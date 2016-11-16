@@ -1,0 +1,13 @@
+language: objective-c
+osx_image: xcode61
+rvm:
+- 2.1.2
+before_install:
+ - chmod +x ./Scripts/install.sh
+ - chmod +x ./Scripts/build.sh
+install:
+- ./Scripts/install.sh
+script:
+- ./Scripts/build.sh
+notifications:
+  slack: seprated:O4cp3wNWtgdcpwDMjjLhHNy0
