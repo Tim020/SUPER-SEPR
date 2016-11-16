@@ -9,3 +9,5 @@ install:
 - ./Scripts/install.sh
 script:
 - ./Scripts/build.sh
+notifications:
+  slack: seprated:O4cp3wNWtgdcpwDMjjLhHNy0
