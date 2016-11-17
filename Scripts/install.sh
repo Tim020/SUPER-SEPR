@@ -3,19 +3,19 @@ HASH=b7e030c65c9b
 VERSION=5.4.2f2
 
 download() {
-	package=$1
-	url="$BASE_URL/$HASH/$package"
-	
-	echo "Downloading from $url: "
-	curl -o "$package" "$url"
+  file=$1
+  url="$BASE_URL/$HASH/$package"
+
+  echo "Downloading from $url: "
+  curl -o `basename "$package"` "$url"
 }
 
 install() {
-	package=$1
-	download "$package"
+  package=$1
+  download "$package"
 
-	echo "Installing $package"
-	sudo installer -dumplog -package "$package" -target /
+  echo "Installing "`basename "$package"`
+  sudo installer -dumplog -package `basename "$package"` -target /
 }
 
 install "MacEditorInstaller/Unity-$VERSION.pkg"
