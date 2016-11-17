@@ -1,5 +1,5 @@
 project="SUPER-SEPR-Game"
 
-echo "Navigating to project directory"
-cd "$(pwd)/Build"
-echo ls -d */
+echo 'Navigating to project directory'
+echo pwd
+echo ls
