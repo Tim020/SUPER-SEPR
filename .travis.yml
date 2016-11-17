@@ -5,9 +5,14 @@ rvm:
 before_install:
  - chmod +x ./Scripts/install.sh
  - chmod +x ./Scripts/build.sh
+ - chmod +x ./Scripts/deploy.sh
 install:
 - ./Scripts/install.sh
 script:
 - ./Scripts/build.sh
+after_success:
+- ./Scripts/deploy.sh
+deploy:
+  skip_cleanup: true
 notifications:
   slack: seprated:O4cp3wNWtgdcpwDMjjLhHNy0
