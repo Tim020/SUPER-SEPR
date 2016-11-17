@@ -1,3 +1,3 @@
 echo 'Navigating to project directory'
-pwd
+cd "$pwd/Game/"
 ls
