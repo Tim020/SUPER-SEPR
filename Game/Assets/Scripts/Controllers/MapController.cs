@@ -36,7 +36,7 @@ public class MapController : MonoBehaviour {
 		go.GetComponent<Tile>().InitialiseTile(tileClicked);
 	}
 
-    // Called when a tile is clicked, the tile that was clicked is passed as a parameter
+    // Called when a tile is clicked, the parameter is the tile that was clicked
 	private void TileClickedHandler(Tile tile) {
 		Debug.Log(tile);
 	}
