@@ -5,33 +5,27 @@ using System.Security.Policy;
 using UnityEngine.Networking;
 using System;
 
-public class Tile
-{
+public class Tile : MonoBehaviour {
 
-	public enum ResourceType
-	{
+	public enum ResourceType {
 		ENERGY,
 		FOOD,
 		ORE
 	}
 
-	public int xPos { private set; get; }
+	private Action<Tile> TileClicked { get; set; }
 
-	public int yPos { private set; get; }
+	private Dictionary<ResourceType, TileResource> tileResources { get; set; }
 
-	private Dictionary<ResourceType, TileResource> tileResources;
+	public void InitialiseTile(Action<Tile> tileClicked) {
+		TileClicked = tileClicked;
 
-	public Tile (int x, int y)
-	{
-		xPos = x;
-		yPos = y;
 		tileResources = new Dictionary<ResourceType, TileResource> ();
 		tileResources.Add (ResourceType.ENERGY, new TileResource (50));
 		tileResources.Add (ResourceType.ORE, new TileResource (50));
 	}
 
-	public float getResourceAmount (ResourceType type)
-	{
+	public float getResourceAmount (ResourceType type) {
 		if (tileResources.ContainsKey (type)) {
 			TileResource r = tileResources [type];
 			if (r != null) {
@@ -41,8 +35,11 @@ public class Tile
 		return 0;
 	}
 
-	private class TileResource
-	{
+	private void OnMouseDown() {
+		TileClicked(this);
+	}
+
+	private class TileResource {
 
 		public float max, current;
 
@@ -51,7 +48,5 @@ public class Tile
 			this.max = max;
 			current = max;
 		}
-		
 	}
-
 }
