@@ -7,7 +7,7 @@ echo "Attempting to build $project for Windows x64"
   -silent-crashes \
   -logFile $(pwd)/unity.log \
   -projectPath "$(pwd)/Game" \
-  -buildWindows64Player "$(pwd)/Build/windows64/$(project)x64.exe" \
+  -buildWindows64Player "$(pwd)/Build/windows64/$project.exe" \
   -quit
   
 echo "Attempting to build $project for Windows"
