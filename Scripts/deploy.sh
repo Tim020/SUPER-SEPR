@@ -17,6 +17,7 @@ cd "$(pwd)/Build"
 
 package_build "linux"
 package_build "osx"
-package_build "windows"
+package_build "windows32"
+package_build "windows64"
 
 ls -R
