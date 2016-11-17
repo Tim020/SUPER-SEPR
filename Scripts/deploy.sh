@@ -1,3 +1,3 @@
 echo 'Navigating to project directory'
-cd "$(pwd)/"
-ls
+cd "$(pwd)/Build"
+ls -R

@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
 	protected virtual void Production ()
 	{
 		foreach (Tile t in ownedTiles) {
+			//This is technically incorrect, the TileResource holds how much of that resource the tile has left and so should decrease as the turns go on.
 			resourceInventory [Tile.ResourceType.ENERGY] += t.getResourceAmount (Tile.ResourceType.ENERGY);
 			resourceInventory [Tile.ResourceType.ORE] += t.getResourceAmount (Tile.ResourceType.ORE);
 		}
