@@ -6,8 +6,8 @@ echo "Attempting to build $project for Windows x64"
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/unity.log \
-  -projectPath $(pwd) \
-  -buildWindows64Player "$(pwd)/Build/windows64/$project.exe" \
+  -projectPath "$(pwd)/Game" \
+  -buildWindows64Player "$(pwd)/Game/Build/windows64/$project.exe" \
   -quit
   
 echo "Attempting to build $project for Windows x32"
@@ -16,8 +16,8 @@ echo "Attempting to build $project for Windows x32"
   -nographics \
   -silent-crashes \
   -logFile $(pwd)/unity.log \
-  -projectPath $(pwd) \
-  -buildWindowsPlayer "$(pwd)/Build/windows32/$project.exe" \
+  -projectPath "$(pwd)/Game" \
+  -buildWindowsPlayer "$(pwd)/Game/Build/windows32/$project.exe" \
   -quit
   
 echo 'Logs from build'
