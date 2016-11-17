@@ -3,7 +3,7 @@ HASH=b7e030c65c9b
 VERSION=5.4.2f2
 
 download() {
-	file=$1
+	package=$1
 	url="$BASE_URL/$HASH/$package"
 	
 	echo "Downloading from $url: "
