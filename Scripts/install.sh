@@ -1,5 +1,24 @@
-echo 'Downloading from http://netstorage.unity3d.com/unity/b7e030c65c9b/MacEditorInstaller/Unity-5.4.2f2.pkg: '
-curl -o Unity.pkg http://netstorage.unity3d.com/unity/b7e030c65c9b/MacEditorInstaller/Unity-5.4.2f2.pkg
+BASE_URL=http://netstorage.unity3d.com/unity/
+HASH=b7e030c65c9b
+VERSION=5.4.2f2
 
-echo 'Installing Unity.pkg'
-sudo installer -dumplog -package Unity.pkg -target /
+download() {
+  file=$1
+  url="$BASE_URL/$HASH/$package"
+
+  echo "Downloading from $url: "
+  curl -o `basename "$package"` "$url"
+}
+
+install() {
+  package=$1
+  download "$package"
+
+  echo "Installing "`basename "$package"`
+  sudo installer -dumplog -package `basename "$package"` -target /
+}
+
+install "MacEditorInstaller/Unity-$VERSION.pkg"
+install "MacEditorTargetInstaller/UnitySetup-Windows-Support-for-Editor-$VERSION.pkg"
+install "MacEditorTargetInstaller/UnitySetup-Mac-Support-for-Editor-$VERSION.pkg"
+install "MacEditorTargetInstaller/UnitySetup-Linux-Support-for-Editor-$VERSION.pkg"
