@@ -9,7 +9,6 @@ install:
 - ./Scripts/install.sh
 script:
 - ./Scripts/build.sh
-after_success:
 - ./Scripts/deploy.sh
 deploy:
   skip_cleanup: true
