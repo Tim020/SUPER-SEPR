@@ -8,10 +8,6 @@ package_build(){
 	fi
 }
 
-upload_archive(){
-	
-}
-
 echo 'Navigating to project directory'
 cd "$(pwd)/Build"
 
