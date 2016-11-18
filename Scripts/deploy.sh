@@ -1,5 +1,3 @@
-HOST = "ftp://mavenrepo.uoy-sepr.smithsmodding.com"
-
 package_build(){
 	build_dir=$1
 	echo "$(pwd)/Build/$build_dir"
@@ -17,7 +15,7 @@ upload_archive(){
 	upload_dir = $1
 	
 	echo "Uploading build $dir to remote repository"
-	curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$build_dir-$TRAVIS_BUILD_NUMBER.zip" "$HOST" --user "$FTP_USER:$FTP_PASSWORD"
+	curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$build_dir-$TRAVIS_BUILD_NUMBER.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com" --user "$FTP_USER:$FTP_PASSWORD"
 }
 
 package_build "linux"
