@@ -32,6 +32,7 @@ public class MapController : MonoBehaviour {
     // Called when a tile needs to be created (when the game starts), requires the position that the tile will be placed at
 	private void GenerateTile(Vector3 position) {
 		GameObject go = Instantiate(tilePrefab, position, Quaternion.identity) as GameObject;
+		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
 		go.GetComponent<Tile>().InitialiseTile(tileClicked);
 	}

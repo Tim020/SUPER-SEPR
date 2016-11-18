@@ -12,10 +12,10 @@ package_build(){
 }
 
 upload_archive(){
-	upload_dir = $1
+	upload_dir=$1
 	
 	echo "Uploading build $dir to remote repository"
-	curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$build_dir-$TRAVIS_BUILD_NUMBER.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com" --user "$FTP_USER:$FTP_PASSWORD"
+	curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$upload_dir-$TRAVIS_BUILD_NUMBER.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com" --user "$FTP_USER:$FTP_PASSWORD"
 }
 
 package_build "linux"
