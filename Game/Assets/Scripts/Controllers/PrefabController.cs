@@ -8,10 +8,10 @@ public class PrefabController : MonoBehaviour {
 
 	// Public variables set in the editor
 	// A reference to all of the tile game object prefabs
-	public GameObject grass;
+	public GameObject tile;
 
 	// Called when the game starts
-	void Start () {
+	void Start() {
 		Prefabs = this;
 	}
 }
