@@ -1,21 +1,29 @@
 package_build(){
 	build_dir=$1
-	echo "$(pwd)/Build/$build_dir"
-	if [ ! -d "$(pwd)/Archive" ]; then
-		echo "Creating $(pwd)/Archive"
-		mkdir -p "$(pwd)/Archive"
-	fi
-	if [ -d "$(pwd)/Build/$build_dir" ]; then
-		echo "Zipping $build_dir to $build_dir.zip"
-		zip -r "$(pwd)/Archive/$TRAVIS_BRANCH-$build_dir-$TRAVIS_BUILD_NUMBER.zip" "$(pwd)/Build/$build_dir"
+	
+	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+		if [ ! -d "$(pwd)/Archive" ]; then
+			echo "Creating $(pwd)/Archive"
+			mkdir -p "$(pwd)/Archive"
+		fi
+		if [ -d "$(pwd)/Build/$build_dir" ]; then
+			echo "Zipping $build_dir to $build_dir.zip"
+			zip -r "$(pwd)/Archive/$TRAVIS_BRANCH-$build_dir-$TRAVIS_BUILD_NUMBER.zip" "$(pwd)/Build/$build_dir"
+		fi
+	else
+		echo "Building a pull request, skipping creating the archive for $upload_dir"
 	fi
 }
 
 upload_archive(){
 	upload_dir=$1
 	
-	echo "Uploading build $dir to remote repository"
-	curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$upload_dir-$TRAVIS_BUILD_NUMBER.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com" --user "$FTP_USER:$FTP_PASSWORD"
+	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+		echo "Uploading build $dir to remote repository"
+		curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$upload_dir-$TRAVIS_BUILD_NUMBER.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com" --user "$FTP_USER:$FTP_PASSWORD"
+	else
+		echo "Building a pull request, skipping uploding the archive for $upload_dir"
+	fi
 }
 
 package_build "linux"
