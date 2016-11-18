@@ -5,7 +5,7 @@ package_build(){
 	echo "$(pwd)/Build/$build_dir"
 	if [ ! -d "$(pwd)/Archive" ]; then
 		echo "Creating $(pwd)/Archive"
-		"$(mkdir) -p $(pwd)/Archive"
+		mkdir -p "$(pwd)/Archive"
 	fi
 	if [ -d "$(pwd)/Build/$build_dir" ]; then
 		echo "Zipping $build_dir to $build_dir.zip"
