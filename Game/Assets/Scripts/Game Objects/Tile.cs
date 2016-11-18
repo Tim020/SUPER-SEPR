@@ -4,17 +4,10 @@ using System;
 
 public class Tile : MonoBehaviour {
 
-    // NEED TO MOVE THIS SOMEWHERE ELSE
-	public enum ResourceType {
-		ENERGY,
-		FOOD,
-		ORE
-	}
-
     // An action that gets called when a tile is clicked, handled in the MapController object
     private Action<Tile> tileClicked;
     // A dictionary with a resource type as a key, and a tile resource as a value, value is the amount generated per round
-    private Dictionary<ResourceType, TileResource> resourcesGenerated;
+	private Dictionary<Data.ResourceType, TileResource> resourcesGenerated;
 	// A reference to the player that owns this tile, null if no owner
 	private Player owner;
 
@@ -22,13 +15,18 @@ public class Tile : MonoBehaviour {
 	public void InitialiseTile(Action<Tile> tileClicked) {
 		this.tileClicked = tileClicked;
 
-		resourcesGenerated = new Dictionary<ResourceType, TileResource> ();
-		resourcesGenerated.Add (ResourceType.ENERGY, new TileResource (50));
-		resourcesGenerated.Add (ResourceType.ORE, new TileResource (50));
+		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource> ();
+		resourcesGenerated.Add (Data.ResourceType.ENERGY, new TileResource (50));
+		resourcesGenerated.Add (Data.ResourceType.ORE, new TileResource (50));
 	}
 
-    // Returns the amount of a given resource type 
-	public float getResourceAmount(ResourceType type) {
+    // Called when the user left clicks on the tile
+	private void OnMouseDown() {
+		tileClicked(this);
+	}
+
+	// Returns the amount of a given resource type 
+	public float getResourceAmount(Data.ResourceType type) {
 		if (resourcesGenerated.ContainsKey (type)) {
 			TileResource r = resourcesGenerated[type];
 			if (r != null) {
@@ -37,10 +35,13 @@ public class Tile : MonoBehaviour {
 		}
 		return 0;
 	}
+		
+	public Player getOwner() {
+		return owner;
+	}
 
-    // Called when the user left clicks on the tile
-	private void OnMouseDown() {
-		tileClicked(this);
+	public void setOwner(Player p) {
+		owner = p;
 	}
 
 	public class TileResource {
