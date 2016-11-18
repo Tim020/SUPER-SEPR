@@ -26,7 +26,7 @@ quit
 END_SCRIPT
 }
 
-package_build "linux"
-package_build "osx"
-package_build "windows32"
-package_build "windows64"
+upload_archive "linux"
+upload_archive "osx"
+upload_archive "windows32"
+upload_archive "windows64"
