@@ -13,7 +13,7 @@ package_build(){
 			zip -r "$(pwd)/Archive/$build_dir.zip" "$(pwd)/Build/$build_dir"
 		fi
 	else
-		echo "Building a pull request, skipping creating the archive for $upload_dir"
+		echo "Building a pull request, skipping creating the archive for $build_dir"
 	fi
 }
 
