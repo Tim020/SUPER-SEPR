@@ -3,7 +3,8 @@ project="seprated-Game"
 package_build(){
 	build_dir=$1
 	echo "$(pwd)/Build/$build_dir"
-	if [ ! -d "$(pwd)/Archive"]; then
+	if [ ! -d "$(pwd)/Archive" ]; then
+		echo "Creating $(pwd)/Archive"
 		"$(mkdir) -p $(pwd)/Archive"
 	fi
 	if [ -d "$(pwd)/Build/$build_dir" ]; then
