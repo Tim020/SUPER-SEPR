@@ -17,11 +17,7 @@ upload_archive(){
 	upload_dir = $1
 	
 	echo "Uploading build $dir to remote repository"
-	ftp -n "$HOST" <<END_SCRIPT
-user "$FTP_USER" "$FTP_PASSWORD"
-put "$(pwd)/Archive/$TRAVIS_BRANCH-$upload_dir-$TRAVIS_BUILD_NUMBER.zip"
-quit
-END_SCRIPT
+	curl -T "$(pwd)/Archive/$TRAVIS_BRANCH-$build_dir-$TRAVIS_BUILD_NUMBER.zip" --user "$FTP_USER:$FTP_PASSWORD"
 }
 
 package_build "linux"
