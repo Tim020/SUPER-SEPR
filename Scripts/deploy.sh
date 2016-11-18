@@ -2,7 +2,7 @@ project="seprated-Game"
 
 package_build(){
 	build_dir=$1
-	if [-d "$(pwd)/Build/$build_dir" ]; then
+	if [ -d "$(pwd)/Build/$build_dir" ]; then
 		echo "Zipping $build_dir to $build_dir.zip"
 		zip -r "$(pwd)/Build/$build_dir.zip" "$(pwd)/Build/$build_dir"
 	fi
