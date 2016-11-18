@@ -1,5 +1,15 @@
 project="seprated-Game"
 
+echo "Attempting to build $project for Windows x64"
+/Applications/Unity/Unity.app/Contents/MacOS/Unity \
+  -batchmode \
+  -nographics \
+  -silent-crashes \
+  -logFile $(pwd)/unity.log \
+  -projectPath "$(pwd)/Game" \
+  -buildWindows64Player "$(pwd)/Build/windows64/$project.exe" \
+  -quit
+  
 echo "Attempting to build $project for Windows"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
@@ -7,7 +17,7 @@ echo "Attempting to build $project for Windows"
   -silent-crashes \
   -logFile $(pwd)/unity.log \
   -projectPath "$(pwd)/Game" \
-  -buildWindows64Player "$(pwd)/Build/windows/$project.exe" \
+  -buildWindowsPlayer "$(pwd)/Build/windows32/$project.exe" \
   -quit
 
 echo "Attempting to build $project for OS X"
