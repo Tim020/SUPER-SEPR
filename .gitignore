@@ -4,9 +4,6 @@ Game/Obj/
 Game/Build/
 Game/Builds/
 Game/Assets/AssetStoreTools*
-Game/Assets/StreamingAssets/Data/Mods/*
-!Game/Assets/StreamingAssets/Data/Mods/README.md
-!Game/Assets/StreamingAssets/Data/Mods/README.md.meta
 Game/ProjectSettings/ProjectVersion.txt
 Game/ProjectSettings/GraphicsSettings.asset
 
@@ -22,7 +19,6 @@ ExportedObj/
 *.pidb
 *.booproj
 *.svd
-
 
 # Unity3D generated meta files
 *.pidb.meta
