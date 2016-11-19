@@ -132,7 +132,6 @@ if [ "$errorCount" != "0" ]; then
     exit 1
 fi
 
-
 errorCount=$(grep "failures" Game/EditorTestResults.xml | awk -F"\"" '{print $18}') #finally for invalid tests
 
 if [ "$errorCount" != "0" ]; then
@@ -141,6 +140,6 @@ if [ "$errorCount" != "0" ]; then
     rm "$(pwd)/Game/EditorTestResults.xml"
     exit 1
 fi
-#end of unit test checks. at this point the test have suceeded or exited with an error code.
 
+#end of unit test checks. at this point the test have suceeded or exited with an error code.
 rm "$(pwd)/Game/EditorTestResults.xml"
