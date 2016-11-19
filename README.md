@@ -5,7 +5,7 @@ Development Build Status: [![Build Status](https://travis-ci.com/Tim020/SUPER-SE
 
 ## Build System Overview
 
-1. We will be working on a specific feature at a time
+1. We will be working in packs (of 2 or 3 people) on a specific feature at a time
 2. You make changes to the code and commit these to your local repository
 3. Once you have completed some working code (not necessarily a completed feautre, could be a small part eg helper method) you push to the Remote Repository
     * We will be working using feature branching, so say you were working on the GUI you would push to the branch development-gui
