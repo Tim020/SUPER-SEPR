@@ -1,3 +1,5 @@
+# Script taken and modified from https://github.com/TeamPorcupine/ProjectPorcupine
+
 travisUnity="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
 
 if [ $# -eq "0" ]; # Running without arguments -- assume running locally
@@ -63,7 +65,7 @@ endTestsFold=0 #stores whether the travis_fold:end:tests has been echoed yet
 
 travecho 'travis_fold:start:compile'
 echo "Attempting Unit Tests"
-"$unityPath" -batchmode -runEditorTests -nographics -EditorTestResultFile "$(pwd)"/EditorTestResults.xml -projectPath "$(pwd)" -logFile unity.log
+"$unityPath" -batchmode -runEditorTests -nographics -EditorTestResultFile "$(pwd)"/EditorTestResults.xml -projectPath "$(pwd)/Game" -logFile unity.log
 logFile="$(pwd)"/unity.log
 travecho "$(cat "$logFile")"
 travecho 'travis_fold:end:compile'
