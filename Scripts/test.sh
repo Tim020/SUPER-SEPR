@@ -65,14 +65,14 @@ endTestsFold=0 #stores whether the travis_fold:end:tests has been echoed yet
 
 travecho 'travis_fold:start:compile'
 echo "Attempting Unit Tests"
-"$unityPath" -batchmode -runEditorTests -nographics -EditorTestResultFile "$(pwd)"/EditorTestResults.xml -projectPath "$(pwd)/Game" -logFile unity.log
-logFile="$(pwd)"/unity.log
+"$unityPath" -batchmode -runEditorTests -nographics -editorTestResultFile "$(pwd)/Game/EditorTestResults.xml" -projectPath "$(pwd)/Game" -logFile unity.log
+logFile="$(pwd)/unity.log"
 travecho "$(cat "$logFile")"
 travecho 'travis_fold:end:compile'
 
 travecho 'travis_fold:start:tests'
 travecho 'Show Results from Tests'
-if [ ! -f "$(pwd)"/EditorTestResults.xml ]; then
+if [ ! -f "$(pwd)/Game/EditorTestResults.xml" ]; then
     echo "Results file not found!"
     echo "Make sure that there are no Unity processes already open and try again."
     travecho "travis_fold:end:tests"
@@ -94,7 +94,7 @@ if [ ! -f "$(pwd)"/EditorTestResults.xml ]; then
 fi
 rm "$(pwd)"/unity.log
 
-resultsFile="$(pwd)/EditorTestResults.xml"
+resultsFile="$(pwd)/Game/EditorTestResults.xml"
 travecho "$(cat "$resultsFile")"
 if [ "$endTestsFold" = 0 ]; then
     travecho 'travis_fold:end:tests'
@@ -110,7 +110,7 @@ if [ "$errorCount" != "0" ]; then
     printf '\nThe following unit tests failed:'
     echo | grep 'success="False"' EditorTestResults.xml | grep 'test-case'
 
-    rm "$(pwd)"/EditorTestResults.xml
+    rm "$(pwd)/Game/EditorTestResults.xml"
     exit 1
 fi
 
@@ -119,7 +119,7 @@ errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $6}') #n
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests threw errors!'
 
-    rm "$(pwd)"/EditorTestResults.xml
+    rm "$(pwd)/Game/EditorTestResults.xml"
     exit 1
 fi
 
@@ -128,7 +128,7 @@ errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $12}') #
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests were inconlusive!'
 
-    rm "$(pwd)"/EditorTestResults.xml
+    rm "$(pwd)/Game/EditorTestResults.xml"
     exit 1
 fi
 
@@ -138,9 +138,9 @@ errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $18}') #
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests were invalid!'
 
-    rm "$(pwd)"/EditorTestResults.xml
+    rm "$(pwd)/Game/EditorTestResults.xml"
     exit 1
 fi
 #end of unit test checks. at this point the test have suceeded or exited with an error code.
 
-rm "$(pwd)"/EditorTestResults.xml
+rm "$(pwd)/Game/EditorTestResults.xml"
