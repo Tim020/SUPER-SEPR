@@ -101,20 +101,20 @@ if [ "$endTestsFold" = 0 ]; then
 fi
 
 #TERRIBLE error check logic - Please fix ASAP
-errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $8}') #find line with 'failures' and returns characters between quotation mark 8 and 9
+errorCount=$(grep "failures" Game/EditorTestResults.xml | awk -F"\"" '{print $8}') #find line with 'failures' and returns characters between quotation mark 8 and 9
 
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests failed!'
 
      #show the exact unit test failure
     printf '\nThe following unit tests failed:'
-    echo | grep 'success="False"' EditorTestResults.xml | grep 'test-case'
+    echo | grep 'success="False"' Game/EditorTestResults.xml | grep 'test-case'
 
     rm "$(pwd)/Game/EditorTestResults.xml"
     exit 1
 fi
 
-errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $6}') #now for errors
+errorCount=$(grep "failures" Game/EditorTestResults.xml | awk -F"\"" '{print $6}') #now for errors
 
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests threw errors!'
@@ -123,7 +123,7 @@ if [ "$errorCount" != "0" ]; then
     exit 1
 fi
 
-errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $12}') #inconlusive tests
+errorCount=$(grep "failures" Game/EditorTestResults.xml | awk -F"\"" '{print $12}') #inconlusive tests
 
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests were inconlusive!'
@@ -133,7 +133,7 @@ if [ "$errorCount" != "0" ]; then
 fi
 
 
-errorCount=$(grep "failures" EditorTestResults.xml | awk -F"\"" '{print $18}') #finally for invalid tests
+errorCount=$(grep "failures" Game/EditorTestResults.xml | awk -F"\"" '{print $18}') #finally for invalid tests
 
 if [ "$errorCount" != "0" ]; then
     echo "$errorCount" ' unit tests were invalid!'
