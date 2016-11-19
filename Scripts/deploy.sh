@@ -1,13 +1,19 @@
+# This runs the file 'build.cfg' and loads the variables into this script
 source build.cfg
 
+# Function to create ZIP directories from a specified folder
 package_build(){
+	# Get the first (and only) parameter for the function which represents the directory to zip
 	build_dir=$1
 	
+	# Check if we are currently running CI on a Pull Request
 	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+		# Check if there is an Archive folder for this build, if not then create it
 		if [ ! -d "$(pwd)/Archive" ]; then
 			echo "Creating $(pwd)/Archive"
 			mkdir -p "$(pwd)/Archive"
 		fi
+		# If we are not in a PR then create the ZIP archive
 		if [ -d "$(pwd)/Build/$build_dir" ]; then
 			echo "Zipping $build_dir to $build_dir.zip"
 			zip -r "$(pwd)/Archive/$build_dir.zip" "$(pwd)/Build/$build_dir"
@@ -17,10 +23,13 @@ package_build(){
 	fi
 }
 
+# Function to upload the archives to an FTP site
 upload_archive(){
+	# Get the first (and only) parameter for the function which represents the directory to upload
 	upload_dir=$1
-	
+	# Check if we are running in a Pull Request
 	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+		# Not in a Pull Request so continue uploading the archive
 		echo "Uploading build $dir to remote repository" 
 		curl -T "$(pwd)/Archive/$upload_dir.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 	else
@@ -28,6 +37,7 @@ upload_archive(){
 	fi
 }
 
+# Create and upload archives for Linux, OSX, Win32 and Win64 builds
 package_build "linux"
 upload_archive "linux"
 

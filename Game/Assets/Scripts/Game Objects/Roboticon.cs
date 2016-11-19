@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Roboticon
-{
+public class Roboticon {
 
 	// The tile that this roboticon is situated
 	private Tile location;
@@ -11,23 +10,19 @@ public class Roboticon
 	// The player who owns this Roboticon
 	private Player player;
 
-	public Roboticon ()
-	{
+	public Roboticon () {
 		
 	}
 
-	public void setLocation (Tile t)
-	{
+	public void setLocation (Tile t) {
 		location = t;
 	}
 
-	public void setResourceSpecialisation (Data.ResourceType type)
-	{
+	public void setResourceSpecialisation (Data.ResourceType type) {
 		resourceSpecialisation = type;
 	}
 
-	public void setPlayer (Player player)
-	{
+	public void setPlayer (Player player) {
 		this.player = player;
 	}
 }

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System;
 
-public class Tile : MonoBehaviour
-{
+public class Tile : MonoBehaviour {
 
 	// An action that gets called when a tile is clicked, handled in the MapController object
 	private Action<Tile> tileClicked;
@@ -13,8 +12,7 @@ public class Tile : MonoBehaviour
 	private Player owner;
 
 	// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
-	public void InitialiseTile (Action<Tile> tileClicked)
-	{
+	public void InitialiseTile(Action<Tile> tileClicked) {
 		this.tileClicked = tileClicked;
 
 		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource> ();
@@ -23,8 +21,7 @@ public class Tile : MonoBehaviour
 	}
 
 	// Called when the user left clicks on the tile
-	private void OnMouseDown ()
-	{
+	private void OnMouseDown() {
 		tileClicked (this);
 	}
 
@@ -33,8 +30,7 @@ public class Tile : MonoBehaviour
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">Type of the resource.</param>
-	public float getResourceAmount (Data.ResourceType type)
-	{
+	public float getResourceAmount(Data.ResourceType type) {
 		if (resourcesGenerated.ContainsKey (type)) {
 			TileResource r = resourcesGenerated [type];
 			if (r != null) {
@@ -48,8 +44,7 @@ public class Tile : MonoBehaviour
 	/// Gets the owner.
 	/// </summary>
 	/// <returns>The owner.</returns>
-	public Player getOwner ()
-	{
+	public Player getOwner() {
 		return owner;
 	}
 
@@ -57,18 +52,15 @@ public class Tile : MonoBehaviour
 	/// Sets the owner.
 	/// </summary>
 	/// <param name="p">P.</param>
-	public void setOwner (Player p)
-	{
+	public void setOwner(Player p) {
 		owner = p;
 	}
 
-	public class TileResource
-	{
+	public class TileResource {
 
 		public float max, current;
 
-		public TileResource (float max)
-		{
+		public TileResource (float max) {
 			this.max = max;
 			current = max;
 		}

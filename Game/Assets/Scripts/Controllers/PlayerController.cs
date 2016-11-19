@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour {
 	private Player[] players;
 
 	// Called when the game starts
-	void Start() {
+	void Start () {
 		players = new Player[2];
 	}
 }
