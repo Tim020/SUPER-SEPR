@@ -1,5 +1,6 @@
 # Script taken and modified from https://github.com/TeamPorcupine/ProjectPorcupine
 
+# The directory Unity gets installed into if running on a Travis CI server
 travisUnity="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
 
 if [ $# -eq "0" ]; # Running without arguments -- assume running locally

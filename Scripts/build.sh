@@ -1,5 +1,7 @@
+# The project name, this probably needs changing at some point
 project="seprated-Game"
 
+# Run the Unity shell commands to build the projects
 echo "Attempting to build $project for Windows x64"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
@@ -40,5 +42,6 @@ echo "Attempting to build $project for Linux"
   -buildLinuxUniversalPlayer "$(pwd)/Build/linux/$project.exe" \
   -quit
 
+# Dump the log to the console - this could probably be done within folding when I get round to it
 echo 'Logs from build'
 cat $(pwd)/unity.log
