@@ -11,8 +11,12 @@ env:
     - DOXYFILE: $TRAVIS_BUILD_DIR/Scripts/doxygen.config
     - GH_REPO_REF: github.com/Tim020/SUPER-SEPR.git
 before_install:
-- sudo apt-get update -qq
-- sudo apt-get install -qq [doxygen, doxygen-doc, doxygen-latex, doxygen-gui, graphviz]
+- brew update
+- brew install doxygen
+- brew install doxygen-doc
+- brew install doxygen-latex
+- brew install doxygen-gui
+- brew install graphviz
 - chmod +x ./Scripts/install.sh
 - chmod +x ./Scripts/test.sh
 - chmod +x ./Scripts/build.sh
