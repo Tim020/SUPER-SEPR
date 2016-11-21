@@ -13,10 +13,6 @@ env:
 before_install:
 - brew update
 - brew install doxygen
-- brew install doxygen-doc
-- brew install doxygen-latex
-- brew install doxygen-gui
-- brew install graphviz
 - chmod +x ./Scripts/install.sh
 - chmod +x ./Scripts/test.sh
 - chmod +x ./Scripts/build.sh
