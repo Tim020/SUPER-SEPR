@@ -24,17 +24,21 @@ public class MapController : MonoBehaviour {
 			}
 		}
 
-		GameObject camera = GameObject.FindWithTag ("MainCamera");
-		if (camera != null) {
-			Camera c = camera.GetComponent<Camera> ();
-			if (c != null) {
-				c.transform.position = new Vector3 (width / 2, height / 2, -20);
-			}
-		}
-	}
+        //GameObject camera = GameObject.FindWithTag("MainCamera");
+        //if (camera != null) {
+        //    Camera c = camera.GetComponent<Camera>();
+        //    if (c != null) {
+        //        c.transform.position = new Vector3(width / 2, height / 2, -20);
+        //    }
+        //}
 
-	// Called when a tile needs to be created (when the game starts), requires the position that the tile will be placed at
-	private void GenerateTile(Vector3 position) {
+        // This line should do the same job.
+        Camera.main.transform.position = new Vector3(width / 2, height / 2, -30);
+
+    }
+
+    // Called when a tile needs to be created (when the game starts), requires the position that the tile will be placed at
+    private void GenerateTile(Vector3 position) {
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
 		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
@@ -43,7 +47,6 @@ public class MapController : MonoBehaviour {
 		if (UnityEngine.Random.Range (0, 2) == 0f) {
 			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.instance.stoneSprite;
 		}
-
 	}
 
 	// Called when a tile is clicked, the parameter is the tile that was clicked
