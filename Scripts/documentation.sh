@@ -20,8 +20,6 @@ cd code_docs
 
 # Get the current gh-pages branch
 git clone -b gh-pages https://$GH_REPO_TOKEN@$GH_REPO_REF
-ls -R
-cd $GH_REPO_NAME
 
 ##### Configure git.
 # Set the push default to simple i.e. push only the current branch.
