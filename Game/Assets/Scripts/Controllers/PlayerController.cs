@@ -3,11 +3,15 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-	// An array of the players in the game, can be any combination of human or AI
+	/// <summary>
+	/// An array of the players in the game, can be any combination of human or AI
+	/// </summary>
 	private Player[] players;
 
-	// Called when the game starts
-	void Start () {
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
+	void Start() {
 		players = new Player[2];
 	}
 }
