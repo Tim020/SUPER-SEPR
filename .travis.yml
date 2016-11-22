@@ -9,7 +9,7 @@ env:
   global:
     - GH_REPO_NAME: SUPER_SEPR
     - DOXYFILE: $TRAVIS_BUILD_DIR/Scripts/doxygen.config
-	- PROJECT_FILE: $TRAVIS_BUILD_DIR/Game
+    - PROJECT_FILE: $TRAVIS_BUILD_DIR/Game
     - GH_REPO_REF: github.com/Tim020/SUPER-SEPR.git
 before_install:
 - brew update
