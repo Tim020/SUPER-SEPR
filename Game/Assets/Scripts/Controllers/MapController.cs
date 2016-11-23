@@ -32,7 +32,8 @@ public class MapController : MonoBehaviour {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				GenerateTile (new Vector3 (x, y, 0));
+				Tile t = GenerateTile (new Vector3 (x, y, 0));
+                tiles[x, y] = t;
 			}
 		}
 	
@@ -43,15 +44,20 @@ public class MapController : MonoBehaviour {
 	/// Called when a tile needs to be created
 	/// </summary>
 	/// <param name="position">The position the tile is being placed at</param>
-	private void GenerateTile(Vector3 position) {
+	private Tile GenerateTile(Vector3 position) {
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
+        Tile tileObject = go.GetComponent<Tile>();
+
 		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
-		go.GetComponent<Tile> ().InitialiseTile (tileClicked);
+
+		tileObject.InitialiseTile (tileClicked);
 
 		if (UnityEngine.Random.Range (0, 2) == 0f) {
-			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.instance.stoneSprite;
+			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
 		}
+
+        return tileObject;
 	}
 
 	/// <summary>

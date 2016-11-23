@@ -7,7 +7,7 @@ public class SpriteController : MonoBehaviour {
 	/// Gets the instance of the SpriteController
 	/// </summary>
 	/// <value>The instance of the SpriteController</value>
-	public static SpriteController instance { private set; get; }
+	public static SpriteController Sprites { private set; get; }
 
 	/// <summary>
 	/// The grass sprite.
@@ -19,11 +19,10 @@ public class SpriteController : MonoBehaviour {
 	/// </summary>
 	public Sprite stoneSprite;
 
-	/// <summary>
-	/// Start this instance and sets the static reference
-	/// </summary>
-	void Start() {
-		instance = this;
-	}
-
+    /// <summary>
+    /// Start this instance and sets the static reference
+    /// </summary>
+    void Start() {
+        Sprites = this;
+    }
 }

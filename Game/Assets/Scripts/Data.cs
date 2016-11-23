@@ -1,8 +1,5 @@
-﻿using System.Security.Policy;
-using System;
+﻿using System;
 using UnityEngine;
-using UnityEngine.Networking;
-using System.Collections;
 using System.Collections.Generic;
 
 public static class Data {
