@@ -33,7 +33,7 @@ upload_archive(){
 	# Check if we are running in a Pull Request
 	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 		# Not in a Pull Request so continue uploading the archive
-		if [ -d "$(pwd)/Archive/$upload_dir.zip" ]; then
+		if [ -f "$(pwd)/Archive/$upload_dir.zip" ]; then
 			echo "Uploading build $dir to remote repository" 
 			curl -T "$(pwd)/Archive/$upload_dir.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 		else
