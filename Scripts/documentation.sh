@@ -4,6 +4,8 @@
 cd $TRAVIS_BUILD_DIR
 cd ../..
 
+echo $(pwd)
+
 # Check if we are on the master branch, if not exit this script
 if [ ! $TRAVIS_BRANCH == "master" ] && [ ! $TRAVIS_BRANCH == "development-docs" ]; then
 	echo "Not on the master branch (or docs testing branch), not building documentation"
@@ -19,8 +21,13 @@ set -e
 mkdir code_docs
 cd code_docs
 
+echo $(pwd)
+
 # Get the current gh-pages branch
 git clone -b gh-pages https://$GH_REPO_TOKEN@$GH_REPO_REF
+
+echo $(pwd)
+echo ls -R
 
 ##### Configure git.
 # Set the push default to simple i.e. push only the current branch.
