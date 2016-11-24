@@ -4,12 +4,12 @@
 cd $TRAVIS_BUILD_DIR
 cd ../..
 
-echo $(pwd)
-
 # Check if we are on the master branch, if not exit this script
-if [ ! $TRAVIS_BRANCH == "master" ] && [ ! $TRAVIS_BRANCH == "development-docs" ]; then
-	echo "Not on the master branch (or docs testing branch), not building documentation"
-	exit 0
+if [ ! $TRAVIS_BRANCH == "master" ]; then
+	echo "Not on the master branch, will build the documentation but not upload to the GitHub Pages branch. I shall upload to the FTP site instead :)"
+	ON_MASTER = 0
+else
+	ON_MASTER = 1
 fi
 
 # Setup this script and get the current gh-pages branch. 
@@ -58,25 +58,26 @@ doxygen $DOXYFILE 2>&1 | tee doxygen.log
 # both exist. This is a good indication that Doxygen did it's work.
 if [ -d "html" ] && [ -f "html/index.html" ]; then
 
-	#git status
-	#cd $TRAVIS_BUILD_DIR/code_docs
-	#ls -R
+	if [ ON_MASTER == 1 ]; then
+		echo 'Building on Master Branch - Uploading documentation to the gh-pages branch...'
+		# Add everything in this directory (the Doxygen code documentation) to the
+		# gh-pages branch.
+		# GitHub is smart enough to know which files have changed and which files have
+		# stayed the same and will only update the changed files.
+		git add --all
 
-    echo 'Uploading documentation to the gh-pages branch...'
-    # Add everything in this directory (the Doxygen code documentation) to the
-    # gh-pages branch.
-    # GitHub is smart enough to know which files have changed and which files have
-    # stayed the same and will only update the changed files.
-    git add --all
+		# Commit the added files with a title and description containing the Travis CI
+		# build number and the GitHub commit reference that issued this build.
+		git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
 
-    # Commit the added files with a title and description containing the Travis CI
-    # build number and the GitHub commit reference that issued this build.
-    git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
-
-    # Force push to the remote gh-pages branch.
-    # The ouput is redirected to /dev/null to hide any sensitive credential data
-    # that might otherwise be exposed.
-    git push --force "https://$GH_REPO_TOKEN@$GH_REPO_REF" > /dev/null 2>&1
+		# Force push to the remote gh-pages branch.
+		# The ouput is redirected to /dev/null to hide any sensitive credential data
+		# that might otherwise be exposed.
+		git push --force "https://$GH_REPO_TOKEN@$GH_REPO_REF" > /dev/null 2>&1
+	else
+		echo "Not on the master branch, zipping and uploading the documentation to the FTP site only"
+	fi
+	ls
 else
     echo '' >&2
     echo 'Warning: No documentation (html) files have been found!' >&2

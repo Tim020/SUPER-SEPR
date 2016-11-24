@@ -3,7 +3,7 @@ project="seprated-Game"
 
 travecho()
 {
-    if [ -n "$RUN_AS_TRAVIS" ];
+    if [ -n "$RUN_TRAVIS" ];
     then
         echo "$@"
     fi
@@ -11,13 +11,13 @@ travecho()
 
 if [ $# -eq "0" ]; then
 	# Running without arguments -- assume running locally
-    RUN_AS_TRAVIS=""
+    RUN_TRAVIS=""
 fi
 
 while [ $# -gt 0 ]; do    # Until you run out of parameters . . .
   case "$1" in
     --travis)
-        RUN_AS_TRAVIS=1 ;;
+        RUN_TRAVIS=1 ;;
     -h|--help)
         echo "Usage: ${0##*/} [OPTION]"
         echo "Build the game and deploy the archives to the FTP site. Exits with 1 if anything fails."
