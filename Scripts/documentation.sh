@@ -1,5 +1,8 @@
 # Taken and modified from https://gist.github.com/vidavidorra/548ffbcdae99d752da02
 
+# This runs the file 'build.cfg' and loads the variables into this script
+source build.cfg
+
 # Navigate to the repository location
 cd $TRAVIS_BUILD_DIR
 cd ../..
