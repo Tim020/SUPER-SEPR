@@ -51,7 +51,7 @@ echo "Attempting to build $project for Windows x64"
   -buildWindows64Player "$(pwd)/Build/windows64/$project.exe" \
   -quit
   
-echo "Attempting to build $project for Windows"
+echo "Attempting to build $project for Windows x32"
 /Applications/Unity/Unity.app/Contents/MacOS/Unity \
   -batchmode \
   -nographics \

@@ -58,7 +58,7 @@ doxygen $DOXYFILE 2>&1 | tee doxygen.log
 # both exist. This is a good indication that Doxygen did it's work.
 if [ -d "html" ] && [ -f "html/index.html" ]; then
 
-	if [ ON_MASTER == 1 ]; then
+	if [ $ON_MASTER == 1 ]; then
 		echo 'Building on Master Branch - Uploading documentation to the gh-pages branch...'
 		# Add everything in this directory (the Doxygen code documentation) to the
 		# gh-pages branch.
@@ -77,10 +77,16 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
 	else
 		echo "Not on the master branch, zipping and uploading the documentation to the FTP site only"
 	fi
-	ls
+	
+	cd ..
+	echo "Creating documentation archive"
+	zip -r "Documentation.zip" "SUPER-SEPR"
+	echo "Uploading documentation archive"
+	curl -T "Documentation.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 else
     echo '' >&2
     echo 'Warning: No documentation (html) files have been found!' >&2
     echo 'Warning: Not going to push the documentation to GitHub!' >&2
+	echo 'Warning: Not going to upload the documentation to FTP site!' >&2
     exit 1
 fi
