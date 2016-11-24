@@ -4,14 +4,26 @@ using System;
 
 public class Tile : MonoBehaviour {
 
-	// An action that gets called when a tile is clicked, handled in the MapController object
+	/// <summary>
+	/// An action that gets called when a tile is clicked, handled in the MapController object
+	/// </summary>
 	private Action<Tile> tileClicked;
-	// A dictionary with a resource type as a key, and a tile resource as a value, value is the amount generated per round
+
+	/// <summary>
+	/// A dictionary with a resource type as a key, and a tile resource as a value
+	/// The value holds the maximum value for the resource type and the currrent amount - this will reduce over time as it gets generated
+	/// </summary>
 	private Dictionary<Data.ResourceType, TileResource> resourcesGenerated;
-	// A reference to the player that owns this tile, null if no owner
+
+	/// <summary>
+	/// A reference to the player that owns this tile, null if no owner
+	/// </summary>
 	private Player owner;
 
-	// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
+	/// <summary>
+	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
+	/// </summary>
+	/// <param name="tileClicked">The action that gets called when the tile is clicked</param>
 	public void InitialiseTile(Action<Tile> tileClicked) {
 		this.tileClicked = tileClicked;
 
@@ -20,7 +32,9 @@ public class Tile : MonoBehaviour {
 		resourcesGenerated.Add (Data.ResourceType.ORE, new TileResource (50));
 	}
 
-	// Called when the user left clicks on the tile
+	/// <summary>
+	/// Raises the mouse down event. Called when the user left clicks on the tile
+	/// </summary>
 	private void OnMouseDown() {
 		tileClicked (this);
 	}
@@ -41,25 +55,40 @@ public class Tile : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Gets the owner.
+	/// Gets the owner of this tile, may be null if no one has selected it yet
 	/// </summary>
-	/// <returns>The owner.</returns>
+	/// <returns>The owner of the tile</returns>
 	public Player getOwner() {
 		return owner;
 	}
 
 	/// <summary>
-	/// Sets the owner.
+	/// Sets the owner for the tile
 	/// </summary>
-	/// <param name="p">P.</param>
+	/// <param name="p">Player who bought this tile</param>
 	public void setOwner(Player p) {
 		owner = p;
 	}
 
+	/// <summary>
+	/// Tile resource data class
+	/// </summary>
 	public class TileResource {
 
-		public float max, current;
+		/// <summary>
+		/// The maximum amount of resource this tile has
+		/// </summary>
+		public float max;
 
+		/// <summary>
+		/// The current amount of resource this tile has
+		/// </summary>
+		public float current;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Tile+TileResource"/> class.
+		/// </summary>
+		/// <param name="max">The maximum amount of resource this tile holds</param>
 		public TileResource (float max) {
 			this.max = max;
 			current = max;

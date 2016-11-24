@@ -3,26 +3,49 @@ using System.Collections;
 
 public class Roboticon {
 
-	// The tile that this roboticon is situated
+	/// <summary>
+	/// The tile that this roboticon is situated
+	/// </summary>
 	private Tile location;
-	// The resource type this roboticon allows production of when placed on a tile.
+
+	/// <summary>
+	/// The resource type this roboticon allows production of when placed on a tile.
+	/// </summary>
 	private Data.ResourceType resourceSpecialisation;
-	// The player who owns this Roboticon
+
+	/// <summary>
+	/// The player who owns this Roboticon
+	/// </summary>
 	private Player player;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="Roboticon"/> class.
+	/// </summary>
 	public Roboticon () {
-		
+
 	}
 
-	public void setLocation (Tile t) {
+	/// <summary>
+	/// Sets the location.
+	/// </summary>
+	/// <param name="t">The tile the Roboticon is being placed on</param>
+	public void setLocation(Tile t) {
 		location = t;
 	}
 
-	public void setResourceSpecialisation (Data.ResourceType type) {
+	/// <summary>
+	/// Sets the resource specialisation.
+	/// </summary>
+	/// <param name="type">The type of resource this Robiticon is specialised for</param>
+	public void setResourceSpecialisation(Data.ResourceType type) {
 		resourceSpecialisation = type;
 	}
 
-	public void setPlayer (Player player) {
+	/// <summary>
+	/// Sets the owner of this Roboticon
+	/// </summary>
+	/// <param name="player">The player who bought this Robiticon</param>
+	public void setPlayer(Player player) {
 		this.player = player;
 	}
 }

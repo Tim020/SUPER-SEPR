@@ -3,50 +3,67 @@ using System;
 
 public class MapController : MonoBehaviour {
 
-	// Public variables set in the editor
-	// Size of the world, units is the number of tiles
+	/// <summary>
+	/// The width of the map, in number of tiles
+	/// </summary>
 	public int width;
+
+	/// <summary>
+	/// The height of the map, in number of tiles
+	/// </summary>
 	public int height;
     
-	// A 2D array of the tiles in the game, indexed by their position
+	/// <summary>
+	/// A 2D array of the tiles in the game, indexed by their position
+	/// </summary>
 	private Tile[,] tiles;
-	// An action that gets called when a tile is clicked
+
+	/// <summary>
+	/// An action that gets called when a tile is clicked
+	/// </summary>
 	private Action<Tile> tileClicked;
 
-	// Called when the game starts
+	/// <summary>
+	///  Called when the game starts, used to generate the tiles and centre the camera
+	/// </summary>
 	void Start() {
 		tileClicked = TileClickedHandler;
 		tiles = new Tile[width, height];
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				GenerateTile (new Vector3 (x, y, 0));
+				Tile t = GenerateTile (new Vector3 (x, y, 0));
+                tiles[x, y] = t;
 			}
 		}
-
-		GameObject camera = GameObject.FindWithTag ("MainCamera");
-		if (camera != null) {
-			Camera c = camera.GetComponent<Camera> ();
-			if (c != null) {
-				c.transform.position = new Vector3 (width / 2, height / 2, -20);
-			}
-		}
+	
+		Camera.main.transform.position = new Vector3 (width / 2, height / 2, -30);
 	}
 
-	// Called when a tile needs to be created (when the game starts), requires the position that the tile will be placed at
-	private void GenerateTile(Vector3 position) {
+	/// <summary>
+	/// Called when a tile needs to be created
+	/// </summary>
+	/// <param name="position">The position the tile is being placed at</param>
+	private Tile GenerateTile(Vector3 position) {
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
+        Tile tileObject = go.GetComponent<Tile>();
+
 		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
-		go.GetComponent<Tile> ().InitialiseTile (tileClicked);
+
+		tileObject.InitialiseTile (tileClicked);
 
 		if (UnityEngine.Random.Range (0, 2) == 0f) {
-			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.instance.stoneSprite;
+			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
 		}
 
+        return tileObject;
 	}
 
-	// Called when a tile is clicked, the parameter is the tile that was clicked
+	/// <summary>
+	/// Called when a tile is clicked
+	/// </summary>
+	/// <param name="tile">The tile that was clicked</param>
 	private void TileClickedHandler(Tile tile) {
 		Debug.Log (tile);
 	}
