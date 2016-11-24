@@ -21,13 +21,10 @@ set -e
 mkdir code_docs
 cd code_docs
 
-echo $(pwd)
-
 # Get the current gh-pages branch
 git clone -b gh-pages https://$GH_REPO_TOKEN@$GH_REPO_REF
 
-echo $(pwd)
-ls -R
+cd SUPER-SEPR
 
 ##### Configure git.
 # Set the push default to simple i.e. push only the current branch.
