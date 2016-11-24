@@ -53,5 +53,5 @@ echo "Attempting to build $project for Linux"
 # Dump the log to the console - this could probably be done within folding when I get round to it
 travecho 'travis_fold:start:buildlog'
 echo 'Logs from build'
-cat $(pwd)/unity.log
+travecho "$(cat "$(pwd)/unity.log")"
 travecho 'travis_fold:end:buildlog'
