@@ -17,6 +17,9 @@ package_build(){
 		if [ -d "$(pwd)/Build/$build_dir" ]; then
 			echo "Zipping $build_dir to $build_dir.zip"
 			zip -r "$(pwd)/Archive/$build_dir.zip" "$(pwd)/Build/$build_dir"
+		else
+			echo "Could not find the build folder for $build_dir, this probably means the build has failed, so throwing an error"
+			exit 1
 		fi
 	else
 		echo "Building a pull request, skipping creating the archive for $build_dir"
@@ -30,8 +33,13 @@ upload_archive(){
 	# Check if we are running in a Pull Request
 	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 		# Not in a Pull Request so continue uploading the archive
-		echo "Uploading build $upload_dir to remote repository" 
-		curl -T "$(pwd)/Archive/$upload_dir.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+		if [ -f "$(pwd)/Archive/$upload_dir.zip" ]; then
+			echo "Uploading build $dir to remote repository" 
+			curl -T "$(pwd)/Archive/$upload_dir.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+		else
+			echo "Could not find the archive $upload_dir.zip, this probably means the archive process has failed, so throwing an error"
+			exit 1
+		fi
 	else
 		echo "Building a pull request, skipping uploding the archive for $upload_dir"
 	fi
