@@ -10,9 +10,9 @@ cd ../..
 # Check if we are on the master branch, if not exit this script
 if [ ! $TRAVIS_BRANCH == "master" ]; then
 	echo "Not on the master branch, will build the documentation but not upload to the GitHub Pages branch. I shall upload to the FTP site instead :)"
-	ON_MASTER = 0
+	ON_MASTER=0
 else
-	ON_MASTER = 1
+	ON_MASTER=1
 fi
 
 # Setup this script and get the current gh-pages branch. 
@@ -82,10 +82,14 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
 	fi
 	
 	cd ..
-	echo "Creating documentation archive"
-	zip -r "Documentation.zip" "SUPER-SEPR"
-	echo "Uploading documentation archive"
-	curl -T "Documentation.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+		echo "Creating documentation archive"
+		zip -r "Documentation.zip" "SUPER-SEPR"
+		echo "Uploading documentation archive"
+		curl -T "Documentation.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+	else
+		echo "Building a pull request, skipping uploading the documentation"
+	fi
 else
     echo '' >&2
     echo 'Warning: No documentation (html) files have been found!' >&2
