@@ -84,7 +84,7 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
 	cd ..
 	if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
 		echo "Creating documentation archive"
-		zip -r "Documentation.zip" "SUPER-SEPR"
+		zip -r "Documentation.zip" "SUPER-SEPR" -x "/.git/*"
 		echo "Uploading documentation archive"
 		curl -T "Documentation.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 	else
