@@ -23,7 +23,7 @@ install:
 - ./Scripts/install.sh
 script:
 - ./Scripts/test.sh --travis
-- ./Scripts/build.sh
+- ./Scripts/build.sh --travis
 after_success:
 - ./Scripts/deploy.sh
 - ./Scripts/documentation.sh

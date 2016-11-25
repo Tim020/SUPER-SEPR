@@ -15,7 +15,7 @@ while [ $# -gt 0 ]; do    # Until you run out of parameters . . .
         RUN_AS_TRAVIS=1 ;;
     -h|--help)
         echo "Usage: ${0##*/} [OPTION]"
-        echo "Build ProjectPorcupine and run all unit tests. Exits with 1 if anything fails."
+        echo "Build the game and run all unit tests. Exits with 1 if anything fails."
         echo
         echo "Options available:"
         echo "  --travis     Indicate that this is being run on the Travis CI server."
