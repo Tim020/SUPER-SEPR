@@ -19,3 +19,11 @@ Development Build Status: [![Build Status](https://travis-ci.com/Tim020/SUPER-SE
 5. Once all the features for the Assessment have been successfully merged into the development branch I will bring all these into the master branch
     * This will trigger build on both Travis CI and Unity Cloud
     * We will submit the executables produced from the Cloud build service
+
+## Summary
+### master
+This branch is for code we want to submit, it should be 100% working and **builds not passing in this branch at any time are not accpetable.** Only to be merged with from Development.
+### development
+This branch is for pulling together all the individual feature branches into one complete branch, **builds should always be passing in this branch.** Mergeable into from any feature development branches.
+### Feature Branches
+These branches are for implementation of features, you can have failing builds sure. Try to avoid this for long periods of time, especially when it isn't just you developing a feature. Catch issues soon and solve them.
