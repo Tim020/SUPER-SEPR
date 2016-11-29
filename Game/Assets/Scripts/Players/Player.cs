@@ -19,7 +19,7 @@ public class Player : MonoBehaviour {
 	/// <summary>
 	/// The amount of money this player has
 	/// </summary>
-	private float funds;
+	public float funds;
 
 	/// <summary>
 	/// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list

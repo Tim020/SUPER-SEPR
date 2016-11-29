@@ -2,21 +2,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using System;
 
 public class MarketController : MonoBehaviour {
 
 	/// <summary>
 	/// A dictionary with a resource type as a key, the value is the amount the market currently has
 	/// </summary>
-	private Dictionary<Data.ResourceType, float> marketResources;
+	private Dictionary<Data.ResourceType, int> marketResources;
 
 	/// <summary>
-	/// A dictionary with a resource type as a key, the value is the vlaue the market is selling at
+	/// A dictionary with a resource type as a key, the value is the value the market is selling at
 	/// </summary>
 	private Dictionary<Data.ResourceType, float> marketSellPrices;
 
 	/// <summary>
-	/// A dictionary with a resource type as a key, the value is the vlaue the market is buying at
+	/// A dictionary with a resource type as a key, the value is the value the market is buying at
 	/// </summary>
 	private Dictionary<Data.ResourceType, float> marketBuyPrices;
 
@@ -34,7 +35,7 @@ public class MarketController : MonoBehaviour {
 	/// Start this instance. Intialise the resource dictionaries and the starting funds.
 	/// </summary>
 	void Start() {
-		marketResources = new Dictionary<Data.ResourceType, float> ();
+		marketResources = new Dictionary<Data.ResourceType, int> ();
 		marketResources.Add (Data.ResourceType.ENERGY, 100);
 		marketResources.Add (Data.ResourceType.ORE, 100);
 
@@ -95,6 +96,42 @@ public class MarketController : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Buys resources from market.
+	/// </summary>
+	/// <param name="player">Player wishing to buy resources</param>
+	/// <param name="type">Type of resource being purchased</param>
+	/// <param name="amount">Amount of resource being purchased</param>
+	public void buyFromMarket(Player player, Data.ResourceType type, int amount) {
+		if (marketResources.ContainsKey (type) && marketSellPrices.ContainsKey (type)) {
+			if (marketResources [type] >= amount && player.funds >= marketSellPrices [type] * amount) {
+				float total = marketSellPrices [type] * amount;
+				player.giveResouce (type, amount);
+				marketResources [type] -= amount;
+				marketFunds += total;
+				player.funds -= total;
+			}
+		}
+	}
+
+	/// <summary>
+	/// Sells resources to market.
+	/// </summary>
+	/// <param name="player">Player wishing to sell resources</param>
+	/// <param name="type">Type of resource being sold</param>
+	/// <param name="amount">Amount of resource being sold</param>
+	public void sellToMarket(Player player, Data.ResourceType type, int amount) {
+		if (marketResources.ContainsKey (type) && marketBuyPrices.ContainsKey (type)) {
+			if (player.getResourceAmount (type) >= amount && marketFunds >= marketBuyPrices [type] * amount) {
+				float total = marketBuyPrices [type] * amount;
+				player.deductResouce (type, amount);
+				marketResources [type] += amount;
+				marketFunds -= total;
+				player.funds += total;
+			}
+		}
+	}
+
+	/// <summary>
 	/// Creates a new player trade. This will remove the resource from the player but not give them any money
 	/// </summary>
 	/// <param name="player">Player wishing to sell their resources</param>
@@ -122,7 +159,7 @@ public class MarketController : MonoBehaviour {
 	/// <summary>
 	/// Class to represent an offer being made by a player, contains information about the offer such as resource type, amount and unit price
 	/// </summary>
-	private class P2PTrade {
+	public class P2PTrade {
 
 		/// <summary>
 		/// The player who is selling this resource/owns this deal
