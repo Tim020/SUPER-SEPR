@@ -44,7 +44,7 @@ public class Tile : MonoBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">Type of the resource.</param>
-	public float getResourceAmount(Data.ResourceType type) {
+	public int getResourceAmount(Data.ResourceType type) {
 		if (resourcesGenerated.ContainsKey (type)) {
 			TileResource r = resourcesGenerated [type];
 			if (r != null) {
@@ -61,10 +61,10 @@ public class Tile : MonoBehaviour {
 	/// </summary>
 	/// <returns>The amount of resource produced and hence gained by the player.</returns>
 	/// <param name="type">The type of resoure to produce for</param>
-	public float doResourceProduction(Data.ResourceType type) {
+	public int doResourceProduction(Data.ResourceType type) {
 		if (resourcesGenerated.ContainsKey (type)) {
 			TileResource r = resourcesGenerated [type];
-			float prodAmt = UnityEngine.Random.Range (0, Math.Min (15, r.current));
+			int prodAmt = UnityEngine.Random.Range (0, Math.Min (15, r.current));
 			r.current -= prodAmt;
 			return prodAmt;
 		}
@@ -95,18 +95,18 @@ public class Tile : MonoBehaviour {
 		/// <summary>
 		/// The maximum amount of resource this tile has
 		/// </summary>
-		public float max;
+		public int max;
 
 		/// <summary>
 		/// The current amount of resource this tile has
 		/// </summary>
-		public float current;
+		public int current;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tile+TileResource"/> class.
 		/// </summary>
 		/// <param name="max">The maximum amount of resource this tile holds</param>
-		public TileResource (float max) {
+		public TileResource (int max) {
 			this.max = max;
 			current = max;
 		}
