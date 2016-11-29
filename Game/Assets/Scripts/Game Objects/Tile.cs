@@ -55,6 +55,23 @@ public class Tile : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Does the production on this tile for a given resource.
+	/// This will internally decrease the amount of resource left on this tile whilst returning the amount generated.
+	/// TODO: This has an arbitrary random number used to determine how much to produce, this may need changing through play tests.
+	/// </summary>
+	/// <returns>The amount of resource produced and hence gained by the player.</returns>
+	/// <param name="type">The type of resoure to produce for</param>
+	public float doResourceProduction(Data.ResourceType type) {
+		if (resourcesGenerated.ContainsKey (type)) {
+			TileResource r = resourcesGenerated [type];
+			float prodAmt = UnityEngine.Random.Range (0, Math.Min (15, r.current));
+			r.current -= prodAmt;
+			return prodAmt;
+		}
+		return 0;
+	}
+
+	/// <summary>
 	/// Gets the owner of this tile, may be null if no one has selected it yet
 	/// </summary>
 	/// <returns>The owner of the tile</returns>

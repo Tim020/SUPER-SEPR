@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
 	/// <summary>
-	/// A dictionary with a resource type as a key, and a tile resource as a value, value is the amount this player currently has
+	/// A dictionary with a resource type as a key, the value is the amount this player currently has
 	/// </summary>
 	private Dictionary<Data.ResourceType, float> resourceInventory;
 
@@ -15,6 +15,11 @@ public class Player : MonoBehaviour {
 	private List<Tile> ownedTiles;
 
 	/// <summary>
+	/// The amount of money this player has
+	/// </summary>
+	private float funds;
+
+	/// <summary>
 	/// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
 	/// </summary>
 	protected virtual void Start() {
@@ -22,6 +27,7 @@ public class Player : MonoBehaviour {
 		resourceInventory.Add (Data.ResourceType.ENERGY, 0);
 		resourceInventory.Add (Data.ResourceType.ORE, 0);
 		ownedTiles = new List<Tile> ();
+		funds = 100;
 	}
 
 	/// <summary>
@@ -33,11 +39,10 @@ public class Player : MonoBehaviour {
 	/// <summary>
 	/// Iterates through the list of tiles the player owns and gathers the resources it has generated
 	/// </summary>
-	// TODO: This method is incorrect and doesn't function as the TileResource is intended
 	protected virtual void Production() {
 		foreach (Tile t in ownedTiles) {
-			resourceInventory [Data.ResourceType.ENERGY] += t.getResourceAmount (Data.ResourceType.ENERGY);
-			resourceInventory [Data.ResourceType.ORE] += t.getResourceAmount (Data.ResourceType.ORE);
+			resourceInventory [Data.ResourceType.ENERGY] += t.doResourceProduction (Data.ResourceType.ENERGY);
+			resourceInventory [Data.ResourceType.ORE] += t.doResourceProduction (Data.ResourceType.ORE);
 		}
 	}
 
