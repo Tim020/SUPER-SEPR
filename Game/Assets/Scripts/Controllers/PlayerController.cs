@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Keeps track of the players in the game
+/// </summary>
 public class PlayerController : MonoBehaviour {
 
 	/// <summary>

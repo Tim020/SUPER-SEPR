@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// The tile class, keeps track of resources on this tile as well as handling mouse events
+/// </summary>
 public class Tile : MonoBehaviour {
 
 	/// <summary>

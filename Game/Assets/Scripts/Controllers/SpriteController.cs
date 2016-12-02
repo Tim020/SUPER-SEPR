@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Reference class used to store sprites to use in the editor and from within code
+/// </summary>
 public class SpriteController : MonoBehaviour {
 
 	/// <summary>
@@ -19,10 +22,10 @@ public class SpriteController : MonoBehaviour {
 	/// </summary>
 	public Sprite stoneSprite;
 
-    /// <summary>
-    /// Start this instance and sets the static reference
-    /// </summary>
-    void Start() {
-        Sprites = this;
-    }
+	/// <summary>
+	/// Start this instance and sets the static reference
+	/// </summary>
+	void Start() {
+		Sprites = this;
+	}
 }

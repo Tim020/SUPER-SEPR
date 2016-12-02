@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System;
 
+/// <summary>
+/// Class to handle the map. Keeps track of the tiles and does the world generation
+/// </summary>
 public class MapController : MonoBehaviour {
 
 	/// <summary>
@@ -33,7 +36,7 @@ public class MapController : MonoBehaviour {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				Tile t = GenerateTile (new Vector3 (x, y, 0));
-                tiles[x, y] = t;
+				tiles [x, y] = t;
 			}
 		}
 	
@@ -46,7 +49,7 @@ public class MapController : MonoBehaviour {
 	/// <param name="position">The position the tile is being placed at</param>
 	private Tile GenerateTile(Vector3 position) {
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
-        Tile tileObject = go.GetComponent<Tile>();
+		Tile tileObject = go.GetComponent<Tile> ();
 
 		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
@@ -57,7 +60,7 @@ public class MapController : MonoBehaviour {
 			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
 		}
 
-        return tileObject;
+		return tileObject;
 	}
 
 	/// <summary>

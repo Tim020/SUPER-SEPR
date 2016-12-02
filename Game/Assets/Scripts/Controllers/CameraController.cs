@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class to handle the movement of the camera through various control methods
+/// </summary>
 public class CameraController : MonoBehaviour {
 
 	/// <summary>
@@ -13,35 +16,35 @@ public class CameraController : MonoBehaviour {
 	/// </summary>
 	private Vector3 dragOrigin;
 
-    /// <summary>
+	/// <summary>
 	/// The position that the camera is set to at the start of the game
 	/// </summary>
-    private Vector3 startPosition;
+	private Vector3 startPosition;
 
-    void Start() {
-        startPosition = Camera.main.transform.position;
-    }
+	void Start() {
+		startPosition = Camera.main.transform.position;
+	}
 
 	/// <summary>
 	/// Called every update cycle, checks whether the LMB is pressed and transforms the camera position accordingly.
-    /// Also checks if the MMB is clicked to return to the camera to the centre of the game world
+	/// Also checks if the MMB is clicked to return to the camera to the centre of the game world
 	/// </summary>
 	void Update() {
-        if (Input.GetMouseButtonDown(2)) {
-            Camera.main.transform.position = startPosition;
-            return;
-        }
+		if (Input.GetMouseButtonDown (2)) {
+			Camera.main.transform.position = startPosition;
+			return;
+		}
 
-        if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown (0)) {
 			dragOrigin = Input.mousePosition;
 			return;
 		}
 
 		if (!Input.GetMouseButton (0)) {
-            return;
-        }
+			return;
+		}
 
-        Vector3 pos = Camera.main.ScreenToViewportPoint (dragOrigin - Input.mousePosition);
+		Vector3 pos = Camera.main.ScreenToViewportPoint (dragOrigin - Input.mousePosition);
 		Vector3 move = new Vector3 (pos.x * dragSpeed, pos.y * dragSpeed, 0);
 
 		transform.Translate (move, Space.World);

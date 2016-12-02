@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The Roboticon class
+/// </summary>
 public class Roboticon {
 
 	/// <summary>

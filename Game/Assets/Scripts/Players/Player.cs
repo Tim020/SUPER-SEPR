@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// The player class, stores information such as the resources and money for the player as well as their owned tiles and chosen college
+/// </summary>
 public class Player : MonoBehaviour {
 
 	/// <summary>
@@ -18,7 +21,7 @@ public class Player : MonoBehaviour {
 	/// <summary>
 	/// The amount of money this player has
 	/// </summary>
-	private float funds;
+	public float funds;
 
 	/// <summary>
 	/// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
