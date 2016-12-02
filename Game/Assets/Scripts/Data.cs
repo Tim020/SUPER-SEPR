@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+/// <summary>
+/// Static class to hold reference data
+/// </summary>
 public static class Data {
 
 	/// <summary>

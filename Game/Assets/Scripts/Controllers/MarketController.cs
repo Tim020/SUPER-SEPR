@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Centralised market system, handles all trades between players and to the market itself
+/// </summary>
 public class MarketController : MonoBehaviour {
 
 	/// <summary>

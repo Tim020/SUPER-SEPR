@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Reference class used to store prefabs to use in the editor and from within code
+/// </summary>
 public class PrefabController : MonoBehaviour {
 	
 	/// <summary>

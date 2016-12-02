@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// The player class, stores information such as the resources and money for the player as well as their owned tiles and chosen college
+/// </summary>
 public class Player : MonoBehaviour {
 
 	/// <summary>
