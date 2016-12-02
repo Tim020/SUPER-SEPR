@@ -46,6 +46,8 @@ upload_archive(){
 }
 
 # Create and upload archives for Linux, OSX, Win32 and Win64 builds
+set -e
+
 package_build "linux"
 upload_archive "linux"
 
@@ -57,3 +59,5 @@ upload_archive "windows32"
 
 package_build "windows64"
 upload_archive "windows64"
+
+set +e
