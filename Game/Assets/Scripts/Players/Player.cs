@@ -2,11 +2,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Networking;
 
 /// <summary>
 /// The player class, stores information such as the resources and money for the player as well as their owned tiles and chosen college
 /// </summary>
-public class Player : MonoBehaviour {
+public class Player : NetworkBehaviour {
 
 	/// <summary>
 	/// A dictionary with a resource type as a key, the value is the amount this player currently has
@@ -23,10 +24,10 @@ public class Player : MonoBehaviour {
 	/// </summary>
 	public float funds;
 
-	/// <summary>
-	/// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
-	/// </summary>
-	protected virtual void Start() {
+    /// <summary>
+    /// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
+    /// </summary>
+    protected virtual void OnStartLocalClient() {
 		resourceInventory = new Dictionary<Data.ResourceType, int> ();
 		resourceInventory.Add (Data.ResourceType.ENERGY, 0);
 		resourceInventory.Add (Data.ResourceType.ORE, 0);
