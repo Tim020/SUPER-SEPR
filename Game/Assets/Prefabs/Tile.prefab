@@ -22,6 +22,8 @@ GameObject:
   - 212: {fileID: 212000010792884442}
   - 61: {fileID: 61000011063596200}
   - 114: {fileID: 114000011839467552}
+  - 114: {fileID: 114000012737257066}
+  - 114: {fileID: 114000013536229646}
   m_Layer: 0
   m_Name: Tile
   m_TagString: Untagged
@@ -67,6 +69,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5fa30a6a3792544bad7a3a358c1a454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &114000012737257066
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011104786766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 243
+    i1: 238
+    i2: 96
+    i3: 115
+    i4: 15
+    i5: 247
+    i6: 4
+    i7: 71
+    i8: 170
+    i9: 248
+    i10: 205
+    i11: 233
+    i12: 50
+    i13: 45
+    i14: 110
+    i15: 213
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
+--- !u!114 &114000013536229646
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011104786766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1768714887, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TransformSyncMode: 1
+  m_SendInterval: 0.1
+  m_SyncRotationAxis: 7
+  m_RotationSyncCompression: 0
+  m_SyncSpin: 0
+  m_MovementTheshold: 0.001
+  m_SnapThreshold: 5
+  m_InterpolateRotation: 1
+  m_InterpolateMovement: 1
 --- !u!212 &212000010792884442
 SpriteRenderer:
   m_ObjectHideFlags: 1

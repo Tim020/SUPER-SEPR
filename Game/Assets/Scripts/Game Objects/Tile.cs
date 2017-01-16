@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Networking;
 
 /// <summary>
 /// The tile class, keeps track of resources on this tile as well as handling mouse events
 /// </summary>
-public class Tile : MonoBehaviour {
+public class Tile : NetworkBehaviour {
 
 	/// <summary>
 	/// An action that gets called when a tile is clicked, handled in the MapController object
@@ -22,6 +23,19 @@ public class Tile : MonoBehaviour {
 	/// A reference to the player that owns this tile, null if no owner
 	/// </summary>
 	private Player owner;
+
+    [SyncVar]
+    private Sprite sprite;
+
+    public Sprite Sprite {
+        get {
+            return sprite;
+        }
+        set {
+            sprite = value;
+            GetComponent<SpriteRenderer>().sprite = sprite;
+        }
+    }
 
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference

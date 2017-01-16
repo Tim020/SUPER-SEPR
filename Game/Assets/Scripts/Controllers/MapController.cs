@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Class to handle the map. Keeps track of the tiles and does the world generation
 /// </summary>
-public class MapController : MonoBehaviour {
+public class MapController : NetworkBehaviour {
 
 	/// <summary>
 	/// The width of the map, in number of tiles
@@ -35,8 +36,7 @@ public class MapController : MonoBehaviour {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				Tile t = GenerateTile (new Vector3 (x, y, 0));
-				tiles [x, y] = t;
+				CmdGenerateTile (new Vector3 (x, y, 0));
 			}
 		}
 	
@@ -44,10 +44,11 @@ public class MapController : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Called when a tile needs to be created
+	/// Called when a tile needs to be created. Executed on the server.
 	/// </summary>
 	/// <param name="position">The position the tile is being placed at</param>
-	private Tile GenerateTile(Vector3 position) {
+    [Command]
+	private void CmdGenerateTile(Vector3 position) {
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
 		Tile tileObject = go.GetComponent<Tile> ();
 
@@ -57,11 +58,13 @@ public class MapController : MonoBehaviour {
 		tileObject.InitialiseTile (tileClicked);
 
 		if (UnityEngine.Random.Range (0, 2) == 0f) {
-			go.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
+            tileObject.Sprite = SpriteController.Sprites.stoneSprite;
 		}
 
-		return tileObject;
-	}
+        NetworkServer.Spawn(go);
+
+        tiles[(int) go.transform.position.x, (int) go.transform.position.y] = tileObject;
+    }
 
 	/// <summary>
 	/// Called when a tile is clicked
