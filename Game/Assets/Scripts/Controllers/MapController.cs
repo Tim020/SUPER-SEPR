@@ -30,13 +30,21 @@ public class MapController : NetworkBehaviour {
 	/// <summary>
 	///  Called when the game starts, used to generate the tiles and centre the camera
 	/// </summary>
-	void Start() {
+	public override void OnStartServer() {
+
+		// Just to make sure
+		if (!isServer)
+			return;
+
+		Debug.Log ("MapController - Server Started");
+		
 		tileClicked = TileClickedHandler;
 		tiles = new Tile[width, height];
 
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				CmdGenerateTile (new Vector3 (x, y, 0));
+				Tile t = GenerateTile (new Vector3 (x, y, 0));
+				tiles[x, y] = t;
 			}
 		}
 	
@@ -47,23 +55,22 @@ public class MapController : NetworkBehaviour {
 	/// Called when a tile needs to be created. Executed on the server.
 	/// </summary>
 	/// <param name="position">The position the tile is being placed at</param>
-    [Command]
-	private void CmdGenerateTile(Vector3 position) {
+	private Tile GenerateTile(Vector3 position) {
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
 		Tile tileObject = go.GetComponent<Tile> ();
 
 		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
 
-		tileObject.InitialiseTile (tileClicked);
-
 		if (UnityEngine.Random.Range (0, 2) == 0f) {
-            tileObject.Sprite = SpriteController.Sprites.stoneSprite;
+			tileObject.GetComponent<SpriteRenderer>().sprite = SpriteController.Sprites.stoneSprite;
 		}
 
+		tileObject.InitialiseTile (tileClicked);
+	
         NetworkServer.Spawn(go);
 
-        tiles[(int) go.transform.position.x, (int) go.transform.position.y] = tileObject;
+		return tileObject;
     }
 
 	/// <summary>

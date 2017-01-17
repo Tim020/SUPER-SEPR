@@ -5,4 +5,9 @@ using System.Collections;
 /// Human player.
 /// </summary>
 public class HumanPlayer : Player {
+
+	public override void OnStartClient ()
+	{
+		base.OnStartClient();
+	}
 }

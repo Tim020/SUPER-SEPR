@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
 /// <summary>
 /// Reference class used to store sprites to use in the editor and from within code
 /// </summary>
-public class SpriteController : MonoBehaviour {
+public class SpriteController : NetworkBehaviour {
 
 	/// <summary>
 	/// Gets the instance of the SpriteController
@@ -25,7 +26,8 @@ public class SpriteController : MonoBehaviour {
 	/// <summary>
 	/// Start this instance and sets the static reference
 	/// </summary>
-	void Start() {
+	public override void OnStartServer() {
+		Debug.Log ("SpriteController - Server Started");
 		Sprites = this;
 	}
 }

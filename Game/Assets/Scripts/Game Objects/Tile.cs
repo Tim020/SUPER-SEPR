@@ -24,19 +24,6 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	private Player owner;
 
-    [SyncVar]
-    private Sprite sprite;
-
-    public Sprite Sprite {
-        get {
-            return sprite;
-        }
-        set {
-            sprite = value;
-            GetComponent<SpriteRenderer>().sprite = sprite;
-        }
-    }
-
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
 	/// </summary>
@@ -55,6 +42,22 @@ public class Tile : NetworkBehaviour {
 	private void OnMouseDown() {
 		tileClicked (this);
 	}
+
+	public override void OnStartClient ()
+	{
+		Debug.Log (hasAuthority);
+	}
+
+	[Command]
+	public void CmdSetObject() {
+		RpcSetObject (gameObject);
+	}
+
+	[ClientRpc]
+	public void RpcSetObject(GameObject go) {
+		GetComponent<SpriteRenderer>().sprite = go.GetComponent<SpriteRenderer>().sprite;
+	}
+
 
 	/// <summary>
 	/// Gets the resource amount for a given resource type.

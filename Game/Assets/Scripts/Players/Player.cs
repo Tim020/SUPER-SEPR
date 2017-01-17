@@ -27,7 +27,7 @@ public class Player : NetworkBehaviour {
     /// <summary>
     /// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
     /// </summary>
-    protected virtual void OnStartLocalClient() {
+    public virtual void OnStartClient() {
 		resourceInventory = new Dictionary<Data.ResourceType, int> ();
 		resourceInventory.Add (Data.ResourceType.ENERGY, 0);
 		resourceInventory.Add (Data.ResourceType.ORE, 0);
