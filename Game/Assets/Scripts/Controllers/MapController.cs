@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 /// <summary>
 /// Class to handle the map. Keeps track of the tiles and does the world generation
 /// </summary>
-public class MapController : NetworkBehaviour {
+public class MapController : NetworkBehaviour
+{
 
 	/// <summary>
 	/// The width of the map, in number of tiles
@@ -30,7 +31,8 @@ public class MapController : NetworkBehaviour {
 	/// <summary>
 	///  Called when the game starts, used to generate the tiles and centre the camera
 	/// </summary>
-	public override void OnStartServer() {
+	public override void OnStartServer ()
+	{
 
 		// Just to make sure
 		if (!isServer)
@@ -44,7 +46,7 @@ public class MapController : NetworkBehaviour {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				Tile t = GenerateTile (new Vector3 (x, y, 0));
-				tiles[x, y] = t;
+				tiles [x, y] = t;
 			}
 		}
 	
@@ -55,7 +57,8 @@ public class MapController : NetworkBehaviour {
 	/// Called when a tile needs to be created. Executed on the server.
 	/// </summary>
 	/// <param name="position">The position the tile is being placed at</param>
-	private Tile GenerateTile(Vector3 position) {
+	private Tile GenerateTile (Vector3 position)
+	{
 		GameObject go = Instantiate (PrefabController.Prefabs.tile, position, Quaternion.identity) as GameObject;
 		Tile tileObject = go.GetComponent<Tile> ();
 
@@ -63,21 +66,23 @@ public class MapController : NetworkBehaviour {
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
 
 		if (UnityEngine.Random.Range (0, 2) == 0f) {
-			tileObject.GetComponent<SpriteRenderer>().sprite = SpriteController.Sprites.stoneSprite;
+			tileObject.tileIndex = 1;
+			//tileObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
 		}
 
 		tileObject.InitialiseTile (tileClicked);
 	
-        NetworkServer.Spawn(go);
+		NetworkServer.Spawn (go);
 
 		return tileObject;
-    }
+	}
 
 	/// <summary>
 	/// Called when a tile is clicked
 	/// </summary>
 	/// <param name="tile">The tile that was clicked</param>
-	private void TileClickedHandler(Tile tile) {
+	private void TileClickedHandler (Tile tile)
+	{
 		Debug.Log (tile);
 	}
 }

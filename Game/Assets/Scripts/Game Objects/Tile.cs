@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 /// <summary>
 /// The tile class, keeps track of resources on this tile as well as handling mouse events
 /// </summary>
-public class Tile : NetworkBehaviour {
+public class Tile : NetworkBehaviour
+{
 
 	/// <summary>
 	/// An action that gets called when a tile is clicked, handled in the MapController object
@@ -24,38 +25,42 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	private Player owner;
 
+	[SyncVar]
+	public int tileIndex = 0;
+
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
 	/// </summary>
 	/// <param name="tileClicked">The action that gets called when the tile is clicked</param>
-	public void InitialiseTile(Action<Tile> tileClicked) {
+	public void InitialiseTile (Action<Tile> tileClicked)
+	{
 		this.tileClicked = tileClicked;
 
 		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource> ();
 		resourcesGenerated.Add (Data.ResourceType.ENERGY, new TileResource (50));
 		resourcesGenerated.Add (Data.ResourceType.ORE, new TileResource (50));
+
+		if (isClient) {
+			Debug.Log (tileIndex);
+		}
 	}
 
 	/// <summary>
 	/// Raises the mouse down event. Called when the user left clicks on the tile
 	/// </summary>
-	private void OnMouseDown() {
+	private void OnMouseDown ()
+	{
 		tileClicked (this);
 	}
 
 	public override void OnStartClient ()
 	{
-		Debug.Log (hasAuthority);
 	}
 
-	[Command]
-	public void CmdSetObject() {
-		RpcSetObject (gameObject);
-	}
 
-	[ClientRpc]
-	public void RpcSetObject(GameObject go) {
-		GetComponent<SpriteRenderer>().sprite = go.GetComponent<SpriteRenderer>().sprite;
+	public override void OnDeserialize (NetworkReader reader, bool initialState)
+	{
+		//Debug.Log (tileIndex);
 	}
 
 
@@ -64,7 +69,8 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">Type of the resource.</param>
-	public int getResourceAmount(Data.ResourceType type) {
+	public int getResourceAmount (Data.ResourceType type)
+	{
 		if (resourcesGenerated.ContainsKey (type)) {
 			TileResource r = resourcesGenerated [type];
 			if (r != null) {
@@ -81,7 +87,8 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The amount of resource produced and hence gained by the player.</returns>
 	/// <param name="type">The type of resoure to produce for</param>
-	public int doResourceProduction(Data.ResourceType type) {
+	public int doResourceProduction (Data.ResourceType type)
+	{
 		if (resourcesGenerated.ContainsKey (type)) {
 			TileResource r = resourcesGenerated [type];
 			int prodAmt = UnityEngine.Random.Range (0, Math.Min (15, r.current));
@@ -95,7 +102,8 @@ public class Tile : NetworkBehaviour {
 	/// Gets the owner of this tile, may be null if no one has selected it yet
 	/// </summary>
 	/// <returns>The owner of the tile</returns>
-	public Player getOwner() {
+	public Player getOwner ()
+	{
 		return owner;
 	}
 
@@ -103,14 +111,16 @@ public class Tile : NetworkBehaviour {
 	/// Sets the owner for the tile
 	/// </summary>
 	/// <param name="p">Player who bought this tile</param>
-	public void setOwner(Player p) {
+	public void setOwner (Player p)
+	{
 		owner = p;
 	}
 
 	/// <summary>
 	/// Tile resource data class
 	/// </summary>
-	public class TileResource {
+	public class TileResource
+	{
 
 		/// <summary>
 		/// The maximum amount of resource this tile has
@@ -126,7 +136,8 @@ public class Tile : NetworkBehaviour {
 		/// Initializes a new instance of the <see cref="Tile+TileResource"/> class.
 		/// </summary>
 		/// <param name="max">The maximum amount of resource this tile holds</param>
-		public TileResource (int max) {
+		public TileResource (int max)
+		{
 			this.max = max;
 			current = max;
 		}
