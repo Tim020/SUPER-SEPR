@@ -1,9 +1,9 @@
 # This is where Unity keeps their files
 BASE_URL=http://netstorage.unity3d.com/unity/
 # This is the hash for the target build, can be found on the unity download website by inspecting the links
-HASH=b7e030c65c9b
+HASH=38b4efef76f0
 # This is the version of unity we wish to target
-VERSION=5.4.2f2
+VERSION=5.5.0f3
 
 # Function to download from the unity servers
 download() {
