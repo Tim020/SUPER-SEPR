@@ -30,4 +30,9 @@ public class SpriteController : NetworkBehaviour {
 		Debug.Log ("SpriteController - Server Started");
 		Sprites = this;
 	}
+
+	public void Awake() {
+		Debug.Log ("SpriteController - Client Started");
+		Sprites = this;
+	}
 }

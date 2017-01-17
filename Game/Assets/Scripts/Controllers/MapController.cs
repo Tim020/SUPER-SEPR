@@ -65,10 +65,14 @@ public class MapController : NetworkBehaviour
 		go.transform.parent = this.transform;
 		go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
 
-		if (UnityEngine.Random.Range (0, 2) == 0f) {
-			tileObject.tileIndex = 1;
-			//tileObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
-		}
+//		if (UnityEngine.Random.Range (0, 2) == 0f) {
+//			tileObject.tileIndex = 1;
+//			//tileObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
+//		} else {
+//			tileObject.tileIndex = 0;
+//		}
+
+		tileObject.tileIndex = 1;
 
 		tileObject.InitialiseTile (tileClicked);
 	

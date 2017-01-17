@@ -26,7 +26,7 @@ public class Tile : NetworkBehaviour
 	private Player owner;
 
 	[SyncVar]
-	public int tileIndex = 0;
+	public int tileIndex = -1;
 
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
@@ -40,9 +40,6 @@ public class Tile : NetworkBehaviour
 		resourcesGenerated.Add (Data.ResourceType.ENERGY, new TileResource (50));
 		resourcesGenerated.Add (Data.ResourceType.ORE, new TileResource (50));
 
-		if (isClient) {
-			Debug.Log (tileIndex);
-		}
 	}
 
 	/// <summary>
@@ -55,12 +52,19 @@ public class Tile : NetworkBehaviour
 
 	public override void OnStartClient ()
 	{
+		Debug.Log (tileIndex);
+		if (tileIndex == 0) {
+			Debug.Log (isClient);
+			gameObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
+		} else {
+			gameObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.grassSprite;
+		}
 	}
 
 
 	public override void OnDeserialize (NetworkReader reader, bool initialState)
 	{
-		//Debug.Log (tileIndex);
+		
 	}
 
 
