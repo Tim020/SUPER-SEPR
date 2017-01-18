@@ -19,7 +19,7 @@ public class Roboticon {
 	/// <summary>
 	/// The player who owns this Roboticon
 	/// </summary>
-	private Player player;
+	private BasePlayer player;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Roboticon"/> class.
@@ -48,7 +48,7 @@ public class Roboticon {
 	/// Sets the owner of this Roboticon
 	/// </summary>
 	/// <param name="player">The player who bought this Robiticon</param>
-	public void setPlayer(Player player) {
+	public void setPlayer(BasePlayer player) {
 		this.player = player;
 	}
 }

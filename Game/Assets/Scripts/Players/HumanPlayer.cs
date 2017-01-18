@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Human player.
 /// </summary>
-public class HumanPlayer : Player {
+public class HumanPlayer : BasePlayer {
 
 	/// <summary>
 	/// The tile overlay UI prefab
