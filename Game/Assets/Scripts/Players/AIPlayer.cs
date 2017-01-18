@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AIPlayer : Player {
+/// <summary>
+/// AI player.
+/// </summary>
+public class AIPlayer : BasePlayer {
 }

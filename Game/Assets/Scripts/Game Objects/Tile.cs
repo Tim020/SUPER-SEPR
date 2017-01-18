@@ -1,13 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Networking;
 
-public class Tile : MonoBehaviour {
-
-	/// <summary>
-	/// An action that gets called when a tile is clicked, handled in the MapController object
-	/// </summary>
-	private Action<Tile> tileClicked;
+/// <summary>
+/// The tile class, keeps track of resources on this tile as well as handling mouse events
+/// </summary>
+public class Tile : NetworkBehaviour {
 
 	/// <summary>
 	/// A dictionary with a resource type as a key, and a tile resource as a value
@@ -18,25 +17,22 @@ public class Tile : MonoBehaviour {
 	/// <summary>
 	/// A reference to the player that owns this tile, null if no owner
 	/// </summary>
-	private Player owner;
+	private BasePlayer owner;
+
+	/// <summary>
+	/// Type of the tile
+	/// </summary>
+	public Data.TileType type;
 
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
 	/// </summary>
 	/// <param name="tileClicked">The action that gets called when the tile is clicked</param>
-	public void InitialiseTile(Action<Tile> tileClicked) {
-		this.tileClicked = tileClicked;
+	public override void OnStartClient() {
+		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource>();
+		resourcesGenerated.Add(Data.ResourceType.ENERGY, new TileResource(50));
+		resourcesGenerated.Add(Data.ResourceType.ORE, new TileResource(50));
 
-		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource> ();
-		resourcesGenerated.Add (Data.ResourceType.ENERGY, new TileResource (50));
-		resourcesGenerated.Add (Data.ResourceType.ORE, new TileResource (50));
-	}
-
-	/// <summary>
-	/// Raises the mouse down event. Called when the user left clicks on the tile
-	/// </summary>
-	private void OnMouseDown() {
-		tileClicked (this);
 	}
 
 	/// <summary>
@@ -44,9 +40,9 @@ public class Tile : MonoBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">Type of the resource.</param>
-	public float getResourceAmount(Data.ResourceType type) {
-		if (resourcesGenerated.ContainsKey (type)) {
-			TileResource r = resourcesGenerated [type];
+	public int getResourceAmount(Data.ResourceType type) {
+		if (resourcesGenerated.ContainsKey(type)) {
+			TileResource r = resourcesGenerated[type];
 			if (r != null) {
 				return r.current;
 			}
@@ -55,10 +51,27 @@ public class Tile : MonoBehaviour {
 	}
 
 	/// <summary>
+	/// Does the production on this tile for a given resource.
+	/// This will internally decrease the amount of resource left on this tile whilst returning the amount generated.
+	/// TODO: This has an arbitrary random number used to determine how much to produce, this may need changing through play tests.
+	/// </summary>
+	/// <returns>The amount of resource produced and hence gained by the player.</returns>
+	/// <param name="type">The type of resoure to produce for</param>
+	public int doResourceProduction(Data.ResourceType type) {
+		if (resourcesGenerated.ContainsKey(type)) {
+			TileResource r = resourcesGenerated[type];
+			int prodAmt = UnityEngine.Random.Range(0, Math.Min(15, r.current));
+			r.current -= prodAmt;
+			return prodAmt;
+		}
+		return 0;
+	}
+
+	/// <summary>
 	/// Gets the owner of this tile, may be null if no one has selected it yet
 	/// </summary>
 	/// <returns>The owner of the tile</returns>
-	public Player getOwner() {
+	public BasePlayer getOwner() {
 		return owner;
 	}
 
@@ -66,8 +79,29 @@ public class Tile : MonoBehaviour {
 	/// Sets the owner for the tile
 	/// </summary>
 	/// <param name="p">Player who bought this tile</param>
-	public void setOwner(Player p) {
+	public void setOwner(BasePlayer p) {
 		owner = p;
+	}
+
+	/// <summary>
+	/// Rpc to sync data about the tile from the server to the client.
+	/// Sets the correct type of the tile and the sprite renderer for it
+	/// </summary>
+	/// <param name="ord">The ordinal (integer position) of the element in the enum</param>
+	[ClientRpc]
+	public void RpcSyncTile(int ord) {
+		//Debug.Log ("Setting sprite");
+		Data.TileType type = (Data.TileType)ord;
+		SpriteRenderer r = GetComponent<SpriteRenderer>();
+		this.type = type;
+		switch (type) {
+		case Data.TileType.GRASS:
+			r.sprite = SpriteController.Sprites.grassSprite;
+			break;
+		case Data.TileType.STONE:
+			r.sprite = SpriteController.Sprites.stoneSprite;
+			break;
+		}
 	}
 
 	/// <summary>
@@ -78,18 +112,18 @@ public class Tile : MonoBehaviour {
 		/// <summary>
 		/// The maximum amount of resource this tile has
 		/// </summary>
-		public float max;
+		public int max;
 
 		/// <summary>
 		/// The current amount of resource this tile has
 		/// </summary>
-		public float current;
+		public int current;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tile+TileResource"/> class.
 		/// </summary>
 		/// <param name="max">The maximum amount of resource this tile holds</param>
-		public TileResource (float max) {
+		public TileResource(int max) {
 			this.max = max;
 			current = max;
 		}

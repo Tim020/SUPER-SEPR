@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - MapController
+  - MapOverlay
+  - CollegeSelection
+  - UserInterface
   layers:
   - Default
   - TransparentFX

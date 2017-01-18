@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Class to handle the movement of the camera through various control methods
+/// </summary>
 public class CameraController : MonoBehaviour {
 
 	/// <summary>
@@ -13,37 +16,64 @@ public class CameraController : MonoBehaviour {
 	/// </summary>
 	private Vector3 dragOrigin;
 
-    /// <summary>
+	/// <summary>
 	/// The position that the camera is set to at the start of the game
 	/// </summary>
-    private Vector3 startPosition;
-
-    void Start() {
-        startPosition = Camera.main.transform.position;
-    }
+	private Vector3 startPosition;
 
 	/// <summary>
-	/// Called every update cycle, checks whether the LMB is pressed and transforms the camera position accordingly.
-    /// Also checks if the MMB is clicked to return to the camera to the centre of the game world
+	/// The furthest in you are allowed to zoom
+	/// </summary>
+	private float maxZoom;
+
+	/// <summary>
+	/// The furthest out you are allowed to zoom
+	/// </summary>
+	private float minZoom;
+
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
+	void Start() {
+		startPosition = Camera.main.transform.position;
+		minZoom = Camera.main.orthographicSize;
+		maxZoom = 4;
+	}
+
+	/// <summary>
+	/// Called every update cycle, checks whether the RMB is pressed and transforms the camera position accordingly.
+	/// Also checks if the MMB is clicked to return to the camera to the centre of the game world
+	/// Also checks for scroll wheel and will zoom in and out, this also scales the drag speed so it's the same rate at each level of zoom
 	/// </summary>
 	void Update() {
-        if (Input.GetMouseButtonDown(2)) {
-            Camera.main.transform.position = startPosition;
-            return;
-        }
+		if (Input.GetMouseButtonDown(2)) {
+			Camera.main.transform.position = startPosition;
+			return;
+		}
 
-        if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown(1)) {
 			dragOrigin = Input.mousePosition;
 			return;
 		}
 
-		if (!Input.GetMouseButton (0)) {
-            return;
-        }
+		if (Input.GetAxis("Mouse ScrollWheel") != 0) {
+			float newZoom = Camera.main.orthographicSize + Input.GetAxis("Mouse ScrollWheel") * -2f;
+			if (newZoom > minZoom) {
+				newZoom = minZoom;
+			}
+			if (newZoom < maxZoom) {
+				newZoom = maxZoom;
+			}
+			Camera.main.orthographicSize = newZoom;
+		}
 
-        Vector3 pos = Camera.main.ScreenToViewportPoint (dragOrigin - Input.mousePosition);
-		Vector3 move = new Vector3 (pos.x * dragSpeed, pos.y * dragSpeed, 0);
+		if (!Input.GetMouseButton(1)) {
+			return;
+		}
 
-		transform.Translate (move, Space.World);
+		Vector3 pos = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
+		Vector3 move = new Vector3(pos.x * dragSpeed * Camera.main.orthographicSize / minZoom, pos.y * dragSpeed * Camera.main.orthographicSize / minZoom, 0);
+
+		transform.Translate(move, Space.World);
 	}
 }

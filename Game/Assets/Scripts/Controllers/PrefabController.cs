@@ -1,7 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.Networking;
 
-public class PrefabController : MonoBehaviour {
+/// <summary>
+/// Reference class used to store prefabs to use in the editor and from within code
+/// </summary>
+public class PrefabController : NetworkBehaviour {
 	
 	/// <summary>
 	/// A static reference to this class so we can access the prefab GameObjects
@@ -19,7 +23,8 @@ public class PrefabController : MonoBehaviour {
 	/// <summary>
 	/// Start this instance, sets the static reference to this class
 	/// </summary>
-	void Start() {
+	public override void OnStartServer() {
+		Debug.Log("PrefabController - Server Started");
 		Prefabs = this;
 	}
 }
