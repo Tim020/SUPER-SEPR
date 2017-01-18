@@ -35,6 +35,9 @@ public class MapController : NetworkBehaviour {
 	/// </summary>
 	int lastPlayers = 0;
 
+	/// <summary>
+	/// Handy boolean integer
+	/// </summary>
 	[SyncVar]
 	public int collegeDecided = 0;
 
