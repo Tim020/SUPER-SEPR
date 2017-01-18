@@ -35,6 +35,9 @@ public class MapController : NetworkBehaviour {
 	/// </summary>
 	int lastPlayers = 0;
 
+	[SyncVar]
+	public int collegeDecided = 0;
+
 	/// <summary>
 	///  Called when the game starts, used to generate the tiles and centre the camera
 	/// </summary>

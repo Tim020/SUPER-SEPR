@@ -49,6 +49,7 @@ public class Player : NetworkBehaviour {
 
 	[Command]
 	public void CmdSetCollege(int collegeID) {
+		Debug.Log(college == null);
 		switch (collegeID) {
 		case 0:
 			college = Data.College.ALCUIN;
@@ -75,7 +76,9 @@ public class Player : NetworkBehaviour {
 			college = Data.College.VANBURGH;
 			break;
 		}
-		Debug.Log("Client:" + isClient + ", " + college.Name);
+		if (isServer) {
+			MapController.instance.collegeDecided = 1;
+		}
 	}
 
 	/// <summary>
@@ -130,6 +133,7 @@ public class Player : NetworkBehaviour {
 	}
 
 	/// <summary>
+	/// SERVER SIDE
 	/// Called when a player wishes to buy a tile
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
