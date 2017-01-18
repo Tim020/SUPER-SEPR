@@ -38,6 +38,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="class_network_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -47,11 +48,96 @@ $(function() {
 
 <p>Inherits NetworkManager.</p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a714f49a7b73757cadc4feb41f7b8918e"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network_controller.html#a714f49a7b73757cadc4feb41f7b8918e">OnServerAddPlayer</a> (NetworkConnection conn, short id)</td></tr>
+<tr class="memdesc:a714f49a7b73757cadc4feb41f7b8918e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raises the server add player event.  <a href="#a714f49a7b73757cadc4feb41f7b8918e">More...</a><br /></td></tr>
+<tr class="separator:a714f49a7b73757cadc4feb41f7b8918e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34e1186fb9fe5b2187b9cd6b8cb55553"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network_controller.html#a34e1186fb9fe5b2187b9cd6b8cb55553">OnServerRemovePlayer</a> (NetworkConnection conn, UnityEngine.Networking.PlayerController player)</td></tr>
+<tr class="memdesc:a34e1186fb9fe5b2187b9cd6b8cb55553"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raises the server remove player event.  <a href="#a34e1186fb9fe5b2187b9cd6b8cb55553">More...</a><br /></td></tr>
+<tr class="separator:a34e1186fb9fe5b2187b9cd6b8cb55553"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a1c08c69c84426c5e85376aabf1fbe871"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_network_controller.html">NetworkController</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_network_controller.html#a1c08c69c84426c5e85376aabf1fbe871">instance</a></td></tr>
+<tr class="memdesc:a1c08c69c84426c5e85376aabf1fbe871"><td class="mdescLeft">&#160;</td><td class="mdescRight">The instance.  <a href="#a1c08c69c84426c5e85376aabf1fbe871">More...</a><br /></td></tr>
 <tr class="separator:a1c08c69c84426c5e85376aabf1fbe871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a714f49a7b73757cadc4feb41f7b8918e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a714f49a7b73757cadc4feb41f7b8918e">&#9670;&nbsp;</a></span>OnServerAddPlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override void NetworkController.OnServerAddPlayer </td>
+          <td>(</td>
+          <td class="paramtype">NetworkConnection&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">short&#160;</td>
+          <td class="paramname"><em>id</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Raises the server add player event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>Conn.</td></tr>
+    <tr><td class="paramname">id</td><td>Identifier.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a34e1186fb9fe5b2187b9cd6b8cb55553"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34e1186fb9fe5b2187b9cd6b8cb55553">&#9670;&nbsp;</a></span>OnServerRemovePlayer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override void NetworkController.OnServerRemovePlayer </td>
+          <td>(</td>
+          <td class="paramtype">NetworkConnection&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">UnityEngine.Networking.PlayerController&#160;</td>
+          <td class="paramname"><em>player</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Raises the server remove player event. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>Conn.</td></tr>
+    <tr><td class="paramname">player</td><td>Player.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a1c08c69c84426c5e85376aabf1fbe871"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a1c08c69c84426c5e85376aabf1fbe871">&#9670;&nbsp;</a></span>instance</h2>
@@ -73,6 +159,8 @@ Static Public Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>The instance. </p>
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
@@ -81,7 +169,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jan 18 2017 22:14:43 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 18 2017 23:48:39 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
