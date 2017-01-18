@@ -54,7 +54,6 @@ public class MapController : NetworkBehaviour {
 
 				go.transform.parent = this.transform;
 				go.name = "Tile_" + go.transform.position.x + "_" + go.transform.position.y;
-				tileObject.InitialiseTile(tileClicked);
 
 				if (UnityEngine.Random.Range(0, 2) == 0) {
 					tileObject.type = Data.TileType.GRASS;

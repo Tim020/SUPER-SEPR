@@ -9,11 +9,6 @@ using UnityEngine.Networking;
 public class Tile : NetworkBehaviour {
 
 	/// <summary>
-	/// An action that gets called when a tile is clicked, handled in the MapController object
-	/// </summary>
-	private Action<Tile> tileClicked;
-
-	/// <summary>
 	/// A dictionary with a resource type as a key, and a tile resource as a value
 	/// The value holds the maximum value for the resource type and the currrent amount - this will reduce over time as it gets generated
 	/// </summary>
@@ -33,20 +28,11 @@ public class Tile : NetworkBehaviour {
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
 	/// </summary>
 	/// <param name="tileClicked">The action that gets called when the tile is clicked</param>
-	public void InitialiseTile(Action<Tile> tileClicked) {
-		this.tileClicked = tileClicked;
-
+	public override void OnStartClient() {
 		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource>();
 		resourcesGenerated.Add(Data.ResourceType.ENERGY, new TileResource(50));
 		resourcesGenerated.Add(Data.ResourceType.ORE, new TileResource(50));
 
-	}
-
-	/// <summary>
-	/// Raises the mouse down event. Called when the user left clicks on the tile
-	/// </summary>
-	private void OnMouseDown() {
-		tileClicked(this);
 	}
 
 	/// <summary>
