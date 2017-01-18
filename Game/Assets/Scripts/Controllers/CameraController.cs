@@ -30,23 +30,23 @@ public class CameraController : MonoBehaviour {
 	/// Also checks if the MMB is clicked to return to the camera to the centre of the game world
 	/// </summary>
 	void Update() {
-		if (Input.GetMouseButtonDown (2)) {
+		if (Input.GetMouseButtonDown(2)) {
 			Camera.main.transform.position = startPosition;
 			return;
 		}
 
-		if (Input.GetMouseButtonDown (0)) {
+		if (Input.GetMouseButtonDown(0)) {
 			dragOrigin = Input.mousePosition;
 			return;
 		}
 
-		if (!Input.GetMouseButton (0)) {
+		if (!Input.GetMouseButton(0)) {
 			return;
 		}
 
-		Vector3 pos = Camera.main.ScreenToViewportPoint (dragOrigin - Input.mousePosition);
-		Vector3 move = new Vector3 (pos.x * dragSpeed, pos.y * dragSpeed, 0);
+		Vector3 pos = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
+		Vector3 move = new Vector3(pos.x * dragSpeed, pos.y * dragSpeed, 0);
 
-		transform.Translate (move, Space.World);
+		transform.Translate(move, Space.World);
 	}
 }

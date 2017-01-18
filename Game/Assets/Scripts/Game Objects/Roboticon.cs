@@ -24,7 +24,7 @@ public class Roboticon {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Roboticon"/> class.
 	/// </summary>
-	public Roboticon () {
+	public Roboticon() {
 
 	}
 

@@ -27,12 +27,12 @@ public class SpriteController : NetworkBehaviour {
 	/// Start this instance and sets the static reference
 	/// </summary>
 	public override void OnStartServer() {
-		Debug.Log ("SpriteController - Server Started");
+		Debug.Log("SpriteController - Server Started");
 		Sprites = this;
 	}
 
 	public void Awake() {
-		Debug.Log ("SpriteController - Client Started");
+		Debug.Log("SpriteController - Client Started");
 		Sprites = this;
 	}
 }

@@ -8,11 +8,11 @@ using UnityEngine.Networking;
 public class HumanPlayer : Player {
 
 	public override void OnStartLocalPlayer() {
-		CmdSetCameraTransform ();
+		CmdSetCameraTransform();
 	}
 
 	[Command]
 	private void CmdSetCameraTransform() {
-		Camera.main.transform.position = new Vector3 (MapController.instance.width / 2, MapController.instance.height / 2, -30);
+		Camera.main.transform.position = new Vector3(MapController.instance.width / 2, MapController.instance.height / 2, -30);
 	}
 }

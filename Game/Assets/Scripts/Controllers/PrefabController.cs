@@ -24,7 +24,7 @@ public class PrefabController : NetworkBehaviour {
 	/// Start this instance, sets the static reference to this class
 	/// </summary>
 	public override void OnStartServer() {
-		Debug.Log ("PrefabController - Server Started");
+		Debug.Log("PrefabController - Server Started");
 		Prefabs = this;
 	}
 }

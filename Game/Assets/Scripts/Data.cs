@@ -5,14 +5,12 @@ using System.Collections.Generic;
 /// <summary>
 /// Static class to hold reference data
 /// </summary>
-public static class Data
-{
+public static class Data {
 
 	/// <summary>
 	/// The different types of tiles
 	/// </summary>
-	public enum TileType
-	{
+	public enum TileType {
 		STONE,
 		GRASS
 	}
@@ -20,8 +18,7 @@ public static class Data
 	/// <summary>
 	/// Types of resources available in the game
 	/// </summary>
-	public enum ResourceType
-	{
+	public enum ResourceType {
 		ENERGY,
 		FOOD,
 		ORE
@@ -30,17 +27,16 @@ public static class Data
 	/// <summary>
 	/// The colleges of York university
 	/// </summary>
-	public class College
-	{
+	public class College {
 
-		public static readonly College ALCUIN = new College ("Alcuin", new Color (136, 0, 3));
-		public static readonly College CONSTANTINE = new College ("Constantine", new Color (199, 0, 127));
-		public static readonly College DERWENT = new College ("Derwent", new Color (10, 35, 67));
-		public static readonly College GOODRICKE = new College ("Goodricke", new Color (0, 128, 0));
-		public static readonly College HALIFAX = new College ("Halifax", new Color (130, 210, 247));
-		public static readonly College JAMES = new College ("James", Color.black);
-		public static readonly College LANGWITH = new College ("Langwith", new Color (253, 200, 0));
-		public static readonly College VANBURGH = new College ("Vanburgh", new Color (101, 24, 102));
+		public static readonly College ALCUIN = new College("Alcuin", new Color(136, 0, 3));
+		public static readonly College CONSTANTINE = new College("Constantine", new Color(199, 0, 127));
+		public static readonly College DERWENT = new College("Derwent", new Color(10, 35, 67));
+		public static readonly College GOODRICKE = new College("Goodricke", new Color(0, 128, 0));
+		public static readonly College HALIFAX = new College("Halifax", new Color(130, 210, 247));
+		public static readonly College JAMES = new College("James", Color.black);
+		public static readonly College LANGWITH = new College("Langwith", new Color(253, 200, 0));
+		public static readonly College VANBURGH = new College("Vanburgh", new Color(101, 24, 102));
 
 		/// <summary>
 		/// The name of the college
@@ -56,8 +52,7 @@ public static class Data
 		/// </summary>
 		/// <param name="name">Name of the college</param>
 		/// <param name="color">Color of the college</param>
-		public College (String name, Color color)
-		{
+		public College(String name, Color color) {
 			this.name = name;
 			this.color = color;
 		}
