@@ -24,10 +24,8 @@ public class MapController : NetworkBehaviour {
 	private Tile[,] tiles;
 
 	/// <summary>
-	/// An action that gets called when a tile is clicked
+	/// Instance of the map controller to allow static access
 	/// </summary>
-	private Action<Tile> tileClicked;
-
 	public static MapController instance;
 
 	/// <summary>
@@ -42,8 +40,7 @@ public class MapController : NetworkBehaviour {
 		}
 
 		Debug.Log("MapController - Server Started");
-		
-		tileClicked = TileClickedHandler;
+
 		tiles = new Tile[width, height];
 
 		for (int x = 0; x < width; x++) {
@@ -68,13 +65,15 @@ public class MapController : NetworkBehaviour {
 
 	int lastPlayers = 0;
 
+	/// <summary>
+	/// Update this instance.
+	/// Checks whether players have left or joined and will send updated map data to them
+	/// </summary>
 	void Update() {
 		if (lastPlayers != NetworkController.instance.numPlayers) {
 			lastPlayers = NetworkController.instance.numPlayers;
 			foreach (Tile t in tiles) {
-				Debug.Log(System.DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
 				test();
-				Debug.Log(System.DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond);
 				int ord = (int)t.type;
 				t.RpcSetSprite(ord);
 			}
@@ -84,13 +83,5 @@ public class MapController : NetworkBehaviour {
 	IEnumerator test() {
 		yield return new WaitForSeconds(0.010F);
 	}
-
-	/// <summary>
-	/// Called when a tile is clicked
-	/// </summary>
-	/// <param name="tile">The tile that was clicked</param>
-	private void TileClickedHandler(Tile tile) {
-		Debug.Log(tile);
-	}
-		
+			
 }
