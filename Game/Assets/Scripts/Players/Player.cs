@@ -24,14 +24,15 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	public float funds;
 
-    /// <summary>
-    /// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
-    /// </summary>
-    public virtual void OnStartClient() {
-		resourceInventory = new Dictionary<Data.ResourceType, int> ();
-		resourceInventory.Add (Data.ResourceType.ENERGY, 0);
-		resourceInventory.Add (Data.ResourceType.ORE, 0);
-		ownedTiles = new List<Tile> ();
+	/// <summary>
+	/// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
+	/// </summary>
+	public virtual void OnStartClient() {
+		base.OnStartClient();
+		resourceInventory = new Dictionary<Data.ResourceType, int>();
+		resourceInventory.Add(Data.ResourceType.ENERGY, 0);
+		resourceInventory.Add(Data.ResourceType.ORE, 0);
+		ownedTiles = new List<Tile>();
 		funds = 100;
 	}
 
@@ -47,8 +48,8 @@ public class Player : NetworkBehaviour {
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">The type of resource</param>
 	public virtual int getResourceAmount(Data.ResourceType type) {
-		if (resourceInventory.ContainsKey (type)) {
-			return resourceInventory [type];
+		if (resourceInventory.ContainsKey(type)) {
+			return resourceInventory[type];
 		}
 		return 0;
 	}
@@ -60,8 +61,8 @@ public class Player : NetworkBehaviour {
 	/// <param name="type">Type of resource</param>
 	/// <param name="amount">Amount of resource to deduct</param>
 	public virtual void deductResouce(Data.ResourceType type, int amount) {
-		if (resourceInventory.ContainsKey (type) && amount >= 0) {
-			resourceInventory [type] = Math.Max (0, resourceInventory [type] - amount);
+		if (resourceInventory.ContainsKey(type) && amount >= 0) {
+			resourceInventory[type] = Math.Max(0, resourceInventory[type] - amount);
 		}
 	}
 
@@ -71,8 +72,8 @@ public class Player : NetworkBehaviour {
 	/// <param name="type">Type of resource to give the player</param>
 	/// <param name="amount">Amount of resource to give</param>
 	public virtual void giveResouce(Data.ResourceType type, int amount) {
-		if (resourceInventory.ContainsKey (type) && amount >= 0) {
-			resourceInventory [type] = resourceInventory [type] += amount;
+		if (resourceInventory.ContainsKey(type) && amount >= 0) {
+			resourceInventory[type] = resourceInventory[type] += amount;
 		}
 	}
 
@@ -81,8 +82,8 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	protected virtual void Production() {
 		foreach (Tile t in ownedTiles) {
-			resourceInventory [Data.ResourceType.ENERGY] += t.doResourceProduction (Data.ResourceType.ENERGY);
-			resourceInventory [Data.ResourceType.ORE] += t.doResourceProduction (Data.ResourceType.ORE);
+			resourceInventory[Data.ResourceType.ENERGY] += t.doResourceProduction(Data.ResourceType.ENERGY);
+			resourceInventory[Data.ResourceType.ORE] += t.doResourceProduction(Data.ResourceType.ORE);
 		}
 	}
 
@@ -91,9 +92,9 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
 	protected virtual void AcquireTile(Tile t) {
-		if (t.getOwner () == null) {
-			ownedTiles.Add (t);
-			t.setOwner (this);
+		if (t.getOwner() == null) {
+			ownedTiles.Add(t);
+			t.setOwner(this);
 		}
 	}
 }
