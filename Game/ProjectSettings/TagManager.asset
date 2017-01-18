@@ -6,6 +6,8 @@ TagManager:
   tags:
   - MapController
   - MapOverlay
+  - CollegeSelection
+  - UserInterface
   layers:
   - Default
   - TransparentFX

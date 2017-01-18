@@ -30,6 +30,13 @@ public class Player : NetworkBehaviour {
 	public Data.College college;
 
 	/// <summary>
+	/// Raises the start server event.
+	/// </summary>
+	public override void OnStartServer() {
+		Init();
+	}
+
+	/// <summary>
 	/// Initialise this instance.
 	/// </summary>
 	public void Init() {
@@ -38,6 +45,37 @@ public class Player : NetworkBehaviour {
 		resourceInventory.Add(Data.ResourceType.ORE, 0);
 		ownedTiles = new List<Tile>();
 		funds = 100;
+	}
+
+	[Command]
+	public void CmdSetCollege(int collegeID) {
+		switch (collegeID) {
+		case 0:
+			college = Data.College.ALCUIN;
+			break;
+		case 1:
+			college = Data.College.CONSTANTINE;
+			break;
+		case 2:
+			college = Data.College.DERWENT;
+			break;
+		case 3:
+			college = Data.College.GOODRICKE;
+			break;
+		case 4:
+			college = Data.College.HALIFAX;
+			break;
+		case 5:
+			college = Data.College.JAMES;
+			break;
+		case 6:
+			college = Data.College.LANGWITH;
+			break;
+		case 7:
+			college = Data.College.VANBURGH;
+			break;
+		}
+		Debug.Log("Client:" + isClient + ", " + college.Name);
 	}
 
 	/// <summary>

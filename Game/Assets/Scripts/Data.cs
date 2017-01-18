@@ -29,7 +29,7 @@ public static class Data {
 	/// </summary>
 	public class College {
 
-		public static readonly College ALCUIN = new College("Alcuin", new Color(136, 0, 3));
+		public static readonly College ALCUIN = new College("Alcuin", new Color(255, 0, 3));
 		public static readonly College CONSTANTINE = new College("Constantine", new Color(199, 0, 127));
 		public static readonly College DERWENT = new College("Derwent", new Color(10, 35, 67));
 		public static readonly College GOODRICKE = new College("Goodricke", new Color(0, 128, 0));
