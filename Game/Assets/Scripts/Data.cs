@@ -5,12 +5,23 @@ using System.Collections.Generic;
 /// <summary>
 /// Static class to hold reference data
 /// </summary>
-public static class Data {
+public static class Data
+{
+
+	/// <summary>
+	/// The different types of tiles
+	/// </summary>
+	public enum TileType
+	{
+		STONE,
+		GRASS
+	}
 
 	/// <summary>
 	/// Types of resources available in the game
 	/// </summary>
-	public enum ResourceType {
+	public enum ResourceType
+	{
 		ENERGY,
 		FOOD,
 		ORE
@@ -19,7 +30,8 @@ public static class Data {
 	/// <summary>
 	/// The colleges of York university
 	/// </summary>
-	public class College {
+	public class College
+	{
 
 		public static readonly College ALCUIN = new College ("Alcuin", new Color (136, 0, 3));
 		public static readonly College CONSTANTINE = new College ("Constantine", new Color (199, 0, 127));
@@ -44,7 +56,8 @@ public static class Data {
 		/// </summary>
 		/// <param name="name">Name of the college</param>
 		/// <param name="color">Color of the college</param>
-		public College (String name, Color color) {
+		public College (String name, Color color)
+		{
 			this.name = name;
 			this.color = color;
 		}

@@ -623,7 +623,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2144791710}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -822479833, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Script: {fileID: 11500000, guid: 8eb4d686f16426748a9d44ed1a7c30ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_NetworkPort: 7777
@@ -639,8 +639,8 @@ MonoBehaviour:
     type: 2}
   m_AutoCreatePlayer: 1
   m_PlayerSpawnMethod: 0
-  m_OfflineScene: 
-  m_OnlineScene: 
+  m_OfflineScene: GameOffline
+  m_OnlineScene: GameOffline
   m_SpawnPrefabs:
   - {fileID: 1000011104786766, guid: f3ee60730ff70447aaf8cde9322d6ed5, type: 2}
   m_CustomConfig: 0

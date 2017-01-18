@@ -25,8 +25,10 @@ public class Tile : NetworkBehaviour
 	/// </summary>
 	private Player owner;
 
-	[SyncVar]
-	public int tileIndex = -1;
+	/// <summary>
+	/// Type of the tile
+	/// </summary>
+	public Data.TileType type;
 
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
@@ -49,24 +51,6 @@ public class Tile : NetworkBehaviour
 	{
 		tileClicked (this);
 	}
-
-	public override void OnStartClient ()
-	{
-		Debug.Log (tileIndex);
-		if (tileIndex == 0) {
-			Debug.Log (isClient);
-			gameObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.stoneSprite;
-		} else {
-			gameObject.GetComponent<SpriteRenderer> ().sprite = SpriteController.Sprites.grassSprite;
-		}
-	}
-
-
-	public override void OnDeserialize (NetworkReader reader, bool initialState)
-	{
-		
-	}
-
 
 	/// <summary>
 	/// Gets the resource amount for a given resource type.
@@ -118,6 +102,22 @@ public class Tile : NetworkBehaviour
 	public void setOwner (Player p)
 	{
 		owner = p;
+	}
+
+	[ClientRpc]
+	public void RpcSetSprite (int ord)
+	{
+		//Debug.Log ("Setting sprite");
+		Data.TileType type = (Data.TileType)ord;
+		SpriteRenderer r = GetComponent<SpriteRenderer> ();
+		switch (type) {
+		case Data.TileType.GRASS:
+			r.sprite = SpriteController.Sprites.grassSprite;
+			break;
+		case Data.TileType.STONE:
+			r.sprite = SpriteController.Sprites.stoneSprite;
+			break;
+		}
 	}
 
 	/// <summary>
