@@ -11,11 +11,13 @@ public class MapController : NetworkBehaviour {
 	/// <summary>
 	/// The width of the map, in number of tiles
 	/// </summary>
+	[SyncVar]
 	public int width;
 
 	/// <summary>
 	/// The height of the map, in number of tiles
 	/// </summary>
+	[SyncVar]
 	public int height;
     
 	/// <summary>
@@ -27,6 +29,11 @@ public class MapController : NetworkBehaviour {
 	/// Instance of the map controller to allow static access
 	/// </summary>
 	public static MapController instance;
+
+	/// <summary>
+	/// The number of players connected last time the update was run
+	/// </summary>
+	int lastPlayers = 0;
 
 	/// <summary>
 	///  Called when the game starts, used to generate the tiles and centre the camera
@@ -63,7 +70,13 @@ public class MapController : NetworkBehaviour {
 		}
 	}
 
-	int lastPlayers = 0;
+	/// <summary>
+	/// Raises the start client event.
+	/// </summary>
+	public override void OnStartClient() {
+		instance = this;
+		Debug.Log("MapController - Client Started");
+	}
 
 	/// <summary>
 	/// Update this instance.
@@ -73,15 +86,9 @@ public class MapController : NetworkBehaviour {
 		if (lastPlayers != NetworkController.instance.numPlayers) {
 			lastPlayers = NetworkController.instance.numPlayers;
 			foreach (Tile t in tiles) {
-				test();
 				int ord = (int)t.type;
 				t.RpcSyncTile(ord);
 			}
 		}
 	}
-
-	IEnumerator test() {
-		yield return new WaitForSeconds(0.010F);
-	}
-			
 }

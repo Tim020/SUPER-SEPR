@@ -11,8 +11,4 @@ public class NetworkController : NetworkManager {
 		instance = this;
 	}
 
-	public override void OnServerConnect(NetworkConnection conn) {
-		Debug.Log("Player connected: " + conn.address);
-	}
-
 }

@@ -87,7 +87,7 @@ public class Tile : NetworkBehaviour {
 	/// Rpc to sync data about the tile from the server to the client.
 	/// Sets the correct type of the tile and the sprite renderer for it
 	/// </summary>
-	/// <param name="ord">Ord.</param>
+	/// <param name="ord">The ordinal (integer position) of the element in the enum</param>
 	[ClientRpc]
 	public void RpcSyncTile(int ord) {
 		//Debug.Log ("Setting sprite");

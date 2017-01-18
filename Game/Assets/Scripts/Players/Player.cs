@@ -25,10 +25,14 @@ public class Player : NetworkBehaviour {
 	public float funds;
 
 	/// <summary>
-	/// Start this instance, initialises the resource dictionary and adds the starting values and also intialises the tiles list
+	/// The college the player belongs to
 	/// </summary>
-	public virtual void OnStartClient() {
-		base.OnStartClient();
+	public Data.College college;
+
+	/// <summary>
+	/// Initialise this instance.
+	/// </summary>
+	public void Init() {
 		resourceInventory = new Dictionary<Data.ResourceType, int>();
 		resourceInventory.Add(Data.ResourceType.ENERGY, 0);
 		resourceInventory.Add(Data.ResourceType.ORE, 0);
