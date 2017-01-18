@@ -21,8 +21,19 @@ public class CameraController : MonoBehaviour {
 	/// </summary>
 	private Vector3 startPosition;
 
-	private float maxZoom, minZoom;
+	/// <summary>
+	/// The furthest in you are allowed to zoom
+	/// </summary>
+	private float maxZoom;
 
+	/// <summary>
+	/// The furthest out you are allowed to zoom
+	/// </summary>
+	private float minZoom;
+
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start() {
 		startPosition = Camera.main.transform.position;
 		minZoom = Camera.main.orthographicSize;

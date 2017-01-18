@@ -26,6 +26,9 @@ public class HumanPlayer : Player {
 		DoCollegeSelection();
 	}
 
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
 	void Update() {
 		if (MapController.instance.collegeDecided == 1 && collegeAssigned == false && !isServer) {
 			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(true);
