@@ -75,7 +75,7 @@ public class MapController : NetworkBehaviour {
 			foreach (Tile t in tiles) {
 				test();
 				int ord = (int)t.type;
-				t.RpcSetSprite(ord);
+				t.RpcSyncTile(ord);
 			}
 		}
 	}

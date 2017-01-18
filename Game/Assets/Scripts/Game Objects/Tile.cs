@@ -83,11 +83,17 @@ public class Tile : NetworkBehaviour {
 		owner = p;
 	}
 
+	/// <summary>
+	/// Rpc to sync data about the tile from the server to the client.
+	/// Sets the correct type of the tile and the sprite renderer for it
+	/// </summary>
+	/// <param name="ord">Ord.</param>
 	[ClientRpc]
-	public void RpcSetSprite(int ord) {
+	public void RpcSyncTile(int ord) {
 		//Debug.Log ("Setting sprite");
 		Data.TileType type = (Data.TileType)ord;
 		SpriteRenderer r = GetComponent<SpriteRenderer>();
+		this.type = type;
 		switch (type) {
 		case Data.TileType.GRASS:
 			r.sprite = SpriteController.Sprites.grassSprite;
