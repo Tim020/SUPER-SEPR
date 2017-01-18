@@ -103,7 +103,7 @@ public class MarketController : MonoBehaviour {
 	/// <param name="player">Player wishing to buy resources</param>
 	/// <param name="type">Type of resource being purchased</param>
 	/// <param name="amount">Amount of resource being purchased</param>
-	public void buyFromMarket(Player player, Data.ResourceType type, int amount) {
+	public void buyFromMarket(BasePlayer player, Data.ResourceType type, int amount) {
 		if (marketResources.ContainsKey(type) && marketSellPrices.ContainsKey(type)) {
 			if (marketResources[type] >= amount && player.funds >= marketSellPrices[type] * amount) {
 				float total = marketSellPrices[type] * amount;
@@ -121,7 +121,7 @@ public class MarketController : MonoBehaviour {
 	/// <param name="player">Player wishing to sell resources</param>
 	/// <param name="type">Type of resource being sold</param>
 	/// <param name="amount">Amount of resource being sold</param>
-	public void sellToMarket(Player player, Data.ResourceType type, int amount) {
+	public void sellToMarket(BasePlayer player, Data.ResourceType type, int amount) {
 		if (marketResources.ContainsKey(type) && marketBuyPrices.ContainsKey(type)) {
 			if (player.getResourceAmount(type) >= amount && marketFunds >= marketBuyPrices[type] * amount) {
 				float total = marketBuyPrices[type] * amount;
@@ -140,7 +140,7 @@ public class MarketController : MonoBehaviour {
 	/// <param name="type">The type of resource the player is selling</param>
 	/// <param name="resourceAmount">The amount of resource the player is selling</param>
 	/// <param name="unitPrice">Unit price the player wishes to sell at</param>
-	public void createPlayerTrade(Player player, Data.ResourceType type, int resourceAmount, float unitPrice) {
+	public void createPlayerTrade(BasePlayer player, Data.ResourceType type, int resourceAmount, float unitPrice) {
 		if (player.getResourceAmount(type) >= resourceAmount) {
 			playerTrades.Add(new P2PTrade(player, type, resourceAmount, unitPrice));
 			player.deductResouce(type, resourceAmount);
@@ -166,7 +166,7 @@ public class MarketController : MonoBehaviour {
 		/// <summary>
 		/// The player who is selling this resource/owns this deal
 		/// </summary>
-		public Player host;
+		public BasePlayer host;
 
 		/// <summary>
 		/// The type of resource the player is selling
@@ -190,7 +190,7 @@ public class MarketController : MonoBehaviour {
 		/// <param name="resource">The resource type</param>
 		/// <param name="resourceAmount">The resource amount.</param>
 		/// <param name="unitPrice">The unit price.</param>
-		public P2PTrade(Player host, Data.ResourceType resource, int resourceAmount, float unitPrice) {
+		public P2PTrade(BasePlayer host, Data.ResourceType resource, int resourceAmount, float unitPrice) {
 			this.host = host;
 			this.resource = resource;
 			this.resourceAmount = resourceAmount;

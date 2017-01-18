@@ -4,5 +4,5 @@ using System.Collections;
 /// <summary>
 /// AI player.
 /// </summary>
-public class AIPlayer : Player {
+public class AIPlayer : BasePlayer {
 }

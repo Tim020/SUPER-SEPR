@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 /// <summary>
 /// The player class, stores information such as the resources and money for the player as well as their owned tiles and chosen college
 /// </summary>
-public class Player : NetworkBehaviour {
+public class BasePlayer : NetworkBehaviour {
 
 	/// <summary>
 	/// A dictionary with a resource type as a key, the value is the amount this player currently has
@@ -28,6 +28,12 @@ public class Player : NetworkBehaviour {
 	/// The college the player belongs to
 	/// </summary>
 	public Data.College college;
+
+	/// <summary>
+	/// The player ID as set by the server.
+	/// </summary>
+	[SyncVar]
+	public int playerID;
 
 	/// <summary>
 	/// Raises the start server event.

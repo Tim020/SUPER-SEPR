@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Human player.
 /// </summary>
-public class HumanPlayer : Player {
+public class HumanPlayer : BasePlayer {
 
 	/// <summary>
 	/// The tile overlay UI prefab
@@ -52,6 +52,10 @@ public class HumanPlayer : Player {
 		selection.GetChild(1).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(1));
 		selection.GetChild(2).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(2));
 		selection.GetChild(3).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(3));
+		selection.GetChild(4).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(4));
+		selection.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(5));
+		selection.GetChild(6).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(6));
+		selection.GetChild(7).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
 		if (isServer) {
 			selection.gameObject.SetActive(true);
 		}
@@ -135,28 +139,28 @@ public class HumanPlayer : Player {
 		}
 		switch (id) {
 		case 0:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.ALCUIN.Col);
+			go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
 			break;
 		case 1:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.CONSTANTINE.Col);
+			go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
 			break;
 		case 2:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.DERWENT.Col);
+			go.GetComponent<Image>().color = Data.College.DERWENT.Col;
 			break;
 		case 3:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.GOODRICKE.Col);
+			go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
 			break;
 		case 4:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.HALIFAX.Col);
+			go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
 			break;
 		case 5:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.JAMES.Col);
+			go.GetComponent<Image>().color = Data.College.JAMES.Col;
 			break;
 		case 6:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.LANGWITH.Col);
+			go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
 			break;
 		case 7:
-			go.GetComponent<CanvasRenderer>().SetColor(Data.College.VANBURGH.Col);
+			go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
 			break;
 		}
 	}
