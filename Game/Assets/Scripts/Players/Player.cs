@@ -47,9 +47,12 @@ public class Player : NetworkBehaviour {
 		funds = 100;
 	}
 
+	/// <summary>
+	/// Set the college of the player on the server side.
+	/// </summary>
+	/// <param name="collegeID">College I.</param>
 	[Command]
-	public void CmdSetCollege(int collegeID) {
-		Debug.Log(college == null);
+	public virtual void CmdSetCollege(int collegeID) {
 		switch (collegeID) {
 		case 0:
 			college = Data.College.ALCUIN;

@@ -57,9 +57,9 @@ public class HumanPlayer : Player {
 	}
 
 	/// <summary>
-	/// Handler for when a college button is clicked, sets the value on the client side then sends the data to the server to do the same
+	/// Handler for when a college button is clicked, sets the value on the client side then sends the data to the server to do the same.
 	/// </summary>
-	/// <param name="id">The college ID based</param>
+	/// <param name="id">The college ID.</param>
 	private void CollegeButtonClick(int id) {
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(false);
 		collegeAssigned = true;
@@ -68,7 +68,7 @@ public class HumanPlayer : Player {
 	}
 
 	/// <summary>
-	/// Creates the map overlay dividing the map into subplots
+	/// Creates the map overlay dividing the map into subplots.
 	/// </summary>
 	private void CreateMapOverlay() {
 		Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
@@ -81,11 +81,35 @@ public class HumanPlayer : Player {
 		}
 	}
 
+	/// <summary>
+	/// Set the college of the player on the server side.
+	/// </summary>
+	/// <param name="collegeID">College ID.</param>
+	[Command]
+	public void CmdSetCollege(int collegeID) {
+		base.CmdSetCollege(collegeID);
+		RpcDisableCollege(collegeID);
+	}
+
+	/// <summary>
+	/// Disable the buttons for colleges already chosen by another player.
+	/// </summary>
+	/// <param name="collegeID">College ID.</param>
+	[ClientRpc]
+	private void RpcDisableCollege(int collegeID) {
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).transform.GetChild(collegeID).gameObject.SetActive(false);
+	}
+
+	/// <summary>
+	/// Handles the mouse click on the server side.
+	/// </summary>
+	/// <param name="worldX">World X position of the click.</param>
+	/// <param name="worldY">World Y position of the click.</param>
 	[Command]
 	protected void CmdMouseClick(int worldX, int worldY) {
-		Tile t = GameObject.Find("Tile_" + worldX + "_" + worldY).GetComponent<Tile>();
-		if (t != null) {
-			AcquireTile(t);
+		GameObject go = GameObject.Find("Tile_" + worldX + "_" + worldY);
+		if (go != null) {
+			AcquireTile(go.GetComponent<Tile>());
 		}
 	}
 
