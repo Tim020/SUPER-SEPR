@@ -21,13 +21,18 @@ public class CameraController : MonoBehaviour {
 	/// </summary>
 	private Vector3 startPosition;
 
+	private float maxZoom, minZoom;
+
 	void Start() {
 		startPosition = Camera.main.transform.position;
+		minZoom = Camera.main.orthographicSize;
+		maxZoom = 4;
 	}
 
 	/// <summary>
-	/// Called every update cycle, checks whether the LMB is pressed and transforms the camera position accordingly.
+	/// Called every update cycle, checks whether the RMB is pressed and transforms the camera position accordingly.
 	/// Also checks if the MMB is clicked to return to the camera to the centre of the game world
+	/// Also checks for scroll wheel and will zoom in and out, this also scales the drag speed so it's the same rate at each level of zoom
 	/// </summary>
 	void Update() {
 		if (Input.GetMouseButtonDown(2)) {
@@ -35,17 +40,28 @@ public class CameraController : MonoBehaviour {
 			return;
 		}
 
-		if (Input.GetMouseButtonDown(0)) {
+		if (Input.GetMouseButtonDown(1)) {
 			dragOrigin = Input.mousePosition;
 			return;
 		}
 
-		if (!Input.GetMouseButton(0)) {
+		if (Input.GetAxis("Mouse ScrollWheel") != 0) {
+			float newZoom = Camera.main.orthographicSize + Input.GetAxis("Mouse ScrollWheel") * -2f;
+			if (newZoom > minZoom) {
+				newZoom = minZoom;
+			}
+			if (newZoom < maxZoom) {
+				newZoom = maxZoom;
+			}
+			Camera.main.orthographicSize = newZoom;
+		}
+
+		if (!Input.GetMouseButton(1)) {
 			return;
 		}
 
 		Vector3 pos = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
-		Vector3 move = new Vector3(pos.x * dragSpeed, pos.y * dragSpeed, 0);
+		Vector3 move = new Vector3(pos.x * dragSpeed * Camera.main.orthographicSize / minZoom, pos.y * dragSpeed * Camera.main.orthographicSize / minZoom, 0);
 
 		transform.Translate(move, Space.World);
 	}

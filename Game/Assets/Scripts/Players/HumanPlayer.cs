@@ -24,7 +24,6 @@ public class HumanPlayer : Player {
 	public override void OnStartLocalPlayer() {
 		Debug.Log("Start local human player");
 		DoCollegeSelection();
-		//CreateMapOverlay();
 	}
 
 	void Update() {
@@ -36,7 +35,6 @@ public class HumanPlayer : Player {
 			//Do input stuff in here
 			if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
 				Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				Debug.Log("Click");
 				CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
 			}
 		}
@@ -130,10 +128,8 @@ public class HumanPlayer : Player {
 	public void RpcColorTile(string tile, int id) {
 		GameObject go = GameObject.Find(tile);
 		if (go == null) {
-			Debug.Log("Could not find: " + tile);
 			return;
 		}
-		Debug.Log(id);
 		switch (id) {
 		case 0:
 			go.GetComponent<CanvasRenderer>().SetColor(Data.College.ALCUIN.Col);

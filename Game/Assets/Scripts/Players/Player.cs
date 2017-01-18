@@ -50,7 +50,7 @@ public class Player : NetworkBehaviour {
 	/// <summary>
 	/// Set the college of the player on the server side.
 	/// </summary>
-	/// <param name="collegeID">College I.</param>
+	/// <param name="collegeID">College ID.</param>
 	[Command]
 	public virtual void CmdSetCollege(int collegeID) {
 		switch (collegeID) {
