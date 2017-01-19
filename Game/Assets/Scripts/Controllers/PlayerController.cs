@@ -14,9 +14,9 @@ public class PlayerController : NetworkBehaviour {
 	public static PlayerController instance;
 
 	/// <summary>
-	/// An array of the players in the game, can be any combination of human or AI
+	/// A dictionary of the players in the game.
 	/// </summary>
-	public List<BasePlayer> players;
+	public Dictionary<BasePlayer, NetworkConnection> players;
 
 	/// <summary>
 	/// Raises the start server event.
@@ -24,7 +24,7 @@ public class PlayerController : NetworkBehaviour {
 	public override void OnStartServer() {
 		Debug.Log("Server Start - Player Controller");
 		instance = this;
-		players = new List<BasePlayer>();
+		players = new Dictionary<BasePlayer, NetworkConnection>();
 	}
 
 	private int nextID = -1;

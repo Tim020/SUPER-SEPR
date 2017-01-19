@@ -27,7 +27,7 @@ public class NetworkController : NetworkManager {
 		base.OnServerAddPlayer(conn, id);
 		BasePlayer p = conn.playerControllers[0].gameObject.GetComponent<BasePlayer>();
 		p.playerID = PlayerController.instance.getNextID();
-		PlayerController.instance.players.Add(p);
+		PlayerController.instance.players.Add(p, conn);
 		Debug.Log("Player connected: " + p.playerID);
 	}
 
@@ -39,5 +39,6 @@ public class NetworkController : NetworkManager {
 	public override void OnServerRemovePlayer(NetworkConnection conn, UnityEngine.Networking.PlayerController player) {
 		base.OnServerRemovePlayer(conn, player);
 		PlayerController.instance.players.Remove(player.gameObject.GetComponent<BasePlayer>());
+		Debug.Log("Player disconnected: " + player.gameObject.GetComponent<BasePlayer>().playerID);
 	}
 }
