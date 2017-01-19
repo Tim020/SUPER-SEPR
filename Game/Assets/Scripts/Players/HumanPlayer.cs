@@ -23,17 +23,16 @@ public class HumanPlayer : BasePlayer {
 	/// </summary>
 	public override void OnStartLocalPlayer() {
 		Debug.Log("Start local human player");
-		DoCollegeSelection();
+		Debug.Log(base.playerID);
+		SetupCollegeSelection();
+		Transform selection = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1);
+		selection.gameObject.SetActive(true);
 	}
 
 	/// <summary>
 	/// Update this instance.
 	/// </summary>
 	void Update() {
-		if (MapController.instance.collegeDecided == 1 && collegeAssigned == false && !isServer) {
-			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(true);
-			MapController.instance.collegeDecided = 0;
-		}
 		if (isLocalPlayer) {
 			//Do input stuff in here
 			if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
@@ -46,7 +45,7 @@ public class HumanPlayer : BasePlayer {
 	/// <summary>
 	/// Enable the college selection buttons and add the button listeners for them
 	/// </summary>
-	private void DoCollegeSelection() {
+	private void SetupCollegeSelection() {
 		Transform selection = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0);
 		selection.GetChild(0).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(0));
 		selection.GetChild(1).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(1));
@@ -56,8 +55,35 @@ public class HumanPlayer : BasePlayer {
 		selection.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(5));
 		selection.GetChild(6).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(6));
 		selection.GetChild(7).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
-		if (isServer) {
-			selection.gameObject.SetActive(true);
+	}
+
+	/// <summary>
+	/// Hide the waiting for players message
+	/// </summary>
+	[ClientRpc]
+	public void RpcDisableWaitMessage() {
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1).gameObject.SetActive(false);
+	}
+
+	/// <summary>
+	/// Enable the college selection for the given player
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	[ClientRpc]
+	public void RpcActivateCollegeSelection(int playerID) {
+		if (playerID == base.playerID && isLocalPlayer) {
+			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(true);
+		}
+	}
+
+	/// <summary>
+	/// Disable the college selection for the given player
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	[ClientRpc]
+	public void RpcDisableCollegeSelection(int playerID) {
+		if (playerID == base.playerID && isLocalPlayer) {
+			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(false);
 		}
 	}
 
@@ -123,9 +149,12 @@ public class HumanPlayer : BasePlayer {
 	/// Called when a player wishes to buy a tile
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
-	protected virtual void AcquireTile(Tile t) {
-		base.AcquireTile(t);
-		RpcColorTile("TileOverlay_" + t.transform.position.x + "_" + t.transform.position.y, college.Id);
+	protected override bool AcquireTile(Tile t) {
+		if (base.AcquireTile(t)) {
+			RpcColorTile("TileOverlay_" + t.transform.position.x + "_" + t.transform.position.y, college.Id);
+			return true;
+		}
+		return false;
 	}
 
 	/// <summary>

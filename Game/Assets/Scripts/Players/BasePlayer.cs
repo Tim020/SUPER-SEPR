@@ -146,10 +146,12 @@ public class BasePlayer : NetworkBehaviour {
 	/// Called when a player wishes to buy a tile
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
-	protected virtual void AcquireTile(Tile t) {
+	protected virtual bool AcquireTile(Tile t) {
 		if (t.getOwner() == null) {
 			ownedTiles.Add(t);
 			t.setOwner(this);
+			return true;
 		}
+		return false;
 	}
 }
