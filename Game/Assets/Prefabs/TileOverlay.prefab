@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 224852770941328610}
   m_Layer: 5
   m_Name: TileOverlay
-  m_TagString: Untagged
+  m_TagString: TileInfoOverlay
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -85,5 +85,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   funds: 1000
+  playerID: 0
   TileOverlay: {fileID: 1041942971785404, guid: 9e7459d3a53f15d488ee667e6bb735c4,
     type: 2}
+  TileInfoOverlay: {fileID: 1293774599021256, guid: cc0b4fdfa9aa23f48bdef23cb36b5e57,
+    type: 2}
+  collegeAssigned: 0

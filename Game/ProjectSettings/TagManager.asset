@@ -8,6 +8,7 @@ TagManager:
   - MapOverlay
   - CollegeSelection
   - UserInterface
+  - TileInfoOverlay
   layers:
   - Default
   - TransparentFX

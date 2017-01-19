@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System.Runtime.InteropServices;
 
 /// <summary>
 /// Human player.
@@ -151,13 +152,28 @@ public class HumanPlayer : BasePlayer {
 		} else {
 			owner = "None";
 		}
-		RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
+		if (t != null) {
+			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
+		}
 	}
 
 	[ClientRpc]
 	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			
+			GameObject overlay = GameObject.FindGameObjectWithTag("UserInterface"); 
+			Canvas c = overlay.GetComponent<Canvas>();
+			if (!Input.GetKey(KeyCode.LeftControl)) {
+				foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
+					Destroy(g);
+				}
+			}
+			GameObject go = Instantiate(TileInfoOverlay, new Vector3(tileX, tileY, -2), Quaternion.identity, c.transform);
+			go.name = "TileInfo_" + tileX + "_" + tileY;
+			go.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
+			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
+			go.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
+			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
+
 		}
 	}
 
