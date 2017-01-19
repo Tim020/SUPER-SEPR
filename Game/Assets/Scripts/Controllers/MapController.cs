@@ -97,4 +97,15 @@ public class MapController : NetworkBehaviour {
 			}
 		}
 	}
+
+	[Server]
+	public Tile getTileAt(int worldX, int worldY) {
+		if (worldX < 0 || worldX > width) {
+			return null;
+		}
+		if (worldY < 0 || worldY > height) {
+			return null;
+		}
+		return tiles[worldX, worldY];
+	}
 }

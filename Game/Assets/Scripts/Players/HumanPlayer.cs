@@ -13,6 +13,8 @@ public class HumanPlayer : BasePlayer {
 	/// </summary>
 	public GameObject TileOverlay;
 
+	public GameObject TileInfoOverlay;
+
 	/// <summary>
 	/// Local not server
 	/// </summary>
@@ -139,10 +141,26 @@ public class HumanPlayer : BasePlayer {
 	[Command]
 	protected void CmdMouseClick(int worldX, int worldY) {
 		GameObject go = GameObject.Find("Tile_" + worldX + "_" + worldY);
+		Tile t = MapController.instance.getTileAt(worldX, worldY);
 		if (go != null) {
 			AcquireTile(go.GetComponent<Tile>());
 		}
+		string owner;
+		if (t.getOwner() != null) {
+			owner = t.getOwner().college.Name;
+		} else {
+			owner = "None";
+		}
+		RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
 	}
+
+	[ClientRpc]
+	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			
+		}
+	}
+
 
 	/// <summary>
 	/// SERVER SIDE

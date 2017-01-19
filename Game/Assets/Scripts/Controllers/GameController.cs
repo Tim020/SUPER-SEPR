@@ -10,6 +10,9 @@ public class GameController : NetworkBehaviour {
 
 	private GameState state = GameState.PLAYER_WAIT;
 
+	/// <summary>
+	/// Game state.
+	/// </summary>
 	public enum GameState {
 		PLAYER_WAIT,
 		COLLEGE_SELECTION,
@@ -17,14 +20,24 @@ public class GameController : NetworkBehaviour {
 		TILE_PURCHASE,
 		ROBOTICON_CUSTOMISATION,
 		ROBOTICON_PLACEMENT,
+		PLAYER_FINISH,
 		PRODUCTION,
 		AUCTION
 	}
 
+	private int playersCompletedPhase = 0;
+	private int currentPlayerTurn;
+
+	/// <summary>
+	/// Raises the start server event.
+	/// </summary>
 	public override void OnStartServer() {
 		instance = this;
 	}
 
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
 	public void Update() {
 		if (state == GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == 2) {
 			state = GameState.COLLEGE_SELECTION;
@@ -44,6 +57,23 @@ public class GameController : NetworkBehaviour {
 					state = GameState.GAME_WAIT;
 				}
 			}
+		} else if (state == GameState.GAME_WAIT) {
+			currentPlayerTurn = ((HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value).playerID;
+			state = GameState.TILE_PURCHASE;
+		} else if (state == GameState.TILE_PURCHASE) {
+			
+		} else if (state == GameState.PLAYER_FINISH) {
+			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
+				state = GameState.PRODUCTION;
+			} else {
+				state = GameState.GAME_WAIT;
+				playersCompletedPhase++;
+			}
+		} else if (state == GameState.PRODUCTION) {
+			
+		} else if (state == GameState.AUCTION) {
+			playersCompletedPhase = 0;
+			state = GameState.GAME_WAIT;
 		}
 	}
 }
