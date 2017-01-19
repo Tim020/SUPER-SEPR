@@ -154,6 +154,8 @@ public class HumanPlayer : BasePlayer {
 		}
 		if (t != null) {
 			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
+		} else {
+			RpcKillAllTileOverlays(this.playerID);
 		}
 	}
 
@@ -162,18 +164,24 @@ public class HumanPlayer : BasePlayer {
 		if (playerID == this.playerID && isLocalPlayer) {
 			GameObject overlay = GameObject.FindGameObjectWithTag("UserInterface"); 
 			Canvas c = overlay.GetComponent<Canvas>();
-			if (!Input.GetKey(KeyCode.LeftControl)) {
-				foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
-					Destroy(g);
-				}
+			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
+				Destroy(g);
 			}
-			GameObject go = Instantiate(TileInfoOverlay, new Vector3(tileX, tileY, -2), Quaternion.identity, c.transform);
+			GameObject go = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX - 1, tileY, -2)), Quaternion.identity, c.transform);
 			go.name = "TileInfo_" + tileX + "_" + tileY;
 			go.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
 			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
 			go.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
 			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
+		}
+	}
 
+	[ClientRpc]
+	private void RpcKillAllTileOverlays(int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
+				Destroy(g);
+			}
 		}
 	}
 

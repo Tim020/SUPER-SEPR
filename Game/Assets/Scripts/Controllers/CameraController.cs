@@ -24,12 +24,12 @@ public class CameraController : MonoBehaviour {
 	/// <summary>
 	/// The furthest in you are allowed to zoom
 	/// </summary>
-	private float maxZoom;
+	public static float maxZoom { get ; private set; }
 
 	/// <summary>
 	/// The furthest out you are allowed to zoom
 	/// </summary>
-	private float minZoom;
+	public static float minZoom { get; private set; }
 
 	/// <summary>
 	/// Start this instance.
