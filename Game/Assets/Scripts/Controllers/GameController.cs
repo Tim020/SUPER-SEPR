@@ -8,6 +8,8 @@ public class GameController : NetworkBehaviour {
 
 	public static GameController instance;
 
+	private static int numberOfPlayersNeeded = 2;
+
 	private GameState state = GameState.PLAYER_WAIT;
 
 	/// <summary>
@@ -22,7 +24,8 @@ public class GameController : NetworkBehaviour {
 		ROBOTICON_PLACEMENT,
 		PLAYER_FINISH,
 		PRODUCTION,
-		AUCTION
+		AUCTION,
+		RECYCLE
 	}
 
 	private int playersCompletedPhase = 0;
@@ -39,24 +42,27 @@ public class GameController : NetworkBehaviour {
 	/// Update this instance.
 	/// </summary>
 	public void Update() {
-		if (state == GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == 2) {
+		if (state == GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == numberOfPlayersNeeded) {
 			state = GameState.COLLEGE_SELECTION;
-			HumanPlayer p0 = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
-			p0.RpcDisableWaitMessage();
+			HumanPlayer player = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
+			player.RpcDisableWaitMessage();
 		} else if (state == GameState.COLLEGE_SELECTION) {
-			//TODO: Rewrite to not be hard coded to 2 players
-			if (PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value is HumanPlayer && PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(1).Value is HumanPlayer) {
-				HumanPlayer p0 = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
-				HumanPlayer p1 = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(1).Value;
-				if (p0.college == null) {
-					p0.RpcActivateCollegeSelection(p0.playerID);
-				} else if (p1.college == null) {
-					p0.RpcDisableCollegeSelection(p0.playerID);
-					p1.RpcActivateCollegeSelection(p1.playerID);
-				} else {
-					p1.RpcDisableCollegeSelection(p1.playerID);
-					state = GameState.GAME_WAIT;
+			int i = 0;
+			for (; i < PlayerController.instance.players.Count; i++) {
+				if (PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value is HumanPlayer) {
+					HumanPlayer player = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value;
+					if (player.college == null) {
+						Debug.Log("Enable selection for player: " + player.playerID);
+						player.RpcActivateCollegeSelection(player.playerID);
+						break;
+					} else {
+						Debug.Log("Disable selection for player: " + player.playerID);
+						player.RpcDisableCollegeSelection(player.playerID);
+					}
 				}
+			}
+			if (i == NetworkController.instance.numPlayers) {
+				state = GameState.GAME_WAIT;
 			}
 		} else if (state == GameState.GAME_WAIT) {
 			currentPlayerTurn = ((HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value).playerID;
@@ -73,6 +79,8 @@ public class GameController : NetworkBehaviour {
 		} else if (state == GameState.PRODUCTION) {
 			
 		} else if (state == GameState.AUCTION) {
+			state = GameState.RECYCLE;
+		} else if (state == GameState.RECYCLE) {
 			playersCompletedPhase = 0;
 			state = GameState.GAME_WAIT;
 		}

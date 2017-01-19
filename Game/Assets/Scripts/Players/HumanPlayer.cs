@@ -10,14 +10,17 @@ using System.Runtime.InteropServices;
 public class HumanPlayer : BasePlayer {
 
 	/// <summary>
-	/// The tile overlay UI prefab
+	/// The tile overlay UI prefab.
 	/// </summary>
 	public GameObject TileOverlay;
 
+	/// <summary>
+	/// The tile info overlay prefab.
+	/// </summary>
 	public GameObject TileInfoOverlay;
 
 	/// <summary>
-	/// Local not server
+	/// Local not server.
 	/// </summary>
 	public bool collegeAssigned = false;
 
@@ -141,24 +144,32 @@ public class HumanPlayer : BasePlayer {
 	/// <param name="worldY">World Y position of the click.</param>
 	[Command]
 	protected void CmdMouseClick(int worldX, int worldY) {
-		GameObject go = GameObject.Find("Tile_" + worldX + "_" + worldY);
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
-		if (go != null) {
-			AcquireTile(go.GetComponent<Tile>());
-		}
-		string owner;
-		if (t.getOwner() != null) {
-			owner = t.getOwner().college.Name;
-		} else {
-			owner = "None";
+		if (t != null) {
+			AcquireTile(t);
 		}
 		if (t != null) {
+			string owner;
+			if (t.getOwner() != null) {
+				owner = t.getOwner().college.Name;
+			} else {
+				owner = "None";
+			}
 			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
 		} else {
 			RpcKillAllTileOverlays(this.playerID);
 		}
 	}
 
+	/// <summary>
+	/// RPC method to spawn an info overlay for a tile.
+	/// </summary>
+	/// <param name="tileX">Tile X position</param>
+	/// <param name="tileY">Tile Y position.</param>
+	/// <param name="oreAmount">Ore amount.</param>
+	/// <param name="energyAmount">Energy amount.</param>
+	/// <param name="owner">Owner of the tile.</param>
+	/// <param name="playerID">Player ID to invoke command on.</param>
 	[ClientRpc]
 	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
@@ -176,6 +187,10 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
+	/// <summary>
+	/// RPC method to remove all tile info overlays.
+	/// </summary>
+	/// <param name="playerID">The player to invoke the command on.</param>
 	[ClientRpc]
 	private void RpcKillAllTileOverlays(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
@@ -185,9 +200,7 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
-
 	/// <summary>
-	/// SERVER SIDE
 	/// Called when a player wishes to buy a tile
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
