@@ -193,6 +193,7 @@ public class Player : NetworkBehaviour {
 	/// Creates the map overlay dividing the map into subplots.
 	/// </summary>
 	private void CreateMapOverlay() {
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2).gameObject.SetActive(true);
 		Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
 		for (int x = 0; x < MapController.instance.width; x++) {
 			for (int y = 0; y < MapController.instance.height; y++) {
