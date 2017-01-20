@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System;
+using System.Runtime.Remoting;
 
 /// <summary>
 /// Human player class.
@@ -35,7 +36,7 @@ public class Player : NetworkBehaviour {
 	/// <summary>
 	/// The amount of money this player has
 	/// </summary>
-	public float funds;
+	private float funds;
 
 	/// <summary>
 	/// The college the player belongs to
@@ -65,8 +66,7 @@ public class Player : NetworkBehaviour {
 		Debug.Log("Start local human player");
 		Debug.Log(playerID);
 		SetupCollegeSelection();
-		Transform selection = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1);
-		selection.gameObject.SetActive(true);
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1).gameObject.SetActive(true);
 	}
 
 	/// <summary>
@@ -103,14 +103,14 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	private void SetupCollegeSelection() {
 		Transform selection = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0);
-		selection.GetChild(0).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(0));
-		selection.GetChild(1).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(1));
-		selection.GetChild(2).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(2));
-		selection.GetChild(3).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(3));
-		selection.GetChild(4).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(4));
-		selection.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(5));
-		selection.GetChild(6).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(6));
-		selection.GetChild(7).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
+		selection.GetChild(1).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(0));
+		selection.GetChild(2).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(1));
+		selection.GetChild(3).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(2));
+		selection.GetChild(4).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(3));
+		selection.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(4));
+		selection.GetChild(6).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(5));
+		selection.GetChild(7).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(6));
+		selection.GetChild(8).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
 	}
 
 	/// <summary>
@@ -161,30 +161,30 @@ public class Player : NetworkBehaviour {
 	[Command]
 	public virtual void CmdSetCollege(int collegeID) {
 		switch (collegeID) {
-			case 0:
-				college = Data.College.ALCUIN;
-				break;
-			case 1:
-				college = Data.College.CONSTANTINE;
-				break;
-			case 2:
-				college = Data.College.DERWENT;
-				break;
-			case 3:
-				college = Data.College.GOODRICKE;
-				break;
-			case 4:
-				college = Data.College.HALIFAX;
-				break;
-			case 5:
-				college = Data.College.JAMES;
-				break;
-			case 6:
-				college = Data.College.LANGWITH;
-				break;
-			case 7:
-				college = Data.College.VANBURGH;
-				break;
+		case 0:
+			college = Data.College.ALCUIN;
+			break;
+		case 1:
+			college = Data.College.CONSTANTINE;
+			break;
+		case 2:
+			college = Data.College.DERWENT;
+			break;
+		case 3:
+			college = Data.College.GOODRICKE;
+			break;
+		case 4:
+			college = Data.College.HALIFAX;
+			break;
+		case 5:
+			college = Data.College.JAMES;
+			break;
+		case 6:
+			college = Data.College.LANGWITH;
+			break;
+		case 7:
+			college = Data.College.VANBURGH;
+			break;
 		}
 		RpcDisableCollege(collegeID);
 	}
@@ -209,7 +209,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="collegeID">College ID.</param>
 	[ClientRpc]
 	private void RpcDisableCollege(int collegeID) {
-		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).transform.GetChild(collegeID).gameObject.SetActive(false);
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).transform.GetChild(collegeID + 1).gameObject.SetActive(false);
 	}
 
 	/// <summary>
@@ -373,30 +373,30 @@ public class Player : NetworkBehaviour {
 			return;
 		}
 		switch (id) {
-			case 0:
-				go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
-				break;
-			case 1:
-				go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
-				break;
-			case 2:
-				go.GetComponent<Image>().color = Data.College.DERWENT.Col;
-				break;
-			case 3:
-				go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
-				break;
-			case 4:
-				go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
-				break;
-			case 5:
-				go.GetComponent<Image>().color = Data.College.JAMES.Col;
-				break;
-			case 6:
-				go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
-				break;
-			case 7:
-				go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
-				break;
+		case 0:
+			go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
+			break;
+		case 1:
+			go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
+			break;
+		case 2:
+			go.GetComponent<Image>().color = Data.College.DERWENT.Col;
+			break;
+		case 3:
+			go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
+			break;
+		case 4:
+			go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
+			break;
+		case 5:
+			go.GetComponent<Image>().color = Data.College.JAMES.Col;
+			break;
+		case 6:
+			go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
+			break;
+		case 7:
+			go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
+			break;
 		}
 	}
 
@@ -405,7 +405,8 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">The type of resource</param>
-	public virtual int getResourceAmount(Data.ResourceType type) {
+	[Server]
+	public int GetResourceAmount(Data.ResourceType type) {
 		if (resourceInventory.ContainsKey(type)) {
 			return resourceInventory[type];
 		}
@@ -418,10 +419,12 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="type">Type of resource</param>
 	/// <param name="amount">Amount of resource to deduct</param>
-	public virtual void deductResouce(Data.ResourceType type, int amount) {
+	[Server]
+	public void DeductResouce(Data.ResourceType type, int amount) {
 		if (resourceInventory.ContainsKey(type) && amount >= 0) {
 			resourceInventory[type] = Math.Max(0, resourceInventory[type] - amount);
 		}
+		RpcUpdateResourceOverlay(playerID, GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), funds);
 	}
 
 	/// <summary>
@@ -429,9 +432,71 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="type">Type of resource to give the player</param>
 	/// <param name="amount">Amount of resource to give</param>
-	public virtual void giveResouce(Data.ResourceType type, int amount) {
+	[Server]
+	public void GiveResouce(Data.ResourceType type, int amount) {
 		if (resourceInventory.ContainsKey(type) && amount >= 0) {
 			resourceInventory[type] = resourceInventory[type] += amount;
+		}
+		RpcUpdateResourceOverlay(playerID, GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), funds);
+	}
+
+	/// <summary>
+	/// Gets the player's funds.
+	/// </summary>
+	/// <returns>The funds.</returns>
+	[Server]
+	public float GetFunds() {
+		return funds;
+	}
+
+	/// <summary>
+	/// Increases the player's funds.
+	/// </summary>
+	/// <param name="amount">Amount to increase by.</param>
+	[Server]
+	public void IncreaseFunds(float amount) {
+		if (amount >= 0) {
+			funds += amount;
+		}
+		RpcUpdateResourceOverlay(playerID, GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), funds);
+	}
+
+	/// <summary>
+	/// Decreases the player's funds.
+	/// </summary>
+	/// <param name="amount">Amount to decrease by.</param>
+	[Server]
+	public void DecreaseFunds(float amount) {
+		if (amount >= 0) {
+			funds -= amount;
+		}
+		RpcUpdateResourceOverlay(playerID, GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), funds);
+	}
+
+	/// <summary>
+	/// Sends the resource info to the client so the UI can be updated.
+	/// </summary>
+	[Server]
+	public void SendResourceInfo() {
+		RpcUpdateResourceOverlay(playerID, GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), funds);
+	}
+
+	/// <summary>
+	/// Updates the resource overlay using data sent form the server
+	/// </summary>
+	/// <param name="playerID">Player ID to update.</param>
+	/// <param name="ore">Amount of ore.</param>
+	/// <param name="food">Amount of food.</param>
+	/// <param name="energy">Amound of energy.</param>
+	/// <param name="funds">Total funds.</param>
+	[ClientRpc]
+	private void RpcUpdateResourceOverlay(int playerID, int ore, int food, int energy, float funds) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
+			overlay.GetChild(1).GetChild(2).GetComponent<Text>().text = ore.ToString();
+			overlay.GetChild(2).GetChild(2).GetComponent<Text>().text = food.ToString();
+			overlay.GetChild(3).GetChild(2).GetComponent<Text>().text = energy.ToString();
+			overlay.GetChild(4).GetChild(2).GetComponent<Text>().text = funds.ToString();
 		}
 	}
 
@@ -440,8 +505,9 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	protected virtual void Production() {
 		foreach (Tile t in ownedTiles) {
-			resourceInventory[Data.ResourceType.ENERGY] += t.doResourceProduction(Data.ResourceType.ENERGY);
-			resourceInventory[Data.ResourceType.ORE] += t.doResourceProduction(Data.ResourceType.ORE);
+			GiveResouce(Data.ResourceType.ORE, t.doResourceProduction(Data.ResourceType.ORE));
+			//GiveResouce(Data.ResourceType.FOOD, t.doResourceProduction(Data.ResourceType.FOOD));
+			GiveResouce(Data.ResourceType.ENERGY, t.doResourceProduction(Data.ResourceType.ENERGY));
 		}
 	}
 }

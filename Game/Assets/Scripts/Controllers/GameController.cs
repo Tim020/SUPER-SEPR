@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Linq;
+
 //using System.Diagnostics;
 
 /// <summary>
@@ -78,6 +79,9 @@ public class GameController : NetworkBehaviour {
 			}
 			if (i == NetworkController.instance.numPlayers) {
 				state = Data.GameState.GAME_WAIT;
+				foreach (Player player in PlayerController.instance.players.Values) {
+					player.SendResourceInfo();
+				}
 				UnityEngine.Debug.Log("All players selected a college");
 			}
 		} else if (state == Data.GameState.GAME_WAIT) {
