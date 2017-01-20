@@ -71,6 +71,7 @@ public class CameraController : MonoBehaviour {
 			return;
 		}
 
+		//TODO: Clamp these so you can't go past the map bounds
 		Vector3 pos = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
 		Vector3 move = new Vector3(pos.x * dragSpeed * Camera.main.orthographicSize / minZoom, pos.y * dragSpeed * Camera.main.orthographicSize / minZoom, 0);
 
