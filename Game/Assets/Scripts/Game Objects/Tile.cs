@@ -17,7 +17,7 @@ public class Tile : NetworkBehaviour {
 	/// <summary>
 	/// A reference to the player that owns this tile, null if no owner
 	/// </summary>
-	private BasePlayer owner;
+	private Player owner;
 
 	/// <summary>
 	/// Type of the tile
@@ -71,7 +71,7 @@ public class Tile : NetworkBehaviour {
 	/// Gets the owner of this tile, may be null if no one has selected it yet
 	/// </summary>
 	/// <returns>The owner of the tile</returns>
-	public BasePlayer getOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 
@@ -79,7 +79,7 @@ public class Tile : NetworkBehaviour {
 	/// Sets the owner for the tile
 	/// </summary>
 	/// <param name="p">Player who bought this tile</param>
-	public void setOwner(BasePlayer p) {
+	public void setOwner(Player p) {
 		owner = p;
 	}
 

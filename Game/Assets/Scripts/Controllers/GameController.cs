@@ -45,7 +45,7 @@ public class GameController : NetworkBehaviour {
 	/// <summary>
 	/// The player whos turn is currently is.
 	/// </summary>
-	private HumanPlayer currentPlayer;
+	private Player currentPlayer;
 
 	/// <summary>
 	/// Raises the start server event.
@@ -61,13 +61,13 @@ public class GameController : NetworkBehaviour {
 	public void Update() {
 		if (state == Data.GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == numberOfPlayersNeeded) {
 			state = Data.GameState.COLLEGE_SELECTION;
-			HumanPlayer player = (HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
+			Player player = (Player)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
 			player.RpcDisableWaitMessage();
 		} else if (state == Data.GameState.COLLEGE_SELECTION) {
 			int i = 0;
 			for (; i < PlayerController.instance.players.Count; i++) {
-				if (PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value is HumanPlayer) {
-					HumanPlayer player = (HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value;
+				if (PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value is Player) {
+					Player player = (Player)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value;
 					if (player.college == null) {
 						player.RpcActivateCollegeSelection(player.playerID);
 						break;
@@ -81,7 +81,7 @@ public class GameController : NetworkBehaviour {
 				UnityEngine.Debug.Log("All players selected a college");
 			}
 		} else if (state == Data.GameState.GAME_WAIT) {
-			currentPlayer = (HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
+			currentPlayer = (Player)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
 			currentPlayerTurn = currentPlayer.playerID;
 			state = Data.GameState.TILE_PURCHASE;
 		} else if (state == Data.GameState.TILE_PURCHASE) {
