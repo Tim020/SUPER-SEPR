@@ -3,14 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Linq;
+using System.Diagnostics;
 
 public class GameController : NetworkBehaviour {
 
+	/// <summary>
+	/// The instance.
+	/// </summary>
 	public static GameController instance;
 
+	/// <summary>
+	/// The number of players needed.
+	/// </summary>
 	private static int numberOfPlayersNeeded = 2;
 
-	private GameState state = GameState.PLAYER_WAIT;
+	/// <summary>
+	/// The current state the game is in.
+	/// </summary>
+	/// <value>The state.</value>
+	public GameState state { get; private set; }
+
+	/// <summary>
+	/// The timer used to time Phases 2 and 3.
+	/// </summary>
+	private Stopwatch timer;
 
 	/// <summary>
 	/// Game state.
@@ -28,14 +44,23 @@ public class GameController : NetworkBehaviour {
 		RECYCLE
 	}
 
+	/// <summary>
+	/// The number of players that have completed the 3 individual phases.
+	/// </summary>
 	private int playersCompletedPhase = 0;
-	private int currentPlayerTurn;
+
+	/// <summary>
+	/// Gets the current player who is taking their turn at individual phases.
+	/// </summary>
+	/// <value>The current player.</value>
+	public int currentPlayerTurn { get; private set; }
 
 	/// <summary>
 	/// Raises the start server event.
 	/// </summary>
 	public override void OnStartServer() {
 		instance = this;
+		state = GameState.PLAYER_WAIT;
 	}
 
 	/// <summary>
@@ -52,11 +77,9 @@ public class GameController : NetworkBehaviour {
 				if (PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value is HumanPlayer) {
 					HumanPlayer player = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value;
 					if (player.college == null) {
-						Debug.Log("Enable selection for player: " + player.playerID);
 						player.RpcActivateCollegeSelection(player.playerID);
 						break;
 					} else {
-						Debug.Log("Disable selection for player: " + player.playerID);
 						player.RpcDisableCollegeSelection(player.playerID);
 					}
 				}
@@ -68,7 +91,21 @@ public class GameController : NetworkBehaviour {
 			currentPlayerTurn = ((HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value).playerID;
 			state = GameState.TILE_PURCHASE;
 		} else if (state == GameState.TILE_PURCHASE) {
-			
+			// Check for something here maybe?
+		} else if (state == GameState.ROBOTICON_CUSTOMISATION) {
+			if (timer.Elapsed.TotalSeconds > 60) {
+				state = GameState.ROBOTICON_PLACEMENT;
+				timer = Stopwatch.StartNew();
+			} else {
+				//Check for something here maybe?
+			}
+		} else if (state == GameState.ROBOTICON_PLACEMENT) {
+			if (timer.Elapsed.TotalSeconds > 60) {
+				state = GameState.PLAYER_FINISH;
+				timer = null;
+			} else {
+				//Check for something here maybe?
+			}
 		} else if (state == GameState.PLAYER_FINISH) {
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = GameState.PRODUCTION;
@@ -84,5 +121,14 @@ public class GameController : NetworkBehaviour {
 			playersCompletedPhase = 0;
 			state = GameState.GAME_WAIT;
 		}
+	}
+
+	/// <summary>
+	/// Called by a player when they have purchased a tile to advance to the next game state.
+	/// </summary>
+	/// <param name="playerID">ID of the player that took the tile.</param>
+	public void playerPurchasedTile(int playerID) {
+		state = GameState.ROBOTICON_CUSTOMISATION;
+		timer = Stopwatch.StartNew();
 	}
 }

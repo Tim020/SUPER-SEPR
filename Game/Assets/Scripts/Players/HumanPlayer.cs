@@ -147,8 +147,6 @@ public class HumanPlayer : BasePlayer {
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
 		if (t != null) {
 			AcquireTile(t);
-		}
-		if (t != null) {
 			string owner;
 			if (t.getOwner() != null) {
 				owner = t.getOwner().college.Name;
@@ -204,6 +202,7 @@ public class HumanPlayer : BasePlayer {
 	/// Called when a player wishes to buy a tile
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
+	[Server]
 	protected override bool AcquireTile(Tile t) {
 		if (base.AcquireTile(t)) {
 			RpcColorTile("TileOverlay_" + t.transform.position.x + "_" + t.transform.position.y, college.Id);

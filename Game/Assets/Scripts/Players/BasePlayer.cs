@@ -85,9 +85,6 @@ public class BasePlayer : NetworkBehaviour {
 			college = Data.College.VANBURGH;
 			break;
 		}
-		if (isServer) {
-			MapController.instance.collegeDecided = 1;
-		}
 	}
 
 	/// <summary>
@@ -146,10 +143,12 @@ public class BasePlayer : NetworkBehaviour {
 	/// Called when a player wishes to buy a tile
 	/// </summary>
 	/// <param name="t">The tile the player wishes to buy</param>
+	[Server]
 	protected virtual bool AcquireTile(Tile t) {
-		if (t.getOwner() == null) {
+		if (t.getOwner() == null && GameController.instance.state == GameController.GameState.TILE_PURCHASE && GameController.instance.currentPlayerTurn == this.playerID) {
 			ownedTiles.Add(t);
 			t.setOwner(this);
+			GameController.instance.playerPurchasedTile(this.playerID);
 			return true;
 		}
 		return false;
