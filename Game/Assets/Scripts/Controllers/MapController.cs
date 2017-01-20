@@ -86,7 +86,7 @@ public class MapController : NetworkBehaviour {
 		if (lastPlayers != NetworkController.instance.numPlayers) {
 			lastPlayers = NetworkController.instance.numPlayers;
 			foreach (Tile t in tiles) {
-				int ord = (int) t.type;
+				int ord = (int)t.type;
 				t.RpcSyncTile(ord);
 			}
 		}
