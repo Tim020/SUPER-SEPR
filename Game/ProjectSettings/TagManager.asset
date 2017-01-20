@@ -9,6 +9,7 @@ TagManager:
   - CollegeSelection
   - UserInterface
   - TileInfoOverlay
+  - UIMarket
   layers:
   - Default
   - TransparentFX
