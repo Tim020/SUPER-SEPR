@@ -100,10 +100,10 @@ public class MapController : NetworkBehaviour {
 	/// <param name="worldY">World Y position.</param>
 	[Server]
 	public Tile getTileAt(int worldX, int worldY) {
-		if (worldX < 0 || worldX > width) {
+		if (worldX < 0 || worldX >= width) {
 			return null;
 		}
-		if (worldY < 0 || worldY > height) {
+		if (worldY < 0 || worldY >= height) {
 			return null;
 		}
 		return tiles[worldX, worldY];

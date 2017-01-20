@@ -8,6 +8,22 @@ using System.Collections.Generic;
 public static class Data {
 
 	/// <summary>
+	/// Game state.
+	/// </summary>
+	public enum GameState {
+		PLAYER_WAIT,
+		COLLEGE_SELECTION,
+		GAME_WAIT,
+		TILE_PURCHASE,
+		ROBOTICON_CUSTOMISATION,
+		ROBOTICON_PLACEMENT,
+		PLAYER_FINISH,
+		PRODUCTION,
+		AUCTION,
+		RECYCLE
+	}
+
+	/// <summary>
 	/// The different types of tiles
 	/// </summary>
 	public enum TileType {

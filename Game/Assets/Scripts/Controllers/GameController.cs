@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Linq;
-using System.Diagnostics;
+//using System.Diagnostics;
 
+/// <summary>
+/// Class to control the behaviour of the game, this handles moving between the various phases as well as making sure that all players are present
+/// </summary>
 public class GameController : NetworkBehaviour {
 
 	/// <summary>
@@ -21,28 +24,12 @@ public class GameController : NetworkBehaviour {
 	/// The current state the game is in.
 	/// </summary>
 	/// <value>The state.</value>
-	public GameState state { get; private set; }
+	public Data.GameState state { get; private set; }
 
 	/// <summary>
 	/// The timer used to time Phases 2 and 3.
 	/// </summary>
-	private Stopwatch timer;
-
-	/// <summary>
-	/// Game state.
-	/// </summary>
-	public enum GameState {
-		PLAYER_WAIT,
-		COLLEGE_SELECTION,
-		GAME_WAIT,
-		TILE_PURCHASE,
-		ROBOTICON_CUSTOMISATION,
-		ROBOTICON_PLACEMENT,
-		PLAYER_FINISH,
-		PRODUCTION,
-		AUCTION,
-		RECYCLE
-	}
+	private System.Diagnostics.Stopwatch timer;
 
 	/// <summary>
 	/// The number of players that have completed the 3 individual phases.
@@ -56,26 +43,31 @@ public class GameController : NetworkBehaviour {
 	public int currentPlayerTurn { get; private set; }
 
 	/// <summary>
+	/// The player whos turn is currently is.
+	/// </summary>
+	private HumanPlayer currentPlayer;
+
+	/// <summary>
 	/// Raises the start server event.
 	/// </summary>
 	public override void OnStartServer() {
 		instance = this;
-		state = GameState.PLAYER_WAIT;
+		state = Data.GameState.PLAYER_WAIT;
 	}
 
 	/// <summary>
 	/// Update this instance.
 	/// </summary>
 	public void Update() {
-		if (state == GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == numberOfPlayersNeeded) {
-			state = GameState.COLLEGE_SELECTION;
-			HumanPlayer player = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
+		if (state == Data.GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == numberOfPlayersNeeded) {
+			state = Data.GameState.COLLEGE_SELECTION;
+			HumanPlayer player = (HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
 			player.RpcDisableWaitMessage();
-		} else if (state == GameState.COLLEGE_SELECTION) {
+		} else if (state == Data.GameState.COLLEGE_SELECTION) {
 			int i = 0;
 			for (; i < PlayerController.instance.players.Count; i++) {
 				if (PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value is HumanPlayer) {
-					HumanPlayer player = (HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value;
+					HumanPlayer player = (HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(i).Value;
 					if (player.college == null) {
 						player.RpcActivateCollegeSelection(player.playerID);
 						break;
@@ -85,41 +77,45 @@ public class GameController : NetworkBehaviour {
 				}
 			}
 			if (i == NetworkController.instance.numPlayers) {
-				state = GameState.GAME_WAIT;
+				state = Data.GameState.GAME_WAIT;
+				UnityEngine.Debug.Log("All players selected a college");
 			}
-		} else if (state == GameState.GAME_WAIT) {
-			currentPlayerTurn = ((HumanPlayer) PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value).playerID;
-			state = GameState.TILE_PURCHASE;
-		} else if (state == GameState.TILE_PURCHASE) {
+		} else if (state == Data.GameState.GAME_WAIT) {
+			currentPlayer = (HumanPlayer)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
+			currentPlayerTurn = currentPlayer.playerID;
+			state = Data.GameState.TILE_PURCHASE;
+		} else if (state == Data.GameState.TILE_PURCHASE) {
 			// Check for something here maybe?
-		} else if (state == GameState.ROBOTICON_CUSTOMISATION) {
+			currentPlayer.RpcStartTilePhase(currentPlayerTurn);
+		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			if (timer.Elapsed.TotalSeconds > 60) {
-				state = GameState.ROBOTICON_PLACEMENT;
-				timer = Stopwatch.StartNew();
+				state = Data.GameState.ROBOTICON_PLACEMENT;
+				timer = System.Diagnostics.Stopwatch.StartNew();
 			} else {
-				//Check for something here maybe?
+				currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
 			}
-		} else if (state == GameState.ROBOTICON_PLACEMENT) {
+		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
 			if (timer.Elapsed.TotalSeconds > 60) {
-				state = GameState.PLAYER_FINISH;
+				state = Data.GameState.PLAYER_FINISH;
 				timer = null;
 			} else {
-				//Check for something here maybe?
+				currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
 			}
-		} else if (state == GameState.PLAYER_FINISH) {
+		} else if (state == Data.GameState.PLAYER_FINISH) {
+			currentPlayer.RpcEndPlayerPhase(currentPlayerTurn);
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
-				state = GameState.PRODUCTION;
+				state = Data.GameState.PRODUCTION;
 			} else {
-				state = GameState.GAME_WAIT;
+				state = Data.GameState.GAME_WAIT;
 				playersCompletedPhase++;
 			}
-		} else if (state == GameState.PRODUCTION) {
+		} else if (state == Data.GameState.PRODUCTION) {
 			
-		} else if (state == GameState.AUCTION) {
-			state = GameState.RECYCLE;
-		} else if (state == GameState.RECYCLE) {
+		} else if (state == Data.GameState.AUCTION) {
+			state = Data.GameState.RECYCLE;
+		} else if (state == Data.GameState.RECYCLE) {
 			playersCompletedPhase = 0;
-			state = GameState.GAME_WAIT;
+			state = Data.GameState.GAME_WAIT;
 		}
 	}
 
@@ -128,7 +124,7 @@ public class GameController : NetworkBehaviour {
 	/// </summary>
 	/// <param name="playerID">ID of the player that took the tile.</param>
 	public void playerPurchasedTile(int playerID) {
-		state = GameState.ROBOTICON_CUSTOMISATION;
-		timer = Stopwatch.StartNew();
+		state = Data.GameState.ROBOTICON_CUSTOMISATION;
+		timer = System.Diagnostics.Stopwatch.StartNew();
 	}
 }

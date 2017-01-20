@@ -60,30 +60,30 @@ public class BasePlayer : NetworkBehaviour {
 	[Command]
 	public virtual void CmdSetCollege(int collegeID) {
 		switch (collegeID) {
-		case 0:
-			college = Data.College.ALCUIN;
-			break;
-		case 1:
-			college = Data.College.CONSTANTINE;
-			break;
-		case 2:
-			college = Data.College.DERWENT;
-			break;
-		case 3:
-			college = Data.College.GOODRICKE;
-			break;
-		case 4:
-			college = Data.College.HALIFAX;
-			break;
-		case 5:
-			college = Data.College.JAMES;
-			break;
-		case 6:
-			college = Data.College.LANGWITH;
-			break;
-		case 7:
-			college = Data.College.VANBURGH;
-			break;
+			case 0:
+				college = Data.College.ALCUIN;
+				break;
+			case 1:
+				college = Data.College.CONSTANTINE;
+				break;
+			case 2:
+				college = Data.College.DERWENT;
+				break;
+			case 3:
+				college = Data.College.GOODRICKE;
+				break;
+			case 4:
+				college = Data.College.HALIFAX;
+				break;
+			case 5:
+				college = Data.College.JAMES;
+				break;
+			case 6:
+				college = Data.College.LANGWITH;
+				break;
+			case 7:
+				college = Data.College.VANBURGH;
+				break;
 		}
 	}
 
@@ -145,7 +145,7 @@ public class BasePlayer : NetworkBehaviour {
 	/// <param name="t">The tile the player wishes to buy</param>
 	[Server]
 	protected virtual bool AcquireTile(Tile t) {
-		if (t.getOwner() == null && GameController.instance.state == GameController.GameState.TILE_PURCHASE && GameController.instance.currentPlayerTurn == this.playerID) {
+		if (t.getOwner() == null && GameController.instance.state == Data.GameState.TILE_PURCHASE && GameController.instance.currentPlayerTurn == this.playerID) {
 			ownedTiles.Add(t);
 			t.setOwner(this);
 			GameController.instance.playerPurchasedTile(this.playerID);

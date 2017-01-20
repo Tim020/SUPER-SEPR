@@ -2,10 +2,11 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Runtime.InteropServices;
 
 /// <summary>
-/// Human player.
+/// Human player class.
 /// </summary>
 public class HumanPlayer : BasePlayer {
 
@@ -25,6 +26,11 @@ public class HumanPlayer : BasePlayer {
 	public bool collegeAssigned = false;
 
 	/// <summary>
+	/// The state of the player.
+	/// </summary>
+	private Data.GameState playerState = Data.GameState.PLAYER_WAIT;
+
+	/// <summary>
 	/// Raises the start local player event.
 	/// </summary>
 	public override void OnStartLocalPlayer() {
@@ -42,8 +48,13 @@ public class HumanPlayer : BasePlayer {
 		if (isLocalPlayer) {
 			//Do input stuff in here
 			if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
-				Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-				CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
+				//Check if we are clicking over a UI element, if so don't do anything
+				if (EventSystem.current.IsPointerOverGameObject()) {
+					Debug.Log("UI thing clicked");
+				} else {
+					Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
+				}
 			}
 		}
 	}
@@ -146,7 +157,6 @@ public class HumanPlayer : BasePlayer {
 	protected void CmdMouseClick(int worldX, int worldY) {
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
 		if (t != null) {
-			AcquireTile(t);
 			string owner;
 			if (t.getOwner() != null) {
 				owner = t.getOwner().college.Name;
@@ -155,8 +165,24 @@ public class HumanPlayer : BasePlayer {
 			}
 			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
 		} else {
-			RpcKillAllTileOverlays(this.playerID);
+			if (worldX < 0 || worldX >= MapController.instance.width || worldY < 0 || worldY >= MapController.instance.height) {
+				RpcKillAllTileOverlays(this.playerID);
+			}
 		}
+	}
+
+	protected void PurchaseButtonClick(int worldX, int worldY) {
+		Debug.Log("Tile purchase button clicked");
+		CmdDoTilePurchase(worldX, worldY);
+	}
+
+	[Command]
+	private void CmdDoTilePurchase(int worldX, int worldY) {
+		Tile t = MapController.instance.getTileAt(worldX, worldY);
+		if (t != null) {
+			AcquireTile(t);
+		}
+		RpcKillAllTileOverlays(this.playerID);
 	}
 
 	/// <summary>
@@ -182,6 +208,11 @@ public class HumanPlayer : BasePlayer {
 			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
 			go.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
 			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
+			// Check if we are in the tile phase, if so enable the purchase button
+			if (playerState == Data.GameState.TILE_PURCHASE) {
+				go.transform.GetChild(5).gameObject.SetActive(true);
+				go.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
+			}
 		}
 	}
 
@@ -195,6 +226,34 @@ public class HumanPlayer : BasePlayer {
 			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
 				Destroy(g);
 			}
+		}
+	}
+
+	[ClientRpc]
+	public void RpcStartTilePhase(int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			playerState = Data.GameState.TILE_PURCHASE;
+		}
+	}
+
+	[ClientRpc]
+	public void RpcStartRoboticonCustomPhase(int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
+		}
+	}
+
+	[ClientRpc]
+	public void RpcStartRoboticonPlacePhase(int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			playerState = Data.GameState.ROBOTICON_PLACEMENT;
+		}
+	}
+
+	[ClientRpc]
+	public void RpcEndPlayerPhase(int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			playerState = Data.GameState.PLAYER_WAIT;
 		}
 	}
 
@@ -221,30 +280,30 @@ public class HumanPlayer : BasePlayer {
 			return;
 		}
 		switch (id) {
-		case 0:
-			go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
-			break;
-		case 1:
-			go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
-			break;
-		case 2:
-			go.GetComponent<Image>().color = Data.College.DERWENT.Col;
-			break;
-		case 3:
-			go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
-			break;
-		case 4:
-			go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
-			break;
-		case 5:
-			go.GetComponent<Image>().color = Data.College.JAMES.Col;
-			break;
-		case 6:
-			go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
-			break;
-		case 7:
-			go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
-			break;
+			case 0:
+				go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
+				break;
+			case 1:
+				go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
+				break;
+			case 2:
+				go.GetComponent<Image>().color = Data.College.DERWENT.Col;
+				break;
+			case 3:
+				go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
+				break;
+			case 4:
+				go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
+				break;
+			case 5:
+				go.GetComponent<Image>().color = Data.College.JAMES.Col;
+				break;
+			case 6:
+				go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
+				break;
+			case 7:
+				go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
+				break;
 		}
 	}
 }
