@@ -171,11 +171,21 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
+	/// <summary>
+	/// Called when a purchase button is clicked
+	/// </summary>
+	/// <param name="worldX">World X position of the tile.</param>
+	/// <param name="worldY">World Y position of the tile.</param>
 	protected void PurchaseButtonClick(int worldX, int worldY) {
 		Debug.Log("Tile purchase button clicked");
 		CmdDoTilePurchase(worldX, worldY);
 	}
 
+	/// <summary>
+	/// Command that gets run on the server object to purchase a tile when the button is clicked
+	/// </summary>
+	/// <param name="worldX">World X position.</param>
+	/// <param name="worldY">World Y position.</param>
 	[Command]
 	private void CmdDoTilePurchase(int worldX, int worldY) {
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
@@ -229,6 +239,10 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
+	/// <summary>
+	/// Tells the client that it is in the tile phase.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	public void RpcStartTilePhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
@@ -236,6 +250,10 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
+	/// <summary>
+	/// Tells the client that it is in the roboticon customisation phase.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	public void RpcStartRoboticonCustomPhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
@@ -243,6 +261,10 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
+	/// <summary>
+	/// Tells the client that it is in the robiticon placement phase.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	public void RpcStartRoboticonPlacePhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
@@ -250,6 +272,10 @@ public class HumanPlayer : BasePlayer {
 		}
 	}
 
+	/// <summary>
+	/// Tells the client that it is in end turn phase.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	public void RpcEndPlayerPhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
