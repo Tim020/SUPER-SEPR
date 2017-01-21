@@ -159,4 +159,8 @@ public class GameController : NetworkBehaviour {
         state = Data.GameState.ROBOTICON_PLACEMENT;
         firstTick = true;
     }
+
+    public int GetTimerInSeconds() {
+        return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
+    }
 }

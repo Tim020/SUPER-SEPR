@@ -125,7 +125,7 @@ public class Player : NetworkBehaviour {
 			}
 
             if (playerState == Data.GameState.ROBOTICON_CUSTOMISATION || playerState == Data.GameState.ROBOTICON_PLACEMENT) {
-                timerText.text = Mathf.CeilToInt(60 - (float)GameController.instance.timer.Elapsed.TotalSeconds).ToString();
+                CmdSetTimerTime(playerID);
             } else {
                 timerText.text = "";
             }
@@ -134,7 +134,7 @@ public class Player : NetworkBehaviour {
             if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
 				//Check if we are clicking over a UI element, if so don't do anything
 				if (EventSystem.current.IsPointerOverGameObject()) {
-					Debug.Log("UI thing clicked");
+                    Debug.Log("UI thing clicked");
 				} else {
 					Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
@@ -142,6 +142,18 @@ public class Player : NetworkBehaviour {
 			}
 		}
 	}
+
+    [Command]
+    public void CmdSetTimerTime(int playerID) {
+        RpcSetTimerText(playerID, GameController.instance.GetTimerInSeconds());
+    }
+
+    [ClientRpc]
+    public void RpcSetTimerText(int playerID, int timerValue) {
+        if (playerID == this.playerID && isLocalPlayer) {
+            timerText.text = (60 - timerValue).ToString();
+        }
+    }
 
 	/// <summary>
 	/// Enable the college selection buttons and add the button listeners for them
