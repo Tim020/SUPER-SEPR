@@ -35,9 +35,10 @@ public static class Data {
 	/// Types of resources available in the game
 	/// </summary>
 	public enum ResourceType {
-		ENERGY,
+		ORE,
 		FOOD,
-		ORE
+		ENERGY,
+		NONE
 	}
 
 	/// <summary>

@@ -59,6 +59,13 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	private Data.GameState playerState = Data.GameState.PLAYER_WAIT;
 
+	private Data.ResourceType marketResourceSelection = Data.ResourceType.NONE;
+
+	private Data.ResourceType robotCustomisationChoice = Data.ResourceType.NONE;
+
+	[SyncVar]
+	private int marketResourceTradeAmount = 0;
+
 	/// <summary>
 	/// Raises the start local player event.
 	/// </summary>
@@ -66,6 +73,7 @@ public class Player : NetworkBehaviour {
 		Debug.Log("Start local human player");
 		Debug.Log(playerID);
 		SetupCollegeSelection();
+		SetupMarketUI();
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1).gameObject.SetActive(true);
 	}
 
@@ -74,8 +82,8 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	public override void OnStartServer() {
 		resourceInventory = new Dictionary<Data.ResourceType, int>();
-		resourceInventory.Add(Data.ResourceType.ENERGY, 0);
-		resourceInventory.Add(Data.ResourceType.ORE, 0);
+		resourceInventory.Add(Data.ResourceType.ORE, 10);
+		resourceInventory.Add(Data.ResourceType.ENERGY, 10);
 		ownedTiles = new List<Tile>();
 		funds = 100;
 	}
@@ -111,6 +119,36 @@ public class Player : NetworkBehaviour {
 		selection.GetChild(6).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(5));
 		selection.GetChild(7).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(6));
 		selection.GetChild(8).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
+	}
+
+	/// <summary>
+	/// Configure the market UI by setting up the button listeners
+	/// </summary>
+	private void SetupMarketUI() {
+		// Get the various market components
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform background = market.GetChild(0);
+		Transform resources = market.GetChild(1);
+		Transform roboticon = market.GetChild(2);
+	
+		// Button listeners for the menu panel buttons
+		background.GetChild(0).GetComponent<Button>().onClick.AddListener(() => MarketMenuButtonSelected(0, Data.ResourceType.ORE));
+		background.GetChild(1).GetComponent<Button>().onClick.AddListener(() => MarketMenuButtonSelected(1, Data.ResourceType.FOOD));
+		background.GetChild(2).GetComponent<Button>().onClick.AddListener(() => MarketMenuButtonSelected(2, Data.ResourceType.ENERGY));
+		background.GetChild(3).GetComponent<Button>().onClick.AddListener(() => MarketMenuButtonSelected(3, Data.ResourceType.NONE));
+		background.GetChild(4).GetComponent<Button>().onClick.AddListener(() => MarketMenuButtonSelected(4, Data.ResourceType.NONE));
+		background.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CloseMarket());
+
+		// Button listeners for the resources tab buttons
+		resources.GetChild(1).GetComponent<Button>().onClick.AddListener(() => CmdChangeResourceQuanity(1, (int)marketResourceSelection));
+		resources.GetChild(2).GetComponent<Button>().onClick.AddListener(() => CmdChangeResourceQuanity(-1, (int)marketResourceSelection));
+		//resources.GetChild(3).GetComponent<Button>().onClick.AddListener();
+		//resources.GetChild(4).GetComponent<Button>().onClick.AddListener();
+
+		// Button listeners for the roboticon tab
+		roboticon.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(false));
+		roboticon.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(true));
+		//roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener();
 	}
 
 	/// <summary>
@@ -219,7 +257,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="worldX">World X position of the click.</param>
 	/// <param name="worldY">World Y position of the click.</param>
 	[Command]
-	protected void CmdMouseClick(int worldX, int worldY) {
+	private void CmdMouseClick(int worldX, int worldY) {
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
 		if (t != null) {
 			string owner;
@@ -241,8 +279,7 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="worldX">World X position of the tile.</param>
 	/// <param name="worldY">World Y position of the tile.</param>
-	protected void PurchaseButtonClick(int worldX, int worldY) {
-		Debug.Log("Tile purchase button clicked");
+	private void PurchaseButtonClick(int worldX, int worldY) {
 		CmdDoTilePurchase(worldX, worldY);
 	}
 
@@ -302,6 +339,251 @@ public class Player : NetworkBehaviour {
 				Destroy(g);
 			}
 		}
+	}
+
+	/// <summary>
+	/// Called when one of the menu panel buttons are pressed within the market UI.
+	/// </summary>
+	/// <param name="resource">The type of resource selected.</param>
+	private void MarketMenuButtonSelected(int id, Data.ResourceType resource) {
+		marketResourceSelection = resource;
+		marketResourceTradeAmount = 0;
+
+		//Find and enable the correct game objects that represent the resource part of the market UI
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(0);
+		Transform marketResource = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1);
+		Transform marketRoboticon = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2);
+
+		//Check which button was pressed and enable/disable the correct game objects
+		if (id < 3) {
+			marketResource.gameObject.SetActive(true);
+			marketRoboticon.gameObject.SetActive(false);
+			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
+		} else if (id == 3) {
+			marketRoboticon.gameObject.SetActive(true);
+			marketRoboticon.GetChild(5).GetComponent<Button>().enabled = false;
+			marketResource.gameObject.SetActive(false);
+		} else if (id == 4) {
+			
+		}
+
+		//Determine which resource was pressed and highlight the associated menu button
+		ColorBlock cb;
+		switch (id) {
+		case 0:
+			cb = market.GetChild(0).GetComponent<Button>().colors;
+			cb.normalColor = new Color(0, 160 / 255, 1);
+			market.GetChild(0).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(1).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(1).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(2).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(2).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(3).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(3).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(4).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(4).GetComponent<Button>().colors = cb;
+
+			break;
+		case 1:
+			cb = market.GetChild(0).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(0).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(1).GetComponent<Button>().colors;
+			cb.normalColor = new Color(0, 160 / 255, 1);
+			market.GetChild(1).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(2).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(2).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(3).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(3).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(4).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(4).GetComponent<Button>().colors = cb;
+
+			break;
+		case 2:
+			cb = market.GetChild(0).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(0).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(1).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(1).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(2).GetComponent<Button>().colors;
+			cb.normalColor = new Color(0, 160 / 255, 1);
+			market.GetChild(2).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(3).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(3).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(4).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(4).GetComponent<Button>().colors = cb;
+
+			break;
+		case 3:
+			cb = market.GetChild(0).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(0).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(1).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(1).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(2).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(2).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(3).GetComponent<Button>().colors;
+			cb.normalColor = new Color(0, 160 / 255, 1);
+			market.GetChild(3).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(4).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(4).GetComponent<Button>().colors = cb;
+
+			break;
+		case 4:
+			cb = market.GetChild(0).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(0).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(1).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(1).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(2).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(2).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(3).GetComponent<Button>().colors;
+			cb.normalColor = new Color(1, 1, 1);
+			market.GetChild(3).GetComponent<Button>().colors = cb;
+
+			cb = market.GetChild(4).GetComponent<Button>().colors;
+			cb.normalColor = new Color(0, 160 / 255, 1);
+			market.GetChild(4).GetComponent<Button>().colors = cb;
+
+			break;
+		}
+	}
+
+	/// <summary>
+	/// Command to change the quantity of resources being traded.
+	/// This is needed because we check whether the player has enough of this resource to trade and this data is held server side in the resource dictionary.
+	/// Once the quantity has been validated, an RPC call is sent to update the text on the client side in the UI.
+	/// </summary>
+	/// <param name="amount">The amount we are hoping to change by.</param>
+	/// <param name="resourceTypeOrdinal">The ordinal of the resource being traded</param>
+	[Command]
+	private void CmdChangeResourceQuanity(int amount, int resourceTypeOrdinal) {
+		if (marketResourceTradeAmount + amount >= 0 && marketResourceTradeAmount + amount <= GetResourceAmount((Data.ResourceType)resourceTypeOrdinal)) {
+			marketResourceTradeAmount += amount;
+			RpcUpdateMarketResourceUI(this.playerID);
+		}
+	}
+
+	/// <summary>
+	/// RPC call to update the quantity text in the market UI.
+	/// </summary>
+	/// <param name="playerID">Player ID that made the change.</param>
+	[ClientRpc]
+	private void RpcUpdateMarketResourceUI(int playerID) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
+		}
+	}
+
+	/// <summary>
+	/// Changes the robot configuration.
+	/// </summary>
+	/// <param name="next">If set to <c>true</c> we are cycling next, if set to <c>false</c> we are cycling previous.</param>
+	private void ChangeRobotConfiguration(bool next) {
+		Transform robotSprite = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(1);
+		Transform robotText = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(2);
+		Transform confirmButton = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(5);
+		if (next) {
+			robotCustomisationChoice = Util.Next(robotCustomisationChoice);
+		} else {
+			robotCustomisationChoice = Util.Prev(robotCustomisationChoice);
+		}
+		switch (robotCustomisationChoice) {
+		case Data.ResourceType.NONE:
+			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
+			robotText.GetComponent<Text>().text = "Default Roboticon";
+			confirmButton.GetComponent<Button>().enabled = false;
+			break;
+		case Data.ResourceType.ORE:
+			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonOre;
+			robotText.GetComponent<Text>().text = "Ore Roboticon";
+			confirmButton.GetComponent<Button>().enabled = true;
+			break;
+		case Data.ResourceType.FOOD:
+			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonFood;
+			robotText.GetComponent<Text>().text = "Food Roboticon";
+			confirmButton.GetComponent<Button>().enabled = true;
+			break;
+		case Data.ResourceType.ENERGY:
+			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonEnergy;
+			robotText.GetComponent<Text>().text = "Energy Roboticon";
+			confirmButton.GetComponent<Button>().enabled = true;
+			break;
+		}
+	}
+
+	/// <summary>
+	/// Closes and resets the market UI.
+	/// </summary>
+	private void CloseMarket() {
+		//Find the correct UI game objects
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform marketBackground = market.GetChild(0);
+		Transform marketResourceBackground = market.GetChild(1);
+
+		//Disable the relevant UI objects
+		market.gameObject.SetActive(false);
+		marketResourceBackground.gameObject.SetActive(false);
+
+		//Recolour the menu buttons
+		ColorBlock cb = marketBackground.GetChild(0).GetComponent<Button>().colors;
+		cb.normalColor = new Color(1, 1, 1);
+		marketBackground.GetChild(0).GetComponent<Button>().colors = cb;
+
+		cb = marketBackground.GetChild(1).GetComponent<Button>().colors;
+		cb.normalColor = new Color(1, 1, 1);
+		marketBackground.GetChild(1).GetComponent<Button>().colors = cb;
+
+		cb = marketBackground.GetChild(2).GetComponent<Button>().colors;
+		cb.normalColor = new Color(1, 1, 1);
+		marketBackground.GetChild(2).GetComponent<Button>().colors = cb;
+
+		cb = market.GetChild(3).GetComponent<Button>().colors;
+		cb.normalColor = new Color(1, 1, 1);
+		market.GetChild(3).GetComponent<Button>().colors = cb;
+
+		cb = market.GetChild(4).GetComponent<Button>().colors;
+		cb.normalColor = new Color(1, 1, 1);
+		market.GetChild(4).GetComponent<Button>().colors = cb;
+
+		//Reset the variables
+		CmdChangeResourceQuanity(marketResourceTradeAmount * -1, (int)marketResourceSelection);
+		marketResourceSelection = Data.ResourceType.NONE;
+		robotCustomisationChoice = Data.ResourceType.NONE;
 	}
 
 	/// <summary>
