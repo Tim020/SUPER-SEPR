@@ -9,6 +9,8 @@ using UnityEngine.Networking;
 /// </summary>
 public class MarketController : NetworkBehaviour {
 
+	public static MarketController instance;
+
 	/// <summary>
 	/// A dictionary with a resource type as a key, the value is the amount the market currently has
 	/// </summary>
@@ -38,6 +40,7 @@ public class MarketController : NetworkBehaviour {
 	/// Start this instance. Intialise the resource dictionaries and the starting funds.
 	/// </summary>
 	public override void OnStartServer() {
+		instance = this;
 		marketResources = new Dictionary<Data.ResourceType, int>();
 		marketResources.Add(Data.ResourceType.ENERGY, 100);
 		marketResources.Add(Data.ResourceType.ORE, 100);

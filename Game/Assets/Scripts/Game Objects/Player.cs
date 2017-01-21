@@ -140,8 +140,8 @@ public class Player : NetworkBehaviour {
 		background.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CloseMarket());
 
 		// Button listeners for the resources tab buttons
-		resources.GetChild(1).GetComponent<Button>().onClick.AddListener(() => CmdChangeResourceQuanity(1, (int)marketResourceSelection));
-		resources.GetChild(2).GetComponent<Button>().onClick.AddListener(() => CmdChangeResourceQuanity(-1, (int)marketResourceSelection));
+		resources.GetChild(1).GetComponent<Button>().onClick.AddListener(() => ChangeResourceQuanity(1));
+		resources.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ChangeResourceQuanity(-1));
 		//resources.GetChild(3).GetComponent<Button>().onClick.AddListener();
 		//resources.GetChild(4).GetComponent<Button>().onClick.AddListener();
 
@@ -199,30 +199,30 @@ public class Player : NetworkBehaviour {
 	[Command]
 	public virtual void CmdSetCollege(int collegeID) {
 		switch (collegeID) {
-		case 0:
-			college = Data.College.ALCUIN;
-			break;
-		case 1:
-			college = Data.College.CONSTANTINE;
-			break;
-		case 2:
-			college = Data.College.DERWENT;
-			break;
-		case 3:
-			college = Data.College.GOODRICKE;
-			break;
-		case 4:
-			college = Data.College.HALIFAX;
-			break;
-		case 5:
-			college = Data.College.JAMES;
-			break;
-		case 6:
-			college = Data.College.LANGWITH;
-			break;
-		case 7:
-			college = Data.College.VANBURGH;
-			break;
+			case 0:
+				college = Data.College.ALCUIN;
+				break;
+			case 1:
+				college = Data.College.CONSTANTINE;
+				break;
+			case 2:
+				college = Data.College.DERWENT;
+				break;
+			case 3:
+				college = Data.College.GOODRICKE;
+				break;
+			case 4:
+				college = Data.College.HALIFAX;
+				break;
+			case 5:
+				college = Data.College.JAMES;
+				break;
+			case 6:
+				college = Data.College.LANGWITH;
+				break;
+			case 7:
+				college = Data.College.VANBURGH;
+				break;
 		}
 		RpcDisableCollege(collegeID);
 	}
@@ -370,143 +370,128 @@ public class Player : NetworkBehaviour {
 		//Determine which resource was pressed and highlight the associated menu button
 		ColorBlock cb;
 		switch (id) {
-		case 0:
-			cb = market.GetChild(0).GetComponent<Button>().colors;
-			cb.normalColor = new Color(0, 160 / 255, 1);
-			market.GetChild(0).GetComponent<Button>().colors = cb;
+			case 0:
+				cb = market.GetChild(0).GetComponent<Button>().colors;
+				cb.normalColor = new Color(0, 160 / 255, 1);
+				market.GetChild(0).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(1).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(1).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(1).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(1).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(2).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(2).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(2).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(2).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(3).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(3).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(3).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(3).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(4).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(4).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(4).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(4).GetComponent<Button>().colors = cb;
 
-			break;
-		case 1:
-			cb = market.GetChild(0).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(0).GetComponent<Button>().colors = cb;
+				break;
+			case 1:
+				cb = market.GetChild(0).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(0).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(1).GetComponent<Button>().colors;
-			cb.normalColor = new Color(0, 160 / 255, 1);
-			market.GetChild(1).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(1).GetComponent<Button>().colors;
+				cb.normalColor = new Color(0, 160 / 255, 1);
+				market.GetChild(1).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(2).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(2).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(2).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(2).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(3).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(3).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(3).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(3).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(4).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(4).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(4).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(4).GetComponent<Button>().colors = cb;
 
-			break;
-		case 2:
-			cb = market.GetChild(0).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(0).GetComponent<Button>().colors = cb;
+				break;
+			case 2:
+				cb = market.GetChild(0).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(0).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(1).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(1).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(1).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(1).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(2).GetComponent<Button>().colors;
-			cb.normalColor = new Color(0, 160 / 255, 1);
-			market.GetChild(2).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(2).GetComponent<Button>().colors;
+				cb.normalColor = new Color(0, 160 / 255, 1);
+				market.GetChild(2).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(3).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(3).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(3).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(3).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(4).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(4).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(4).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(4).GetComponent<Button>().colors = cb;
 
-			break;
-		case 3:
-			cb = market.GetChild(0).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(0).GetComponent<Button>().colors = cb;
+				break;
+			case 3:
+				cb = market.GetChild(0).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(0).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(1).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(1).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(1).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(1).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(2).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(2).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(2).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(2).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(3).GetComponent<Button>().colors;
-			cb.normalColor = new Color(0, 160 / 255, 1);
-			market.GetChild(3).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(3).GetComponent<Button>().colors;
+				cb.normalColor = new Color(0, 160 / 255, 1);
+				market.GetChild(3).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(4).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(4).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(4).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(4).GetComponent<Button>().colors = cb;
 
-			break;
-		case 4:
-			cb = market.GetChild(0).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(0).GetComponent<Button>().colors = cb;
+				break;
+			case 4:
+				cb = market.GetChild(0).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(0).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(1).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(1).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(1).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(1).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(2).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(2).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(2).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(2).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(3).GetComponent<Button>().colors;
-			cb.normalColor = new Color(1, 1, 1);
-			market.GetChild(3).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(3).GetComponent<Button>().colors;
+				cb.normalColor = new Color(1, 1, 1);
+				market.GetChild(3).GetComponent<Button>().colors = cb;
 
-			cb = market.GetChild(4).GetComponent<Button>().colors;
-			cb.normalColor = new Color(0, 160 / 255, 1);
-			market.GetChild(4).GetComponent<Button>().colors = cb;
+				cb = market.GetChild(4).GetComponent<Button>().colors;
+				cb.normalColor = new Color(0, 160 / 255, 1);
+				market.GetChild(4).GetComponent<Button>().colors = cb;
 
-			break;
+				break;
 		}
 	}
 
 	/// <summary>
-	/// Command to change the quantity of resources being traded.
-	/// This is needed because we check whether the player has enough of this resource to trade and this data is held server side in the resource dictionary.
-	/// Once the quantity has been validated, an RPC call is sent to update the text on the client side in the UI.
+	/// Increase or decrease the amount of resource the player wishes to buy or sell to the market
 	/// </summary>
 	/// <param name="amount">The amount we are hoping to change by.</param>
-	/// <param name="resourceTypeOrdinal">The ordinal of the resource being traded</param>
-	[Command]
-	private void CmdChangeResourceQuanity(int amount, int resourceTypeOrdinal) {
-		if (marketResourceTradeAmount + amount >= 0 && marketResourceTradeAmount + amount <= GetResourceAmount((Data.ResourceType)resourceTypeOrdinal)) {
+	private void ChangeResourceQuanity(int amount) {
+		if (marketResourceTradeAmount + amount >= 0) {
 			marketResourceTradeAmount += amount;
-			RpcUpdateMarketResourceUI(this.playerID);
 		}
-	}
-
-	/// <summary>
-	/// RPC call to update the quantity text in the market UI.
-	/// </summary>
-	/// <param name="playerID">Player ID that made the change.</param>
-	[ClientRpc]
-	private void RpcUpdateMarketResourceUI(int playerID) {
-		if (playerID == this.playerID && isLocalPlayer) {
-			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
-		}
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
 	}
 
 	/// <summary>
@@ -523,26 +508,26 @@ public class Player : NetworkBehaviour {
 			robotCustomisationChoice = Util.Prev(robotCustomisationChoice);
 		}
 		switch (robotCustomisationChoice) {
-		case Data.ResourceType.NONE:
-			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
-			robotText.GetComponent<Text>().text = "Default Roboticon";
-			confirmButton.GetComponent<Button>().enabled = false;
-			break;
-		case Data.ResourceType.ORE:
-			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonOre;
-			robotText.GetComponent<Text>().text = "Ore Roboticon";
-			confirmButton.GetComponent<Button>().enabled = true;
-			break;
-		case Data.ResourceType.FOOD:
-			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonFood;
-			robotText.GetComponent<Text>().text = "Food Roboticon";
-			confirmButton.GetComponent<Button>().enabled = true;
-			break;
-		case Data.ResourceType.ENERGY:
-			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonEnergy;
-			robotText.GetComponent<Text>().text = "Energy Roboticon";
-			confirmButton.GetComponent<Button>().enabled = true;
-			break;
+			case Data.ResourceType.NONE:
+				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
+				robotText.GetComponent<Text>().text = "Default Roboticon";
+				confirmButton.GetComponent<Button>().enabled = false;
+				break;
+			case Data.ResourceType.ORE:
+				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonOre;
+				robotText.GetComponent<Text>().text = "Ore Roboticon";
+				confirmButton.GetComponent<Button>().enabled = true;
+				break;
+			case Data.ResourceType.FOOD:
+				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonFood;
+				robotText.GetComponent<Text>().text = "Food Roboticon";
+				confirmButton.GetComponent<Button>().enabled = true;
+				break;
+			case Data.ResourceType.ENERGY:
+				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonEnergy;
+				robotText.GetComponent<Text>().text = "Energy Roboticon";
+				confirmButton.GetComponent<Button>().enabled = true;
+				break;
 		}
 	}
 
@@ -572,11 +557,11 @@ public class Player : NetworkBehaviour {
 		cb.normalColor = new Color(1, 1, 1);
 		marketBackground.GetChild(2).GetComponent<Button>().colors = cb;
 
-		cb = market.GetChild(3).GetComponent<Button>().colors;
+		cb = marketBackground.GetChild(3).GetComponent<Button>().colors;
 		cb.normalColor = new Color(1, 1, 1);
 		market.GetChild(3).GetComponent<Button>().colors = cb;
 
-		cb = market.GetChild(4).GetComponent<Button>().colors;
+		cb = marketBackground.GetChild(4).GetComponent<Button>().colors;
 		cb.normalColor = new Color(1, 1, 1);
 		market.GetChild(4).GetComponent<Button>().colors = cb;
 
@@ -656,30 +641,30 @@ public class Player : NetworkBehaviour {
 			return;
 		}
 		switch (id) {
-		case 0:
-			go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
-			break;
-		case 1:
-			go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
-			break;
-		case 2:
-			go.GetComponent<Image>().color = Data.College.DERWENT.Col;
-			break;
-		case 3:
-			go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
-			break;
-		case 4:
-			go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
-			break;
-		case 5:
-			go.GetComponent<Image>().color = Data.College.JAMES.Col;
-			break;
-		case 6:
-			go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
-			break;
-		case 7:
-			go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
-			break;
+			case 0:
+				go.GetComponent<Image>().color = Data.College.ALCUIN.Col;
+				break;
+			case 1:
+				go.GetComponent<Image>().color = Data.College.CONSTANTINE.Col;
+				break;
+			case 2:
+				go.GetComponent<Image>().color = Data.College.DERWENT.Col;
+				break;
+			case 3:
+				go.GetComponent<Image>().color = Data.College.GOODRICKE.Col;
+				break;
+			case 4:
+				go.GetComponent<Image>().color = Data.College.HALIFAX.Col;
+				break;
+			case 5:
+				go.GetComponent<Image>().color = Data.College.JAMES.Col;
+				break;
+			case 6:
+				go.GetComponent<Image>().color = Data.College.LANGWITH.Col;
+				break;
+			case 7:
+				go.GetComponent<Image>().color = Data.College.VANBURGH.Col;
+				break;
 		}
 	}
 
