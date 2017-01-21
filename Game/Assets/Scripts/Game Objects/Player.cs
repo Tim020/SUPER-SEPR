@@ -559,11 +559,11 @@ public class Player : NetworkBehaviour {
 
 		cb = marketBackground.GetChild(3).GetComponent<Button>().colors;
 		cb.normalColor = new Color(1, 1, 1);
-		market.GetChild(3).GetComponent<Button>().colors = cb;
+		marketBackground.GetChild(3).GetComponent<Button>().colors = cb;
 
 		cb = marketBackground.GetChild(4).GetComponent<Button>().colors;
 		cb.normalColor = new Color(1, 1, 1);
-		market.GetChild(4).GetComponent<Button>().colors = cb;
+		marketBackground.GetChild(4).GetComponent<Button>().colors = cb;
 
 		//Reset the variables
 		ChangeResourceQuanity(marketResourceTradeAmount * -1);
