@@ -153,7 +153,13 @@ public class Player : NetworkBehaviour {
 	}
 
 	private void OpenMarket() {
-		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).gameObject.SetActive(true);
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform resources = market.GetChild(1);
+		resources.GetChild(1).GetComponent<Button>().enabled = false;
+		resources.GetChild(2).GetComponent<Button>().enabled = false;
+		resources.GetChild(3).GetComponent<Button>().enabled = false;
+		resources.GetChild(4).GetComponent<Button>().enabled = false;
+		market.gameObject.SetActive(true);
 	}
 
 	/// <summary>
