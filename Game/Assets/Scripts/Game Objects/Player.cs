@@ -94,6 +94,7 @@ public class Player : NetworkBehaviour {
 		Debug.Log(playerID);
 		SetupCollegeSelection();
 		SetupMarketUI();
+		SetupOverlayUI();
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1).gameObject.SetActive(true);
 	}
 
@@ -144,6 +145,15 @@ public class Player : NetworkBehaviour {
 		selection.GetChild(6).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(5));
 		selection.GetChild(7).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(6));
 		selection.GetChild(8).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
+	}
+
+	private void SetupOverlayUI() {
+		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
+		overlay.GetChild(5).GetComponent<Button>().onClick.AddListener(() => OpenMarket());
+	}
+
+	private void OpenMarket() {
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).gameObject.SetActive(true);
 	}
 
 	/// <summary>
