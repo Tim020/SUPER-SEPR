@@ -43,7 +43,10 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	public Data.College college;
 
-	private Dictionary<GameObject, Vector3> selectedTilesOverlays = new Dictionary<GameObject, Vector3> ();
+	/// <summary>
+	/// All the currently open overlays.
+	/// </summary>
+	private Dictionary<GameObject, Vector3> selectedTilesOverlays = new Dictionary<GameObject, Vector3>();
 
 	/// <summary>
 	/// The player ID as set by the server.
@@ -97,7 +100,7 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer) {
 
 			foreach (GameObject t in selectedTilesOverlays.Keys) {
-				t.transform.position = Camera.main.WorldToScreenPoint (new Vector3 (selectedTilesOverlays[t].x + 0.5f, selectedTilesOverlays[t].y + 0.5f, -2));
+				t.transform.position = Camera.main.WorldToScreenPoint(new Vector3(selectedTilesOverlays[t].x + 0.5f, selectedTilesOverlays[t].y + 0.5f, -2));
 			}
 
 			//Do input stuff in here
@@ -273,7 +276,7 @@ public class Player : NetworkBehaviour {
 			} else {
 				owner = "None";
 			}
-			bool multiClick = Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl) || Input.GetKey (KeyCode.LeftCommand) || Input.GetKey (KeyCode.RightCommand);
+			bool multiClick = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
 			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID, !multiClick);
 		} else {
 			if (worldX < 0 || worldX >= MapController.instance.width || worldY < 0 || worldY >= MapController.instance.height) {
@@ -321,17 +324,18 @@ public class Player : NetworkBehaviour {
 			Canvas c = overlay.GetComponent<Canvas>();
 			if (destroyOtherOverlays) {
 				foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
-					Destroy (g);
+					selectedTilesOverlays.Remove(g);
+					Destroy(g);
 				}
 			}
 			GameObject go = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX + 0.5f, tileY + 0.5f, -2)), Quaternion.identity, c.transform);
-			selectedTilesOverlays [go] = new Vector3 (tileX, tileY, 0);
+			selectedTilesOverlays[go] = new Vector3(tileX, tileY, 0);
 			go.name = "TileInfo_" + tileX + "_" + tileY;
 			go.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
 			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
 			go.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
 			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
-			go.transform.GetChild(6).GetComponent<Button>().onClick.AddListener (() => RpcKillSpecificTileOverlay(playerID, go));
+			go.transform.GetChild(6).GetComponent<Button>().onClick.AddListener(() => KillSpecificTileOverlay(go));
 			// Check if we are in the tile phase, if so enable the purchase button
 			if (playerState == Data.GameState.TILE_PURCHASE) {
 				go.transform.GetChild(5).gameObject.SetActive(true);
@@ -340,12 +344,13 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
-	[ClientRpc]
-	private void RpcKillSpecificTileOverlay(int playerID, GameObject overlay) {
-		if (playerID == this.playerID && isLocalPlayer) {
-			selectedTilesOverlays.Remove (overlay);
-			Destroy (overlay);
-		}
+	/// <summary>
+	/// Kills the specific tile overlay.
+	/// </summary>
+	/// <param name="overlay">Overlay to kill.</param>
+	private void KillSpecificTileOverlay(GameObject overlay) {
+		selectedTilesOverlays.Remove(overlay);
+		Destroy(overlay);
 	}
 
 	/// <summary>
