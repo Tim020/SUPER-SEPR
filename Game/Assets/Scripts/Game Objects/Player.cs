@@ -43,20 +43,7 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	public Data.College college;
 
-	/// <summary>
-	/// The tile overlays that are currently displayed.
-	/// </summary>
-	private List<GameObject> selectedTilesOverlays = new List<GameObject>();
-
-	/// <summary>
-	/// The X world positions of the corresponding selectedTilesOverlays tiles that are currently being displayed.
-	/// </summary>
-	private List<int> selectedTilesX = new List<int>();
-
-	/// <summary>
-	/// The Y world positions of the corresponding selectedTilesOverlays tiles that are currently being displayed.
-	/// </summary>
-	private List<int> selectedTilesY = new List<int>();
+	private Dictionary<GameObject, Vector3> selectedTilesOverlays = new Dictionary<GameObject, Vector3> ();
 
 	/// <summary>
 	/// The player ID as set by the server.
@@ -108,6 +95,11 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	void Update() {
 		if (isLocalPlayer) {
+
+			foreach (GameObject t in selectedTilesOverlays.Keys) {
+				t.transform.position = Camera.main.WorldToScreenPoint (new Vector3 (selectedTilesOverlays[t].x + 0.5f, selectedTilesOverlays[t].y + 0.5f, -2));
+			}
+
 			//Do input stuff in here
 			if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
 				//Check if we are clicking over a UI element, if so don't do anything
@@ -116,12 +108,6 @@ public class Player : NetworkBehaviour {
 				} else {
 					Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
-				}
-			}
-
-			if (selectedTilesOverlays.Count > 0) {
-				foreach (GameObject t in selectedTilesOverlays) {
-					t.transform.position = Camera.main.WorldToScreenPoint (new Vector3 (selectedTilesX[selectedTilesOverlays.IndexOf(t)] + 0.5f, selectedTilesY[selectedTilesOverlays.IndexOf(t)] + 0.5f, -2));
 				}
 			}
 		}
@@ -339,7 +325,7 @@ public class Player : NetworkBehaviour {
 				}
 			}
 			GameObject go = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX + 0.5f, tileY + 0.5f, -2)), Quaternion.identity, c.transform);
-			selectedTilesOverlays.Add (go);
+			selectedTilesOverlays [go] = new Vector3 (tileX, tileY, 0);
 			go.name = "TileInfo_" + tileX + "_" + tileY;
 			go.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
 			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
@@ -351,16 +337,15 @@ public class Player : NetworkBehaviour {
 				go.transform.GetChild(5).gameObject.SetActive(true);
 				go.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
 			}
-			selectedTilesX.Add(tileX);
-			selectedTilesY.Add(tileY);
 		}
 	}
 
 	[ClientRpc]
 	private void RpcKillSpecificTileOverlay(int playerID, GameObject overlay) {
-		selectedTilesX.RemoveAt (selectedTilesOverlays.IndexOf (overlay));
-		selectedTilesY.RemoveAt (selectedTilesOverlays.IndexOf (overlay));
-		selectedTilesOverlays.Remove (overlay);
+		if (playerID == this.playerID && isLocalPlayer) {
+			selectedTilesOverlays.Remove (overlay);
+			Destroy (overlay);
+		}
 	}
 
 	/// <summary>
@@ -374,8 +359,6 @@ public class Player : NetworkBehaviour {
 				Destroy(g);
 			}
 			selectedTilesOverlays.Clear();
-			selectedTilesX.Clear();
-			selectedTilesY.Clear();
 		}
 	}
 
