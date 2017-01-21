@@ -63,6 +63,8 @@ public class Player : NetworkBehaviour {
 
 	private Data.ResourceType robotCustomisationChoice = Data.ResourceType.NONE;
 
+	private bool sellingToMarket;
+
 	[SyncVar]
 	private int marketResourceTradeAmount = 0;
 
@@ -142,8 +144,15 @@ public class Player : NetworkBehaviour {
 		// Button listeners for the resources tab buttons
 		resources.GetChild(1).GetComponent<Button>().onClick.AddListener(() => ChangeResourceQuanity(1));
 		resources.GetChild(2).GetComponent<Button>().onClick.AddListener(() => ChangeResourceQuanity(-1));
-		//resources.GetChild(3).GetComponent<Button>().onClick.AddListener();
-		//resources.GetChild(4).GetComponent<Button>().onClick.AddListener();
+		resources.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ActivateTradeConfirmPopup(false));
+		resources.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ActivateTradeConfirmPopup(true));
+
+		// Trade confirmation popup
+		resources.GetChild(6).GetChild(2).GetComponent<Button>().onClick.AddListener(() => CmdDoTrade(sellingToMarket, (int)marketResourceSelection, marketResourceTradeAmount));
+		resources.GetChild(6).GetChild(3).GetComponent<Button>().onClick.AddListener(() => CancelTrade());
+
+		// Trade error popup
+		resources.GetChild(7).GetChild(2).GetComponent<Button>().onClick.AddListener(() => CloseErrorPopup());
 
 		// Button listeners for the roboticon tab
 		roboticon.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(false));
@@ -165,7 +174,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	public void RpcActivateCollegeSelection(int playerID) {
-		if (playerID == playerID && isLocalPlayer) {
+		if (playerID == this.playerID && isLocalPlayer) {
 			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(true);
 		}
 	}
@@ -176,7 +185,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	public void RpcDisableCollegeSelection(int playerID) {
-		if (playerID == playerID && isLocalPlayer) {
+		if (playerID == this.playerID && isLocalPlayer) {
 			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(0).gameObject.SetActive(false);
 		}
 	}
@@ -494,6 +503,132 @@ public class Player : NetworkBehaviour {
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
 	}
 
+	private void ActivateTradeConfirmPopup(bool sellingToMarket) {
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform resources = market.GetChild(1);
+		resources.GetChild(1).GetComponent<Button>().enabled = false;
+		resources.GetChild(2).GetComponent<Button>().enabled = false;
+		resources.GetChild(3).GetComponent<Button>().enabled = false;
+		resources.GetChild(4).GetComponent<Button>().enabled = false;
+		resources.GetChild(6).transform.gameObject.SetActive(true);
+		CmdSendTradeCostToClient(sellingToMarket, (int)marketResourceSelection, marketResourceTradeAmount);
+		this.sellingToMarket = sellingToMarket;
+	}
+
+	[Command]
+	private void CmdSendTradeCostToClient(bool sellingToMarket, int resourceTypeOrdinal, int amount) {
+		float cost;
+		if (sellingToMarket) {
+			cost = MarketController.instance.GetResourceBuyPrice((Data.ResourceType)resourceTypeOrdinal) * amount;
+		} else {
+			cost = MarketController.instance.GetResourceSellPrice((Data.ResourceType)resourceTypeOrdinal) * amount;
+		}
+		RpcUpdateTradeCostText(this.playerID, cost, sellingToMarket);
+	}
+
+	[ClientRpc]
+	private void RpcUpdateTradeCostText(int playerID, float cost, bool sellingToMarket) {
+		if (this.playerID == playerID && isLocalPlayer) {
+			Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+			Transform resources = market.GetChild(1);
+			Transform popup = resources.GetChild(6);
+			if (sellingToMarket) {
+				popup.GetChild(1).GetComponent<Text>().text = "Would you like to sell " + marketResourceTradeAmount + " " + Util.FirstLetterToUpper(marketResourceSelection.ToString()) + " to the market for $" + cost + "?";
+			} else {
+				popup.GetChild(1).GetComponent<Text>().text = "Would you like to buy " + marketResourceTradeAmount + " " + Util.FirstLetterToUpper(marketResourceSelection.ToString()) + " from the market for $" + cost + "?";
+			}
+		}
+	}
+
+	[Command]
+	private void CmdDoTrade(bool sellingToMarket, int resourceTypeOrdinal, int resourceAmount) {
+		Data.ResourceType type = (Data.ResourceType)resourceAmount;
+		if (MarketController.instance.IsTradeValid(sellingToMarket, (Data.ResourceType)resourceTypeOrdinal, resourceAmount, this)) {
+			if (sellingToMarket) {
+				MarketController.instance.SellToMarket(this, (Data.ResourceType)resourceTypeOrdinal, resourceAmount);
+			} else {
+				MarketController.instance.BuyFromMarket(this, (Data.ResourceType)resourceTypeOrdinal, resourceAmount);
+			}
+			RpcTradeSuccessful(playerID);
+		} else {
+			string errorMessage = "Trade could not be completed because ";
+			int initialLength = errorMessage.Length;
+			if (sellingToMarket) {
+				if (MarketController.instance.marketFunds < MarketController.instance.GetResourceBuyPrice((Data.ResourceType)resourceTypeOrdinal) * resourceAmount) {
+					errorMessage += "the market does not have enough money";
+				}
+				if (GetResourceAmount((Data.ResourceType)resourceTypeOrdinal) < resourceAmount) {
+					if (errorMessage.Length > initialLength) {
+						errorMessage += ", you do not have enough of the resource";
+					} else {
+						errorMessage += "you do not have enough of the resource";	
+					}
+				}
+			} else {
+				if (MarketController.instance.GetResourceAmount((Data.ResourceType)resourceTypeOrdinal) < resourceAmount) {
+					errorMessage += "the market does not have enough of the resource";
+				}
+				if (funds < MarketController.instance.GetResourceSellPrice((Data.ResourceType)resourceTypeOrdinal) * resourceAmount) {
+					if (errorMessage.Length > initialLength) {
+						errorMessage += ", you do not have enough funds";
+					} else {
+						errorMessage += "you do not have enough funds";	
+					}
+				}
+			}
+			RpcActivateTradeErrorPopup(playerID, errorMessage);
+		}
+	}
+
+	private void CancelTrade() {
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform resources = market.GetChild(1);
+		resources.GetChild(1).GetComponent<Button>().enabled = true;
+		resources.GetChild(2).GetComponent<Button>().enabled = true;
+		resources.GetChild(3).GetComponent<Button>().enabled = true;
+		resources.GetChild(4).GetComponent<Button>().enabled = true;
+		resources.GetChild(6).transform.gameObject.SetActive(false);
+		ChangeResourceQuanity(marketResourceTradeAmount * -1);
+	}
+
+	[ClientRpc]
+	private void RpcTradeSuccessful(int playerID) {
+		if (this.playerID == playerID && isLocalPlayer) {
+			Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+			Transform resources = market.GetChild(1);
+			resources.GetChild(1).GetComponent<Button>().enabled = true;
+			resources.GetChild(2).GetComponent<Button>().enabled = true;
+			resources.GetChild(3).GetComponent<Button>().enabled = true;
+			resources.GetChild(4).GetComponent<Button>().enabled = true;
+			resources.GetChild(6).transform.gameObject.SetActive(false);
+			ChangeResourceQuanity(marketResourceTradeAmount * -1);
+		}
+	}
+
+	[ClientRpc]
+	private void RpcActivateTradeErrorPopup(int playerID, string errorMessage) {
+		if (this.playerID == playerID && isLocalPlayer) {
+			Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+			Transform resources = market.GetChild(1);
+			Transform popup = resources.GetChild(7);
+			popup.GetChild(1).GetComponent<Text>().text = errorMessage;
+			popup.gameObject.SetActive(true);
+		}
+	}
+
+	private void CloseErrorPopup() {
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform resources = market.GetChild(1);
+		Transform popup = resources.GetChild(7);
+		popup.gameObject.SetActive(false);
+		ChangeResourceQuanity(marketResourceTradeAmount * -1);
+		resources.GetChild(6).transform.gameObject.SetActive(false);
+		resources.GetChild(1).GetComponent<Button>().enabled = true;
+		resources.GetChild(2).GetComponent<Button>().enabled = true;
+		resources.GetChild(3).GetComponent<Button>().enabled = true;
+		resources.GetChild(4).GetComponent<Button>().enabled = true;
+	}
+
 	/// <summary>
 	/// Changes the robot configuration.
 	/// </summary>
@@ -590,6 +725,17 @@ public class Player : NetworkBehaviour {
 	public void RpcStartRoboticonCustomPhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
 			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
+			Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+			Transform marketBackground = market.GetChild(0);
+			Transform robot = market.GetChild(2);
+
+			marketBackground.GetChild(0).GetComponent<Button>().enabled = false;
+			marketBackground.GetChild(1).GetComponent<Button>().enabled = false;
+			marketBackground.GetChild(2).GetComponent<Button>().enabled = false;
+			marketBackground.GetChild(4).GetComponent<Button>().enabled = false;
+			robotCustomisationChoice = Data.ResourceType.NONE;
+			robot.gameObject.SetActive(true);
+			market.gameObject.SetActive(true);
 		}
 	}
 

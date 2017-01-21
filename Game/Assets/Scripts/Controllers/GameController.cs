@@ -48,6 +48,8 @@ public class GameController : NetworkBehaviour {
 	/// </summary>
 	private Player currentPlayer;
 
+	private bool firstTick = false;
+
 	/// <summary>
 	/// Raises the start server event.
 	/// </summary>
@@ -88,25 +90,40 @@ public class GameController : NetworkBehaviour {
 			currentPlayer = (Player)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
 			currentPlayerTurn = currentPlayer.playerID;
 			state = Data.GameState.TILE_PURCHASE;
+			firstTick = true;
 		} else if (state == Data.GameState.TILE_PURCHASE) {
 			// Check for something here maybe?
-			currentPlayer.RpcStartTilePhase(currentPlayerTurn);
+			if (firstTick) {
+				currentPlayer.RpcStartTilePhase(currentPlayerTurn);
+			}
+			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			if (timer.Elapsed.TotalSeconds > 60) {
 				state = Data.GameState.ROBOTICON_PLACEMENT;
+				firstTick = true;
 				timer = System.Diagnostics.Stopwatch.StartNew();
 			} else {
-				currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
+				if (firstTick) {
+					currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
+				}
+				firstTick = false;
 			}
 		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
 			if (timer.Elapsed.TotalSeconds > 60) {
 				state = Data.GameState.PLAYER_FINISH;
+				firstTick = true;
 				timer = null;
 			} else {
-				currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
+				if (firstTick) {
+					currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
+				}
+				firstTick = false;
 			}
 		} else if (state == Data.GameState.PLAYER_FINISH) {
-			currentPlayer.RpcEndPlayerPhase(currentPlayerTurn);
+			if (firstTick) {
+				currentPlayer.RpcEndPlayerPhase(currentPlayerTurn);
+			}
+			firstTick = false;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = Data.GameState.PRODUCTION;
 			} else {
@@ -130,5 +147,6 @@ public class GameController : NetworkBehaviour {
 	public void playerPurchasedTile(int playerID) {
 		state = Data.GameState.ROBOTICON_CUSTOMISATION;
 		timer = System.Diagnostics.Stopwatch.StartNew();
+		firstTick = true;
 	}
 }

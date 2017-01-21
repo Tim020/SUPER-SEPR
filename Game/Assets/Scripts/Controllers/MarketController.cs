@@ -34,7 +34,7 @@ public class MarketController : NetworkBehaviour {
 	/// <summary>
 	/// The amount of money the market currently has
 	/// </summary>
-	private float marketFunds;
+	public float marketFunds{ private set; get; }
 
 	/// <summary>
 	/// Start this instance. Intialise the resource dictionaries and the starting funds.
@@ -55,7 +55,7 @@ public class MarketController : NetworkBehaviour {
 
 		playerTrades = new List<P2PTrade>();
 
-		marketFunds = 100;
+		marketFunds = 200;
 	}
 
 	/// <summary>
@@ -63,6 +63,32 @@ public class MarketController : NetworkBehaviour {
 	/// </summary>
 	void Update() {
 	
+	}
+
+	/// <summary>
+	/// Determines whether this trade is valid for the specified resource type and amount.
+	/// </summary>
+	/// <returns><c>true</c> if this trade is valid otherwise <c>false</c>.</returns>
+	/// <param name="sellingToMarket">If set to <c>true</c> selling to market, else buying from market.</param>
+	/// <param name="resourceType">The <c>Data.ResourceType</c> of the trade.</param>
+	/// <param name="resourceAmount">Resource amount.</param>
+	/// <param name="player">The <c>Player</c> wishing to make this trade</param>
+	public bool IsTradeValid(bool sellingToMarket, Data.ResourceType resourceType, int resourceAmount, Player player) {
+		if (sellingToMarket) {
+			if (marketFunds >= GetResourceBuyPrice(resourceType) * resourceAmount) {
+				if (player.GetResourceAmount(resourceType) >= resourceAmount) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			if (GetResourceAmount(resourceType) >= resourceAmount) {
+				if (player.GetFunds() >= GetResourceSellPrice(resourceType) * resourceAmount) {
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 	/// <summary>

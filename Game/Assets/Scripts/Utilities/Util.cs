@@ -38,4 +38,14 @@ public static class Util {
 		}
 		return (Arr.Length == j) ? Arr[0] : Arr[j];
 	}
+
+	public static string FirstLetterToUpper(string input) {
+		if (input == null) {
+			return null;
+		}
+		if (input.Length > 1) {
+			return char.ToUpper(input[0]) + input.Substring(1).ToLower();
+		}
+		return input.ToUpper();
+	}
 }
