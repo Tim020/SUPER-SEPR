@@ -44,6 +44,21 @@ public class Player : NetworkBehaviour {
 	public Data.College college;
 
 	/// <summary>
+	/// The tile overlay that is currently displayed.
+	/// </summary>
+	private GameObject selectedTileOverlay;
+
+	/// <summary>
+	/// The X world position of the tile that selectedTileOverlay is currently displaying information about.
+	/// </summary>
+	private int selectedTileX;
+
+	/// <summary>
+	/// The Y world position of the tile that selectedTileOverlay is currently displaying information about.
+	/// </summary>
+	private int selectedTileY;
+
+	/// <summary>
 	/// The player ID as set by the server.
 	/// </summary>
 	[SyncVar]
@@ -102,6 +117,11 @@ public class Player : NetworkBehaviour {
 					Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
 				}
+			}
+
+			if (selectedTileOverlay != null) {
+				Vector3 pos = Camera.main.WorldToScreenPoint (new Vector3 (selectedTileX - 1, selectedTileY, -2));
+				selectedTileOverlay.transform.position = pos;
 			}
 		}
 	}
@@ -314,17 +334,20 @@ public class Player : NetworkBehaviour {
 			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
 				Destroy(g);
 			}
-			GameObject go = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX - 1, tileY, -2)), Quaternion.identity, c.transform);
-			go.name = "TileInfo_" + tileX + "_" + tileY;
-			go.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
-			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
-			go.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
-			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
+			selectedTileOverlay = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX - 1, tileY, -2)), Quaternion.identity, c.transform);
+			selectedTileOverlay.name = "TileInfo_" + tileX + "_" + tileY;
+			selectedTileOverlay.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
+			selectedTileOverlay.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
+			selectedTileOverlay.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
+			selectedTileOverlay.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
+			selectedTileOverlay.transform.GetChild(6).GetComponent<Button>().onClick.AddListener (() => RpcKillAllTileOverlays(playerID));
 			// Check if we are in the tile phase, if so enable the purchase button
 			if (playerState == Data.GameState.TILE_PURCHASE) {
-				go.transform.GetChild(5).gameObject.SetActive(true);
-				go.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
+				selectedTileOverlay.transform.GetChild(5).gameObject.SetActive(true);
+				selectedTileOverlay.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
 			}
+			selectedTileX = tileX;
+			selectedTileY = tileY;
 		}
 	}
 
@@ -338,6 +361,7 @@ public class Player : NetworkBehaviour {
 			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
 				Destroy(g);
 			}
+			selectedTileOverlay = null;
 		}
 	}
 
