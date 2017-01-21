@@ -48,6 +48,9 @@ public class GameController : NetworkBehaviour {
 	/// </summary>
 	private Player currentPlayer;
 
+	/// <summary>
+	/// Whether we are in the first update for the particular phase
+	/// </summary>
 	private bool firstTick = false;
 
 	/// <summary>

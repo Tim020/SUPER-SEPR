@@ -1403,6 +1403,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tile: {fileID: 1000011104786766, guid: f3ee60730ff70447aaf8cde9322d6ed5, type: 2}
+  roboticon: {fileID: 1819822835916966, guid: 60b3b16307723d64089c1610ecc50977, type: 2}
 --- !u!4 &430873121
 Transform:
   m_ObjectHideFlags: 0

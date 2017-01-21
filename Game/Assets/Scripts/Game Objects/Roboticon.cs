@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// The Roboticon class
 /// </summary>
-public class Roboticon {
+public class Roboticon : MonoBehaviour {
 
 	/// <summary>
 	/// The tile that this roboticon is situated
@@ -20,13 +20,6 @@ public class Roboticon {
 	/// The player who owns this Roboticon
 	/// </summary>
 	private Player player;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Roboticon"/> class.
-	/// </summary>
-	public Roboticon() {
-
-	}
 
 	/// <summary>
 	/// Sets the location.
