@@ -44,6 +44,21 @@ public class Player : NetworkBehaviour {
 	public Data.College college;
 
 	/// <summary>
+	/// The tile overlays that are currently displayed.
+	/// </summary>
+	private List<GameObject> selectedTilesOverlays = new List<GameObject>();
+
+	/// <summary>
+	/// The X world positions of the corresponding selectedTilesOverlays tiles that are currently being displayed.
+	/// </summary>
+	private List<int> selectedTilesX = new List<int>();
+
+	/// <summary>
+	/// The Y world positions of the corresponding selectedTilesOverlays tiles that are currently being displayed.
+	/// </summary>
+	private List<int> selectedTilesY = new List<int>();
+
+	/// <summary>
 	/// The player ID as set by the server.
 	/// </summary>
 	[SyncVar]
@@ -116,6 +131,12 @@ public class Player : NetworkBehaviour {
 				} else {
 					Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
+				}
+			}
+
+			if (selectedTilesOverlays.Count > 0) {
+				foreach (GameObject t in selectedTilesOverlays) {
+					t.transform.position = Camera.main.WorldToScreenPoint (new Vector3 (selectedTilesX[selectedTilesOverlays.IndexOf(t)] + 0.5f, selectedTilesY[selectedTilesOverlays.IndexOf(t)] + 0.5f, -2));
 				}
 			}
 		}
@@ -288,7 +309,8 @@ public class Player : NetworkBehaviour {
 			} else {
 				owner = "None";
 			}
-			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID);
+			bool multiClick = Input.GetKey (KeyCode.LeftControl) || Input.GetKey (KeyCode.RightControl) || Input.GetKey (KeyCode.LeftCommand) || Input.GetKey (KeyCode.RightCommand);
+			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID, !multiClick);
 		} else {
 			if (worldX < 0 || worldX >= MapController.instance.width || worldY < 0 || worldY >= MapController.instance.height) {
 				RpcKillAllTileOverlays(this.playerID);
@@ -329,25 +351,38 @@ public class Player : NetworkBehaviour {
 	/// <param name="owner">Owner of the tile.</param>
 	/// <param name="playerID">Player ID to invoke command on.</param>
 	[ClientRpc]
-	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID) {
+	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID, bool destroyOtherOverlays) {
 		if (playerID == this.playerID && isLocalPlayer) {
 			GameObject overlay = GameObject.FindGameObjectWithTag("UserInterface"); 
 			Canvas c = overlay.GetComponent<Canvas>();
-			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
-				Destroy(g);
+			if (destroyOtherOverlays) {
+				foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
+					Destroy (g);
+				}
 			}
-			GameObject go = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX - 1, tileY, -2)), Quaternion.identity, c.transform);
+			GameObject go = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX + 0.5f, tileY + 0.5f, -2)), Quaternion.identity, c.transform);
+			selectedTilesOverlays.Add (go);
 			go.name = "TileInfo_" + tileX + "_" + tileY;
 			go.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
 			go.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
 			go.transform.GetChild(3).GetComponent<Text>().text = "Energy: " + energyAmount;
 			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
+			go.transform.GetChild(6).GetComponent<Button>().onClick.AddListener (() => RpcKillSpecificTileOverlay(playerID, go));
 			// Check if we are in the tile phase, if so enable the purchase button
 			if (playerState == Data.GameState.TILE_PURCHASE) {
 				go.transform.GetChild(5).gameObject.SetActive(true);
 				go.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
 			}
+			selectedTilesX.Add(tileX);
+			selectedTilesY.Add(tileY);
 		}
+	}
+
+	[ClientRpc]
+	private void RpcKillSpecificTileOverlay(int playerID, GameObject overlay) {
+		selectedTilesX.RemoveAt (selectedTilesOverlays.IndexOf (overlay));
+		selectedTilesY.RemoveAt (selectedTilesOverlays.IndexOf (overlay));
+		selectedTilesOverlays.Remove (overlay);
 	}
 
 	/// <summary>
@@ -360,6 +395,9 @@ public class Player : NetworkBehaviour {
 			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
 				Destroy(g);
 			}
+			selectedTilesOverlays.Clear();
+			selectedTilesX.Clear();
+			selectedTilesY.Clear();
 		}
 	}
 
