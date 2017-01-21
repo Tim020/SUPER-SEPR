@@ -566,7 +566,7 @@ public class Player : NetworkBehaviour {
 		market.GetChild(4).GetComponent<Button>().colors = cb;
 
 		//Reset the variables
-		CmdChangeResourceQuanity(marketResourceTradeAmount * -1, (int)marketResourceSelection);
+		ChangeResourceQuanity(marketResourceTradeAmount * -1);
 		marketResourceSelection = Data.ResourceType.NONE;
 		robotCustomisationChoice = Data.ResourceType.NONE;
 	}
