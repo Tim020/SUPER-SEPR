@@ -59,12 +59,25 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	private Data.GameState playerState = Data.GameState.PLAYER_WAIT;
 
+	/// <summary>
+	/// The resource the player is wishing to trade.
+	/// </summary>
 	private Data.ResourceType marketResourceSelection = Data.ResourceType.NONE;
 
+	/// <summary>
+	/// The type of robot the user has selected at customisation phase.
+	/// </summary>
 	private Data.ResourceType robotCustomisationChoice = Data.ResourceType.NONE;
 
+	/// <summary>
+	/// Whether the user is selling to the market
+	/// <c>true</c> implies they are otherwise <c>false</c> means they are buying from the market
+	/// </summary>
 	private bool sellingToMarket;
 
+	/// <summary>
+	/// The amount of resource the player wishes to trade.
+	/// </summary>
 	[SyncVar]
 	private int marketResourceTradeAmount = 0;
 
@@ -503,6 +516,10 @@ public class Player : NetworkBehaviour {
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
 	}
 
+	/// <summary>
+	/// Activates the trade confirmimation popup.
+	/// </summary>
+	/// <param name="sellingToMarket">If set to <c>true</c> selling to market, else buying from the market.</param>
 	private void ActivateTradeConfirmPopup(bool sellingToMarket) {
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
 		Transform resources = market.GetChild(1);
@@ -515,6 +532,12 @@ public class Player : NetworkBehaviour {
 		this.sellingToMarket = sellingToMarket;
 	}
 
+	/// <summary>
+	/// Command to calculate and send the trade cost to the client.
+	/// </summary>
+	/// <param name="sellingToMarket">If set to <c>true</c> selling to market, else buying from the market.</param>
+	/// <param name="resourceTypeOrdinal">Resource type ordinal.</param>
+	/// <param name="amount">Amount of resource being traded.</param>
 	[Command]
 	private void CmdSendTradeCostToClient(bool sellingToMarket, int resourceTypeOrdinal, int amount) {
 		float cost;
@@ -526,6 +549,12 @@ public class Player : NetworkBehaviour {
 		RpcUpdateTradeCostText(this.playerID, cost, sellingToMarket);
 	}
 
+	/// <summary>
+	/// Update the message in the trade confirmation popup.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	/// <param name="cost">Cost of the trade.</param>
+	/// <param name="sellingToMarket">If set to <c>true</c> selling to market, else buying from the market.</param>
 	[ClientRpc]
 	private void RpcUpdateTradeCostText(int playerID, float cost, bool sellingToMarket) {
 		if (this.playerID == playerID && isLocalPlayer) {
@@ -540,6 +569,13 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Command to do the trade with the market.
+	/// If the trade is not successful the RPC call is used to display an error message on the client.
+	/// </summary>
+	/// <param name="sellingToMarket">If set to <c>true</c> selling to market, else buying from the market.</param>
+	/// <param name="resourceTypeOrdinal">Resource type ordinal.</param>
+	/// <param name="resourceAmount">Resource amount being traded.</param>
 	[Command]
 	private void CmdDoTrade(bool sellingToMarket, int resourceTypeOrdinal, int resourceAmount) {
 		Data.ResourceType type = (Data.ResourceType)resourceAmount;
@@ -580,6 +616,10 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Used when the user wishes to cancel the trade.
+	/// Updates the UI to show/hide the correct parts.
+	/// </summary>
 	private void CancelTrade() {
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
 		Transform resources = market.GetChild(1);
@@ -591,6 +631,10 @@ public class Player : NetworkBehaviour {
 		ChangeResourceQuanity(marketResourceTradeAmount * -1);
 	}
 
+	/// <summary>
+	/// Used when the trade is successful to reset the UI to its default state.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
 	private void RpcTradeSuccessful(int playerID) {
 		if (this.playerID == playerID && isLocalPlayer) {
@@ -605,6 +649,11 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Used to display the trade error message.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	/// <param name="errorMessage">Error message.</param>
 	[ClientRpc]
 	private void RpcActivateTradeErrorPopup(int playerID, string errorMessage) {
 		if (this.playerID == playerID && isLocalPlayer) {
@@ -616,6 +665,10 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Closes the error popup.
+	/// Reset the UI to default state.
+	/// </summary>
 	private void CloseErrorPopup() {
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
 		Transform resources = market.GetChild(1);
