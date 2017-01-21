@@ -56,6 +56,7 @@ public class GameController : NetworkBehaviour {
 	public override void OnStartServer() {
 		instance = this;
 		state = Data.GameState.PLAYER_WAIT;
+        timer = new System.Diagnostics.Stopwatch();
 	}
 
 	/// <summary>
@@ -99,12 +100,13 @@ public class GameController : NetworkBehaviour {
 			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			if (timer.Elapsed.TotalSeconds > 60) {
-				state = Data.GameState.ROBOTICON_PLACEMENT;
+                state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
-				timer = System.Diagnostics.Stopwatch.StartNew();
-			} else {
+                timer = System.Diagnostics.Stopwatch.StartNew();
+            } else {
 				if (firstTick) {
-					currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
+                    timer = System.Diagnostics.Stopwatch.StartNew();
+                    currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
 				}
 				firstTick = false;
 			}
@@ -112,10 +114,11 @@ public class GameController : NetworkBehaviour {
 			if (timer.Elapsed.TotalSeconds > 60) {
 				state = Data.GameState.PLAYER_FINISH;
 				firstTick = true;
-				timer = null;
+                timer.Stop();
 			} else {
 				if (firstTick) {
-					currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
+                    timer = System.Diagnostics.Stopwatch.StartNew();
+                    currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
 				}
 				firstTick = false;
 			}
@@ -146,7 +149,14 @@ public class GameController : NetworkBehaviour {
 	/// <param name="playerID">ID of the player that took the tile.</param>
 	public void playerPurchasedTile(int playerID) {
 		state = Data.GameState.ROBOTICON_CUSTOMISATION;
-		timer = System.Diagnostics.Stopwatch.StartNew();
 		firstTick = true;
 	}
+
+    /// <summary>
+    /// Called by a player when they confirm their roboticon type selection.
+    /// </summary>
+    public void playerCustomisedRoboticon() {
+        state = Data.GameState.ROBOTICON_PLACEMENT;
+        firstTick = true;
+    }
 }

@@ -87,9 +87,9 @@ public class Player : NetworkBehaviour {
 	private int marketResourceTradeAmount = 0;
 
     /// <summary>
-    /// The timer displayed on the HUD for certain phases.
+    /// The timer text displayed on the HUD for certain phases.
     /// </summary>
-    private Text timer;
+    private Text timerText;
 
 	/// <summary>
 	/// Raises the start local player event.
@@ -125,9 +125,9 @@ public class Player : NetworkBehaviour {
 			}
 
             if (playerState == Data.GameState.ROBOTICON_CUSTOMISATION || playerState == Data.GameState.ROBOTICON_PLACEMENT) {
-                timer.text = Mathf.CeilToInt(60 - (float)GameController.instance.timer.Elapsed.TotalSeconds).ToString();
+                timerText.text = Mathf.CeilToInt(60 - (float)GameController.instance.timer.Elapsed.TotalSeconds).ToString();
             } else {
-                timer.text = "";
+                timerText.text = "";
             }
 
             //Do input stuff in here
@@ -161,7 +161,7 @@ public class Player : NetworkBehaviour {
 	private void SetupOverlayUI() {
 		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
 		overlay.GetChild(5).GetComponent<Button>().onClick.AddListener(() => OpenMarket());
-        timer = overlay.GetChild(7).GetComponent<Text>();
+        timerText = overlay.GetChild(7).GetComponent<Text>();
 	}
 
 	private void OpenMarket() {
@@ -208,7 +208,7 @@ public class Player : NetworkBehaviour {
 		// Button listeners for the roboticon tab
 		roboticon.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(false));
 		roboticon.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(true));
-		//roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener();
+		roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CmdDoRoboticonSelection());
 	}
 
 	/// <summary>
@@ -430,17 +430,19 @@ public class Player : NetworkBehaviour {
 		Transform marketResource = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1);
 		Transform marketRoboticon = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2);
 
+        Debug.Log("Market button selected");
+
 		//Check which button was pressed and enable/disable the correct game objects
 		if (id < 3) {
 			marketResource.gameObject.SetActive(true);
 			marketRoboticon.gameObject.SetActive(false);
-			GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
+			marketResource.GetChild(5).GetComponent<Text>().text = marketResourceTradeAmount.ToString();
 		} else if (id == 3) {
 			marketRoboticon.gameObject.SetActive(true);
 			marketRoboticon.GetChild(5).GetComponent<Button>().enabled = false;
 			marketResource.gameObject.SetActive(false);
 		} else if (id == 4) {
-			
+			// do graph stuff
 		}
 
 		//Determine which resource was pressed and highlight the associated menu button
@@ -751,22 +753,26 @@ public class Player : NetworkBehaviour {
 		}
 		switch (robotCustomisationChoice) {
 			case Data.ResourceType.NONE:
+                Debug.Log("none");
 				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
 				robotText.GetComponent<Text>().text = "Default Roboticon";
 				confirmButton.GetComponent<Button>().enabled = false;
 				break;
 			case Data.ResourceType.ORE:
-				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonOre;
+                Debug.Log("ore");
+                robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonOre;
 				robotText.GetComponent<Text>().text = "Ore Roboticon";
 				confirmButton.GetComponent<Button>().enabled = true;
 				break;
 			case Data.ResourceType.FOOD:
-				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonFood;
+                Debug.Log("food");
+                robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonFood;
 				robotText.GetComponent<Text>().text = "Food Roboticon";
 				confirmButton.GetComponent<Button>().enabled = true;
 				break;
 			case Data.ResourceType.ENERGY:
-				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonEnergy;
+                Debug.Log("energy");
+                robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonEnergy;
 				robotText.GetComponent<Text>().text = "Energy Roboticon";
 				confirmButton.GetComponent<Button>().enabled = true;
 				break;
@@ -846,6 +852,12 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+    [Command]
+    public void CmdDoRoboticonSelection() {
+        //robotCustomisationChoice is the selected roboticon.
+        GameController.instance.playerCustomisedRoboticon();
+    }
+
 	/// <summary>
 	/// Tells the client that it is in the robiticon placement phase.
 	/// </summary>
@@ -853,6 +865,14 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcStartRoboticonPlacePhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
+
+            // No roboticon was chosen in the phase
+            if (robotCustomisationChoice == Data.ResourceType.NONE) {
+                // Add some UI to skip to the next stage.
+            } else {
+                // Add some UI to allow for its placement and purchase.
+            }
+
 			playerState = Data.GameState.ROBOTICON_PLACEMENT;
 		}
 	}
