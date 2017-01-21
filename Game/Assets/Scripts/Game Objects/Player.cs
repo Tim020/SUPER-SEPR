@@ -155,10 +155,10 @@ public class Player : NetworkBehaviour {
 	private void OpenMarket() {
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
 		Transform resources = market.GetChild(1);
-		resources.GetChild(1).GetComponent<Button>().enabled = false;
-		resources.GetChild(2).GetComponent<Button>().enabled = false;
-		resources.GetChild(3).GetComponent<Button>().enabled = false;
-		resources.GetChild(4).GetComponent<Button>().enabled = false;
+		resources.GetChild(1).GetComponent<Button>().enabled = true;
+		resources.GetChild(2).GetComponent<Button>().enabled = true;
+		resources.GetChild(3).GetComponent<Button>().enabled = true;
+		resources.GetChild(4).GetComponent<Button>().enabled = true;
 		market.gameObject.SetActive(true);
 	}
 
@@ -411,7 +411,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="resource">The type of resource selected.</param>
 	private void MarketMenuButtonSelected(int id, Data.ResourceType resource) {
 		marketResourceSelection = resource;
-		marketResourceTradeAmount = 0;
+		ChangeResourceQuanity(marketResourceTradeAmount * -1);
 
 		//Find and enable the correct game objects that represent the resource part of the market UI
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(0);
