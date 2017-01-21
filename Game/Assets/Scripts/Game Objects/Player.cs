@@ -86,6 +86,11 @@ public class Player : NetworkBehaviour {
 	[SyncVar]
 	private int marketResourceTradeAmount = 0;
 
+    /// <summary>
+    /// The timer displayed on the HUD for certain phases.
+    /// </summary>
+    private Text timer;
+
 	/// <summary>
 	/// Raises the start local player event.
 	/// </summary>
@@ -119,8 +124,14 @@ public class Player : NetworkBehaviour {
 				t.transform.position = Camera.main.WorldToScreenPoint(new Vector3(selectedTilesOverlays[t].x + 0.5f, selectedTilesOverlays[t].y + 0.5f, -2));
 			}
 
-			//Do input stuff in here
-			if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
+            if (playerState == Data.GameState.ROBOTICON_CUSTOMISATION || playerState == Data.GameState.ROBOTICON_PLACEMENT) {
+                timer.text = Mathf.CeilToInt(60 - (float)GameController.instance.timer.Elapsed.TotalSeconds).ToString();
+            } else {
+                timer.text = "";
+            }
+
+            //Do input stuff in here
+            if (Input.GetMouseButtonDown(0) && collegeAssigned == true) {
 				//Check if we are clicking over a UI element, if so don't do anything
 				if (EventSystem.current.IsPointerOverGameObject()) {
 					Debug.Log("UI thing clicked");
@@ -150,6 +161,7 @@ public class Player : NetworkBehaviour {
 	private void SetupOverlayUI() {
 		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
 		overlay.GetChild(5).GetComponent<Button>().onClick.AddListener(() => OpenMarket());
+        timer = overlay.GetChild(7).GetComponent<Text>();
 	}
 
 	private void OpenMarket() {

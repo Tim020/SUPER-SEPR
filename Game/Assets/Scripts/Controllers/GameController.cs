@@ -30,7 +30,7 @@ public class GameController : NetworkBehaviour {
 	/// <summary>
 	/// The timer used to time Phases 2 and 3.
 	/// </summary>
-	private System.Diagnostics.Stopwatch timer;
+	public System.Diagnostics.Stopwatch timer;
 
 	/// <summary>
 	/// The number of players that have completed the 3 individual phases.
