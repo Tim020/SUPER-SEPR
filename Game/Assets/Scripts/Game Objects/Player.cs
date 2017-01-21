@@ -120,8 +120,7 @@ public class Player : NetworkBehaviour {
 			}
 
 			if (selectedTileOverlay != null) {
-				Vector3 pos = Camera.main.WorldToScreenPoint (new Vector3 (selectedTileX - 1, selectedTileY, -2));
-				selectedTileOverlay.transform.position = pos;
+				selectedTileOverlay.transform.position = Camera.main.WorldToScreenPoint (new Vector3 (selectedTileX + 0.5f, selectedTileY + 0.5f, -2));
 			}
 		}
 	}
@@ -334,7 +333,7 @@ public class Player : NetworkBehaviour {
 			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
 				Destroy(g);
 			}
-			selectedTileOverlay = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX - 1, tileY, -2)), Quaternion.identity, c.transform);
+			selectedTileOverlay = Instantiate(TileInfoOverlay, Camera.main.WorldToScreenPoint(new Vector3(tileX + 0.5f, tileY + 0.5f, -2)), Quaternion.identity, c.transform);
 			selectedTileOverlay.name = "TileInfo_" + tileX + "_" + tileY;
 			selectedTileOverlay.transform.GetChild(1).GetComponent<Text>().text = "Position: " + tileX + ", " + tileY;
 			selectedTileOverlay.transform.GetChild(2).GetComponent<Text>().text = "Ore: " + oreAmount;
