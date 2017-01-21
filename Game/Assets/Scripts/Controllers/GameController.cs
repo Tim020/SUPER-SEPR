@@ -56,7 +56,7 @@ public class GameController : NetworkBehaviour {
 	public override void OnStartServer() {
 		instance = this;
 		state = Data.GameState.PLAYER_WAIT;
-        timer = new System.Diagnostics.Stopwatch();
+		timer = new System.Diagnostics.Stopwatch();
 	}
 
 	/// <summary>
@@ -100,13 +100,13 @@ public class GameController : NetworkBehaviour {
 			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			if (timer.Elapsed.TotalSeconds > 60) {
-                state = Data.GameState.ROBOTICON_PLACEMENT;
+				state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
-                timer = System.Diagnostics.Stopwatch.StartNew();
-            } else {
+				timer = System.Diagnostics.Stopwatch.StartNew();
+			} else {
 				if (firstTick) {
-                    timer = System.Diagnostics.Stopwatch.StartNew();
-                    currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
+					timer = System.Diagnostics.Stopwatch.StartNew();
+					currentPlayer.RpcStartRoboticonCustomPhase(currentPlayerTurn);
 				}
 				firstTick = false;
 			}
@@ -114,11 +114,11 @@ public class GameController : NetworkBehaviour {
 			if (timer.Elapsed.TotalSeconds > 60) {
 				state = Data.GameState.PLAYER_FINISH;
 				firstTick = true;
-                timer.Stop();
+				timer.Stop();
 			} else {
 				if (firstTick) {
-                    timer = System.Diagnostics.Stopwatch.StartNew();
-                    currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
+					timer = System.Diagnostics.Stopwatch.StartNew();
+					currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
 				}
 				firstTick = false;
 			}
@@ -152,15 +152,19 @@ public class GameController : NetworkBehaviour {
 		firstTick = true;
 	}
 
-    /// <summary>
-    /// Called by a player when they confirm their roboticon type selection.
-    /// </summary>
-    public void playerCustomisedRoboticon() {
-        state = Data.GameState.ROBOTICON_PLACEMENT;
-        firstTick = true;
-    }
+	/// <summary>
+	/// Called by a player when they confirm their roboticon type selection.
+	/// </summary>
+	public void playerCustomisedRoboticon() {
+		state = Data.GameState.ROBOTICON_PLACEMENT;
+		firstTick = true;
+	}
 
-    public int GetTimerInSeconds() {
-        return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
-    }
+	/// <summary>
+	/// Gets the elapsed time of the timer in seconds.
+	/// </summary>
+	/// <returns>Elapsed time in seconds.</returns>
+	public int GetTimerInSeconds() {
+		return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
+	}
 }
