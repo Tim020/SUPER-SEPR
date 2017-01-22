@@ -88,7 +88,6 @@ public class GameController : NetworkBehaviour {
 				foreach (Player player in PlayerController.instance.players.Values) {
 					player.SendResourceInfo();
 				}
-				UnityEngine.Debug.Log("All players selected a college");
 			}
 		} else if (state == Data.GameState.GAME_WAIT) {
 			currentPlayer = (Player)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
@@ -96,7 +95,6 @@ public class GameController : NetworkBehaviour {
 			state = Data.GameState.TILE_PURCHASE;
 			firstTick = true;
 		} else if (state == Data.GameState.TILE_PURCHASE) {
-			// Check for something here maybe?
 			if (firstTick) {
 				currentPlayer.RpcStartTilePhase(currentPlayerTurn);
 			}
@@ -145,20 +143,37 @@ public class GameController : NetworkBehaviour {
 			playersCompletedPhase++;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = Data.GameState.PRODUCTION;
+				firstTick = true;
 			} else {
 				state = Data.GameState.GAME_WAIT;
+				firstTick = true;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
 			foreach (Player p in PlayerController.instance.players.Values) {
-				p.Production ();
+				p.Production();
 			}
-			state = Data.GameState.AUCTION;
 			playersCompletedPhase = 0;
+			state = Data.GameState.AUCTION;
+			firstTick = true;
 		} else if (state == Data.GameState.AUCTION) {
+			if (firstTick) {
+				foreach (Player p in PlayerController.instance.players.Values) {
+					p.RpcStartAuctionPhase();
+				}
+			}
+			Debug.Log(playersCompletedPhase);
+			firstTick = false;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = Data.GameState.RECYCLE;
+				firstTick = true;
 			}
 		} else if (state == Data.GameState.RECYCLE) {
+			if (firstTick) {
+				foreach (Player p in PlayerController.instance.players.Values) {
+					p.RpcStartRecyclePhase();
+				}
+			}
+			firstTick = false;
 			playersCompletedPhase = 0;
 			state = Data.GameState.GAME_WAIT;
 			firstTick = true;
@@ -202,7 +217,11 @@ public class GameController : NetworkBehaviour {
 		return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
 	}
 
-	public void PlayerReady() {
-		playersCompletedPhase++;
+	public void PlayerReady(bool ready) {
+		if (ready) {
+			playersCompletedPhase++;
+		} else {
+			playersCompletedPhase--;
+		}
 	}
 }
