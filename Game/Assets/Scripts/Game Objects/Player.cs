@@ -232,7 +232,7 @@ public class Player : NetworkBehaviour {
 				market.gameObject.SetActive(false);
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				KillAllOverlays ();
+				KillAllOverlays();
 				roboticons.gameObject.SetActive(true);
 				MarketMenuButtonSelected(3, Data.ResourceType.NONE);
 				background.GetChild(3).GetComponent<Button>().interactable = true;
@@ -243,8 +243,8 @@ public class Player : NetworkBehaviour {
 			case Data.GameState.PRODUCTION:
 				market.gameObject.SetActive(false);
 				break;
-		case Data.GameState.AUCTION:
-				KillAllOverlays ();
+			case Data.GameState.AUCTION:
+				KillAllOverlays();
 				background.GetChild(0).GetComponent<Button>().interactable = true;
 				background.GetChild(1).GetComponent<Button>().interactable = true;
 				background.GetChild(2).GetComponent<Button>().interactable = true;
@@ -537,7 +537,7 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	private void RpcKillAllTileOverlays(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			KillAllOverlays ();
+			KillAllOverlays();
 		}
 	}
 
@@ -1173,6 +1173,18 @@ public class Player : NetworkBehaviour {
 	[Server]
 	public float GetFunds() {
 		return funds;
+	}
+
+	public void SetFunds(float amount) {
+		if (amount >= 0) {
+			funds = amount;
+		}
+	}
+
+	public void SetResource(Data.ResourceType type, int amount) {
+		if (resourceInventory.ContainsKey(type) && amount >= 0) {
+			resourceInventory[type] = amount;
+		}
 	}
 
 	/// <summary>

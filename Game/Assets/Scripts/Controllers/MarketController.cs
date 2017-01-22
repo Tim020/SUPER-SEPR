@@ -91,6 +91,18 @@ public class MarketController : NetworkBehaviour {
 		}
 	}
 
+	public void SetResourceAmount(Data.ResourceType type, int amount) {
+		if (marketResources.ContainsKey(type)) {
+			marketResources[type] = amount;
+		}
+	}
+
+	public void SetFunds(float funds) {
+		if (funds >= 0) {
+			marketFunds = funds;
+		}
+	}
+
 	/// <summary>
 	/// Gets the amount of a given resource.
 	/// </summary>
