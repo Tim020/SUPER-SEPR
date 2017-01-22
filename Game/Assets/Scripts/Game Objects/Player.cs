@@ -201,18 +201,49 @@ public class Player : NetworkBehaviour {
 	/// <summary>
 	/// Opens the market screen.
 	/// </summary>
-	//TODO: This should probably look at what phase we are in and disable the roboticon/market parts of the UI if not in those phases
 	private void MarketButtonClicked() {
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		market.gameObject.SetActive (!market.gameObject.activeInHierarchy);
+		Transform background = market.GetChild(0);
 		Transform resources = market.GetChild(1);
-		if (market.gameObject.activeInHierarchy) {
-			resources.GetChild(1).GetComponent<Button>().enabled = true;
-			resources.GetChild(2).GetComponent<Button>().enabled = true;
-			resources.GetChild(3).GetComponent<Button>().enabled = true;
-			resources.GetChild(4).GetComponent<Button>().enabled = true;
-			market.gameObject.SetActive(true);
-		} else {
-			market.gameObject.SetActive(false);
+		Transform roboticons = market.GetChild(2);
+		background.gameObject.SetActive (true);
+		resources.gameObject.SetActive (false);
+		roboticons.gameObject.SetActive (false);
+
+		background.GetChild (0).GetComponent<Button> ().interactable = false;
+		background.GetChild (1).GetComponent<Button> ().interactable = false;
+		background.GetChild (2).GetComponent<Button> ().interactable = false;
+		background.GetChild (3).GetComponent<Button> ().interactable = false;
+		background.GetChild (4).GetComponent<Button> ().interactable = false;
+		background.GetChild (5).GetComponent<Button> ().interactable = true;
+
+		switch (playerState) {
+		case Data.GameState.GAME_WAIT:
+			market.gameObject.SetActive (false);
+			break;
+		case Data.GameState.TILE_PURCHASE:
+			market.gameObject.SetActive (false);
+			break;
+		case Data.GameState.ROBOTICON_CUSTOMISATION:
+			roboticons.gameObject.SetActive (true);
+			background.GetChild (3).GetComponent<Button> ().interactable = true;
+			break;
+		case Data.GameState.ROBOTICON_PLACEMENT:
+			market.gameObject.SetActive (false);
+			break;
+		case Data.GameState.PRODUCTION:
+			market.gameObject.SetActive (false);
+			break;
+		case Data.GameState.AUCTION:
+			background.GetChild (0).GetComponent<Button> ().interactable = true;
+			background.GetChild (1).GetComponent<Button> ().interactable = true;
+			background.GetChild (2).GetComponent<Button> ().interactable = true;
+			background.GetChild (4).GetComponent<Button> ().interactable = true;
+			break;
+		case Data.GameState.PLAYER_FINISH:
+			market.gameObject.SetActive (false);
+			break;
 		}
 	}
 
@@ -912,19 +943,8 @@ public class Player : NetworkBehaviour {
 		if (playerID == this.playerID && isLocalPlayer) {
 			Debug.Log(playerID + " started customisation phase");
 			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
-			Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
-			Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
-			Transform marketBackground = market.GetChild(0);
-			Transform robot = market.GetChild(2);
-
-			overlay.GetChild(5).GetComponent<Button>().enabled = false;
-			marketBackground.GetChild(0).GetComponent<Button>().enabled = false;
-			marketBackground.GetChild(1).GetComponent<Button>().enabled = false;
-			marketBackground.GetChild(2).GetComponent<Button>().enabled = false;
-			marketBackground.GetChild(4).GetComponent<Button>().enabled = false;
 			robotCustomisationChoice = Data.ResourceType.NONE;
-			robot.gameObject.SetActive(true);
-			market.gameObject.SetActive(true);
+			MarketButtonClicked();
 		}
 	}
 
