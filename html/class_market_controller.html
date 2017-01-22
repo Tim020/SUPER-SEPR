@@ -40,6 +40,8 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#properties">Properties</a> &#124;
 <a href="class_market_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">MarketController Class Reference</div>  </div>
@@ -49,7 +51,7 @@ $(function() {
 <p>Centralised market system, handles all trades between players and to the market itself  
  <a href="class_market_controller.html#details">More...</a></p>
 
-<p>Inherits MonoBehaviour.</p>
+<p>Inherits NetworkBehaviour.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -59,41 +61,58 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a214192e6a27bc18a92b34c79016a42fa"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a214192e6a27bc18a92b34c79016a42fa">getResourceAmount</a> (<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type)</td></tr>
-<tr class="memdesc:a214192e6a27bc18a92b34c79016a42fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the amount of a given resource.  <a href="#a214192e6a27bc18a92b34c79016a42fa">More...</a><br /></td></tr>
-<tr class="separator:a214192e6a27bc18a92b34c79016a42fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0ad7beddbf737e1b1502a5e5e73fd843"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a0ad7beddbf737e1b1502a5e5e73fd843">getResourceSellPrice</a> (<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type)</td></tr>
-<tr class="memdesc:a0ad7beddbf737e1b1502a5e5e73fd843"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the price the market will sell this resource at.  <a href="#a0ad7beddbf737e1b1502a5e5e73fd843">More...</a><br /></td></tr>
-<tr class="separator:a0ad7beddbf737e1b1502a5e5e73fd843"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abf39ce6bbce21dbaf70caa802c3a13fb"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#abf39ce6bbce21dbaf70caa802c3a13fb">getResourceBuyPrice</a> (<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type)</td></tr>
-<tr class="memdesc:abf39ce6bbce21dbaf70caa802c3a13fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the price the market will buy this resource at.  <a href="#abf39ce6bbce21dbaf70caa802c3a13fb">More...</a><br /></td></tr>
-<tr class="separator:abf39ce6bbce21dbaf70caa802c3a13fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72591c1aaf320f71fcf53d65223d4fb0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a72591c1aaf320f71fcf53d65223d4fb0">buyFromMarket</a> (<a class="el" href="class_base_player.html">BasePlayer</a> player, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type, int amount)</td></tr>
-<tr class="memdesc:a72591c1aaf320f71fcf53d65223d4fb0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buys resources from market.  <a href="#a72591c1aaf320f71fcf53d65223d4fb0">More...</a><br /></td></tr>
-<tr class="separator:a72591c1aaf320f71fcf53d65223d4fb0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac16039b4879f7c6b5d4db00ea9550eee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#ac16039b4879f7c6b5d4db00ea9550eee">sellToMarket</a> (<a class="el" href="class_base_player.html">BasePlayer</a> player, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type, int amount)</td></tr>
-<tr class="memdesc:ac16039b4879f7c6b5d4db00ea9550eee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sells resources to market.  <a href="#ac16039b4879f7c6b5d4db00ea9550eee">More...</a><br /></td></tr>
-<tr class="separator:ac16039b4879f7c6b5d4db00ea9550eee"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a42c809aa19ae3758fbe152863742d6e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a42c809aa19ae3758fbe152863742d6e2">createPlayerTrade</a> (<a class="el" href="class_base_player.html">BasePlayer</a> player, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type, int resourceAmount, float unitPrice)</td></tr>
-<tr class="memdesc:a42c809aa19ae3758fbe152863742d6e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new player trade.  <a href="#a42c809aa19ae3758fbe152863742d6e2">More...</a><br /></td></tr>
-<tr class="separator:a42c809aa19ae3758fbe152863742d6e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a929faf35e76ccdc44061c38270e66484"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a929faf35e76ccdc44061c38270e66484">cancelPlayerTrade</a> (<a class="el" href="class_market_controller_1_1_p2_p_trade.html">P2PTrade</a> trade)</td></tr>
-<tr class="memdesc:a929faf35e76ccdc44061c38270e66484"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancels the player trade.  <a href="#a929faf35e76ccdc44061c38270e66484">More...</a><br /></td></tr>
-<tr class="separator:a929faf35e76ccdc44061c38270e66484"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac14905ada1064a529000073592dd554a"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#ac14905ada1064a529000073592dd554a">OnStartServer</a> ()</td></tr>
+<tr class="memdesc:ac14905ada1064a529000073592dd554a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start this instance.  <a href="#ac14905ada1064a529000073592dd554a">More...</a><br /></td></tr>
+<tr class="separator:ac14905ada1064a529000073592dd554a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2b3b03b1e084195e1277c55b9346f6a"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#ac2b3b03b1e084195e1277c55b9346f6a">IsTradeValid</a> (bool sellingToMarket, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> resourceType, int resourceAmount, <a class="el" href="class_player.html">Player</a> player)</td></tr>
+<tr class="memdesc:ac2b3b03b1e084195e1277c55b9346f6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether this trade is valid for the specified resource type and amount.  <a href="#ac2b3b03b1e084195e1277c55b9346f6a">More...</a><br /></td></tr>
+<tr class="separator:ac2b3b03b1e084195e1277c55b9346f6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1f5c758b2413f7bcc25e115a010f6f46"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a1f5c758b2413f7bcc25e115a010f6f46">GetResourceAmount</a> (<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type)</td></tr>
+<tr class="memdesc:a1f5c758b2413f7bcc25e115a010f6f46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the amount of a given resource.  <a href="#a1f5c758b2413f7bcc25e115a010f6f46">More...</a><br /></td></tr>
+<tr class="separator:a1f5c758b2413f7bcc25e115a010f6f46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab779a75aae1e69b0aa2373ba4c7db7ba"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#ab779a75aae1e69b0aa2373ba4c7db7ba">GetResourceSellPrice</a> (<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type)</td></tr>
+<tr class="memdesc:ab779a75aae1e69b0aa2373ba4c7db7ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the price the market will sell this resource at.  <a href="#ab779a75aae1e69b0aa2373ba4c7db7ba">More...</a><br /></td></tr>
+<tr class="separator:ab779a75aae1e69b0aa2373ba4c7db7ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a94fb3650e8e06f3cc673162cec7a95ea"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a94fb3650e8e06f3cc673162cec7a95ea">GetResourceBuyPrice</a> (<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type)</td></tr>
+<tr class="memdesc:a94fb3650e8e06f3cc673162cec7a95ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the price the market will buy this resource at.  <a href="#a94fb3650e8e06f3cc673162cec7a95ea">More...</a><br /></td></tr>
+<tr class="separator:a94fb3650e8e06f3cc673162cec7a95ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8ebc01ba728bc6aa2d420aefd10f4b6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#ac8ebc01ba728bc6aa2d420aefd10f4b6">BuyFromMarket</a> (<a class="el" href="class_player.html">Player</a> player, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type, int amount)</td></tr>
+<tr class="memdesc:ac8ebc01ba728bc6aa2d420aefd10f4b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Buys resources from market.  <a href="#ac8ebc01ba728bc6aa2d420aefd10f4b6">More...</a><br /></td></tr>
+<tr class="separator:ac8ebc01ba728bc6aa2d420aefd10f4b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97c423b626399266db79432ec4f636bf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a97c423b626399266db79432ec4f636bf">SellToMarket</a> (<a class="el" href="class_player.html">Player</a> player, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type, int amount)</td></tr>
+<tr class="memdesc:a97c423b626399266db79432ec4f636bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sells resources to market.  <a href="#a97c423b626399266db79432ec4f636bf">More...</a><br /></td></tr>
+<tr class="separator:a97c423b626399266db79432ec4f636bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0a58ac8d7afa1b2a88ba7e7feb9ffba5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a0a58ac8d7afa1b2a88ba7e7feb9ffba5">CreatePlayerTrade</a> (<a class="el" href="class_player.html">Player</a> player, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> type, int resourceAmount, float unitPrice)</td></tr>
+<tr class="memdesc:a0a58ac8d7afa1b2a88ba7e7feb9ffba5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new player trade.  <a href="#a0a58ac8d7afa1b2a88ba7e7feb9ffba5">More...</a><br /></td></tr>
+<tr class="separator:a0a58ac8d7afa1b2a88ba7e7feb9ffba5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a04b6d094d0bef7aab243c6d231ffcc7c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a04b6d094d0bef7aab243c6d231ffcc7c">CancelPlayerTrade</a> (<a class="el" href="class_market_controller_1_1_p2_p_trade.html">P2PTrade</a> trade)</td></tr>
+<tr class="memdesc:a04b6d094d0bef7aab243c6d231ffcc7c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancels the player trade.  <a href="#a04b6d094d0bef7aab243c6d231ffcc7c">More...</a><br /></td></tr>
+<tr class="separator:a04b6d094d0bef7aab243c6d231ffcc7c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a34de1b82e5da6ca7c5c7b5852bbb423b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_market_controller.html">MarketController</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a34de1b82e5da6ca7c5c7b5852bbb423b">instance</a></td></tr>
+<tr class="separator:a34de1b82e5da6ca7c5c7b5852bbb423b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
+Properties</h2></td></tr>
+<tr class="memitem:aee6a7768332e448c00ccdab350e56e2a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#aee6a7768332e448c00ccdab350e56e2a">marketFunds</a><code> [get]</code></td></tr>
+<tr class="memdesc:aee6a7768332e448c00ccdab350e56e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The amount of money the market currently has  <a href="#aee6a7768332e448c00ccdab350e56e2a">More...</a><br /></td></tr>
+<tr class="separator:aee6a7768332e448c00ccdab350e56e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Centralised market system, handles all trades between players and to the market itself </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a72591c1aaf320f71fcf53d65223d4fb0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72591c1aaf320f71fcf53d65223d4fb0">&#9670;&nbsp;</a></span>buyFromMarket()</h2>
+<a id="ac8ebc01ba728bc6aa2d420aefd10f4b6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8ebc01ba728bc6aa2d420aefd10f4b6">&#9670;&nbsp;</a></span>BuyFromMarket()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MarketController.buyFromMarket </td>
+          <td class="memname">void MarketController.BuyFromMarket </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_base_player.html">BasePlayer</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="class_player.html">Player</a>&#160;</td>
           <td class="paramname"><em>player</em>, </td>
         </tr>
         <tr>
@@ -119,7 +138,7 @@ Public Member Functions</h2></td></tr>
 <p>Buys resources from market. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">player</td><td>Player wishing to buy resources</td></tr>
+    <tr><td class="paramname">player</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> wishing to buy resources</td></tr>
     <tr><td class="paramname">type</td><td>Type of resource being purchased</td></tr>
     <tr><td class="paramname">amount</td><td>Amount of resource being purchased</td></tr>
   </table>
@@ -128,14 +147,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a929faf35e76ccdc44061c38270e66484"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a929faf35e76ccdc44061c38270e66484">&#9670;&nbsp;</a></span>cancelPlayerTrade()</h2>
+<a id="a04b6d094d0bef7aab243c6d231ffcc7c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a04b6d094d0bef7aab243c6d231ffcc7c">&#9670;&nbsp;</a></span>CancelPlayerTrade()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MarketController.cancelPlayerTrade </td>
+          <td class="memname">void MarketController.CancelPlayerTrade </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_market_controller_1_1_p2_p_trade.html">P2PTrade</a>&#160;</td>
           <td class="paramname"><em>trade</em></td><td>)</td>
@@ -155,16 +174,16 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a42c809aa19ae3758fbe152863742d6e2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a42c809aa19ae3758fbe152863742d6e2">&#9670;&nbsp;</a></span>createPlayerTrade()</h2>
+<a id="a0a58ac8d7afa1b2a88ba7e7feb9ffba5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0a58ac8d7afa1b2a88ba7e7feb9ffba5">&#9670;&nbsp;</a></span>CreatePlayerTrade()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MarketController.createPlayerTrade </td>
+          <td class="memname">void MarketController.CreatePlayerTrade </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_base_player.html">BasePlayer</a>&#160;</td>
+          <td class="paramtype"><a class="el" href="class_player.html">Player</a>&#160;</td>
           <td class="paramname"><em>player</em>, </td>
         </tr>
         <tr>
@@ -197,7 +216,7 @@ Public Member Functions</h2></td></tr>
 <p>This will remove the resource from the player but not give them any money </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">player</td><td>Player wishing to sell their resources</td></tr>
+    <tr><td class="paramname">player</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> wishing to sell their resources</td></tr>
     <tr><td class="paramname">type</td><td>The type of resource the player is selling</td></tr>
     <tr><td class="paramname">resourceAmount</td><td>The amount of resource the player is selling</td></tr>
     <tr><td class="paramname">unitPrice</td><td>Unit price the player wishes to sell at</td></tr>
@@ -207,14 +226,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a214192e6a27bc18a92b34c79016a42fa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a214192e6a27bc18a92b34c79016a42fa">&#9670;&nbsp;</a></span>getResourceAmount()</h2>
+<a id="a1f5c758b2413f7bcc25e115a010f6f46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1f5c758b2413f7bcc25e115a010f6f46">&#9670;&nbsp;</a></span>GetResourceAmount()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float MarketController.getResourceAmount </td>
+          <td class="memname">float MarketController.GetResourceAmount </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td>
           <td class="paramname"><em>type</em></td><td>)</td>
@@ -234,14 +253,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="abf39ce6bbce21dbaf70caa802c3a13fb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abf39ce6bbce21dbaf70caa802c3a13fb">&#9670;&nbsp;</a></span>getResourceBuyPrice()</h2>
+<a id="a94fb3650e8e06f3cc673162cec7a95ea"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a94fb3650e8e06f3cc673162cec7a95ea">&#9670;&nbsp;</a></span>GetResourceBuyPrice()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float MarketController.getResourceBuyPrice </td>
+          <td class="memname">float MarketController.GetResourceBuyPrice </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td>
           <td class="paramname"><em>type</em></td><td>)</td>
@@ -261,14 +280,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a0ad7beddbf737e1b1502a5e5e73fd843"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0ad7beddbf737e1b1502a5e5e73fd843">&#9670;&nbsp;</a></span>getResourceSellPrice()</h2>
+<a id="ab779a75aae1e69b0aa2373ba4c7db7ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab779a75aae1e69b0aa2373ba4c7db7ba">&#9670;&nbsp;</a></span>GetResourceSellPrice()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">float MarketController.getResourceSellPrice </td>
+          <td class="memname">float MarketController.GetResourceSellPrice </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td>
           <td class="paramname"><em>type</em></td><td>)</td>
@@ -288,16 +307,88 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ac16039b4879f7c6b5d4db00ea9550eee"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac16039b4879f7c6b5d4db00ea9550eee">&#9670;&nbsp;</a></span>sellToMarket()</h2>
+<a id="ac2b3b03b1e084195e1277c55b9346f6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2b3b03b1e084195e1277c55b9346f6a">&#9670;&nbsp;</a></span>IsTradeValid()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void MarketController.sellToMarket </td>
+          <td class="memname">bool MarketController.IsTradeValid </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="class_base_player.html">BasePlayer</a>&#160;</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sellingToMarket</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td>
+          <td class="paramname"><em>resourceType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceAmount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_player.html">Player</a>&#160;</td>
+          <td class="paramname"><em>player</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determines whether this trade is valid for the specified resource type and amount. </p>
+<dl class="section return"><dt>Returns</dt><dd><code>true</code> if this trade is valid otherwise <code>false</code>.</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sellingToMarket</td><td>If set to <code>true</code> selling to market, else buying from market.</td></tr>
+    <tr><td class="paramname">resourceType</td><td>The <code><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90" title="Types of resources available in the game ">Data.ResourceType</a></code> of the trade.</td></tr>
+    <tr><td class="paramname">resourceAmount</td><td>Resource amount.</td></tr>
+    <tr><td class="paramname">player</td><td>The <code><a class="el" href="class_player.html" title="Human player class. ">Player</a></code> wishing to make this trade</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac14905ada1064a529000073592dd554a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac14905ada1064a529000073592dd554a">&#9670;&nbsp;</a></span>OnStartServer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">override void MarketController.OnStartServer </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Start this instance. </p>
+<p>Intialise the resource dictionaries and the starting funds. </p>
+
+</div>
+</div>
+<a id="a97c423b626399266db79432ec4f636bf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97c423b626399266db79432ec4f636bf">&#9670;&nbsp;</a></span>SellToMarket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MarketController.SellToMarket </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_player.html">Player</a>&#160;</td>
           <td class="paramname"><em>player</em>, </td>
         </tr>
         <tr>
@@ -323,12 +414,60 @@ Public Member Functions</h2></td></tr>
 <p>Sells resources to market. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">player</td><td>Player wishing to sell resources</td></tr>
+    <tr><td class="paramname">player</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> wishing to sell resources</td></tr>
     <tr><td class="paramname">type</td><td>Type of resource being sold</td></tr>
     <tr><td class="paramname">amount</td><td>Amount of resource being sold</td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a34de1b82e5da6ca7c5c7b5852bbb423b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34de1b82e5da6ca7c5c7b5852bbb423b">&#9670;&nbsp;</a></span>instance</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_market_controller.html">MarketController</a> MarketController.instance</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Property Documentation</h2>
+<a id="aee6a7768332e448c00ccdab350e56e2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee6a7768332e448c00ccdab350e56e2a">&#9670;&nbsp;</a></span>marketFunds</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float MarketController.marketFunds</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The amount of money the market currently has </p>
 
 </div>
 </div>
@@ -338,7 +477,7 @@ Public Member Functions</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 22 2017 17:11:31 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 22 2017 22:58:16 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

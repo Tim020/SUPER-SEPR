@@ -58,13 +58,17 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:abd2a11d2d881f4026cbf2a4cd4b24a48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raises the start server event.  <a href="#abd2a11d2d881f4026cbf2a4cd4b24a48">More...</a><br /></td></tr>
 <tr class="separator:abd2a11d2d881f4026cbf2a4cd4b24a48"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af0fd31770ad245fccbaaa3c8900816d6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player_controller.html#af0fd31770ad245fccbaaa3c8900816d6">getNextID</a> ()</td></tr>
+<tr class="memdesc:af0fd31770ad245fccbaaa3c8900816d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next ID to give to a player.  <a href="#af0fd31770ad245fccbaaa3c8900816d6">More...</a><br /></td></tr>
 <tr class="separator:af0fd31770ad245fccbaaa3c8900816d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a1b5bb3d10659b4f29f0353d2c55b08c8"><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="class_base_player.html">BasePlayer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player_controller.html#a1b5bb3d10659b4f29f0353d2c55b08c8">players</a></td></tr>
-<tr class="memdesc:a1b5bb3d10659b4f29f0353d2c55b08c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">An array of the players in the game, can be any combination of human or AI  <a href="#a1b5bb3d10659b4f29f0353d2c55b08c8">More...</a><br /></td></tr>
-<tr class="separator:a1b5bb3d10659b4f29f0353d2c55b08c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a946edde0598368679b7750045e55645d"><td class="memItemLeft" align="right" valign="top">OrderedDictionary&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player_controller.html#a946edde0598368679b7750045e55645d">players</a></td></tr>
+<tr class="memdesc:a946edde0598368679b7750045e55645d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dictionary of the players in the game.  <a href="#a946edde0598368679b7750045e55645d">More...</a><br /></td></tr>
+<tr class="separator:a946edde0598368679b7750045e55645d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae75fae56077e9fe5bbb4a123ab7f5519"><td class="memItemLeft" align="right" valign="top">OrderedDictionary&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player_controller.html#ae75fae56077e9fe5bbb4a123ab7f5519">playerConnections</a></td></tr>
+<tr class="memdesc:ae75fae56077e9fe5bbb4a123ab7f5519"><td class="mdescLeft">&#160;</td><td class="mdescRight">The player connections.  <a href="#ae75fae56077e9fe5bbb4a123ab7f5519">More...</a><br /></td></tr>
+<tr class="separator:ae75fae56077e9fe5bbb4a123ab7f5519"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -89,6 +93,9 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Gets the next ID to give to a player. </p>
+<dl class="section return"><dt>Returns</dt><dd>The next ID.</dd></dl>
 
 </div>
 </div>
@@ -136,19 +143,35 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1b5bb3d10659b4f29f0353d2c55b08c8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1b5bb3d10659b4f29f0353d2c55b08c8">&#9670;&nbsp;</a></span>players</h2>
+<a id="ae75fae56077e9fe5bbb4a123ab7f5519"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae75fae56077e9fe5bbb4a123ab7f5519">&#9670;&nbsp;</a></span>playerConnections</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">List&lt;<a class="el" href="class_base_player.html">BasePlayer</a>&gt; PlayerController.players</td>
+          <td class="memname">OrderedDictionary PlayerController.playerConnections</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>An array of the players in the game, can be any combination of human or AI </p>
+<p>The player connections. </p>
+
+</div>
+</div>
+<a id="a946edde0598368679b7750045e55645d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a946edde0598368679b7750045e55645d">&#9670;&nbsp;</a></span>players</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">OrderedDictionary PlayerController.players</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A dictionary of the players in the game. </p>
 
 </div>
 </div>
@@ -158,7 +181,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Sun Jan 22 2017 17:11:31 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Sun Jan 22 2017 22:58:16 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
