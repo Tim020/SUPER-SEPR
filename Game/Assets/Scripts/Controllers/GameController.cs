@@ -171,7 +171,6 @@ public class GameController : NetworkBehaviour {
 	/// Called by a player when they confirm their roboticon type selection.
 	/// </summary>
 	public void PlayerCustomisedRoboticon(bool choseRobot) {
-		Debug.Log(choseRobot);
 		if (choseRobot) {
 			state = Data.GameState.ROBOTICON_PLACEMENT;
 		} else {
