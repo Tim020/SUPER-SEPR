@@ -142,11 +142,11 @@ public class GameController : NetworkBehaviour {
 				currentPlayer.RpcEndPlayerPhase(currentPlayerTurn, possibleTiles.ToArray());
 			}
 			firstTick = false;
+			playersCompletedPhase++;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = Data.GameState.PRODUCTION;
 			} else {
 				state = Data.GameState.GAME_WAIT;
-				playersCompletedPhase++;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
 			state = Data.GameState.AUCTION;
@@ -155,6 +155,7 @@ public class GameController : NetworkBehaviour {
 		} else if (state == Data.GameState.RECYCLE) {
 			playersCompletedPhase = 0;
 			state = Data.GameState.GAME_WAIT;
+			firstTick = true;
 		}
 	}
 
