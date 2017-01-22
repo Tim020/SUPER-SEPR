@@ -146,7 +146,8 @@ public class Player : NetworkBehaviour {
 					Debug.Log("UI thing clicked");
 				} else {
 					Vector3 v = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y));
+					bool cntrClick = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
+					CmdMouseClick(Mathf.FloorToInt(v.x), Mathf.FloorToInt(v.y), cntrClick);
 				}
 			}
 		}
@@ -360,7 +361,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="worldX">World X position of the click.</param>
 	/// <param name="worldY">World Y position of the click.</param>
 	[Command]
-	private void CmdMouseClick(int worldX, int worldY) {
+	private void CmdMouseClick(int worldX, int worldY, bool cntrClick) {
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
 		if (t != null) {
 			string owner;
@@ -369,8 +370,7 @@ public class Player : NetworkBehaviour {
 			} else {
 				owner = "None";
 			}
-			bool multiClick = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl) || Input.GetKey(KeyCode.LeftCommand) || Input.GetKey(KeyCode.RightCommand);
-			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID, !multiClick);
+			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID, !cntrClick);
 		} else {
 			if (worldX < 0 || worldX >= MapController.instance.width || worldY < 0 || worldY >= MapController.instance.height) {
 				RpcKillAllTileOverlays(this.playerID);
