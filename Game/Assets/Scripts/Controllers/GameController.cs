@@ -153,8 +153,11 @@ public class GameController : NetworkBehaviour {
 				p.Production ();
 			}
 			state = Data.GameState.AUCTION;
+			playersCompletedPhase = 0;
 		} else if (state == Data.GameState.AUCTION) {
-			state = Data.GameState.RECYCLE;
+			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
+				state = Data.GameState.RECYCLE;
+			}
 		} else if (state == Data.GameState.RECYCLE) {
 			playersCompletedPhase = 0;
 			state = Data.GameState.GAME_WAIT;
@@ -197,5 +200,9 @@ public class GameController : NetworkBehaviour {
 	/// <returns>Elapsed time in seconds.</returns>
 	public int GetTimerInSeconds() {
 		return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
+	}
+
+	public void PlayerReady() {
+		playersCompletedPhase++;
 	}
 }
