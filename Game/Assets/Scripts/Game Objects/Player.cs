@@ -232,6 +232,7 @@ public class Player : NetworkBehaviour {
 				market.gameObject.SetActive(false);
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
+				KillAllOverlays ();
 				roboticons.gameObject.SetActive(true);
 				MarketMenuButtonSelected(3, Data.ResourceType.NONE);
 				background.GetChild(3).GetComponent<Button>().interactable = true;
@@ -242,7 +243,8 @@ public class Player : NetworkBehaviour {
 			case Data.GameState.PRODUCTION:
 				market.gameObject.SetActive(false);
 				break;
-			case Data.GameState.AUCTION:
+		case Data.GameState.AUCTION:
+				KillAllOverlays ();
 				background.GetChild(0).GetComponent<Button>().interactable = true;
 				background.GetChild(1).GetComponent<Button>().interactable = true;
 				background.GetChild(2).GetComponent<Button>().interactable = true;
@@ -519,16 +521,23 @@ public class Player : NetworkBehaviour {
 	}
 
 	/// <summary>
+	/// Kills all tile overlays.
+	/// </summary>
+	private void KillAllOverlays() {
+		foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
+			Destroy(g);
+		}
+		selectedTilesOverlays.Clear();
+	}
+
+	/// <summary>
 	/// RPC method to remove all tile info overlays.
 	/// </summary>
 	/// <param name="playerID">The player to invoke the command on.</param>
 	[ClientRpc]
 	private void RpcKillAllTileOverlays(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			foreach (GameObject g in GameObject.FindGameObjectsWithTag("TileInfoOverlay")) {
-				Destroy(g);
-			}
-			selectedTilesOverlays.Clear();
+			KillAllOverlays ();
 		}
 	}
 
