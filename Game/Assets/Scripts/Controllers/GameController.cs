@@ -149,6 +149,9 @@ public class GameController : NetworkBehaviour {
 				state = Data.GameState.GAME_WAIT;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
+			foreach (Player p in PlayerController.instance.players.Values) {
+				p.Production ();
+			}
 			state = Data.GameState.AUCTION;
 		} else if (state == Data.GameState.AUCTION) {
 			state = Data.GameState.RECYCLE;

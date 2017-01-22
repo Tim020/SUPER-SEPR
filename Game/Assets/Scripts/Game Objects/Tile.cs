@@ -59,9 +59,9 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The amount of resource produced and hence gained by the player.</returns>
 	/// <param name="type">The type of resoure to produce for</param>
-	public int doResourceProduction(Data.ResourceType type) {
-		if (resourcesGenerated.ContainsKey(type)) {
-			TileResource r = resourcesGenerated[type];
+	public int doResourceProduction() {
+		if (roboticon != null && resourcesGenerated.ContainsKey(roboticon.resourceSpecialisation)) {
+			TileResource r = resourcesGenerated[roboticon.resourceSpecialisation];
 			int prodAmt = UnityEngine.Random.Range(0, Math.Min(15, r.current));
 			r.current -= prodAmt;
 			return prodAmt;

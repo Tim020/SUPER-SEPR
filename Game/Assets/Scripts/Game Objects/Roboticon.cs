@@ -15,7 +15,7 @@ public class Roboticon : NetworkBehaviour {
 	/// <summary>
 	/// The resource type this roboticon allows production of when placed on a tile.
 	/// </summary>
-	private Data.ResourceType resourceSpecialisation;
+	public Data.ResourceType resourceSpecialisation;
 
 	/// <summary>
 	/// The player who owns this Roboticon

@@ -373,7 +373,6 @@ public class Player : NetworkBehaviour {
 		for (int x = 0; x < MapController.instance.width; x++) {
 			for (int y = 0; y < MapController.instance.height; y++) {
 				GameObject go = Instantiate(TileOverlay, new Vector3(x, y, -1), Quaternion.identity, c.transform);
-				CanvasRenderer r = go.GetComponent<CanvasRenderer>();
 				go.name = "TileOverlay_" + x + "_" + y;
 			}
 		}
@@ -957,16 +956,11 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcStartRoboticonPlacePhase(int playerID, Vector3[] positions) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			// No roboticon was chosen in the phase
-			if (robotCustomisationChoice == Data.ResourceType.NONE) {
-				// Add some UI to skip to the next stage.
-			} else {
-				// Add some UI to allow for its placement and purchase
+			if (robotCustomisationChoice != Data.ResourceType.NONE) {
 				Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
 				this.playerOwnedTiles = positions;
 				foreach (Vector3 position in positions) {
 					GameObject go = Instantiate(RoboticonPlacementOverlay, position, Quaternion.identity, c.transform);
-					CanvasRenderer r = go.GetComponent<CanvasRenderer>();
 					go.name = "RobotPlacement_" + position.x + "_" + position.y;
 				}
 			}
@@ -1192,11 +1186,12 @@ public class Player : NetworkBehaviour {
 	/// <summary>
 	/// Iterates through the list of tiles the player owns and gathers the resources it has generated
 	/// </summary>
-	protected virtual void Production() {
+	public void Production() {
+		Debug.Log ("Production");
 		foreach (Tile t in ownedTiles) {
-			GiveResouce(Data.ResourceType.ORE, t.doResourceProduction(Data.ResourceType.ORE));
-			//GiveResouce(Data.ResourceType.FOOD, t.doResourceProduction(Data.ResourceType.FOOD));
-			GiveResouce(Data.ResourceType.ENERGY, t.doResourceProduction(Data.ResourceType.ENERGY));
+			if (t.roboticon != null) {
+				GiveResouce (t.roboticon.resourceSpecialisation, t.doResourceProduction());
+			}
 		}
 	}
 }
