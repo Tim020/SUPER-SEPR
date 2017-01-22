@@ -251,7 +251,7 @@ public class Player : NetworkBehaviour {
 		roboticon.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(true));
 		roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener(() => DoRoboticonSelection());
 		roboticon.GetChild(5).GetComponent<Button>().enabled = false;
-		roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener(() => SkipRoboticonSelection());
+		roboticon.GetChild(6).GetComponent<Button>().onClick.AddListener(() => SkipRoboticonSelection());
 	}
 
 	/// <summary>
@@ -403,6 +403,9 @@ public class Player : NetworkBehaviour {
 
 	private void PlaceRoboticonClick(int worldX, int worldY, int resourceOrdinal) {
 		CmdPlaceRoboticon(worldX, worldY, resourceOrdinal);
+		Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
+		Transform t = c.transform.FindChild("RobotPlacement_" + worldX + "_" + worldY);
+		Destroy(t.gameObject);
 	}
 
 	[Command]
@@ -424,6 +427,7 @@ public class Player : NetworkBehaviour {
 			roboticon.RpcSyncRoboticon(resourceOrdinal, college.Id);
 		}
 		RpcKillAllTileOverlays(this.playerID);
+		GameController.instance.PlayerPlacedRoboticon();
 	}
 
 	/// <summary>
@@ -967,7 +971,7 @@ public class Player : NetworkBehaviour {
 
 	[Command]
 	private void CmdDoRoboticonSelection(int resourceOrdinal) {
-		GameController.instance.playerCustomisedRoboticon(true, resourceOrdinal, playerID);
+		GameController.instance.PlayerCustomisedRoboticon(true);
 	}
 
 	private void SkipRoboticonSelection() {
@@ -989,7 +993,7 @@ public class Player : NetworkBehaviour {
 
 	[Command]
 	private void CmdSkipRoboticonSelection() {
-		GameController.instance.playerCustomisedRoboticon(false, (int)Data.ResourceType.NONE, playerID);
+		GameController.instance.PlayerCustomisedRoboticon(false);
 	}
 
 	/// <summary>
@@ -1002,9 +1006,9 @@ public class Player : NetworkBehaviour {
 			playerState = Data.GameState.PLAYER_WAIT;
 			Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
 			foreach (Vector3 position in positions) {
-				GameObject go = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y).gameObject;
-				if (go != null) {
-					Destroy(go);
+				Transform t = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y);
+				if (t != null && t.gameObject != null) {
+					Destroy(t.gameObject);
 				}
 			}
 		}
@@ -1019,7 +1023,7 @@ public class Player : NetworkBehaviour {
 		if (t.getOwner() == null && GameController.instance.state == Data.GameState.TILE_PURCHASE && GameController.instance.currentPlayerTurn == this.playerID) {
 			ownedTiles.Add(t);
 			t.setOwner(this);
-			GameController.instance.playerPurchasedTile(this.playerID);
+			GameController.instance.PlayerPurchasedTile(this.playerID);
 			RpcColorTile("TileOverlay_" + t.transform.position.x + "_" + t.transform.position.y, college.Id);
 			return true;
 		}

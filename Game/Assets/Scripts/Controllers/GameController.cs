@@ -149,7 +149,7 @@ public class GameController : NetworkBehaviour {
 				playersCompletedPhase++;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
-			
+			state = Data.GameState.AUCTION;
 		} else if (state == Data.GameState.AUCTION) {
 			state = Data.GameState.RECYCLE;
 		} else if (state == Data.GameState.RECYCLE) {
@@ -162,7 +162,7 @@ public class GameController : NetworkBehaviour {
 	/// Called by a player when they have purchased a tile to advance to the next game state.
 	/// </summary>
 	/// <param name="playerID">ID of the player that took the tile.</param>
-	public void playerPurchasedTile(int playerID) {
+	public void PlayerPurchasedTile(int playerID) {
 		state = Data.GameState.ROBOTICON_CUSTOMISATION;
 		firstTick = true;
 	}
@@ -170,8 +170,21 @@ public class GameController : NetworkBehaviour {
 	/// <summary>
 	/// Called by a player when they confirm their roboticon type selection.
 	/// </summary>
-	public void playerCustomisedRoboticon(bool choseRobot, int resourceOrdinal, int playerID) {
-		state = Data.GameState.ROBOTICON_PLACEMENT;
+	public void PlayerCustomisedRoboticon(bool choseRobot) {
+		Debug.Log(choseRobot);
+		if (choseRobot) {
+			state = Data.GameState.ROBOTICON_PLACEMENT;
+		} else {
+			state = Data.GameState.PLAYER_FINISH;
+		}
+		firstTick = true;
+	}
+
+	/// <summary>
+	/// Called by a player when they have placed their roboticon.
+	/// </summary>
+	public void PlayerPlacedRoboticon() {
+		state = Data.GameState.PLAYER_FINISH;
 		firstTick = true;
 	}
 
