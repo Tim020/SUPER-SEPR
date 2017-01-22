@@ -227,6 +227,7 @@ public class Player : NetworkBehaviour {
 			break;
 		case Data.GameState.ROBOTICON_CUSTOMISATION:
 			roboticons.gameObject.SetActive (true);
+			MarketMenuButtonSelected(3, Data.ResourceType.NONE);
 			background.GetChild (3).GetComponent<Button> ().interactable = true;
 			break;
 		case Data.GameState.ROBOTICON_PLACEMENT:
@@ -240,6 +241,7 @@ public class Player : NetworkBehaviour {
 			background.GetChild (1).GetComponent<Button> ().interactable = true;
 			background.GetChild (2).GetComponent<Button> ().interactable = true;
 			background.GetChild (4).GetComponent<Button> ().interactable = true;
+			MarketMenuButtonSelected(0, Data.ResourceType.ORE);
 			break;
 		case Data.GameState.PLAYER_FINISH:
 			market.gameObject.SetActive (false);
