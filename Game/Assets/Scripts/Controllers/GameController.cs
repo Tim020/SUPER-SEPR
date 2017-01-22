@@ -102,7 +102,7 @@ public class GameController : NetworkBehaviour {
 			}
 			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
-			if (timer.Elapsed.TotalSeconds > 60) {
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
 				state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
 				timer = System.Diagnostics.Stopwatch.StartNew();
@@ -114,20 +114,32 @@ public class GameController : NetworkBehaviour {
 				firstTick = false;
 			}
 		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
-			if (timer.Elapsed.TotalSeconds > 60) {
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
 				state = Data.GameState.PLAYER_FINISH;
 				firstTick = true;
 				timer.Stop();
 			} else {
 				if (firstTick) {
 					timer = System.Diagnostics.Stopwatch.StartNew();
-					currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn);
+					List<Vector3> possibleTiles = new List<Vector3>();
+					foreach (Tile tile in currentPlayer.ownedTiles) {
+						if (tile.roboticon == null) {
+							possibleTiles.Add(tile.gameObject.transform.position);
+						}
+					}
+					currentPlayer.RpcStartRoboticonPlacePhase(currentPlayerTurn, possibleTiles.ToArray());
 				}
 				firstTick = false;
 			}
 		} else if (state == Data.GameState.PLAYER_FINISH) {
 			if (firstTick) {
-				currentPlayer.RpcEndPlayerPhase(currentPlayerTurn);
+				List<Vector3> possibleTiles = new List<Vector3>();
+				foreach (Tile tile in currentPlayer.ownedTiles) {
+					if (tile.roboticon == null) {
+						possibleTiles.Add(tile.gameObject.transform.position);
+					}
+				}
+				currentPlayer.RpcEndPlayerPhase(currentPlayerTurn, possibleTiles.ToArray());
 			}
 			firstTick = false;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
@@ -158,7 +170,7 @@ public class GameController : NetworkBehaviour {
 	/// <summary>
 	/// Called by a player when they confirm their roboticon type selection.
 	/// </summary>
-	public void playerCustomisedRoboticon() {
+	public void playerCustomisedRoboticon(bool choseRobot, int resourceOrdinal, int playerID) {
 		state = Data.GameState.ROBOTICON_PLACEMENT;
 		firstTick = true;
 	}

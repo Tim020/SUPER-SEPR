@@ -24,6 +24,8 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	public Data.TileType type;
 
+	public Roboticon roboticon{ private set; get; }
+
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
 	/// </summary>
@@ -65,6 +67,10 @@ public class Tile : NetworkBehaviour {
 			return prodAmt;
 		}
 		return 0;
+	}
+
+	public void SetRoboticon(Roboticon r) {
+		this.roboticon = r;
 	}
 
 	/// <summary>

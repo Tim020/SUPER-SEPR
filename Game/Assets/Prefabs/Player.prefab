@@ -88,5 +88,7 @@ MonoBehaviour:
     type: 2}
   TileInfoOverlay: {fileID: 1293774599021256, guid: cc0b4fdfa9aa23f48bdef23cb36b5e57,
     type: 2}
+  RoboticonPlacementOverlay: {fileID: 1856774355468288, guid: 4f5e4645a938d074895ac7f77511b160,
+    type: 2}
   playerID: 0
   collegeAssigned: 0

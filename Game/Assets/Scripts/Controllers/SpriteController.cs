@@ -43,6 +43,15 @@ public class SpriteController : NetworkBehaviour {
 	/// </summary>
 	public Sprite roboticonEnergy;
 
+	public Sprite alcuin;
+	public Sprite constantine;
+	public Sprite derwent;
+	public Sprite goodricke;
+	public Sprite halifax;
+	public Sprite james;
+	public Sprite langwith;
+	public Sprite vanbrugh;
+
 	/// <summary>
 	/// Start this instance and sets the static reference
 	/// </summary>

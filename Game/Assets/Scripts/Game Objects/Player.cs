@@ -7,10 +7,12 @@ using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System;
 using System.Runtime.Remoting;
+using System.Linq;
 
 /// <summary>
 /// Human player class.
 /// </summary>
+/// TODO: Add some helper functions to reset the market UI to its default state
 public class Player : NetworkBehaviour {
 
 	/// <summary>
@@ -24,6 +26,11 @@ public class Player : NetworkBehaviour {
 	public GameObject TileInfoOverlay;
 
 	/// <summary>
+	/// The roboticon placement prefab.
+	/// </summary>
+	public GameObject RoboticonPlacementOverlay;
+
+	/// <summary>
 	/// A dictionary with a resource type as a key, the value is the amount this player currently has
 	/// </summary>
 	private Dictionary<Data.ResourceType, int> resourceInventory;
@@ -31,7 +38,7 @@ public class Player : NetworkBehaviour {
 	/// <summary>
 	/// A list of all the tiles this player owns
 	/// </summary>
-	private List<Tile> ownedTiles;
+	public List<Tile> ownedTiles{ private set; get; }
 
 	/// <summary>
 	/// The amount of money this player has
@@ -91,6 +98,8 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	private Text timerText;
 
+	private Vector3[] playerOwnedTiles;
+
 	/// <summary>
 	/// Raises the start local player event.
 	/// </summary>
@@ -143,11 +152,20 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Command run from the client player to update the timer text.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
 	[Command]
 	public void CmdSetTimerTime(int playerID) {
 		RpcSetTimerText(playerID, GameController.instance.GetTimerInSeconds());
 	}
 
+	/// <summary>
+	/// RPC callback from the server player to set the timer text.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	/// <param name="timerValue">Timer value.</param>
 	[ClientRpc]
 	public void RpcSetTimerText(int playerID, int timerValue) {
 		if (playerID == this.playerID && isLocalPlayer) {
@@ -170,20 +188,31 @@ public class Player : NetworkBehaviour {
 		selection.GetChild(8).GetComponent<Button>().onClick.AddListener(() => CollegeButtonClick(7));
 	}
 
+	/// <summary>
+	/// Setup the overlay UI
+	/// </summary>
 	private void SetupOverlayUI() {
 		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
-		overlay.GetChild(5).GetComponent<Button>().onClick.AddListener(() => OpenMarket());
+		overlay.GetChild(5).GetComponent<Button>().onClick.AddListener(() => MarketButtonClicked());
 		timerText = overlay.GetChild(7).GetComponent<Text>();
 	}
 
-	private void OpenMarket() {
+	/// <summary>
+	/// Opens the market screen.
+	/// </summary>
+	//TODO: This should probably look at what phase we are in and disable the roboticon/market parts of the UI if not in those phases
+	private void MarketButtonClicked() {
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
 		Transform resources = market.GetChild(1);
-		resources.GetChild(1).GetComponent<Button>().enabled = true;
-		resources.GetChild(2).GetComponent<Button>().enabled = true;
-		resources.GetChild(3).GetComponent<Button>().enabled = true;
-		resources.GetChild(4).GetComponent<Button>().enabled = true;
-		market.gameObject.SetActive(true);
+		if (market.gameObject.activeInHierarchy) {
+			resources.GetChild(1).GetComponent<Button>().enabled = true;
+			resources.GetChild(2).GetComponent<Button>().enabled = true;
+			resources.GetChild(3).GetComponent<Button>().enabled = true;
+			resources.GetChild(4).GetComponent<Button>().enabled = true;
+			market.gameObject.SetActive(true);
+		} else {
+			market.gameObject.SetActive(false);
+		}
 	}
 
 	/// <summary>
@@ -220,8 +249,9 @@ public class Player : NetworkBehaviour {
 		// Button listeners for the roboticon tab
 		roboticon.GetChild(3).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(false));
 		roboticon.GetChild(4).GetComponent<Button>().onClick.AddListener(() => ChangeRobotConfiguration(true));
-		roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener(() => CmdDoRoboticonSelection());
+		roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener(() => DoRoboticonSelection());
 		roboticon.GetChild(5).GetComponent<Button>().enabled = false;
+		roboticon.GetChild(5).GetComponent<Button>().onClick.AddListener(() => SkipRoboticonSelection());
 	}
 
 	/// <summary>
@@ -371,6 +401,31 @@ public class Player : NetworkBehaviour {
 		RpcKillAllTileOverlays(this.playerID);
 	}
 
+	private void PlaceRoboticonClick(int worldX, int worldY, int resourceOrdinal) {
+		CmdPlaceRoboticon(worldX, worldY, resourceOrdinal);
+	}
+
+	[Command]
+	private void CmdPlaceRoboticon(int worldX, int worldY, int resourceOrdinal) {
+		Tile t = MapController.instance.getTileAt(worldX, worldY);
+		if (t != null) {
+			GameObject go = Instantiate(PrefabController.Prefabs.roboticon, new Vector3(worldX, worldY, 0), Quaternion.identity) as GameObject;
+			Roboticon roboticon = go.GetComponent<Roboticon>();
+
+			go.transform.parent = MapController.instance.transform;
+			go.name = "Roboticon_" + playerID + "_" + go.transform.position.x + "_" + go.transform.position.y;
+
+			roboticon.SetLocation(t);
+			roboticon.SetPlayer(this);
+			roboticon.SetResourceSpecialisation((Data.ResourceType)resourceOrdinal);
+			t.SetRoboticon(roboticon);
+
+			NetworkServer.Spawn(go);
+			roboticon.RpcSyncRoboticon(resourceOrdinal, college.Id);
+		}
+		RpcKillAllTileOverlays(this.playerID);
+	}
+
 	/// <summary>
 	/// RPC method to spawn an info overlay for a tile.
 	/// </summary>
@@ -403,6 +458,11 @@ public class Player : NetworkBehaviour {
 			if (playerState == Data.GameState.TILE_PURCHASE) {
 				go.transform.GetChild(5).gameObject.SetActive(true);
 				go.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
+			} else if (playerState == Data.GameState.ROBOTICON_PLACEMENT) {
+				if (playerOwnedTiles.Contains(new Vector3(tileX, tileY, 0))) {
+					go.transform.GetChild(8).gameObject.SetActive(true);
+					go.transform.GetChild(8).GetComponent<Button>().onClick.AddListener(() => PlaceRoboticonClick(tileX, tileY, (int)robotCustomisationChoice));
+				}
 			}
 		}
 	}
@@ -766,25 +826,21 @@ public class Player : NetworkBehaviour {
 		}
 		switch (robotCustomisationChoice) {
 		case Data.ResourceType.NONE:
-			Debug.Log("none");
 			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
 			robotText.GetComponent<Text>().text = "Default Roboticon";
 			confirmButton.GetComponent<Button>().enabled = false;
 			break;
 		case Data.ResourceType.ORE:
-			Debug.Log("ore");
 			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonOre;
 			robotText.GetComponent<Text>().text = "Ore Roboticon";
 			confirmButton.GetComponent<Button>().enabled = true;
 			break;
 		case Data.ResourceType.FOOD:
-			Debug.Log("food");
 			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonFood;
 			robotText.GetComponent<Text>().text = "Food Roboticon";
 			confirmButton.GetComponent<Button>().enabled = true;
 			break;
 		case Data.ResourceType.ENERGY:
-			Debug.Log("energy");
 			robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticonEnergy;
 			robotText.GetComponent<Text>().text = "Energy Roboticon";
 			confirmButton.GetComponent<Button>().enabled = true;
@@ -850,11 +906,14 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcStartRoboticonCustomPhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
+			Debug.Log(playerID + " started customisation phase");
 			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
+			Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
 			Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
 			Transform marketBackground = market.GetChild(0);
 			Transform robot = market.GetChild(2);
 
+			overlay.GetChild(5).GetComponent<Button>().enabled = false;
 			marketBackground.GetChild(0).GetComponent<Button>().enabled = false;
 			marketBackground.GetChild(1).GetComponent<Button>().enabled = false;
 			marketBackground.GetChild(2).GetComponent<Button>().enabled = false;
@@ -866,29 +925,71 @@ public class Player : NetworkBehaviour {
 	}
 
 	/// <summary>
-	/// Handle getting a customised Roboticon.
-	/// </summary>
-	[Command]
-	public void CmdDoRoboticonSelection() {
-		GameController.instance.playerCustomisedRoboticon();
-	}
-
-	/// <summary>
 	/// Tells the client that it is in the robiticon placement phase.
 	/// </summary>
 	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
-	public void RpcStartRoboticonPlacePhase(int playerID) {
+	public void RpcStartRoboticonPlacePhase(int playerID, Vector3[] positions) {
 		if (playerID == this.playerID && isLocalPlayer) {
 			// No roboticon was chosen in the phase
 			if (robotCustomisationChoice == Data.ResourceType.NONE) {
 				// Add some UI to skip to the next stage.
 			} else {
-				// Add some UI to allow for its placement and purchase.
+				// Add some UI to allow for its placement and purchase
+				Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
+				this.playerOwnedTiles = positions;
+				foreach (Vector3 position in positions) {
+					GameObject go = Instantiate(RoboticonPlacementOverlay, position, Quaternion.identity, c.transform);
+					CanvasRenderer r = go.GetComponent<CanvasRenderer>();
+					go.name = "RobotPlacement_" + position.x + "_" + position.y;
+				}
 			}
-
 			playerState = Data.GameState.ROBOTICON_PLACEMENT;
 		}
+	}
+
+	public void DoRoboticonSelection() {
+		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform marketBackground = market.GetChild(0);
+		Transform robot = market.GetChild(2);
+
+		overlay.GetChild(5).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(0).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(1).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(2).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(4).GetComponent<Button>().enabled = true;
+		robot.gameObject.SetActive(false);
+		market.gameObject.SetActive(false);
+
+		CmdDoRoboticonSelection((int)robotCustomisationChoice);
+	}
+
+	[Command]
+	private void CmdDoRoboticonSelection(int resourceOrdinal) {
+		GameController.instance.playerCustomisedRoboticon(true, resourceOrdinal, playerID);
+	}
+
+	private void SkipRoboticonSelection() {
+		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
+		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
+		Transform marketBackground = market.GetChild(0);
+		Transform robot = market.GetChild(2);
+
+		overlay.GetChild(5).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(0).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(1).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(2).GetComponent<Button>().enabled = true;
+		marketBackground.GetChild(4).GetComponent<Button>().enabled = true;
+		robot.gameObject.SetActive(false);
+		market.gameObject.SetActive(false);
+
+		CmdSkipRoboticonSelection();
+	}
+
+	[Command]
+	private void CmdSkipRoboticonSelection() {
+		GameController.instance.playerCustomisedRoboticon(false, (int)Data.ResourceType.NONE, playerID);
 	}
 
 	/// <summary>
@@ -896,9 +997,16 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="playerID">Player ID.</param>
 	[ClientRpc]
-	public void RpcEndPlayerPhase(int playerID) {
+	public void RpcEndPlayerPhase(int playerID, Vector3[] positions) {
 		if (playerID == this.playerID && isLocalPlayer) {
 			playerState = Data.GameState.PLAYER_WAIT;
+			Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
+			foreach (Vector3 position in positions) {
+				GameObject go = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y).gameObject;
+				if (go != null) {
+					Destroy(go);
+				}
+			}
 		}
 	}
 
