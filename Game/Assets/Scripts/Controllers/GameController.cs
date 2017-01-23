@@ -161,7 +161,6 @@ public class GameController : NetworkBehaviour {
 					p.RpcStartAuctionPhase();
 				}
 			}
-			Debug.Log(playersCompletedPhase);
 			firstTick = false;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = Data.GameState.RECYCLE;
