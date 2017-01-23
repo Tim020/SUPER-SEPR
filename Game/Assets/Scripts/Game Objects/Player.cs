@@ -461,7 +461,7 @@ public class Player : NetworkBehaviour {
 	private void CmdPlaceRoboticon(int worldX, int worldY, int resourceOrdinal) {
 		Tile t = MapController.instance.getTileAt(worldX, worldY);
 		if (t != null) {
-			GameObject go = Instantiate(PrefabController.Prefabs.roboticon, new Vector3(worldX, worldY, 0), Quaternion.identity) as GameObject;
+			GameObject go = Instantiate(PrefabController.Prefabs.roboticon, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 			Roboticon roboticon = go.GetComponent<Roboticon>();
 
 			go.transform.parent = MapController.instance.transform;
