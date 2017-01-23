@@ -98,4 +98,12 @@ public class PlayerTests {
 		player.DecreaseFunds(-1);
 		Assert.AreEqual(i, player.GetFunds());
 	}
+
+	[Test]
+	public void PlayerCollegeTest() {
+		for (int i = 0; i < 8; i++) {
+			player.CmdSetCollege(i);
+			Assert.AreSame(Data.College.GetCollege(i), player.college);
+		}
+	}
 }

@@ -77,10 +77,13 @@ public class Player : NetworkBehaviour {
 	private Data.ResourceType marketResourceSelection = Data.ResourceType.NONE;
 
 	/// <summary>
-	/// The type of robot the user has selected at customisation phase.
+	/// The type of robot the user is selecting during customisation phase.
 	/// </summary>
 	private Data.ResourceType robotCustomisationChoice = Data.ResourceType.NONE;
 
+	/// <summary>
+	/// The robot selection choice after customisation.
+	/// </summary>
 	private Data.ResourceType robotSelectionChoice = Data.ResourceType.NONE;
 
 	/// <summary>
@@ -100,6 +103,9 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	private Text timerText;
 
+	/// <summary>
+	/// The locations of all tiles owned by this player.
+	/// </summary>
 	private Vector3[] playerOwnedTiles;
 
 	/// <summary>
@@ -1226,6 +1232,11 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Sets the resource.
+	/// </summary>
+	/// <param name="type">Type of resource.</param>
+	/// <param name="amount">Amount of the resource.</param>
 	public void SetResource(Data.ResourceType type, int amount) {
 		if (resourceInventory.ContainsKey(type) && amount >= 0) {
 			resourceInventory[type] = amount;

@@ -31,11 +31,27 @@ public class Roboticon : NetworkBehaviour {
 	}
 
 	/// <summary>
+	/// Gets the location.
+	/// </summary>
+	/// <returns>The location.</returns>
+	public Tile GetLocation() {
+		return location;
+	}
+
+	/// <summary>
 	/// Sets the resource specialisation.
 	/// </summary>
 	/// <param name="type">The type of resource this Robiticon is specialised for</param>
 	public void SetResourceSpecialisation(Data.ResourceType type) {
 		resourceSpecialisation = type;
+	}
+
+	/// <summary>
+	/// Gets the resource specialisation.
+	/// </summary>
+	/// <returns>The resource specialisation.</returns>
+	public Data.ResourceType GetResourceSpecialisation() {
+		return resourceSpecialisation;
 	}
 
 	/// <summary>
@@ -46,6 +62,14 @@ public class Roboticon : NetworkBehaviour {
 		this.player = player;
 	}
 
+	/// <summary>
+	/// Gets the player.
+	/// </summary>
+	/// <returns>The player.</returns>
+	public Player GetPlayer() {
+		return player;
+	}
+
 	[ClientRpc]
 	public void RpcSyncRoboticon(int ord, int collegeID) {
 		Data.ResourceType type = (Data.ResourceType)ord;
@@ -53,44 +77,44 @@ public class Roboticon : NetworkBehaviour {
 		SpriteRenderer college = this.transform.GetChild(1).GetComponent<SpriteRenderer>();
 		this.resourceSpecialisation = type;
 		switch (type) {
-		case Data.ResourceType.ORE:
-			robot.sprite = SpriteController.Sprites.roboticonOre;
-			break;
-		case Data.ResourceType.FOOD:
-			robot.sprite = SpriteController.Sprites.roboticonFood;
-			break;
-		case Data.ResourceType.ENERGY:
-			robot.sprite = SpriteController.Sprites.roboticonEnergy;
-			break;
-		case Data.ResourceType.NONE:
-			robot.sprite = SpriteController.Sprites.roboticon;
-			break;
+			case Data.ResourceType.ORE:
+				robot.sprite = SpriteController.Sprites.roboticonOre;
+				break;
+			case Data.ResourceType.FOOD:
+				robot.sprite = SpriteController.Sprites.roboticonFood;
+				break;
+			case Data.ResourceType.ENERGY:
+				robot.sprite = SpriteController.Sprites.roboticonEnergy;
+				break;
+			case Data.ResourceType.NONE:
+				robot.sprite = SpriteController.Sprites.roboticon;
+				break;
 		}
 		switch (collegeID) {
-		case 0:
-			college.sprite = SpriteController.Sprites.alcuin;
-			break;
-		case 1:
-			college.sprite = SpriteController.Sprites.constantine;
-			break;
-		case 2:
-			college.sprite = SpriteController.Sprites.derwent;
-			break;
-		case 3:
-			college.sprite = SpriteController.Sprites.goodricke;
-			break;
-		case 4:
-			college.sprite = SpriteController.Sprites.halifax;
-			break;
-		case 5:
-			college.sprite = SpriteController.Sprites.james;
-			break;
-		case 6:
-			college.sprite = SpriteController.Sprites.langwith;
-			break;
-		case 7:
-			college.sprite = SpriteController.Sprites.vanbrugh;
-			break;
+			case 0:
+				college.sprite = SpriteController.Sprites.alcuin;
+				break;
+			case 1:
+				college.sprite = SpriteController.Sprites.constantine;
+				break;
+			case 2:
+				college.sprite = SpriteController.Sprites.derwent;
+				break;
+			case 3:
+				college.sprite = SpriteController.Sprites.goodricke;
+				break;
+			case 4:
+				college.sprite = SpriteController.Sprites.halifax;
+				break;
+			case 5:
+				college.sprite = SpriteController.Sprites.james;
+				break;
+			case 6:
+				college.sprite = SpriteController.Sprites.langwith;
+				break;
+			case 7:
+				college.sprite = SpriteController.Sprites.vanbrugh;
+				break;
 		}
 	}
 }

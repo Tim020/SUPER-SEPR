@@ -114,5 +114,14 @@ public static class Data {
 				yield return VANBURGH;
 			}
 		}
+
+		public static College GetCollege(int id) {
+			foreach (College c in Values) {
+				if (c.Id == id) {
+					return c;
+				}
+			}
+			return null;
+		}
 	}
 }
