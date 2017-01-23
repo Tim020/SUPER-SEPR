@@ -241,6 +241,10 @@ public class Player : NetworkBehaviour {
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
 				KillAllOverlays();
+				Transform robotSprite = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(1);
+				Transform robotText = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(2);
+				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
+				robotText.GetComponent<Text>().text = "Default Roboticon";
 				roboticons.gameObject.SetActive(true);
 				MarketMenuButtonSelected(3, Data.ResourceType.NONE);
 				background.GetChild(3).GetComponent<Button>().interactable = true;
@@ -419,7 +423,7 @@ public class Player : NetworkBehaviour {
 			} else {
 				owner = "None";
 			}
-			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID, !cntrClick);
+			RpcDisplayTileOverlay(worldX, worldY, t.getResourceAmount(Data.ResourceType.ORE), t.getResourceAmount(Data.ResourceType.ENERGY), owner, this.playerID, !cntrClick, t.getOwner() != null);
 		} else {
 			if (worldX < 0 || worldX >= MapController.instance.width || worldY < 0 || worldY >= MapController.instance.height) {
 				RpcKillAllTileOverlays(this.playerID);
@@ -489,7 +493,7 @@ public class Player : NetworkBehaviour {
 	/// <param name="owner">Owner of the tile.</param>
 	/// <param name="playerID">Player ID to invoke command on.</param>
 	[ClientRpc]
-	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID, bool destroyOtherOverlays) {
+	private void RpcDisplayTileOverlay(int tileX, int tileY, int oreAmount, int energyAmount, string owner, int playerID, bool destroyOtherOverlays, bool hasOwner) {
 		if (playerID == this.playerID && isLocalPlayer) {
 			GameObject overlay = GameObject.FindGameObjectWithTag("UserInterface"); 
 			Canvas c = overlay.GetComponent<Canvas>();
@@ -508,7 +512,7 @@ public class Player : NetworkBehaviour {
 			go.transform.GetChild(4).GetComponent<Text>().text = "Owner: " + owner;
 			go.transform.GetChild(6).GetComponent<Button>().onClick.AddListener(() => KillSpecificTileOverlay(go));
 			// Check if we are in the tile phase, if so enable the purchase button
-			if (playerState == Data.GameState.TILE_PURCHASE) {
+			if (playerState == Data.GameState.TILE_PURCHASE && !hasOwner) {
 				go.transform.GetChild(5).gameObject.SetActive(true);
 				go.transform.GetChild(5).GetComponent<Button>().onClick.AddListener(() => PurchaseButtonClick(tileX, tileY));
 			} else if (playerState == Data.GameState.ROBOTICON_PLACEMENT) {
@@ -991,6 +995,7 @@ public class Player : NetworkBehaviour {
 		if (playerID == this.playerID && isLocalPlayer) {
 			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
 			robotCustomisationChoice = Data.ResourceType.NONE;
+			robotSelectionChoice = Data.ResourceType.NONE;
 			OpenMarket();
 			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
 			userInterface.transform.GetChild(5).GetComponent<AutoHideTimer>().StartTimer();
