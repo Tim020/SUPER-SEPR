@@ -70,7 +70,9 @@ echo "Attempting Unit Tests"
 logFile="$(pwd)/unity.log"
 travecho "$(cat "$logFile")"
 travecho 'travis_fold:end:compile'
-
+if [ ! -f "$(pwd)/Game/EditorTestResults.xml" ]; then
+	curl -T "$(pwd)/Game/EditorTestResults.xml" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+fi
 travecho 'travis_fold:start:tests'
 travecho 'Show Results from Tests'
 if [ ! -f "$(pwd)/Game/EditorTestResults.xml" ]; then
@@ -96,7 +98,6 @@ fi
 rm "$(pwd)"/unity.log
 
 resultsFile="$(pwd)/Game/EditorTestResults.xml"
-curl -T "$(pwd)/Game/EditorTestResults.xml" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 travecho "$(cat "$resultsFile")"
 if [ "$endTestsFold" = 0 ]; then
     travecho 'travis_fold:end:tests'
