@@ -27,14 +27,14 @@ public class Tile : NetworkBehaviour {
 	public Roboticon roboticon{ private set; get; }
 
 	/// <summary>
-	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
+	/// Called by the MapController object when the tile is first created, initialises variables and adds resource amounts to the tile
+	/// TODO: This random number will probably need changing through play testing
 	/// </summary>
 	/// <param name="tileClicked">The action that gets called when the tile is clicked</param>
 	public override void OnStartClient() {
 		resourcesGenerated = new Dictionary<Data.ResourceType, TileResource>();
-		resourcesGenerated.Add(Data.ResourceType.ENERGY, new TileResource(50));
-		resourcesGenerated.Add(Data.ResourceType.ORE, new TileResource(50));
-
+		resourcesGenerated.Add(Data.ResourceType.ENERGY, new TileResource(50 + UnityEngine.Random.Range(0, 26)));
+		resourcesGenerated.Add(Data.ResourceType.ORE, new TileResource(50 + UnityEngine.Random.Range(0, 26)));
 	}
 
 	/// <summary>
@@ -101,12 +101,12 @@ public class Tile : NetworkBehaviour {
 		SpriteRenderer r = GetComponent<SpriteRenderer>();
 		this.type = type;
 		switch (type) {
-		case Data.TileType.GRASS:
-			r.sprite = SpriteController.Sprites.grassSprite;
-			break;
-		case Data.TileType.STONE:
-			r.sprite = SpriteController.Sprites.stoneSprite;
-			break;
+			case Data.TileType.GRASS:
+				r.sprite = SpriteController.Sprites.grassSprite;
+				break;
+			case Data.TileType.STONE:
+				r.sprite = SpriteController.Sprites.stoneSprite;
+				break;
 		}
 	}
 

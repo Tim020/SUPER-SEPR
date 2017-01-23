@@ -108,7 +108,7 @@ public class MarketController : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">The type of resource.</param>
-	public float GetResourceAmount(Data.ResourceType type) {
+	public int GetResourceAmount(Data.ResourceType type) {
 		if (marketResources.ContainsKey(type)) {
 			return marketResources[type];
 		}
@@ -153,6 +153,7 @@ public class MarketController : NetworkBehaviour {
 				marketResources[type] -= amount;
 				marketFunds += total;
 				player.DecreaseFunds(total);
+				player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 			}
 		}
 	}
@@ -171,6 +172,7 @@ public class MarketController : NetworkBehaviour {
 				marketResources[type] += amount;
 				marketFunds -= total;
 				player.IncreaseFunds(total);
+				player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 			}
 		}
 	}
@@ -198,6 +200,10 @@ public class MarketController : NetworkBehaviour {
 			trade.host.GiveResouce(trade.resource, trade.resourceAmount);
 			playerTrades.Remove(trade);
 		}
+	}
+
+	public void SendResourceOverlayData(Player player){
+		player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 	}
 
 	/// <summary>

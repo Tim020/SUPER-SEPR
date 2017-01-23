@@ -81,6 +81,8 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	private Data.ResourceType robotCustomisationChoice = Data.ResourceType.NONE;
 
+	private Data.ResourceType robotSelectionChoice = Data.ResourceType.NONE;
+
 	/// <summary>
 	/// Whether the user is selling to the market
 	/// <c>true</c> implies they are otherwise <c>false</c> means they are buying from the market
@@ -193,6 +195,8 @@ public class Player : NetworkBehaviour {
 		SetupOverlayUI();
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(4).GetChild(1).GetComponent<Toggle>().isOn = false;
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.AddListener((value) => CmdPlayerReadyClicked(value));
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(5).GetComponent<AutoHideTimer>().SetStartCallBack(ShowPhaseOverlay);
+		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(5).GetComponent<AutoHideTimer>().SetFinishCallBack(HidePhaseOverlay);
 	}
 
 	/// <summary>
@@ -249,6 +253,7 @@ public class Player : NetworkBehaviour {
 				background.GetChild(1).GetComponent<Button>().interactable = true;
 				background.GetChild(2).GetComponent<Button>().interactable = true;
 				background.GetChild(4).GetComponent<Button>().interactable = true;
+				CmdGetMarketResourceAmounts();
 				MarketMenuButtonSelected(0, Data.ResourceType.ORE);
 				break;
 			case Data.GameState.PLAYER_FINISH:
@@ -505,7 +510,7 @@ public class Player : NetworkBehaviour {
 			} else if (playerState == Data.GameState.ROBOTICON_PLACEMENT) {
 				if (playerOwnedTiles.Contains(new Vector3(tileX, tileY, 0))) {
 					go.transform.GetChild(8).gameObject.SetActive(true);
-					go.transform.GetChild(8).GetComponent<Button>().onClick.AddListener(() => PlaceRoboticonClick(tileX, tileY, (int)robotCustomisationChoice));
+					go.transform.GetChild(8).GetComponent<Button>().onClick.AddListener(() => PlaceRoboticonClick(tileX, tileY, (int)robotSelectionChoice));
 				}
 			}
 		}
@@ -944,6 +949,18 @@ public class Player : NetworkBehaviour {
 		GameController.instance.PlayerReady(state);
 	}
 
+	private void ShowPhaseOverlay() {
+		Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+		userInterface.transform.GetChild(5).GetChild(0).gameObject.SetActive(true);
+		userInterface.transform.GetChild(5).GetChild(1).gameObject.SetActive(true);
+	}
+
+	private void HidePhaseOverlay() {
+		Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+		userInterface.transform.GetChild(5).GetChild(0).gameObject.SetActive(false);
+		userInterface.transform.GetChild(5).GetChild(1).gameObject.SetActive(false);
+	}
+
 	/// <summary>
 	/// Tells the client that it is in the tile phase.
 	/// </summary>
@@ -951,7 +968,13 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcStartTilePhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
+			Debug.Log(playerID);
+			Debug.Log(this.playerID);
+			Debug.Log(playerState);
 			playerState = Data.GameState.TILE_PURCHASE;
+			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+			userInterface.transform.GetChild(5).GetComponent<AutoHideTimer>().StartTimer();
+			userInterface.transform.GetChild(5).GetChild(1).GetComponent<Text>().text = "Please select a tile to acquire";
 		}
 	}
 
@@ -962,10 +985,12 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcStartRoboticonCustomPhase(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			Debug.Log(playerID + " started customisation phase");
 			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
 			robotCustomisationChoice = Data.ResourceType.NONE;
 			OpenMarket();
+			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+			userInterface.transform.GetChild(5).GetComponent<AutoHideTimer>().StartTimer();
+			userInterface.transform.GetChild(5).GetChild(1).GetComponent<Text>().text = "Please select a Roboticon customisation";
 		}
 	}
 
@@ -976,15 +1001,70 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	public void RpcStartRoboticonPlacePhase(int playerID, Vector3[] positions) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			if (robotCustomisationChoice != Data.ResourceType.NONE) {
+			CloseMarket();
+			if (robotSelectionChoice != Data.ResourceType.NONE) {
 				Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
 				this.playerOwnedTiles = positions;
 				foreach (Vector3 position in positions) {
 					GameObject go = Instantiate(RoboticonPlacementOverlay, position, Quaternion.identity, c.transform);
 					go.name = "RobotPlacement_" + position.x + "_" + position.y;
 				}
+				Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+				userInterface.transform.GetChild(5).GetComponent<AutoHideTimer>().StartTimer();
+				userInterface.transform.GetChild(5).GetChild(1).GetComponent<Text>().text = "Please select a position (marked with the white circle) to place your Roboticon";
+			} else {
+				CmdSkipRoboticonPlacement();
 			}
 			playerState = Data.GameState.ROBOTICON_PLACEMENT;
+		}
+	}
+
+	/// <summary>
+	/// Tells the client that it is in the auction phase.
+	/// </summary>
+	[ClientRpc]
+	public void RpcStartAuctionPhase() {
+		if (isLocalPlayer) {
+			playerState = Data.GameState.AUCTION;
+			OpenMarket();
+			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+			userInterface.GetChild(4).gameObject.SetActive(true);
+			userInterface.transform.GetChild(5).GetComponent<AutoHideTimer>().StartTimer();
+			userInterface.transform.GetChild(5).GetChild(1).GetComponent<Text>().text = "Buy & Sell to the market now! When you are done click the button in the bottom right corner";
+		}
+	}
+
+	/// <summary>
+	/// Tells the client it is in the recycle phase - this is needed to reset the state of the player ready for their next turn.
+	/// </summary>
+	[ClientRpc]
+	public void RpcStartRecyclePhase() {
+		if (isLocalPlayer) {
+			playerState = Data.GameState.RECYCLE;
+			CloseMarket();
+			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+			userInterface.GetChild(4).gameObject.SetActive(false);
+			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
+			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().isOn = false;
+			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.AddListener((value) => CmdPlayerReadyClicked(value));
+		}
+	}
+
+	/// <summary>
+	/// Tells the client that it is in end turn phase.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	[ClientRpc]
+	public void RpcEndPlayerPhase(int playerID, Vector3[] positions) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			playerState = Data.GameState.PLAYER_WAIT;
+			Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
+			foreach (Vector3 position in positions) {
+				Transform t = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y);
+				if (t != null && t.gameObject != null) {
+					Destroy(t.gameObject);
+				}
+			}
 		}
 	}
 
@@ -1002,7 +1082,10 @@ public class Player : NetworkBehaviour {
 		robot.gameObject.SetActive(false);
 		market.gameObject.SetActive(false);
 
-		CmdDoRoboticonSelection((int)robotCustomisationChoice);
+		this.robotSelectionChoice = robotCustomisationChoice;
+		robotCustomisationChoice = Data.ResourceType.NONE;
+
+		CmdDoRoboticonSelection((int)robotSelectionChoice);
 	}
 
 	[Command]
@@ -1032,45 +1115,9 @@ public class Player : NetworkBehaviour {
 		GameController.instance.PlayerCustomisedRoboticon(false);
 	}
 
-	/// <summary>
-	/// Tells the client that it is in end turn phase.
-	/// </summary>
-	/// <param name="playerID">Player ID.</param>
-	[ClientRpc]
-	public void RpcEndPlayerPhase(int playerID, Vector3[] positions) {
-		if (playerID == this.playerID && isLocalPlayer) {
-			playerState = Data.GameState.PLAYER_WAIT;
-			Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
-			foreach (Vector3 position in positions) {
-				Transform t = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y);
-				if (t != null && t.gameObject != null) {
-					Destroy(t.gameObject);
-				}
-			}
-		}
-	}
-
-	[ClientRpc]
-	public void RpcStartAuctionPhase() {
-		if (isLocalPlayer) {
-			playerState = Data.GameState.AUCTION;
-			OpenMarket();
-			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
-			userInterface.GetChild(4).gameObject.SetActive(true);
-		}
-	}
-
-	[ClientRpc]
-	public void RpcStartRecyclePhase() {
-		if (isLocalPlayer) {
-			playerState = Data.GameState.RECYCLE;
-			CloseMarket();
-			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
-			userInterface.GetChild(4).gameObject.SetActive(false);
-			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
-			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().isOn = false;
-			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.AddListener((value) => CmdPlayerReadyClicked(value));
-		}
+	[Command]
+	private void CmdSkipRoboticonPlacement() {
+		GameController.instance.PlayerPlacedRoboticon();
 	}
 
 	/// <summary>
@@ -1236,6 +1283,20 @@ public class Player : NetworkBehaviour {
 			overlay.GetChild(3).GetChild(2).GetComponent<Text>().text = energy.ToString();
 			overlay.GetChild(4).GetChild(2).GetComponent<Text>().text = funds.ToString();
 		}
+	}
+
+	[Command]
+	private void CmdGetMarketResourceAmounts() {
+		MarketController.instance.SendResourceOverlayData(this);
+	}
+
+	[ClientRpc]
+	public void RpcUpdateMarketOverlay(int ore, int food, int energy, float funds) {
+		Transform marketResources = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(8);
+		marketResources.GetChild(0).GetChild(2).GetComponent<Text>().text = ore.ToString();
+		marketResources.GetChild(1).GetChild(2).GetComponent<Text>().text = food.ToString();
+		marketResources.GetChild(2).GetChild(2).GetComponent<Text>().text = energy.ToString();
+		marketResources.GetChild(3).GetChild(2).GetComponent<Text>().text = funds.ToString();
 	}
 
 	/// <summary>
