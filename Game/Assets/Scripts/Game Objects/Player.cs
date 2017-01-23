@@ -989,6 +989,53 @@ public class Player : NetworkBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Tells the client that it is in the auction phase.
+	/// </summary>
+	[ClientRpc]
+	public void RpcStartAuctionPhase() {
+		if (isLocalPlayer) {
+			playerState = Data.GameState.AUCTION;
+			OpenMarket();
+			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+			userInterface.GetChild(4).gameObject.SetActive(true);
+		}
+	}
+
+	/// <summary>
+	/// Tells the client it is in the recycle phase - this is needed to reset the state of the player ready for their next turn.
+	/// </summary>
+	[ClientRpc]
+	public void RpcStartRecyclePhase() {
+		if (isLocalPlayer) {
+			playerState = Data.GameState.RECYCLE;
+			CloseMarket();
+			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
+			userInterface.GetChild(4).gameObject.SetActive(false);
+			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
+			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().isOn = false;
+			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.AddListener((value) => CmdPlayerReadyClicked(value));
+		}
+	}
+
+	/// <summary>
+	/// Tells the client that it is in end turn phase.
+	/// </summary>
+	/// <param name="playerID">Player ID.</param>
+	[ClientRpc]
+	public void RpcEndPlayerPhase(int playerID, Vector3[] positions) {
+		if (playerID == this.playerID && isLocalPlayer) {
+			playerState = Data.GameState.PLAYER_WAIT;
+			Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
+			foreach (Vector3 position in positions) {
+				Transform t = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y);
+				if (t != null && t.gameObject != null) {
+					Destroy(t.gameObject);
+				}
+			}
+		}
+	}
+
 	public void DoRoboticonSelection() {
 		Transform overlay = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(2);
 		Transform market = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3);
@@ -1031,47 +1078,6 @@ public class Player : NetworkBehaviour {
 	[Command]
 	private void CmdSkipRoboticonSelection() {
 		GameController.instance.PlayerCustomisedRoboticon(false);
-	}
-
-	/// <summary>
-	/// Tells the client that it is in end turn phase.
-	/// </summary>
-	/// <param name="playerID">Player ID.</param>
-	[ClientRpc]
-	public void RpcEndPlayerPhase(int playerID, Vector3[] positions) {
-		if (playerID == this.playerID && isLocalPlayer) {
-			playerState = Data.GameState.PLAYER_WAIT;
-			Canvas c = GameObject.FindGameObjectWithTag("MapOverlay").GetComponent<Canvas>();
-			foreach (Vector3 position in positions) {
-				Transform t = c.transform.FindChild("RobotPlacement_" + position.x + "_" + position.y);
-				if (t != null && t.gameObject != null) {
-					Destroy(t.gameObject);
-				}
-			}
-		}
-	}
-
-	[ClientRpc]
-	public void RpcStartAuctionPhase() {
-		if (isLocalPlayer) {
-			playerState = Data.GameState.AUCTION;
-			OpenMarket();
-			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
-			userInterface.GetChild(4).gameObject.SetActive(true);
-		}
-	}
-
-	[ClientRpc]
-	public void RpcStartRecyclePhase() {
-		if (isLocalPlayer) {
-			playerState = Data.GameState.RECYCLE;
-			CloseMarket();
-			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
-			userInterface.GetChild(4).gameObject.SetActive(false);
-			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
-			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().isOn = false;
-			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.AddListener((value) => CmdPlayerReadyClicked(value));
-		}
 	}
 
 	/// <summary>
