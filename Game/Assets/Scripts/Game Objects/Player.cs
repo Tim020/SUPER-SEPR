@@ -232,7 +232,7 @@ public class Player : NetworkBehaviour {
 				market.gameObject.SetActive(false);
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				KillAllOverlays ();
+				KillAllOverlays();
 				roboticons.gameObject.SetActive(true);
 				MarketMenuButtonSelected(3, Data.ResourceType.NONE);
 				background.GetChild(3).GetComponent<Button>().interactable = true;
@@ -243,12 +243,13 @@ public class Player : NetworkBehaviour {
 			case Data.GameState.PRODUCTION:
 				market.gameObject.SetActive(false);
 				break;
-		case Data.GameState.AUCTION:
-				KillAllOverlays ();
+			case Data.GameState.AUCTION:
+				KillAllOverlays();
 				background.GetChild(0).GetComponent<Button>().interactable = true;
 				background.GetChild(1).GetComponent<Button>().interactable = true;
 				background.GetChild(2).GetComponent<Button>().interactable = true;
 				background.GetChild(4).GetComponent<Button>().interactable = true;
+				CmdGetMarketResourceAmounts();
 				MarketMenuButtonSelected(0, Data.ResourceType.ORE);
 				break;
 			case Data.GameState.PLAYER_FINISH:
@@ -537,7 +538,7 @@ public class Player : NetworkBehaviour {
 	[ClientRpc]
 	private void RpcKillAllTileOverlays(int playerID) {
 		if (playerID == this.playerID && isLocalPlayer) {
-			KillAllOverlays ();
+			KillAllOverlays();
 		}
 	}
 
@@ -1224,6 +1225,20 @@ public class Player : NetworkBehaviour {
 			overlay.GetChild(3).GetChild(2).GetComponent<Text>().text = energy.ToString();
 			overlay.GetChild(4).GetChild(2).GetComponent<Text>().text = funds.ToString();
 		}
+	}
+
+	[Command]
+	private void CmdGetMarketResourceAmounts() {
+		MarketController.instance.SendResourceOverlayData(this);
+	}
+
+	[ClientRpc]
+	public void RpcUpdateMarketOverlay(int ore, int food, int energy, float funds) {
+		Transform marketResources = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(1).GetChild(8);
+		marketResources.GetChild(0).GetChild(2).GetComponent<Text>().text = ore.ToString();
+		marketResources.GetChild(1).GetChild(2).GetComponent<Text>().text = food.ToString();
+		marketResources.GetChild(2).GetChild(2).GetComponent<Text>().text = energy.ToString();
+		marketResources.GetChild(3).GetChild(2).GetComponent<Text>().text = funds.ToString();
 	}
 
 	/// <summary>
