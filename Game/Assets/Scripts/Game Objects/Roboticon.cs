@@ -31,11 +31,27 @@ public class Roboticon : NetworkBehaviour {
 	}
 
 	/// <summary>
+	/// Gets the location.
+	/// </summary>
+	/// <returns>The location.</returns>
+	public Tile GetLocation() {
+		return location;
+	}
+
+	/// <summary>
 	/// Sets the resource specialisation.
 	/// </summary>
 	/// <param name="type">The type of resource this Robiticon is specialised for</param>
 	public void SetResourceSpecialisation(Data.ResourceType type) {
 		resourceSpecialisation = type;
+	}
+
+	/// <summary>
+	/// Gets the resource specialisation.
+	/// </summary>
+	/// <returns>The resource specialisation.</returns>
+	public Data.ResourceType GetResourceSpecialisation() {
+		return resourceSpecialisation;
 	}
 
 	/// <summary>
@@ -46,19 +62,12 @@ public class Roboticon : NetworkBehaviour {
 		this.player = player;
 	}
 
-	void Update() {
-		if (!gameObject.transform.position.Equals(location.gameObject.transform.position)) {
-			if (gameObject.transform.position.x < location.gameObject.transform.position.x) {
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x + 0.1f, gameObject.transform.position.y, 0);
-			} else {
-				gameObject.transform.position = new Vector3(location.transform.position.x, gameObject.transform.position.y, 0);
-			}
-			if (gameObject.transform.position.y < location.gameObject.transform.position.y) {
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.1f, 0);
-			} else {
-				gameObject.transform.position = new Vector3(gameObject.transform.position.x, location.gameObject.transform.position.y, 0);
-			}
-		}
+	/// <summary>
+	/// Gets the player.
+	/// </summary>
+	/// <returns>The player.</returns>
+	public Player GetPlayer() {
+		return player;
 	}
 
 	[ClientRpc]

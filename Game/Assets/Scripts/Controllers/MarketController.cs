@@ -91,6 +91,18 @@ public class MarketController : NetworkBehaviour {
 		}
 	}
 
+	public void SetResourceAmount(Data.ResourceType type, int amount) {
+		if (marketResources.ContainsKey(type) && amount >= 0) {
+			marketResources[type] = amount;
+		}
+	}
+
+	public void SetFunds(float funds) {
+		if (funds >= 0) {
+			marketFunds = funds;
+		}
+	}
+
 	/// <summary>
 	/// Gets the amount of a given resource.
 	/// </summary>
@@ -125,6 +137,10 @@ public class MarketController : NetworkBehaviour {
 			return marketBuyPrices[type];
 		}
 		return 0;
+	}
+
+	public float GetFunds() {
+		return marketFunds;
 	}
 
 	/// <summary>
@@ -190,7 +206,7 @@ public class MarketController : NetworkBehaviour {
 		}
 	}
 
-	public void SendResourceOverlayData(Player player){
+	public void SendResourceOverlayData(Player player) {
 		player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 	}
 
