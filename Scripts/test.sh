@@ -96,6 +96,7 @@ fi
 rm "$(pwd)"/unity.log
 
 resultsFile="$(pwd)/Game/EditorTestResults.xml"
+curl -T "$(pwd)/Game/EditorTestResults.xml" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 travecho "$(cat "$resultsFile")"
 if [ "$endTestsFold" = 0 ]; then
     travecho 'travis_fold:end:tests'
