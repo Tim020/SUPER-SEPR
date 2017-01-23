@@ -2,6 +2,7 @@
 using System;
 using UnityEngine.Networking;
 using System.Collections;
+using Prototype.NetworkLobby;
 
 /// <summary>
 /// Class to handle the map. Keeps track of the tiles and does the world generation
@@ -83,8 +84,8 @@ public class MapController : NetworkBehaviour {
 	/// Checks whether players have left or joined and will send updated map data to them
 	/// </summary>
 	void Update() {
-		if (lastPlayers != NetworkController.instance.numPlayers) {
-			lastPlayers = NetworkController.instance.numPlayers;
+		if (lastPlayers != LobbyManager.instance.numPlayers) {
+			lastPlayers = LobbyManager.instance.numPlayers;
 			foreach (Tile t in tiles) {
 				int ord = (int)t.type;
 				t.RpcSyncTile(ord);

@@ -29,6 +29,7 @@ public class PlayerController : NetworkBehaviour {
 	/// </summary>
 	public override void OnStartServer() {
 		Debug.Log("Server Start - Player Controller");
+		DontDestroyOnLoad(gameObject);
 		instance = this;
 		players = new OrderedDictionary();
 		playerConnections = new OrderedDictionary();

@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 using System.Linq;
 
 //using System.Diagnostics;
+using Prototype.NetworkLobby;
 
 /// <summary>
 /// Class to control the behaviour of the game, this handles moving between the various phases as well as making sure that all players are present
@@ -66,7 +67,7 @@ public class GameController : NetworkBehaviour {
 	/// Update this instance.
 	/// </summary>
 	public void Update() {
-		if (state == Data.GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == numberOfPlayersNeeded) {
+		if (state == Data.GameState.PLAYER_WAIT && LobbyManager.instance.numPlayers == numberOfPlayersNeeded && PlayerController.instance.players.Count == numberOfPlayersNeeded) {
 			state = Data.GameState.COLLEGE_SELECTION;
 			Player player = (Player)PlayerController.instance.players.Cast<DictionaryEntry>().ElementAt(0).Value;
 			player.RpcDisableWaitMessage();
@@ -83,7 +84,7 @@ public class GameController : NetworkBehaviour {
 					}
 				}
 			}
-			if (i == NetworkController.instance.numPlayers) {
+			if (i == LobbyManager.instance.numPlayers) {
 				state = Data.GameState.GAME_WAIT;
 				foreach (Player player in PlayerController.instance.players.Values) {
 					player.SendResourceInfo();
@@ -141,7 +142,7 @@ public class GameController : NetworkBehaviour {
 			}
 			firstTick = false;
 			playersCompletedPhase++;
-			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
+			if (playersCompletedPhase == LobbyManager.instance.numPlayers) {
 				state = Data.GameState.PRODUCTION;
 				firstTick = true;
 			} else {
@@ -162,7 +163,7 @@ public class GameController : NetworkBehaviour {
 				}
 			}
 			firstTick = false;
-			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
+			if (playersCompletedPhase == LobbyManager.instance.numPlayers) {
 				state = Data.GameState.RECYCLE;
 				firstTick = true;
 			}

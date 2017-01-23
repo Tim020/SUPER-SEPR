@@ -107,7 +107,6 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	public override void OnStartLocalPlayer() {
 		Debug.Log("Start local human player");
-		Debug.Log(playerID);
 		SetupUserInterface();
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1).gameObject.SetActive(true);
 	}
