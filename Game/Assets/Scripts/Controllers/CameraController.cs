@@ -24,12 +24,12 @@ public class CameraController : MonoBehaviour {
 	/// <summary>
 	/// The furthest in you are allowed to zoom
 	/// </summary>
-	private float maxZoom;
+	public static float maxZoom { get ; private set; }
 
 	/// <summary>
 	/// The furthest out you are allowed to zoom
 	/// </summary>
-	private float minZoom;
+	public static float minZoom { get; private set; }
 
 	/// <summary>
 	/// Start this instance.
@@ -71,6 +71,7 @@ public class CameraController : MonoBehaviour {
 			return;
 		}
 
+		//TODO: Clamp these so you can't go past the map bounds
 		Vector3 pos = Camera.main.ScreenToViewportPoint(dragOrigin - Input.mousePosition);
 		Vector3 move = new Vector3(pos.x * dragSpeed * Camera.main.orthographicSize / minZoom, pos.y * dragSpeed * Camera.main.orthographicSize / minZoom, 0);
 

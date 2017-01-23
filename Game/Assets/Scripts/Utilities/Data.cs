@@ -8,6 +8,22 @@ using System.Collections.Generic;
 public static class Data {
 
 	/// <summary>
+	/// Game state.
+	/// </summary>
+	public enum GameState {
+		PLAYER_WAIT,
+		COLLEGE_SELECTION,
+		GAME_WAIT,
+		TILE_PURCHASE,
+		ROBOTICON_CUSTOMISATION,
+		ROBOTICON_PLACEMENT,
+		PLAYER_FINISH,
+		PRODUCTION,
+		AUCTION,
+		RECYCLE
+	}
+
+	/// <summary>
 	/// The different types of tiles
 	/// </summary>
 	public enum TileType {
@@ -19,9 +35,10 @@ public static class Data {
 	/// Types of resources available in the game
 	/// </summary>
 	public enum ResourceType {
-		ENERGY,
+		ORE,
 		FOOD,
-		ORE
+		ENERGY,
+		NONE
 	}
 
 	/// <summary>
@@ -29,7 +46,7 @@ public static class Data {
 	/// </summary>
 	public class College {
 
-		public static readonly College ALCUIN = new College(0, "Alcuin", new Color(255 / 255f, 0 / 255f, 3 / 255f));
+		public static readonly College ALCUIN = new College(0, "Alcuin", new Color(136 / 255f, 0 / 255f, 3 / 255f));
 		public static readonly College CONSTANTINE = new College(1, "Constantine", new Color(199 / 255f, 0, 127 / 255f));
 		public static readonly College DERWENT = new College(2, "Derwent", new Color(10 / 255f, 35 / 255f, 67 / 255f));
 		public static readonly College GOODRICKE = new College(3, "Goodricke", new Color(0, 128 / 255f, 0));

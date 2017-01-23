@@ -24,6 +24,35 @@ public class SpriteController : NetworkBehaviour {
 	public Sprite stoneSprite;
 
 	/// <summary>
+	/// The default Roboticon sprite.
+	/// </summary>
+	public Sprite roboticon;
+
+	/// <summary>
+	/// The ore Roboticon sprite.
+	/// </summary>
+	public Sprite roboticonOre;
+
+	/// <summary>
+	/// The food Roboticon sprite.
+	/// </summary>
+	public Sprite roboticonFood;
+
+	/// <summary>
+	/// The energy Roboticon sprite.
+	/// </summary>
+	public Sprite roboticonEnergy;
+
+	public Sprite alcuin;
+	public Sprite constantine;
+	public Sprite derwent;
+	public Sprite goodricke;
+	public Sprite halifax;
+	public Sprite james;
+	public Sprite langwith;
+	public Sprite vanbrugh;
+
+	/// <summary>
 	/// Start this instance and sets the static reference
 	/// </summary>
 	public override void OnStartServer() {

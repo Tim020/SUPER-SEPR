@@ -36,12 +36,6 @@ public class MapController : NetworkBehaviour {
 	int lastPlayers = 0;
 
 	/// <summary>
-	/// Handy boolean integer
-	/// </summary>
-	[SyncVar]
-	public int collegeDecided = 0;
-
-	/// <summary>
 	///  Called when the game starts, used to generate the tiles and centre the camera
 	/// </summary>
 	public override void OnStartServer() {
@@ -96,5 +90,22 @@ public class MapController : NetworkBehaviour {
 				t.RpcSyncTile(ord);
 			}
 		}
+	}
+
+	/// <summary>
+	/// Gets the tile at worldX and worldY.
+	/// </summary>
+	/// <returns>The <see cref="Tile"/> at the given position.</returns>
+	/// <param name="worldX">World X position.</param>
+	/// <param name="worldY">World Y position.</param>
+	[Server]
+	public Tile getTileAt(int worldX, int worldY) {
+		if (worldX < 0 || worldX >= width) {
+			return null;
+		}
+		if (worldY < 0 || worldY >= height) {
+			return null;
+		}
+		return tiles[worldX, worldY];
 	}
 }

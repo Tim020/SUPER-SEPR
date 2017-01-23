@@ -81,9 +81,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000012076526466}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2be5e4a2fc6e4ee6ba31dbb064ae7a2, type: 3}
+  m_Script: {fileID: 11500000, guid: e34f2cba55903f64ba78da4ea06147c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  funds: 1000
   TileOverlay: {fileID: 1041942971785404, guid: 9e7459d3a53f15d488ee667e6bb735c4,
     type: 2}
+  TileInfoOverlay: {fileID: 1293774599021256, guid: cc0b4fdfa9aa23f48bdef23cb36b5e57,
+    type: 2}
+  RoboticonPlacementOverlay: {fileID: 1856774355468288, guid: 4f5e4645a938d074895ac7f77511b160,
+    type: 2}
+  playerID: 0
+  collegeAssigned: 0

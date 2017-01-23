@@ -2,6 +2,7 @@
 using UnityEngine.Networking;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Collections.Specialized;
 
 /// <summary>
 /// Keeps track of the players in the game
@@ -14,9 +15,14 @@ public class PlayerController : NetworkBehaviour {
 	public static PlayerController instance;
 
 	/// <summary>
-	/// An array of the players in the game, can be any combination of human or AI
+	/// A dictionary of the players in the game.
 	/// </summary>
-	public List<BasePlayer> players;
+	public OrderedDictionary players;
+
+	/// <summary>
+	/// The player connections.
+	/// </summary>
+	public OrderedDictionary playerConnections;
 
 	/// <summary>
 	/// Raises the start server event.
@@ -24,11 +30,19 @@ public class PlayerController : NetworkBehaviour {
 	public override void OnStartServer() {
 		Debug.Log("Server Start - Player Controller");
 		instance = this;
-		players = new List<BasePlayer>();
+		players = new OrderedDictionary();
+		playerConnections = new OrderedDictionary();
 	}
 
+	/// <summary>
+	/// The current ID of the player being given
+	/// </summary>
 	private int nextID = -1;
 
+	/// <summary>
+	/// Gets the next ID to give to a player.
+	/// </summary>
+	/// <returns>The next ID.</returns>
 	public int getNextID() {
 		nextID++;
 		return nextID;

@@ -17,12 +17,14 @@ public class Tile : NetworkBehaviour {
 	/// <summary>
 	/// A reference to the player that owns this tile, null if no owner
 	/// </summary>
-	private BasePlayer owner;
+	private Player owner;
 
 	/// <summary>
 	/// Type of the tile
 	/// </summary>
 	public Data.TileType type;
+
+	public Roboticon roboticon{ private set; get; }
 
 	/// <summary>
 	/// Called by the MapController object when the tile is first created, initialises variables and gets the appropriate action reference
@@ -57,9 +59,9 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The amount of resource produced and hence gained by the player.</returns>
 	/// <param name="type">The type of resoure to produce for</param>
-	public int doResourceProduction(Data.ResourceType type) {
-		if (resourcesGenerated.ContainsKey(type)) {
-			TileResource r = resourcesGenerated[type];
+	public int doResourceProduction() {
+		if (roboticon != null && resourcesGenerated.ContainsKey(roboticon.resourceSpecialisation)) {
+			TileResource r = resourcesGenerated[roboticon.resourceSpecialisation];
 			int prodAmt = UnityEngine.Random.Range(0, Math.Min(15, r.current));
 			r.current -= prodAmt;
 			return prodAmt;
@@ -67,11 +69,15 @@ public class Tile : NetworkBehaviour {
 		return 0;
 	}
 
+	public void SetRoboticon(Roboticon r) {
+		this.roboticon = r;
+	}
+
 	/// <summary>
 	/// Gets the owner of this tile, may be null if no one has selected it yet
 	/// </summary>
 	/// <returns>The owner of the tile</returns>
-	public BasePlayer getOwner() {
+	public Player getOwner() {
 		return owner;
 	}
 
@@ -79,7 +85,7 @@ public class Tile : NetworkBehaviour {
 	/// Sets the owner for the tile
 	/// </summary>
 	/// <param name="p">Player who bought this tile</param>
-	public void setOwner(BasePlayer p) {
+	public void setOwner(Player p) {
 		owner = p;
 	}
 
