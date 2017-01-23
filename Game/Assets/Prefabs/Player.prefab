@@ -90,5 +90,6 @@ MonoBehaviour:
     type: 2}
   RoboticonPlacementOverlay: {fileID: 1856774355468288, guid: 4f5e4645a938d074895ac7f77511b160,
     type: 2}
+  PhasePopup: {fileID: 1480549707725614, guid: 8b459ec98cc787d4184bb80a3f9e5b60, type: 2}
   playerID: 0
   collegeAssigned: 0
