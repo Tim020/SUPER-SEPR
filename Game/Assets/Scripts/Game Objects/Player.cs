@@ -1178,7 +1178,6 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">The type of resource</param>
-	[Server]
 	public int GetResourceAmount(Data.ResourceType type) {
 		if (resourceInventory.ContainsKey(type)) {
 			return resourceInventory[type];
@@ -1192,7 +1191,6 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="type">Type of resource</param>
 	/// <param name="amount">Amount of resource to deduct</param>
-	[Server]
 	public void DeductResouce(Data.ResourceType type, int amount) {
 		if (resourceInventory.ContainsKey(type) && amount >= 0) {
 			resourceInventory[type] = Math.Max(0, resourceInventory[type] - amount);
@@ -1205,7 +1203,6 @@ public class Player : NetworkBehaviour {
 	/// </summary>
 	/// <param name="type">Type of resource to give the player</param>
 	/// <param name="amount">Amount of resource to give</param>
-	[Server]
 	public void GiveResouce(Data.ResourceType type, int amount) {
 		if (resourceInventory.ContainsKey(type) && amount >= 0) {
 			resourceInventory[type] = resourceInventory[type] += amount;
@@ -1217,7 +1214,6 @@ public class Player : NetworkBehaviour {
 	/// Gets the player's funds.
 	/// </summary>
 	/// <returns>The funds.</returns>
-	[Server]
 	public float GetFunds() {
 		return funds;
 	}
@@ -1238,7 +1234,6 @@ public class Player : NetworkBehaviour {
 	/// Increases the player's funds.
 	/// </summary>
 	/// <param name="amount">Amount to increase by.</param>
-	[Server]
 	public void IncreaseFunds(float amount) {
 		if (amount >= 0) {
 			funds += amount;
@@ -1250,7 +1245,6 @@ public class Player : NetworkBehaviour {
 	/// Decreases the player's funds.
 	/// </summary>
 	/// <param name="amount">Amount to decrease by.</param>
-	[Server]
 	public void DecreaseFunds(float amount) {
 		if (amount >= 0) {
 			funds -= amount;
@@ -1261,7 +1255,6 @@ public class Player : NetworkBehaviour {
 	/// <summary>
 	/// Sends the resource info to the client so the UI can be updated.
 	/// </summary>
-	[Server]
 	public void SendResourceInfo() {
 		RpcUpdateResourceOverlay(playerID, GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), funds);
 	}
