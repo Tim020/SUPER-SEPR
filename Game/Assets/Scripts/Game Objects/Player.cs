@@ -1056,8 +1056,6 @@ public class Player : NetworkBehaviour {
 		if (isLocalPlayer) {
 			playerState = Data.GameState.AUCTION;
 			OpenMarket();
-			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
-			userInterface.GetChild(4).gameObject.SetActive(true);
 		}
 	}
 
@@ -1067,7 +1065,6 @@ public class Player : NetworkBehaviour {
 			playerState = Data.GameState.RECYCLE;
 			CloseMarket();
 			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
-			userInterface.GetChild(4).gameObject.SetActive(false);
 			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.RemoveAllListeners();
 			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().isOn = false;
 			userInterface.GetChild(4).GetChild(1).GetComponent<Toggle>().onValueChanged.AddListener((value) => CmdPlayerReadyClicked(value));
