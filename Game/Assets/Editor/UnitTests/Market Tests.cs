@@ -3,6 +3,7 @@ using UnityEditor;
 using NUnit.Framework;
 using UnityEngine.Networking;
 
+[TestFixture]
 public class MarketTests {
 
 	[TestFixture]

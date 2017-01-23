@@ -106,8 +106,6 @@ public class Player : NetworkBehaviour {
 	/// Raises the start local player event.
 	/// </summary>
 	public override void OnStartLocalPlayer() {
-		Debug.Log("Start local human player");
-		Debug.Log(playerID);
 		SetupUserInterface();
 		GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(1).gameObject.SetActive(true);
 	}
@@ -1218,6 +1216,10 @@ public class Player : NetworkBehaviour {
 		return funds;
 	}
 
+	/// <summary>
+	/// Sets the funds.
+	/// </summary>
+	/// <param name="amount">Amount.</param>
 	public void SetFunds(float amount) {
 		if (amount >= 0) {
 			funds = amount;
@@ -1296,7 +1298,6 @@ public class Player : NetworkBehaviour {
 	/// Iterates through the list of tiles the player owns and gathers the resources it has generated
 	/// </summary>
 	public void Production() {
-		Debug.Log("Production");
 		foreach (Tile t in ownedTiles) {
 			if (t.roboticon != null) {
 				GiveResouce(t.roboticon.resourceSpecialisation, t.doResourceProduction());
