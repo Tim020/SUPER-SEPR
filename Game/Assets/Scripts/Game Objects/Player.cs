@@ -237,6 +237,10 @@ public class Player : NetworkBehaviour {
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
 				KillAllOverlays();
+				Transform robotSprite = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(1);
+				Transform robotText = GameObject.FindGameObjectWithTag("UserInterface").transform.GetChild(3).GetChild(2).GetChild(2);
+				robotSprite.GetComponent<Image>().sprite = SpriteController.Sprites.roboticon;
+				robotText.GetComponent<Text>().text = "Default Roboticon";
 				roboticons.gameObject.SetActive(true);
 				MarketMenuButtonSelected(3, Data.ResourceType.NONE);
 				background.GetChild(3).GetComponent<Button>().interactable = true;
@@ -987,6 +991,7 @@ public class Player : NetworkBehaviour {
 		if (playerID == this.playerID && isLocalPlayer) {
 			playerState = Data.GameState.ROBOTICON_CUSTOMISATION;
 			robotCustomisationChoice = Data.ResourceType.NONE;
+			robotSelectionChoice = Data.ResourceType.NONE;
 			OpenMarket();
 			Transform userInterface = GameObject.FindGameObjectWithTag("UserInterface").transform;
 			userInterface.transform.GetChild(5).GetComponent<AutoHideTimer>().StartTimer();
