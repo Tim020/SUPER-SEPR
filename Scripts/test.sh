@@ -71,7 +71,8 @@ logFile="$(pwd)/unity.log"
 travecho "$(cat "$logFile")"
 travecho 'travis_fold:end:compile'
 if [ ! -f "$(pwd)/Game/EditorTestResults.xml" ]; then
-	curl -T "$(pwd)/Game/EditorTestResults.xml" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+	zip -r "$(pwd)/Game/TestResults.zip" "$(pwd)/Game/EditorTestResults.xml"
+	curl -T "$(pwd)/Game/TestResults.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 fi
 travecho 'travis_fold:start:tests'
 travecho 'Show Results from Tests'
