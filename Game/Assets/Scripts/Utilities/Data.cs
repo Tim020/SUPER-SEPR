@@ -116,6 +116,11 @@ public static class Data {
 			}
 		}
 
+		/// <summary>
+		/// Gets the college for the specified ID.
+		/// </summary>
+		/// <returns>The college if found or null.</returns>
+		/// <param name="id">Identifier.</param>
 		public static College GetCollege(int id) {
 			foreach (College c in Values) {
 				if (c.Id == id) {

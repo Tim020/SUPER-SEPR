@@ -44,13 +44,44 @@ public class SpriteController : NetworkBehaviour {
 	/// </summary>
 	public Sprite roboticonEnergy;
 
+	/// <summary>
+	/// The Alcuin logo.
+	/// </summary>
 	public Sprite alcuin;
+
+	/// <summary>
+	/// The Constantine logo.
+	/// </summary>
 	public Sprite constantine;
+
+	/// <summary>
+	/// The Derwent logo.
+	/// </summary>
 	public Sprite derwent;
+
+	/// <summary>
+	/// The Goodricke logo.
+	/// </summary>
 	public Sprite goodricke;
+
+	/// <summary>
+	/// The Halifax logo.
+	/// </summary>
 	public Sprite halifax;
+
+	/// <summary>
+	/// The James logo.
+	/// </summary>
 	public Sprite james;
+
+	/// <summary>
+	/// The Langwith logo.
+	/// </summary>
 	public Sprite langwith;
+
+	/// <summary>
+	/// The Vanbrugh logo.
+	/// </summary>
 	public Sprite vanbrugh;
 
 	/// <summary>
@@ -61,6 +92,9 @@ public class SpriteController : NetworkBehaviour {
 		Sprites = this;
 	}
 
+	/// <summary>
+	/// Awake this instance.
+	/// </summary>
 	public void Awake() {
 		Debug.Log("SpriteController - Client Started");
 		Sprites = this;

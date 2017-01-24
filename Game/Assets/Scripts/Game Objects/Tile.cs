@@ -25,6 +25,10 @@ public class Tile : NetworkBehaviour {
 	/// </summary>
 	public Data.TileType type;
 
+	/// <summary>
+	/// Gets the roboticon on this Tile.
+	/// </summary>
+	/// <value>The roboticon.</value>
 	public Roboticon roboticon{ private set; get; }
 
 	/// <summary>
@@ -70,6 +74,10 @@ public class Tile : NetworkBehaviour {
 		return 0;
 	}
 
+	/// <summary>
+	/// Sets the roboticon on this Tile.
+	/// </summary>
+	/// <param name="r">The red component.</param>
 	public void SetRoboticon(Roboticon r) {
 		this.roboticon = r;
 	}
@@ -102,12 +110,12 @@ public class Tile : NetworkBehaviour {
 		SpriteRenderer r = GetComponent<SpriteRenderer>();
 		this.type = type;
 		switch (type) {
-			case Data.TileType.GRASS:
-				r.sprite = SpriteController.Sprites.grassSprite;
-				break;
-			case Data.TileType.STONE:
-				r.sprite = SpriteController.Sprites.stoneSprite;
-				break;
+		case Data.TileType.GRASS:
+			r.sprite = SpriteController.Sprites.grassSprite;
+			break;
+		case Data.TileType.STONE:
+			r.sprite = SpriteController.Sprites.stoneSprite;
+			break;
 		}
 	}
 
