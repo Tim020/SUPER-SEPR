@@ -98,6 +98,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aee27298b38deb7f869be967b4b2cfb26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tells the client that it is in end turn phase.  <a href="#aee27298b38deb7f869be967b4b2cfb26">More...</a><br /></td></tr>
 <tr class="separator:aee27298b38deb7f869be967b4b2cfb26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c66b26280a6d4fb545dc1b30d99a4aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a0c66b26280a6d4fb545dc1b30d99a4aa">DoRoboticonSelection</a> ()</td></tr>
+<tr class="memdesc:a0c66b26280a6d4fb545dc1b30d99a4aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Button listener called when the player selects a <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code> during the customisation phase.  <a href="#a0c66b26280a6d4fb545dc1b30d99a4aa">More...</a><br /></td></tr>
 <tr class="separator:a0c66b26280a6d4fb545dc1b30d99a4aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a90f7909c5a6810f7eff5ba79b146507d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a90f7909c5a6810f7eff5ba79b146507d">RpcColorTile</a> (string tile, int id)</td></tr>
 <tr class="memdesc:a90f7909c5a6810f7eff5ba79b146507d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Colors the tile on the local client  <a href="#a90f7909c5a6810f7eff5ba79b146507d">More...</a><br /></td></tr>
@@ -130,9 +131,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a0d890367149bce66d6f573ba752cad1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends the resource info to the client so the UI can be updated.  <a href="#a0d890367149bce66d6f573ba752cad1c">More...</a><br /></td></tr>
 <tr class="separator:a0d890367149bce66d6f573ba752cad1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a7bf5f35c2db49fe73e91da78651c1c4c">RpcUpdateMarketOverlay</a> (int ore, int food, int energy, float funds)</td></tr>
+<tr class="memdesc:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call to sync the market resource and fund values to the client and update the overlay.  <a href="#a7bf5f35c2db49fe73e91da78651c1c4c">More...</a><br /></td></tr>
 <tr class="separator:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bc2ceb8e6ef74847d7ec472793e7af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a9bc2ceb8e6ef74847d7ec472793e7af0">Production</a> ()</td></tr>
-<tr class="memdesc:a9bc2ceb8e6ef74847d7ec472793e7af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterates through the list of tiles the player owns and gathers the resources it has generated  <a href="#a9bc2ceb8e6ef74847d7ec472793e7af0">More...</a><br /></td></tr>
+<tr class="memdesc:a9bc2ceb8e6ef74847d7ec472793e7af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Iterates through the list of tiles the player owns and gathers the resources it has generated.  <a href="#a9bc2ceb8e6ef74847d7ec472793e7af0">More...</a><br /></td></tr>
 <tr class="separator:a9bc2ceb8e6ef74847d7ec472793e7af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -344,6 +346,9 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Button listener called when the player selects a <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code> during the customisation phase. </p>
+<p>Used to reset the UI and to inform the server of this action. </p>
+
 </div>
 </div>
 <a id="a3e28e1e5c0b73eb4c8ddceb2cf2d7506"></a>
@@ -509,7 +514,7 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Iterates through the list of tiles the player owns and gathers the resources it has generated </p>
+<p>Iterates through the list of tiles the player owns and gathers the resources it has generated. </p>
 
 </div>
 </div>
@@ -851,6 +856,17 @@ Properties</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>Call to sync the market resource and fund values to the client and update the overlay. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ore</td><td>Ore quantity.</td></tr>
+    <tr><td class="paramname">food</td><td>Food quantity.</td></tr>
+    <tr><td class="paramname">energy</td><td>Energy quantity.</td></tr>
+    <tr><td class="paramname">funds</td><td>Funds in the market.</td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 <a id="a0d890367149bce66d6f573ba752cad1c"></a>
@@ -1063,7 +1079,7 @@ Properties</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 01:16:33 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jan 24 2017 03:59:07 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
