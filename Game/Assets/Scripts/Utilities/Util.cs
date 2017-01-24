@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Executables found here: https://seprated.github.io/Assessment2/Executables.zip
+using System;
 
 /// <summary>
 /// Utilities class
@@ -39,6 +40,11 @@ public static class Util {
 		return (Arr.Length == j) ? Arr[0] : Arr[j];
 	}
 
+	/// <summary>
+	/// Sets the first letter of a string to uppercase and the rest of the string to lower case
+	/// </summary>
+	/// <returns>The formatted string.</returns>
+	/// <param name="input">Input string.</param>
 	public static string FirstLetterToUpper(string input) {
 		if (input == null) {
 			return null;

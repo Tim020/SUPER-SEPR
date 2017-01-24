@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Executables found here: https://seprated.github.io/Assessment2/Executables.zip
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -113,6 +114,20 @@ public static class Data {
 				yield return LANGWITH;
 				yield return VANBURGH;
 			}
+		}
+
+		/// <summary>
+		/// Gets the college for the specified ID.
+		/// </summary>
+		/// <returns>The college if found or null.</returns>
+		/// <param name="id">Identifier.</param>
+		public static College GetCollege(int id) {
+			foreach (College c in Values) {
+				if (c.Id == id) {
+					return c;
+				}
+			}
+			return null;
 		}
 	}
 }

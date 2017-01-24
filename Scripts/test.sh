@@ -1,4 +1,6 @@
 # Script taken and modified from https://github.com/TeamPorcupine/ProjectPorcupine
+# This runs the file 'build.cfg' and loads the variables into this script
+source build.cfg
 
 # The directory Unity gets installed into if running on a Travis CI server
 travisUnity="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
@@ -70,7 +72,10 @@ echo "Attempting Unit Tests"
 logFile="$(pwd)/unity.log"
 travecho "$(cat "$logFile")"
 travecho 'travis_fold:end:compile'
-
+if [ -f "$(pwd)/Game/EditorTestResults.xml" ]; then
+	zip -r "$(pwd)/Game/TestResults.zip" "$(pwd)/Game/EditorTestResults.xml"
+	curl -T "$(pwd)/Game/TestResults.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
+fi
 travecho 'travis_fold:start:tests'
 travecho 'Show Results from Tests'
 if [ ! -f "$(pwd)/Game/EditorTestResults.xml" ]; then

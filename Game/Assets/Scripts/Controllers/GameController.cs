@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿// Executables found here: https://seprated.github.io/Assessment2/Executables.zip
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -64,6 +65,7 @@ public class GameController : NetworkBehaviour {
 
 	/// <summary>
 	/// Update this instance.
+	/// State machine to handle the transition between game phases.
 	/// </summary>
 	public void Update() {
 		if (state == Data.GameState.PLAYER_WAIT && NetworkController.instance.numPlayers == numberOfPlayersNeeded) {
@@ -161,7 +163,6 @@ public class GameController : NetworkBehaviour {
 					p.RpcStartAuctionPhase();
 				}
 			}
-			Debug.Log(playersCompletedPhase);
 			firstTick = false;
 			if (playersCompletedPhase == NetworkController.instance.numPlayers) {
 				state = Data.GameState.RECYCLE;
@@ -217,6 +218,10 @@ public class GameController : NetworkBehaviour {
 		return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
 	}
 
+	/// <summary>
+	/// Used when the toggle button is clicked by a player to signal a change in their ready state.
+	/// </summary>
+	/// <param name="ready">If set to <c>true</c> ready.</param>
 	public void PlayerReady(bool ready) {
 		if (ready) {
 			playersCompletedPhase++;

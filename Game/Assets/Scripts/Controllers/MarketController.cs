@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Executables found here: https://seprated.github.io/Assessment2/Executables.zip
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -9,6 +10,9 @@ using UnityEngine.Networking;
 /// </summary>
 public class MarketController : NetworkBehaviour {
 
+	/// <summary>
+	/// The instance of the controller being used.
+	/// </summary>
 	public static MarketController instance;
 
 	/// <summary>
@@ -62,7 +66,6 @@ public class MarketController : NetworkBehaviour {
 	/// Update this instance.
 	/// </summary>
 	void Update() {
-	
 	}
 
 	/// <summary>
@@ -74,20 +77,44 @@ public class MarketController : NetworkBehaviour {
 	/// <param name="resourceAmount">Resource amount.</param>
 	/// <param name="player">The <c>Player</c> wishing to make this trade</param>
 	public bool IsTradeValid(bool sellingToMarket, Data.ResourceType resourceType, int resourceAmount, Player player) {
-		if (sellingToMarket) {
-			if (marketFunds >= GetResourceBuyPrice(resourceType) * resourceAmount) {
-				if (player.GetResourceAmount(resourceType) >= resourceAmount) {
-					return true;
+		if (resourceAmount >= 0) {
+			if (sellingToMarket) {
+				if (marketFunds >= GetResourceBuyPrice(resourceType) * resourceAmount) {
+					if (player.GetResourceAmount(resourceType) >= resourceAmount) {
+						return true;
+					}
 				}
-			}
-			return false;
-		} else {
-			if (GetResourceAmount(resourceType) >= resourceAmount) {
-				if (player.GetFunds() >= GetResourceSellPrice(resourceType) * resourceAmount) {
-					return true;
+				return false;
+			} else {
+				if (GetResourceAmount(resourceType) >= resourceAmount) {
+					if (player.GetFunds() >= GetResourceSellPrice(resourceType) * resourceAmount) {
+						return true;
+					}
 				}
+				return false;
 			}
-			return false;
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// Sets the resource amount.
+	/// </summary>
+	/// <param name="type">The <c>Data.ResourceType</c>.</param>
+	/// <param name="amount">Amount to set to.</param>
+	public void SetResourceAmount(Data.ResourceType type, int amount) {
+		if (marketResources.ContainsKey(type) && amount >= 0) {
+			marketResources[type] = amount;
+		}
+	}
+
+	/// <summary>
+	/// Sets the funds.
+	/// </summary>
+	/// <param name="funds">Amount to set to.</param>
+	public void SetFunds(float funds) {
+		if (funds >= 0) {
+			marketFunds = funds;
 		}
 	}
 
@@ -96,7 +123,7 @@ public class MarketController : NetworkBehaviour {
 	/// </summary>
 	/// <returns>The resource amount.</returns>
 	/// <param name="type">The type of resource.</param>
-	public float GetResourceAmount(Data.ResourceType type) {
+	public int GetResourceAmount(Data.ResourceType type) {
 		if (marketResources.ContainsKey(type)) {
 			return marketResources[type];
 		}
@@ -128,11 +155,19 @@ public class MarketController : NetworkBehaviour {
 	}
 
 	/// <summary>
+	/// Gets the funds.
+	/// </summary>
+	/// <returns>The funds.</returns>
+	public float GetFunds() {
+		return marketFunds;
+	}
+
+	/// <summary>
 	/// Buys resources from market.
 	/// </summary>
-	/// <param name="player">Player wishing to buy resources</param>
-	/// <param name="type">Type of resource being purchased</param>
-	/// <param name="amount">Amount of resource being purchased</param>
+	/// <param name="player">Player wishing to buy resources.</param>
+	/// <param name="type">Type of resource being purchased.</param>
+	/// <param name="amount">Amount of resource being purchased.</param>
 	public void BuyFromMarket(Player player, Data.ResourceType type, int amount) {
 		if (marketResources.ContainsKey(type) && marketSellPrices.ContainsKey(type)) {
 			if (marketResources[type] >= amount && player.GetFunds() >= marketSellPrices[type] * amount) {
@@ -141,6 +176,7 @@ public class MarketController : NetworkBehaviour {
 				marketResources[type] -= amount;
 				marketFunds += total;
 				player.DecreaseFunds(total);
+				player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 			}
 		}
 	}
@@ -159,17 +195,18 @@ public class MarketController : NetworkBehaviour {
 				marketResources[type] += amount;
 				marketFunds -= total;
 				player.IncreaseFunds(total);
+				player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 			}
 		}
 	}
 
 	/// <summary>
-	/// Creates a new player trade. This will remove the resource from the player but not give them any money
+	/// Creates a new player trade. This will remove the resource from the player but not give them any money.
 	/// </summary>
-	/// <param name="player">Player wishing to sell their resources</param>
-	/// <param name="type">The type of resource the player is selling</param>
-	/// <param name="resourceAmount">The amount of resource the player is selling</param>
-	/// <param name="unitPrice">Unit price the player wishes to sell at</param>
+	/// <param name="player">Player wishing to sell their resources.</param>
+	/// <param name="type">The type of resource the player is selling.</param>
+	/// <param name="resourceAmount">The amount of resource the player is selling.</param>
+	/// <param name="unitPrice">Unit price the player wishes to sell at.</param>
 	public void CreatePlayerTrade(Player player, Data.ResourceType type, int resourceAmount, float unitPrice) {
 		if (player.GetResourceAmount(type) >= resourceAmount) {
 			playerTrades.Add(new P2PTrade(player, type, resourceAmount, unitPrice));
@@ -178,14 +215,22 @@ public class MarketController : NetworkBehaviour {
 	}
 
 	/// <summary>
-	/// Cancels the player trade. This will give the player back their resources
+	/// Cancels the player trade. This will give the player back their resources.
 	/// </summary>
-	/// <param name="trade">The trade to cancel</param>
+	/// <param name="trade">The trade to cancel.</param>
 	public void CancelPlayerTrade(P2PTrade trade) {
 		if (playerTrades.Contains(trade)) {
 			trade.host.GiveResouce(trade.resource, trade.resourceAmount);
 			playerTrades.Remove(trade);
 		}
+	}
+
+	/// <summary>
+	/// Used to send the resource information of the market to all the players.
+	/// </summary>
+	/// <param name="player">Player.</param>
+	public void SendResourceOverlayData(Player player) {
+		player.RpcUpdateMarketOverlay(GetResourceAmount(Data.ResourceType.ORE), GetResourceAmount(Data.ResourceType.FOOD), GetResourceAmount(Data.ResourceType.ENERGY), marketFunds);
 	}
 
 	/// <summary>

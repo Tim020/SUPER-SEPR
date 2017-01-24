@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿// Executables found here: https://seprated.github.io/Assessment2/Executables.zip
+using UnityEngine;
 using System.Collections;
 using UnityEngine.Networking;
 
@@ -31,11 +32,27 @@ public class Roboticon : NetworkBehaviour {
 	}
 
 	/// <summary>
+	/// Gets the location.
+	/// </summary>
+	/// <returns>The location.</returns>
+	public Tile GetLocation() {
+		return location;
+	}
+
+	/// <summary>
 	/// Sets the resource specialisation.
 	/// </summary>
 	/// <param name="type">The type of resource this Robiticon is specialised for</param>
 	public void SetResourceSpecialisation(Data.ResourceType type) {
 		resourceSpecialisation = type;
+	}
+
+	/// <summary>
+	/// Gets the resource specialisation.
+	/// </summary>
+	/// <returns>The resource specialisation.</returns>
+	public Data.ResourceType GetResourceSpecialisation() {
+		return resourceSpecialisation;
 	}
 
 	/// <summary>
@@ -46,9 +63,42 @@ public class Roboticon : NetworkBehaviour {
 		this.player = player;
 	}
 
+	/// <summary>
+	/// Gets the player.
+	/// </summary>
+	/// <returns>The player.</returns>
+	public Player GetPlayer() {
+		return player;
+	}
+
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
+	void Update() {
+		if (isServer) {
+			if (!gameObject.transform.position.Equals(location.gameObject.transform.position)) {
+				if (gameObject.transform.position.x < location.gameObject.transform.position.x) {
+					gameObject.transform.position = new Vector3(gameObject.transform.position.x + 0.1f, gameObject.transform.position.y, 0);
+				} else {
+					gameObject.transform.position = new Vector3(location.transform.position.x, gameObject.transform.position.y, 0);
+				}
+				if (gameObject.transform.position.y < location.gameObject.transform.position.y) {
+					gameObject.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 0.1f, 0);
+				} else {
+					gameObject.transform.position = new Vector3(gameObject.transform.position.x, location.gameObject.transform.position.y, 0);
+				}
+			}
+		}
+	}
+
+	/// <summary>
+	/// Used to sync the roboticon graphics to the clients
+	/// </summary>
+	/// <param name="resourceOrdinal">The ordinal of the resource type</param>
+	/// <param name="collegeID">College ID.</param>
 	[ClientRpc]
-	public void RpcSyncRoboticon(int ord, int collegeID) {
-		Data.ResourceType type = (Data.ResourceType)ord;
+	public void RpcSyncRoboticon(int resourceOrdinal, int collegeID) {
+		Data.ResourceType type = (Data.ResourceType)resourceOrdinal;
 		SpriteRenderer robot = this.transform.GetChild(0).GetComponent<SpriteRenderer>();
 		SpriteRenderer college = this.transform.GetChild(1).GetComponent<SpriteRenderer>();
 		this.resourceSpecialisation = type;

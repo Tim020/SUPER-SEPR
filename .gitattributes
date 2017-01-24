@@ -11,3 +11,4 @@
 *.lang text
 *.md text
 *.ver text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
