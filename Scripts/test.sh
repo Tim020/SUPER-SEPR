@@ -1,4 +1,6 @@
 # Script taken and modified from https://github.com/TeamPorcupine/ProjectPorcupine
+# This runs the file 'build.cfg' and loads the variables into this script
+source build.cfg
 
 # The directory Unity gets installed into if running on a Travis CI server
 travisUnity="/Applications/Unity/Unity.app/Contents/MacOS/Unity"
