@@ -40,6 +40,8 @@ $(function() {
   <div class="summary">
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#properties">Properties</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_camera_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">CameraController Class Reference</div>  </div>
@@ -59,16 +61,114 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a5ede1338f553ab75fb61f85405fda8e7"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a5ede1338f553ab75fb61f85405fda8e7">maxZoom</a><code> [get]</code></td></tr>
+<tr class="memitem:a5ede1338f553ab75fb61f85405fda8e7"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a5ede1338f553ab75fb61f85405fda8e7">maxZoom</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:a5ede1338f553ab75fb61f85405fda8e7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The furthest in you are allowed to zoom  <a href="#a5ede1338f553ab75fb61f85405fda8e7">More...</a><br /></td></tr>
 <tr class="separator:a5ede1338f553ab75fb61f85405fda8e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6c1a8c2ca7e67154970931ed2a88563e"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a6c1a8c2ca7e67154970931ed2a88563e">minZoom</a><code> [get]</code></td></tr>
+<tr class="memitem:a6c1a8c2ca7e67154970931ed2a88563e"><td class="memItemLeft" align="right" valign="top">static float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a6c1a8c2ca7e67154970931ed2a88563e">minZoom</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:a6c1a8c2ca7e67154970931ed2a88563e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The furthest out you are allowed to zoom  <a href="#a6c1a8c2ca7e67154970931ed2a88563e">More...</a><br /></td></tr>
 <tr class="separator:a6c1a8c2ca7e67154970931ed2a88563e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ad4a238c6f7db3ee003302a245d860860"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#ad4a238c6f7db3ee003302a245d860860">Start</a> ()</td></tr>
+<tr class="memdesc:ad4a238c6f7db3ee003302a245d860860"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start this instance.  <a href="#ad4a238c6f7db3ee003302a245d860860">More...</a><br /></td></tr>
+<tr class="separator:ad4a238c6f7db3ee003302a245d860860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c4f486f4bcbd1d54a346fdce9707bd5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a7c4f486f4bcbd1d54a346fdce9707bd5">Update</a> ()</td></tr>
+<tr class="memdesc:a7c4f486f4bcbd1d54a346fdce9707bd5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called every update cycle, checks whether the RMB is pressed and transforms the camera position accordingly.  <a href="#a7c4f486f4bcbd1d54a346fdce9707bd5">More...</a><br /></td></tr>
+<tr class="separator:a7c4f486f4bcbd1d54a346fdce9707bd5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a96a8af3551668387b4142e444ef7d0cd"><td class="memItemLeft" align="right" valign="top">Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a96a8af3551668387b4142e444ef7d0cd">dragOrigin</a></td></tr>
+<tr class="memdesc:a96a8af3551668387b4142e444ef7d0cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The position that that drag was started at  <a href="#a96a8af3551668387b4142e444ef7d0cd">More...</a><br /></td></tr>
+<tr class="separator:a96a8af3551668387b4142e444ef7d0cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5594a3add536340a9ef2882140734eca"><td class="memItemLeft" align="right" valign="top">Vector3&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_camera_controller.html#a5594a3add536340a9ef2882140734eca">startPosition</a></td></tr>
+<tr class="memdesc:a5594a3add536340a9ef2882140734eca"><td class="mdescLeft">&#160;</td><td class="mdescRight">The position that the camera is set to at the start of the game  <a href="#a5594a3add536340a9ef2882140734eca">More...</a><br /></td></tr>
+<tr class="separator:a5594a3add536340a9ef2882140734eca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to handle the movement of the camera through various control methods </p>
-</div><h2 class="groupheader">Member Data Documentation</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ad4a238c6f7db3ee003302a245d860860"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad4a238c6f7db3ee003302a245d860860">&#9670;&nbsp;</a></span>Start()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CameraController.Start </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Start this instance. </p>
+
+</div>
+</div>
+<a id="a7c4f486f4bcbd1d54a346fdce9707bd5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c4f486f4bcbd1d54a346fdce9707bd5">&#9670;&nbsp;</a></span>Update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void CameraController.Update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called every update cycle, checks whether the RMB is pressed and transforms the camera position accordingly. </p>
+<p>Also checks if the MMB is clicked to return to the camera to the centre of the game world Also checks for scroll wheel and will zoom in and out, this also scales the drag speed so it's the same rate at each level of zoom </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a96a8af3551668387b4142e444ef7d0cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96a8af3551668387b4142e444ef7d0cd">&#9670;&nbsp;</a></span>dragOrigin</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector3 CameraController.dragOrigin</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The position that that drag was started at </p>
+
+</div>
+</div>
 <a id="a7589a446e8e79bcd538a3c5462633b1f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7589a446e8e79bcd538a3c5462633b1f">&#9670;&nbsp;</a></span>dragSpeed</h2>
 
@@ -82,6 +182,30 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The speed the camera gets moved at when dragging </p>
+
+</div>
+</div>
+<a id="a5594a3add536340a9ef2882140734eca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5594a3add536340a9ef2882140734eca">&#9670;&nbsp;</a></span>startPosition</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector3 CameraController.startPosition</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The position that the camera is set to at the start of the game </p>
 
 </div>
 </div>
@@ -101,7 +225,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -125,7 +249,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -140,7 +264,7 @@ Properties</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 04:59:17 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2017 10:45:15 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

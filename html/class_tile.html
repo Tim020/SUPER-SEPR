@@ -42,6 +42,7 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#properties">Properties</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_tile-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Tile Class Reference</div>  </div>
@@ -91,9 +92,18 @@ Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:af6f1e7dedcdc64021fa1613a6c7dea92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_roboticon.html">Roboticon</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tile.html#af6f1e7dedcdc64021fa1613a6c7dea92">roboticon</a><code> [get]</code></td></tr>
+<tr class="memitem:af6f1e7dedcdc64021fa1613a6c7dea92"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_roboticon.html">Roboticon</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tile.html#af6f1e7dedcdc64021fa1613a6c7dea92">roboticon</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:af6f1e7dedcdc64021fa1613a6c7dea92"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the roboticon on this <a class="el" href="class_tile.html" title="The tile class, keeps track of resources on this tile as well as handling mouse events ...">Tile</a>.  <a href="#af6f1e7dedcdc64021fa1613a6c7dea92">More...</a><br /></td></tr>
 <tr class="separator:af6f1e7dedcdc64021fa1613a6c7dea92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:aee570a81719f4a14d874d03fd8974278"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, <a class="el" href="class_tile_1_1_tile_resource.html">TileResource</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tile.html#aee570a81719f4a14d874d03fd8974278">resourcesGenerated</a></td></tr>
+<tr class="memdesc:aee570a81719f4a14d874d03fd8974278"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dictionary with a resource type as a key, and a tile resource as a value The value holds the maximum value for the resource type and the currrent amount - this will reduce over time as it gets generated  <a href="#aee570a81719f4a14d874d03fd8974278">More...</a><br /></td></tr>
+<tr class="separator:aee570a81719f4a14d874d03fd8974278"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa24242dbcd6725565f3f867e3bdf7c0d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_player.html">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_tile.html#aa24242dbcd6725565f3f867e3bdf7c0d">owner</a></td></tr>
+<tr class="memdesc:aa24242dbcd6725565f3f867e3bdf7c0d"><td class="mdescLeft">&#160;</td><td class="mdescRight">A reference to the player that owns this tile, null if no owner  <a href="#aa24242dbcd6725565f3f867e3bdf7c0d">More...</a><br /></td></tr>
+<tr class="separator:aa24242dbcd6725565f3f867e3bdf7c0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The tile class, keeps track of resources on this tile as well as handling mouse events </p>
@@ -277,6 +287,54 @@ Properties</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa24242dbcd6725565f3f867e3bdf7c0d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa24242dbcd6725565f3f867e3bdf7c0d">&#9670;&nbsp;</a></span>owner</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_player.html">Player</a> Tile.owner</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A reference to the player that owns this tile, null if no owner </p>
+
+</div>
+</div>
+<a id="aee570a81719f4a14d874d03fd8974278"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee570a81719f4a14d874d03fd8974278">&#9670;&nbsp;</a></span>resourcesGenerated</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, <a class="el" href="class_tile_1_1_tile_resource.html">TileResource</a>&gt; Tile.resourcesGenerated</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A dictionary with a resource type as a key, and a tile resource as a value The value holds the maximum value for the resource type and the currrent amount - this will reduce over time as it gets generated </p>
+
+</div>
+</div>
 <a id="a110ee9e09bebac46db1f61208708a5d4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a110ee9e09bebac46db1f61208708a5d4">&#9670;&nbsp;</a></span>type</h2>
 
@@ -309,7 +367,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -325,7 +383,7 @@ Properties</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 04:59:17 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2017 10:45:15 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

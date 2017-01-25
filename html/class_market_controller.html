@@ -42,6 +42,8 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#properties">Properties</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_market_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">MarketController Class Reference</div>  </div>
@@ -109,9 +111,30 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:aee6a7768332e448c00ccdab350e56e2a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#aee6a7768332e448c00ccdab350e56e2a">marketFunds</a><code> [get]</code></td></tr>
+<tr class="memitem:aee6a7768332e448c00ccdab350e56e2a"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#aee6a7768332e448c00ccdab350e56e2a">marketFunds</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:aee6a7768332e448c00ccdab350e56e2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The amount of money the market currently has  <a href="#aee6a7768332e448c00ccdab350e56e2a">More...</a><br /></td></tr>
 <tr class="separator:aee6a7768332e448c00ccdab350e56e2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:a1493f2faeb1d69f58cf2c90a877e30c3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a1493f2faeb1d69f58cf2c90a877e30c3">Update</a> ()</td></tr>
+<tr class="memdesc:a1493f2faeb1d69f58cf2c90a877e30c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update this instance.  <a href="#a1493f2faeb1d69f58cf2c90a877e30c3">More...</a><br /></td></tr>
+<tr class="separator:a1493f2faeb1d69f58cf2c90a877e30c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:ae9ac368b1cb49e47c6083191ebf3c5d3"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#ae9ac368b1cb49e47c6083191ebf3c5d3">marketResources</a></td></tr>
+<tr class="memdesc:ae9ac368b1cb49e47c6083191ebf3c5d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dictionary with a resource type as a key, the value is the amount the market currently has  <a href="#ae9ac368b1cb49e47c6083191ebf3c5d3">More...</a><br /></td></tr>
+<tr class="separator:ae9ac368b1cb49e47c6083191ebf3c5d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2365095f13437bfef5f068c643142018"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a2365095f13437bfef5f068c643142018">marketSellPrices</a></td></tr>
+<tr class="memdesc:a2365095f13437bfef5f068c643142018"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dictionary with a resource type as a key, the value is the value the market is selling at  <a href="#a2365095f13437bfef5f068c643142018">More...</a><br /></td></tr>
+<tr class="separator:a2365095f13437bfef5f068c643142018"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d71c7a380ad485d05f18a64cd1c5fc7"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, float &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a0d71c7a380ad485d05f18a64cd1c5fc7">marketBuyPrices</a></td></tr>
+<tr class="memdesc:a0d71c7a380ad485d05f18a64cd1c5fc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dictionary with a resource type as a key, the value is the value the market is buying at  <a href="#a0d71c7a380ad485d05f18a64cd1c5fc7">More...</a><br /></td></tr>
+<tr class="separator:a0d71c7a380ad485d05f18a64cd1c5fc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31a551032069d7a2d05e1143d0d60f29"><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="class_market_controller_1_1_p2_p_trade.html">P2PTrade</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_market_controller.html#a31a551032069d7a2d05e1143d0d60f29">playerTrades</a></td></tr>
+<tr class="memdesc:a31a551032069d7a2d05e1143d0d60f29"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of all current standing player trades  <a href="#a31a551032069d7a2d05e1143d0d60f29">More...</a><br /></td></tr>
+<tr class="separator:a31a551032069d7a2d05e1143d0d60f29"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Centralised market system, handles all trades between players and to the market itself </p>
@@ -545,6 +568,33 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a1493f2faeb1d69f58cf2c90a877e30c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1493f2faeb1d69f58cf2c90a877e30c3">&#9670;&nbsp;</a></span>Update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MarketController.Update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update this instance. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a34de1b82e5da6ca7c5c7b5852bbb423b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a34de1b82e5da6ca7c5c7b5852bbb423b">&#9670;&nbsp;</a></span>instance</h2>
@@ -570,6 +620,102 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a0d71c7a380ad485d05f18a64cd1c5fc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d71c7a380ad485d05f18a64cd1c5fc7">&#9670;&nbsp;</a></span>marketBuyPrices</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, float&gt; MarketController.marketBuyPrices</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A dictionary with a resource type as a key, the value is the value the market is buying at </p>
+
+</div>
+</div>
+<a id="ae9ac368b1cb49e47c6083191ebf3c5d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae9ac368b1cb49e47c6083191ebf3c5d3">&#9670;&nbsp;</a></span>marketResources</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, int&gt; MarketController.marketResources</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A dictionary with a resource type as a key, the value is the amount the market currently has </p>
+
+</div>
+</div>
+<a id="a2365095f13437bfef5f068c643142018"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2365095f13437bfef5f068c643142018">&#9670;&nbsp;</a></span>marketSellPrices</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, float&gt; MarketController.marketSellPrices</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A dictionary with a resource type as a key, the value is the value the market is selling at </p>
+
+</div>
+</div>
+<a id="a31a551032069d7a2d05e1143d0d60f29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31a551032069d7a2d05e1143d0d60f29">&#9670;&nbsp;</a></span>playerTrades</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">List&lt;<a class="el" href="class_market_controller_1_1_p2_p_trade.html">P2PTrade</a>&gt; MarketController.playerTrades</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A list of all current standing player trades </p>
+
+</div>
+</div>
 <h2 class="groupheader">Property Documentation</h2>
 <a id="aee6a7768332e448c00ccdab350e56e2a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aee6a7768332e448c00ccdab350e56e2a">&#9670;&nbsp;</a></span>marketFunds</h2>
@@ -586,7 +732,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -601,7 +747,7 @@ Properties</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 04:59:17 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2017 10:45:15 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

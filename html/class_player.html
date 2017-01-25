@@ -42,6 +42,8 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#properties">Properties</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_player-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">Player Class Reference</div>  </div>
@@ -130,7 +132,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a0d890367149bce66d6f573ba752cad1c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a0d890367149bce66d6f573ba752cad1c">SendResourceInfo</a> ()</td></tr>
 <tr class="memdesc:a0d890367149bce66d6f573ba752cad1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sends the resource info to the client so the UI can be updated.  <a href="#a0d890367149bce66d6f573ba752cad1c">More...</a><br /></td></tr>
 <tr class="separator:a0d890367149bce66d6f573ba752cad1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a7bf5f35c2db49fe73e91da78651c1c4c">RpcUpdateMarketOverlay</a> (int ore, int food, int energy, float funds)</td></tr>
+<tr class="memitem:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a7bf5f35c2db49fe73e91da78651c1c4c">RpcUpdateMarketOverlay</a> (int ore, int food, int energy, float <a class="el" href="class_player.html#a7dc349cb42e0639991e3e160720c1013">funds</a>)</td></tr>
 <tr class="memdesc:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call to sync the market resource and fund values to the client and update the overlay.  <a href="#a7bf5f35c2db49fe73e91da78651c1c4c">More...</a><br /></td></tr>
 <tr class="separator:a7bf5f35c2db49fe73e91da78651c1c4c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9bc2ceb8e6ef74847d7ec472793e7af0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a9bc2ceb8e6ef74847d7ec472793e7af0">Production</a> ()</td></tr>
@@ -166,9 +168,165 @@ Protected Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a4b452c51cb7262fcfdcae31cc8192742"><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="class_tile.html">Tile</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a4b452c51cb7262fcfdcae31cc8192742">ownedTiles</a><code> [get]</code></td></tr>
+<tr class="memitem:a4b452c51cb7262fcfdcae31cc8192742"><td class="memItemLeft" align="right" valign="top">List&lt; <a class="el" href="class_tile.html">Tile</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a4b452c51cb7262fcfdcae31cc8192742">ownedTiles</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:a4b452c51cb7262fcfdcae31cc8192742"><td class="mdescLeft">&#160;</td><td class="mdescRight">A list of all the tiles this player owns  <a href="#a4b452c51cb7262fcfdcae31cc8192742">More...</a><br /></td></tr>
 <tr class="separator:a4b452c51cb7262fcfdcae31cc8192742"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:aace80372e18e32fe177e295fe5d93ba8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aace80372e18e32fe177e295fe5d93ba8">Update</a> ()</td></tr>
+<tr class="memdesc:aace80372e18e32fe177e295fe5d93ba8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update this instance.  <a href="#aace80372e18e32fe177e295fe5d93ba8">More...</a><br /></td></tr>
+<tr class="separator:aace80372e18e32fe177e295fe5d93ba8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a593ac66bf9d24b48306618d253a9cbe2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a593ac66bf9d24b48306618d253a9cbe2">SetupCollegeSelection</a> ()</td></tr>
+<tr class="memdesc:a593ac66bf9d24b48306618d253a9cbe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable the college selection buttons and add the button listeners for them  <a href="#a593ac66bf9d24b48306618d253a9cbe2">More...</a><br /></td></tr>
+<tr class="separator:a593ac66bf9d24b48306618d253a9cbe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09d73a4fa748ec2dd1205cd6ea042a16"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a09d73a4fa748ec2dd1205cd6ea042a16">SetupUserInterface</a> ()</td></tr>
+<tr class="memdesc:a09d73a4fa748ec2dd1205cd6ea042a16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called to set up various UI elements.  <a href="#a09d73a4fa748ec2dd1205cd6ea042a16">More...</a><br /></td></tr>
+<tr class="separator:a09d73a4fa748ec2dd1205cd6ea042a16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afdcedd780b5e4b6a0874d80381f96a2e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#afdcedd780b5e4b6a0874d80381f96a2e">SetupOverlayUI</a> ()</td></tr>
+<tr class="memdesc:afdcedd780b5e4b6a0874d80381f96a2e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup the overlay UI  <a href="#afdcedd780b5e4b6a0874d80381f96a2e">More...</a><br /></td></tr>
+<tr class="separator:afdcedd780b5e4b6a0874d80381f96a2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5691bb68d3406df262f3602299d75e04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a5691bb68d3406df262f3602299d75e04">OpenMarket</a> ()</td></tr>
+<tr class="memdesc:a5691bb68d3406df262f3602299d75e04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens the market screen.  <a href="#a5691bb68d3406df262f3602299d75e04">More...</a><br /></td></tr>
+<tr class="separator:a5691bb68d3406df262f3602299d75e04"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abf7bc4a6ca51e3343748dee9674610fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#abf7bc4a6ca51e3343748dee9674610fb">SetupMarketUI</a> ()</td></tr>
+<tr class="memdesc:abf7bc4a6ca51e3343748dee9674610fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configure the market UI by setting up the button listeners  <a href="#abf7bc4a6ca51e3343748dee9674610fb">More...</a><br /></td></tr>
+<tr class="separator:abf7bc4a6ca51e3343748dee9674610fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba6a8ee303eeeb036525b1fee6463e0e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aba6a8ee303eeeb036525b1fee6463e0e">CollegeButtonClick</a> (int id)</td></tr>
+<tr class="memdesc:aba6a8ee303eeeb036525b1fee6463e0e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handler for when a college button is clicked, sets the value on the client side then sends the data to the server to do the same.  <a href="#aba6a8ee303eeeb036525b1fee6463e0e">More...</a><br /></td></tr>
+<tr class="separator:aba6a8ee303eeeb036525b1fee6463e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af42eadf4969a58e1ee10387d26eca02e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#af42eadf4969a58e1ee10387d26eca02e">CreateMapOverlay</a> ()</td></tr>
+<tr class="memdesc:af42eadf4969a58e1ee10387d26eca02e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates the map overlay dividing the map into subplots.  <a href="#af42eadf4969a58e1ee10387d26eca02e">More...</a><br /></td></tr>
+<tr class="separator:af42eadf4969a58e1ee10387d26eca02e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a58298c763ac34ee49990655066529924"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a58298c763ac34ee49990655066529924">RpcDisableCollege</a> (int collegeID)</td></tr>
+<tr class="memdesc:a58298c763ac34ee49990655066529924"><td class="mdescLeft">&#160;</td><td class="mdescRight">Disable the buttons for colleges already chosen by another player.  <a href="#a58298c763ac34ee49990655066529924">More...</a><br /></td></tr>
+<tr class="separator:a58298c763ac34ee49990655066529924"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a254f8d6b99fa1faee78e23533d01156a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a254f8d6b99fa1faee78e23533d01156a">CmdMouseClick</a> (int worldX, int worldY, bool cntrClick)</td></tr>
+<tr class="memdesc:a254f8d6b99fa1faee78e23533d01156a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the mouse click on the server side.  <a href="#a254f8d6b99fa1faee78e23533d01156a">More...</a><br /></td></tr>
+<tr class="separator:a254f8d6b99fa1faee78e23533d01156a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac98ca8a7518518ef618364b160461832"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ac98ca8a7518518ef618364b160461832">PurchaseButtonClick</a> (int worldX, int worldY)</td></tr>
+<tr class="memdesc:ac98ca8a7518518ef618364b160461832"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when a purchase button is clicked  <a href="#ac98ca8a7518518ef618364b160461832">More...</a><br /></td></tr>
+<tr class="separator:ac98ca8a7518518ef618364b160461832"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af46a4b6d1a19788309ed94528c28d485"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#af46a4b6d1a19788309ed94528c28d485">CmdDoTilePurchase</a> (int worldX, int worldY)</td></tr>
+<tr class="memdesc:af46a4b6d1a19788309ed94528c28d485"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command that gets run on the server object to purchase a tile when the button is clicked  <a href="#af46a4b6d1a19788309ed94528c28d485">More...</a><br /></td></tr>
+<tr class="separator:af46a4b6d1a19788309ed94528c28d485"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d54b8a9b7cb1ce9f3fc59bb01953e69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a1d54b8a9b7cb1ce9f3fc59bb01953e69">PlaceRoboticonClick</a> (int worldX, int worldY, int resourceOrdinal)</td></tr>
+<tr class="memdesc:a1d54b8a9b7cb1ce9f3fc59bb01953e69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the place <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code> is clicked.  <a href="#a1d54b8a9b7cb1ce9f3fc59bb01953e69">More...</a><br /></td></tr>
+<tr class="separator:a1d54b8a9b7cb1ce9f3fc59bb01953e69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2e2230eda6a60372f940775c51188b46"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a2e2230eda6a60372f940775c51188b46">CmdPlaceRoboticon</a> (int worldX, int worldY, int resourceOrdinal)</td></tr>
+<tr class="memdesc:a2e2230eda6a60372f940775c51188b46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command sent to the server to place a new <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code> into the world.  <a href="#a2e2230eda6a60372f940775c51188b46">More...</a><br /></td></tr>
+<tr class="separator:a2e2230eda6a60372f940775c51188b46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac594bd4cb47c1eddcd20456da92cab96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ac594bd4cb47c1eddcd20456da92cab96">RpcDisplayTileOverlay</a> (int tileX, int tileY, int oreAmount, int energyAmount, string owner, int <a class="el" href="class_player.html#a2b1593046a8f0326290f6ff71ed23fe9">playerID</a>, bool destroyOtherOverlays, bool hasOwner)</td></tr>
+<tr class="memdesc:ac594bd4cb47c1eddcd20456da92cab96"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC method to spawn an info overlay for a tile.  <a href="#ac594bd4cb47c1eddcd20456da92cab96">More...</a><br /></td></tr>
+<tr class="separator:ac594bd4cb47c1eddcd20456da92cab96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a705bdb2d9b7468a61c4457ee7b238613"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a705bdb2d9b7468a61c4457ee7b238613">KillSpecificTileOverlay</a> (GameObject overlay)</td></tr>
+<tr class="memdesc:a705bdb2d9b7468a61c4457ee7b238613"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kills the specific tile overlay.  <a href="#a705bdb2d9b7468a61c4457ee7b238613">More...</a><br /></td></tr>
+<tr class="separator:a705bdb2d9b7468a61c4457ee7b238613"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1b2eb724c946cb72275fa5dfef98d6f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a1b2eb724c946cb72275fa5dfef98d6f3">KillAllOverlays</a> ()</td></tr>
+<tr class="memdesc:a1b2eb724c946cb72275fa5dfef98d6f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Kills all tile overlays.  <a href="#a1b2eb724c946cb72275fa5dfef98d6f3">More...</a><br /></td></tr>
+<tr class="separator:a1b2eb724c946cb72275fa5dfef98d6f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee54fa26cdf029eef8e7ba0b7e15abc7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aee54fa26cdf029eef8e7ba0b7e15abc7">RpcKillAllTileOverlays</a> (int <a class="el" href="class_player.html#a2b1593046a8f0326290f6ff71ed23fe9">playerID</a>)</td></tr>
+<tr class="memdesc:aee54fa26cdf029eef8e7ba0b7e15abc7"><td class="mdescLeft">&#160;</td><td class="mdescRight">RPC method to remove all tile info overlays.  <a href="#aee54fa26cdf029eef8e7ba0b7e15abc7">More...</a><br /></td></tr>
+<tr class="separator:aee54fa26cdf029eef8e7ba0b7e15abc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a275c0dfc2ce1844476fbc7ee3dbe8b0c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a275c0dfc2ce1844476fbc7ee3dbe8b0c">MarketMenuButtonSelected</a> (int id, <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> resource)</td></tr>
+<tr class="memdesc:a275c0dfc2ce1844476fbc7ee3dbe8b0c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when one of the menu panel buttons are pressed within the market UI.  <a href="#a275c0dfc2ce1844476fbc7ee3dbe8b0c">More...</a><br /></td></tr>
+<tr class="separator:a275c0dfc2ce1844476fbc7ee3dbe8b0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a70ad035941d732d3c0a569a706b2593b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a70ad035941d732d3c0a569a706b2593b">ChangeResourceQuanity</a> (int amount)</td></tr>
+<tr class="memdesc:a70ad035941d732d3c0a569a706b2593b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Increase or decrease the amount of resource the player wishes to buy or sell to the market  <a href="#a70ad035941d732d3c0a569a706b2593b">More...</a><br /></td></tr>
+<tr class="separator:a70ad035941d732d3c0a569a706b2593b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5ea717ee9ded9ab8d489f4457ccd1215"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a5ea717ee9ded9ab8d489f4457ccd1215">ActivateTradeConfirmPopup</a> (bool <a class="el" href="class_player.html#aa90e5b7cf9c811bdcb433deff59aa3e4">sellingToMarket</a>)</td></tr>
+<tr class="memdesc:a5ea717ee9ded9ab8d489f4457ccd1215"><td class="mdescLeft">&#160;</td><td class="mdescRight">Activates the trade confirmimation popup.  <a href="#a5ea717ee9ded9ab8d489f4457ccd1215">More...</a><br /></td></tr>
+<tr class="separator:a5ea717ee9ded9ab8d489f4457ccd1215"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc38c152c6e5d8e6d34abe6706e7c44d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#abc38c152c6e5d8e6d34abe6706e7c44d">CmdSendTradeCostToClient</a> (bool <a class="el" href="class_player.html#aa90e5b7cf9c811bdcb433deff59aa3e4">sellingToMarket</a>, int resourceTypeOrdinal, int amount)</td></tr>
+<tr class="memdesc:abc38c152c6e5d8e6d34abe6706e7c44d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command to calculate and send the trade cost to the client.  <a href="#abc38c152c6e5d8e6d34abe6706e7c44d">More...</a><br /></td></tr>
+<tr class="separator:abc38c152c6e5d8e6d34abe6706e7c44d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2cbc1bb3cee10a902420ba1374c7c282"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a2cbc1bb3cee10a902420ba1374c7c282">RpcUpdateTradeCostText</a> (int <a class="el" href="class_player.html#a2b1593046a8f0326290f6ff71ed23fe9">playerID</a>, float cost, bool <a class="el" href="class_player.html#aa90e5b7cf9c811bdcb433deff59aa3e4">sellingToMarket</a>)</td></tr>
+<tr class="memdesc:a2cbc1bb3cee10a902420ba1374c7c282"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update the message in the trade confirmation popup.  <a href="#a2cbc1bb3cee10a902420ba1374c7c282">More...</a><br /></td></tr>
+<tr class="separator:a2cbc1bb3cee10a902420ba1374c7c282"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab46114284a072ec01c984b57ab29c487"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ab46114284a072ec01c984b57ab29c487">CmdDoTrade</a> (bool <a class="el" href="class_player.html#aa90e5b7cf9c811bdcb433deff59aa3e4">sellingToMarket</a>, int resourceTypeOrdinal, int resourceAmount)</td></tr>
+<tr class="memdesc:ab46114284a072ec01c984b57ab29c487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command to do the trade with the market.  <a href="#ab46114284a072ec01c984b57ab29c487">More...</a><br /></td></tr>
+<tr class="separator:ab46114284a072ec01c984b57ab29c487"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3b6aebb49141464666fdc3bf5217d7e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ad3b6aebb49141464666fdc3bf5217d7e">CancelTrade</a> ()</td></tr>
+<tr class="memdesc:ad3b6aebb49141464666fdc3bf5217d7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used when the user wishes to cancel the trade.  <a href="#ad3b6aebb49141464666fdc3bf5217d7e">More...</a><br /></td></tr>
+<tr class="separator:ad3b6aebb49141464666fdc3bf5217d7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80dbd49b724ffcf000a85dbf153217b0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a80dbd49b724ffcf000a85dbf153217b0">RpcTradeSuccessful</a> (int <a class="el" href="class_player.html#a2b1593046a8f0326290f6ff71ed23fe9">playerID</a>)</td></tr>
+<tr class="memdesc:a80dbd49b724ffcf000a85dbf153217b0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used when the trade is successful to reset the UI to its default state.  <a href="#a80dbd49b724ffcf000a85dbf153217b0">More...</a><br /></td></tr>
+<tr class="separator:a80dbd49b724ffcf000a85dbf153217b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a225ad4721342dd8d30f93c28ad31b4e2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a225ad4721342dd8d30f93c28ad31b4e2">RpcActivateTradeErrorPopup</a> (int <a class="el" href="class_player.html#a2b1593046a8f0326290f6ff71ed23fe9">playerID</a>, string errorMessage)</td></tr>
+<tr class="memdesc:a225ad4721342dd8d30f93c28ad31b4e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used to display the trade error message.  <a href="#a225ad4721342dd8d30f93c28ad31b4e2">More...</a><br /></td></tr>
+<tr class="separator:a225ad4721342dd8d30f93c28ad31b4e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02962c5c45272ed0d302098c8d77e144"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a02962c5c45272ed0d302098c8d77e144">CloseErrorPopup</a> ()</td></tr>
+<tr class="memdesc:a02962c5c45272ed0d302098c8d77e144"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes the error popup.  <a href="#a02962c5c45272ed0d302098c8d77e144">More...</a><br /></td></tr>
+<tr class="separator:a02962c5c45272ed0d302098c8d77e144"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2f346c6dffa72c9be9340737b71393c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#af2f346c6dffa72c9be9340737b71393c">ChangeRobotConfiguration</a> (bool next)</td></tr>
+<tr class="memdesc:af2f346c6dffa72c9be9340737b71393c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Changes the robot configuration.  <a href="#af2f346c6dffa72c9be9340737b71393c">More...</a><br /></td></tr>
+<tr class="separator:af2f346c6dffa72c9be9340737b71393c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a063d4a79eea17d46f775d3f20ecebe0f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a063d4a79eea17d46f775d3f20ecebe0f">CloseMarket</a> ()</td></tr>
+<tr class="memdesc:a063d4a79eea17d46f775d3f20ecebe0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Closes and resets the market UI.  <a href="#a063d4a79eea17d46f775d3f20ecebe0f">More...</a><br /></td></tr>
+<tr class="separator:a063d4a79eea17d46f775d3f20ecebe0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57ea89cc9fc8b1ffe91df942c3ba862d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a57ea89cc9fc8b1ffe91df942c3ba862d">CmdPlayerReadyClicked</a> (bool state)</td></tr>
+<tr class="memdesc:a57ea89cc9fc8b1ffe91df942c3ba862d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command sent to the server when the player clicks the ready toggle button at the end of the auction phase.  <a href="#a57ea89cc9fc8b1ffe91df942c3ba862d">More...</a><br /></td></tr>
+<tr class="separator:a57ea89cc9fc8b1ffe91df942c3ba862d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab1ef6b06c85dff5d3f0bb6c8576bb08b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ab1ef6b06c85dff5d3f0bb6c8576bb08b">ShowPhaseOverlay</a> ()</td></tr>
+<tr class="memdesc:ab1ef6b06c85dff5d3f0bb6c8576bb08b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Shows the phase information overlay at the start of each phase.  <a href="#ab1ef6b06c85dff5d3f0bb6c8576bb08b">More...</a><br /></td></tr>
+<tr class="separator:ab1ef6b06c85dff5d3f0bb6c8576bb08b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a53672623161cca9e83024d9df13b80a5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a53672623161cca9e83024d9df13b80a5">HidePhaseOverlay</a> ()</td></tr>
+<tr class="memdesc:a53672623161cca9e83024d9df13b80a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Hides the phase information overlay.  <a href="#a53672623161cca9e83024d9df13b80a5">More...</a><br /></td></tr>
+<tr class="separator:a53672623161cca9e83024d9df13b80a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a586092a2f48232649a92792f1a523bbf"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a586092a2f48232649a92792f1a523bbf">CmdDoRoboticonSelection</a> (int resourceOrdinal)</td></tr>
+<tr class="memdesc:a586092a2f48232649a92792f1a523bbf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command sent to the server to signal the end of the selection phase caused by the player customising a <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code>.  <a href="#a586092a2f48232649a92792f1a523bbf">More...</a><br /></td></tr>
+<tr class="separator:a586092a2f48232649a92792f1a523bbf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a54201e1e26484d370e858fe14b629635"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a54201e1e26484d370e858fe14b629635">SkipRoboticonSelection</a> ()</td></tr>
+<tr class="memdesc:a54201e1e26484d370e858fe14b629635"><td class="mdescLeft">&#160;</td><td class="mdescRight">Button handler for the skip selection button within the customisation phase.  <a href="#a54201e1e26484d370e858fe14b629635">More...</a><br /></td></tr>
+<tr class="separator:a54201e1e26484d370e858fe14b629635"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aad4320fb7bb09c494e90033838ac5f39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aad4320fb7bb09c494e90033838ac5f39">CmdSkipRoboticonSelection</a> ()</td></tr>
+<tr class="memdesc:aad4320fb7bb09c494e90033838ac5f39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command sent to the server to signal the player has skipped the customisation phase.  <a href="#aad4320fb7bb09c494e90033838ac5f39">More...</a><br /></td></tr>
+<tr class="separator:aad4320fb7bb09c494e90033838ac5f39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a0dbe360cd37cb780fe3c83d9befb0a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a9a0dbe360cd37cb780fe3c83d9befb0a">CmdSkipRoboticonPlacement</a> ()</td></tr>
+<tr class="memdesc:a9a0dbe360cd37cb780fe3c83d9befb0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command sent to the server to signal the player has skipped the placement phase - caused by not selecting a roboticon during customisation.  <a href="#a9a0dbe360cd37cb780fe3c83d9befb0a">More...</a><br /></td></tr>
+<tr class="separator:a9a0dbe360cd37cb780fe3c83d9befb0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49d3968e6e8093799e782ddcd14b17c8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a49d3968e6e8093799e782ddcd14b17c8">RpcUpdateResourceOverlay</a> (int <a class="el" href="class_player.html#a2b1593046a8f0326290f6ff71ed23fe9">playerID</a>, int ore, int food, int energy, float <a class="el" href="class_player.html#a7dc349cb42e0639991e3e160720c1013">funds</a>)</td></tr>
+<tr class="memdesc:a49d3968e6e8093799e782ddcd14b17c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the resource overlay using data sent form the server  <a href="#a49d3968e6e8093799e782ddcd14b17c8">More...</a><br /></td></tr>
+<tr class="separator:a49d3968e6e8093799e782ddcd14b17c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37abeee19b408e0f527edbdd4b56b6b1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a37abeee19b408e0f527edbdd4b56b6b1">CmdGetMarketResourceAmounts</a> ()</td></tr>
+<tr class="memdesc:a37abeee19b408e0f527edbdd4b56b6b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command sent from the client to the server to request market data.  <a href="#a37abeee19b408e0f527edbdd4b56b6b1">More...</a><br /></td></tr>
+<tr class="separator:a37abeee19b408e0f527edbdd4b56b6b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a2d90204ad4775730557daf58419ccb16"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a2d90204ad4775730557daf58419ccb16">resourceInventory</a></td></tr>
+<tr class="memdesc:a2d90204ad4775730557daf58419ccb16"><td class="mdescLeft">&#160;</td><td class="mdescRight">A dictionary with a resource type as a key, the value is the amount this player currently has  <a href="#a2d90204ad4775730557daf58419ccb16">More...</a><br /></td></tr>
+<tr class="separator:a2d90204ad4775730557daf58419ccb16"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dc349cb42e0639991e3e160720c1013"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a7dc349cb42e0639991e3e160720c1013">funds</a></td></tr>
+<tr class="memdesc:a7dc349cb42e0639991e3e160720c1013"><td class="mdescLeft">&#160;</td><td class="mdescRight">The amount of money this player has  <a href="#a7dc349cb42e0639991e3e160720c1013">More...</a><br /></td></tr>
+<tr class="separator:a7dc349cb42e0639991e3e160720c1013"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9df87de2e1202c880db5cfc86f9050c"><td class="memItemLeft" align="right" valign="top">Dictionary&lt; GameObject, Vector3 &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ac9df87de2e1202c880db5cfc86f9050c">selectedTilesOverlays</a> = new Dictionary&lt;GameObject, Vector3&gt;()</td></tr>
+<tr class="memdesc:ac9df87de2e1202c880db5cfc86f9050c"><td class="mdescLeft">&#160;</td><td class="mdescRight">All the currently open overlays.  <a href="#ac9df87de2e1202c880db5cfc86f9050c">More...</a><br /></td></tr>
+<tr class="separator:ac9df87de2e1202c880db5cfc86f9050c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7314413a02fc99db53cabf9b777aafa2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_data.html#a94fc6c846f97701cae6d029738b819f4">Data.GameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a7314413a02fc99db53cabf9b777aafa2">playerState</a> = <a class="el" href="class_data.html#a94fc6c846f97701cae6d029738b819f4ac127ffb94eb3c091b7d5f5bc4446c4d0">Data.GameState.PLAYER_WAIT</a></td></tr>
+<tr class="memdesc:a7314413a02fc99db53cabf9b777aafa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The state of the player.  <a href="#a7314413a02fc99db53cabf9b777aafa2">More...</a><br /></td></tr>
+<tr class="separator:a7314413a02fc99db53cabf9b777aafa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c42732cdc5a30f2b543ef13a85d377b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a5c42732cdc5a30f2b543ef13a85d377b">marketResourceSelection</a> = <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90ab50339a10e1de285ac99d4c3990b8693">Data.ResourceType.NONE</a></td></tr>
+<tr class="memdesc:a5c42732cdc5a30f2b543ef13a85d377b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The resource the player is wishing to trade.  <a href="#a5c42732cdc5a30f2b543ef13a85d377b">More...</a><br /></td></tr>
+<tr class="separator:a5c42732cdc5a30f2b543ef13a85d377b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a305670a02e078cd03e9607dc65e2f2ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a305670a02e078cd03e9607dc65e2f2ae">robotCustomisationChoice</a> = <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90ab50339a10e1de285ac99d4c3990b8693">Data.ResourceType.NONE</a></td></tr>
+<tr class="memdesc:a305670a02e078cd03e9607dc65e2f2ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of robot the user is selecting during customisation phase.  <a href="#a305670a02e078cd03e9607dc65e2f2ae">More...</a><br /></td></tr>
+<tr class="separator:a305670a02e078cd03e9607dc65e2f2ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa5e10901cc06c58c3cff5225affd3e8a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aa5e10901cc06c58c3cff5225affd3e8a">robotSelectionChoice</a> = <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90ab50339a10e1de285ac99d4c3990b8693">Data.ResourceType.NONE</a></td></tr>
+<tr class="memdesc:aa5e10901cc06c58c3cff5225affd3e8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The robot selection choice after customisation.  <a href="#aa5e10901cc06c58c3cff5225affd3e8a">More...</a><br /></td></tr>
+<tr class="separator:aa5e10901cc06c58c3cff5225affd3e8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90e5b7cf9c811bdcb433deff59aa3e4"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#aa90e5b7cf9c811bdcb433deff59aa3e4">sellingToMarket</a></td></tr>
+<tr class="memdesc:aa90e5b7cf9c811bdcb433deff59aa3e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the user is selling to the market <code>true</code> implies they are otherwise <code>false</code> means they are buying from the market  <a href="#aa90e5b7cf9c811bdcb433deff59aa3e4">More...</a><br /></td></tr>
+<tr class="separator:aa90e5b7cf9c811bdcb433deff59aa3e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71a7e303c439e894e30a480688c50260"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#a71a7e303c439e894e30a480688c50260">marketResourceTradeAmount</a> = 0</td></tr>
+<tr class="memdesc:a71a7e303c439e894e30a480688c50260"><td class="mdescLeft">&#160;</td><td class="mdescRight">The amount of resource the player wishes to trade.  <a href="#a71a7e303c439e894e30a480688c50260">More...</a><br /></td></tr>
+<tr class="separator:a71a7e303c439e894e30a480688c50260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd61fd6c8d3003e3a1f4a8430ad27a66"><td class="memItemLeft" align="right" valign="top">Text&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#acd61fd6c8d3003e3a1f4a8430ad27a66">timerText</a></td></tr>
+<tr class="memdesc:acd61fd6c8d3003e3a1f4a8430ad27a66"><td class="mdescLeft">&#160;</td><td class="mdescRight">The timer text displayed on the HUD for certain phases.  <a href="#acd61fd6c8d3003e3a1f4a8430ad27a66">More...</a><br /></td></tr>
+<tr class="separator:acd61fd6c8d3003e3a1f4a8430ad27a66"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9d6cf6eb451a15dd77c49d66b319565"><td class="memItemLeft" align="right" valign="top">Vector3 []&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_player.html#ad9d6cf6eb451a15dd77c49d66b319565">playerOwnedTiles</a></td></tr>
+<tr class="memdesc:ad9d6cf6eb451a15dd77c49d66b319565"><td class="mdescLeft">&#160;</td><td class="mdescRight">The locations of all tiles owned by this player.  <a href="#ad9d6cf6eb451a15dd77c49d66b319565">More...</a><br /></td></tr>
+<tr class="separator:ad9d6cf6eb451a15dd77c49d66b319565"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Human player class. </p>
@@ -202,6 +360,539 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">t</td><td>The tile the player wishes to buy</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a5ea717ee9ded9ab8d489f4457ccd1215"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5ea717ee9ded9ab8d489f4457ccd1215">&#9670;&nbsp;</a></span>ActivateTradeConfirmPopup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.ActivateTradeConfirmPopup </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sellingToMarket</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Activates the trade confirmimation popup. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sellingToMarket</td><td>If set to <code>true</code> selling to market, else buying from the market.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad3b6aebb49141464666fdc3bf5217d7e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3b6aebb49141464666fdc3bf5217d7e">&#9670;&nbsp;</a></span>CancelTrade()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CancelTrade </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used when the user wishes to cancel the trade. </p>
+<p>Updates the UI to show/hide the correct parts. </p>
+
+</div>
+</div>
+<a id="a70ad035941d732d3c0a569a706b2593b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70ad035941d732d3c0a569a706b2593b">&#9670;&nbsp;</a></span>ChangeResourceQuanity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.ChangeResourceQuanity </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>amount</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Increase or decrease the amount of resource the player wishes to buy or sell to the market </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">amount</td><td>The amount we are hoping to change by.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af2f346c6dffa72c9be9340737b71393c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2f346c6dffa72c9be9340737b71393c">&#9670;&nbsp;</a></span>ChangeRobotConfiguration()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.ChangeRobotConfiguration </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>next</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Changes the robot configuration. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">next</td><td>If set to <code>true</code> we are cycling next, if set to <code>false</code> we are cycling previous.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a02962c5c45272ed0d302098c8d77e144"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a02962c5c45272ed0d302098c8d77e144">&#9670;&nbsp;</a></span>CloseErrorPopup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CloseErrorPopup </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Closes the error popup. </p>
+<p>Reset the UI to default state. </p>
+
+</div>
+</div>
+<a id="a063d4a79eea17d46f775d3f20ecebe0f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a063d4a79eea17d46f775d3f20ecebe0f">&#9670;&nbsp;</a></span>CloseMarket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CloseMarket </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Closes and resets the market UI. </p>
+
+</div>
+</div>
+<a id="a586092a2f48232649a92792f1a523bbf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a586092a2f48232649a92792f1a523bbf">&#9670;&nbsp;</a></span>CmdDoRoboticonSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdDoRoboticonSelection </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceOrdinal</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command sent to the server to signal the end of the selection phase caused by the player customising a <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resourceOrdinal</td><td>Resource ordinal.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af46a4b6d1a19788309ed94528c28d485"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af46a4b6d1a19788309ed94528c28d485">&#9670;&nbsp;</a></span>CmdDoTilePurchase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdDoTilePurchase </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command that gets run on the server object to purchase a tile when the button is clicked </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">worldX</td><td>World X position.</td></tr>
+    <tr><td class="paramname">worldY</td><td>World Y position.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab46114284a072ec01c984b57ab29c487"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab46114284a072ec01c984b57ab29c487">&#9670;&nbsp;</a></span>CmdDoTrade()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdDoTrade </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sellingToMarket</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceTypeOrdinal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceAmount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command to do the trade with the market. </p>
+<p>If the trade is not successful the RPC call is used to display an error message on the client. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sellingToMarket</td><td>If set to <code>true</code> selling to market, else buying from the market.</td></tr>
+    <tr><td class="paramname">resourceTypeOrdinal</td><td>Resource type ordinal.</td></tr>
+    <tr><td class="paramname">resourceAmount</td><td>Resource amount being traded.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a37abeee19b408e0f527edbdd4b56b6b1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37abeee19b408e0f527edbdd4b56b6b1">&#9670;&nbsp;</a></span>CmdGetMarketResourceAmounts()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdGetMarketResourceAmounts </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command sent from the client to the server to request market data. </p>
+
+</div>
+</div>
+<a id="a254f8d6b99fa1faee78e23533d01156a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a254f8d6b99fa1faee78e23533d01156a">&#9670;&nbsp;</a></span>CmdMouseClick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdMouseClick </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>cntrClick</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handles the mouse click on the server side. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">worldX</td><td>World X position of the click.</td></tr>
+    <tr><td class="paramname">worldY</td><td>World Y position of the click.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2e2230eda6a60372f940775c51188b46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2e2230eda6a60372f940775c51188b46">&#9670;&nbsp;</a></span>CmdPlaceRoboticon()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdPlaceRoboticon </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceOrdinal</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command sent to the server to place a new <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code> into the world. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">worldX</td><td>World X position.</td></tr>
+    <tr><td class="paramname">worldY</td><td>World Y position.</td></tr>
+    <tr><td class="paramname">resourceOrdinal</td><td>The <code><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90" title="Types of resources available in the game ">Data.ResourceType</a></code> ordinal.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a57ea89cc9fc8b1ffe91df942c3ba862d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a57ea89cc9fc8b1ffe91df942c3ba862d">&#9670;&nbsp;</a></span>CmdPlayerReadyClicked()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdPlayerReadyClicked </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command sent to the server when the player clicks the ready toggle button at the end of the auction phase. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">state</td><td>If set to <code>true</code> then they are ready.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abc38c152c6e5d8e6d34abe6706e7c44d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc38c152c6e5d8e6d34abe6706e7c44d">&#9670;&nbsp;</a></span>CmdSendTradeCostToClient()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdSendTradeCostToClient </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sellingToMarket</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceTypeOrdinal</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>amount</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command to calculate and send the trade cost to the client. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">sellingToMarket</td><td>If set to <code>true</code> selling to market, else buying from the market.</td></tr>
+    <tr><td class="paramname">resourceTypeOrdinal</td><td>Resource type ordinal.</td></tr>
+    <tr><td class="paramname">amount</td><td>Amount of resource being traded.</td></tr>
   </table>
   </dd>
 </dl>
@@ -265,6 +956,121 @@ Properties</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a9a0dbe360cd37cb780fe3c83d9befb0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a0dbe360cd37cb780fe3c83d9befb0a">&#9670;&nbsp;</a></span>CmdSkipRoboticonPlacement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdSkipRoboticonPlacement </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command sent to the server to signal the player has skipped the placement phase - caused by not selecting a roboticon during customisation. </p>
+
+</div>
+</div>
+<a id="aad4320fb7bb09c494e90033838ac5f39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad4320fb7bb09c494e90033838ac5f39">&#9670;&nbsp;</a></span>CmdSkipRoboticonSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CmdSkipRoboticonSelection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Command sent to the server to signal the player has skipped the customisation phase. </p>
+
+</div>
+</div>
+<a id="aba6a8ee303eeeb036525b1fee6463e0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba6a8ee303eeeb036525b1fee6463e0e">&#9670;&nbsp;</a></span>CollegeButtonClick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CollegeButtonClick </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handler for when a college button is clicked, sets the value on the client side then sends the data to the server to do the same. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The college ID.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af42eadf4969a58e1ee10387d26eca02e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af42eadf4969a58e1ee10387d26eca02e">&#9670;&nbsp;</a></span>CreateMapOverlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.CreateMapOverlay </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates the map overlay dividing the map into subplots. </p>
 
 </div>
 </div>
@@ -435,6 +1241,33 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a53672623161cca9e83024d9df13b80a5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a53672623161cca9e83024d9df13b80a5">&#9670;&nbsp;</a></span>HidePhaseOverlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.HidePhaseOverlay </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Hides the phase information overlay. </p>
+
+</div>
+</div>
 <a id="aeef2ad39e5a193afb1e9f3a3475ba815"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aeef2ad39e5a193afb1e9f3a3475ba815">&#9670;&nbsp;</a></span>IncreaseFunds()</h2>
 
@@ -455,6 +1288,111 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">amount</td><td>Amount to increase by.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1b2eb724c946cb72275fa5dfef98d6f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1b2eb724c946cb72275fa5dfef98d6f3">&#9670;&nbsp;</a></span>KillAllOverlays()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.KillAllOverlays </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Kills all tile overlays. </p>
+
+</div>
+</div>
+<a id="a705bdb2d9b7468a61c4457ee7b238613"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a705bdb2d9b7468a61c4457ee7b238613">&#9670;&nbsp;</a></span>KillSpecificTileOverlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.KillSpecificTileOverlay </td>
+          <td>(</td>
+          <td class="paramtype">GameObject&#160;</td>
+          <td class="paramname"><em>overlay</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Kills the specific tile overlay. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">overlay</td><td>Overlay to kill.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a275c0dfc2ce1844476fbc7ee3dbe8b0c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a275c0dfc2ce1844476fbc7ee3dbe8b0c">&#9670;&nbsp;</a></span>MarketMenuButtonSelected()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.MarketMenuButtonSelected </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>&#160;</td>
+          <td class="paramname"><em>resource</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when one of the menu panel buttons are pressed within the market UI. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">resource</td><td>The type of resource selected.</td></tr>
   </table>
   </dd>
 </dl>
@@ -499,6 +1437,86 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a5691bb68d3406df262f3602299d75e04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5691bb68d3406df262f3602299d75e04">&#9670;&nbsp;</a></span>OpenMarket()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.OpenMarket </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Opens the market screen. </p>
+
+</div>
+</div>
+<a id="a1d54b8a9b7cb1ce9f3fc59bb01953e69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d54b8a9b7cb1ce9f3fc59bb01953e69">&#9670;&nbsp;</a></span>PlaceRoboticonClick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.PlaceRoboticonClick </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>resourceOrdinal</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when the place <code><a class="el" href="class_roboticon.html" title="The Roboticon class ">Roboticon</a></code> is clicked. </p>
+<p>Send the place command to the server and kills the circle overlay for that tile. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">worldX</td><td>World x.</td></tr>
+    <tr><td class="paramname">worldY</td><td>World y.</td></tr>
+    <tr><td class="paramname">resourceOrdinal</td><td>Resource ordinal.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a9bc2ceb8e6ef74847d7ec472793e7af0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9bc2ceb8e6ef74847d7ec472793e7af0">&#9670;&nbsp;</a></span>Production()</h2>
 
@@ -515,6 +1533,51 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Iterates through the list of tiles the player owns and gathers the resources it has generated. </p>
+
+</div>
+</div>
+<a id="ac98ca8a7518518ef618364b160461832"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac98ca8a7518518ef618364b160461832">&#9670;&nbsp;</a></span>PurchaseButtonClick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.PurchaseButtonClick </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>worldY</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called when a purchase button is clicked </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">worldX</td><td>World X position of the tile.</td></tr>
+    <tr><td class="paramname">worldY</td><td>World Y position of the tile.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -538,6 +1601,51 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a225ad4721342dd8d30f93c28ad31b4e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a225ad4721342dd8d30f93c28ad31b4e2">&#9670;&nbsp;</a></span>RpcActivateTradeErrorPopup()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcActivateTradeErrorPopup </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>playerID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>errorMessage</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used to display the trade error message. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID.</td></tr>
+    <tr><td class="paramname">errorMessage</td><td>Error message.</td></tr>
   </table>
   </dd>
 </dl>
@@ -571,6 +1679,40 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Colors the tile on the local client </p>
+
+</div>
+</div>
+<a id="a58298c763ac34ee49990655066529924"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a58298c763ac34ee49990655066529924">&#9670;&nbsp;</a></span>RpcDisableCollege()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcDisableCollege </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>collegeID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Disable the buttons for colleges already chosen by another player. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">collegeID</td><td>College ID.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -619,6 +1761,91 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="ac594bd4cb47c1eddcd20456da92cab96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac594bd4cb47c1eddcd20456da92cab96">&#9670;&nbsp;</a></span>RpcDisplayTileOverlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcDisplayTileOverlay </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tileX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tileY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>oreAmount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>energyAmount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>owner</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>playerID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>destroyOtherOverlays</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>hasOwner</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>RPC method to spawn an info overlay for a tile. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">tileX</td><td><a class="el" href="class_tile.html" title="The tile class, keeps track of resources on this tile as well as handling mouse events ...">Tile</a> X position</td></tr>
+    <tr><td class="paramname">tileY</td><td><a class="el" href="class_tile.html" title="The tile class, keeps track of resources on this tile as well as handling mouse events ...">Tile</a> Y position.</td></tr>
+    <tr><td class="paramname">oreAmount</td><td>Ore amount.</td></tr>
+    <tr><td class="paramname">energyAmount</td><td>Energy amount.</td></tr>
+    <tr><td class="paramname">owner</td><td>Owner of the tile.</td></tr>
+    <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID to invoke command on.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aee27298b38deb7f869be967b4b2cfb26"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aee27298b38deb7f869be967b4b2cfb26">&#9670;&nbsp;</a></span>RpcEndPlayerPhase()</h2>
 
@@ -649,6 +1876,40 @@ Properties</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aee54fa26cdf029eef8e7ba0b7e15abc7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aee54fa26cdf029eef8e7ba0b7e15abc7">&#9670;&nbsp;</a></span>RpcKillAllTileOverlays()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcKillAllTileOverlays </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>playerID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>RPC method to remove all tile info overlays. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">playerID</td><td>The player to invoke the command on.</td></tr>
   </table>
   </dd>
 </dl>
@@ -818,6 +2079,40 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a80dbd49b724ffcf000a85dbf153217b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80dbd49b724ffcf000a85dbf153217b0">&#9670;&nbsp;</a></span>RpcTradeSuccessful()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcTradeSuccessful </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>playerID</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Used when the trade is successful to reset the UI to its default state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a7bf5f35c2db49fe73e91da78651c1c4c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a7bf5f35c2db49fe73e91da78651c1c4c">&#9670;&nbsp;</a></span>RpcUpdateMarketOverlay()</h2>
 
@@ -863,6 +2158,124 @@ Properties</h2></td></tr>
     <tr><td class="paramname">food</td><td>Food quantity.</td></tr>
     <tr><td class="paramname">energy</td><td>Energy quantity.</td></tr>
     <tr><td class="paramname">funds</td><td>Funds in the market.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a49d3968e6e8093799e782ddcd14b17c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49d3968e6e8093799e782ddcd14b17c8">&#9670;&nbsp;</a></span>RpcUpdateResourceOverlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcUpdateResourceOverlay </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>playerID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>ore</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>food</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>energy</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>funds</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Updates the resource overlay using data sent form the server </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID to update.</td></tr>
+    <tr><td class="paramname">ore</td><td>Amount of ore.</td></tr>
+    <tr><td class="paramname">food</td><td>Amount of food.</td></tr>
+    <tr><td class="paramname">energy</td><td>Amound of energy.</td></tr>
+    <tr><td class="paramname">funds</td><td>Total funds.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2cbc1bb3cee10a902420ba1374c7c282"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2cbc1bb3cee10a902420ba1374c7c282">&#9670;&nbsp;</a></span>RpcUpdateTradeCostText()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.RpcUpdateTradeCostText </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>playerID</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>cost</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>sellingToMarket</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update the message in the trade confirmation popup. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">playerID</td><td><a class="el" href="class_player.html" title="Human player class. ">Player</a> ID.</td></tr>
+    <tr><td class="paramname">cost</td><td>Cost of the trade.</td></tr>
+    <tr><td class="paramname">sellingToMarket</td><td>If set to <code>true</code> selling to market, else buying from the market.</td></tr>
   </table>
   </dd>
 </dl>
@@ -951,6 +2364,196 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a593ac66bf9d24b48306618d253a9cbe2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a593ac66bf9d24b48306618d253a9cbe2">&#9670;&nbsp;</a></span>SetupCollegeSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.SetupCollegeSelection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enable the college selection buttons and add the button listeners for them </p>
+
+</div>
+</div>
+<a id="abf7bc4a6ca51e3343748dee9674610fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abf7bc4a6ca51e3343748dee9674610fb">&#9670;&nbsp;</a></span>SetupMarketUI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.SetupMarketUI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Configure the market UI by setting up the button listeners </p>
+
+</div>
+</div>
+<a id="afdcedd780b5e4b6a0874d80381f96a2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afdcedd780b5e4b6a0874d80381f96a2e">&#9670;&nbsp;</a></span>SetupOverlayUI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.SetupOverlayUI </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Setup the overlay UI </p>
+
+</div>
+</div>
+<a id="a09d73a4fa748ec2dd1205cd6ea042a16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09d73a4fa748ec2dd1205cd6ea042a16">&#9670;&nbsp;</a></span>SetupUserInterface()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.SetupUserInterface </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Called to set up various UI elements. </p>
+
+</div>
+</div>
+<a id="ab1ef6b06c85dff5d3f0bb6c8576bb08b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab1ef6b06c85dff5d3f0bb6c8576bb08b">&#9670;&nbsp;</a></span>ShowPhaseOverlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.ShowPhaseOverlay </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Shows the phase information overlay at the start of each phase. </p>
+
+</div>
+</div>
+<a id="a54201e1e26484d370e858fe14b629635"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a54201e1e26484d370e858fe14b629635">&#9670;&nbsp;</a></span>SkipRoboticonSelection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.SkipRoboticonSelection </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Button handler for the skip selection button within the customisation phase. </p>
+<p>Used to reset market UI and to inform the server of this action. </p>
+
+</div>
+</div>
+<a id="aace80372e18e32fe177e295fe5d93ba8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aace80372e18e32fe177e295fe5d93ba8">&#9670;&nbsp;</a></span>Update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Player.Update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update this instance. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="a0dc9c4679b7a83710e804fd8920dc8ca"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a0dc9c4679b7a83710e804fd8920dc8ca">&#9670;&nbsp;</a></span>college</h2>
@@ -984,6 +2587,78 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="a7dc349cb42e0639991e3e160720c1013"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dc349cb42e0639991e3e160720c1013">&#9670;&nbsp;</a></span>funds</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float Player.funds</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The amount of money this player has </p>
+
+</div>
+</div>
+<a id="a5c42732cdc5a30f2b543ef13a85d377b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5c42732cdc5a30f2b543ef13a85d377b">&#9670;&nbsp;</a></span>marketResourceSelection</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> Player.marketResourceSelection = <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90ab50339a10e1de285ac99d4c3990b8693">Data.ResourceType.NONE</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The resource the player is wishing to trade. </p>
+
+</div>
+</div>
+<a id="a71a7e303c439e894e30a480688c50260"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71a7e303c439e894e30a480688c50260">&#9670;&nbsp;</a></span>marketResourceTradeAmount</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Player.marketResourceTradeAmount = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The amount of resource the player wishes to trade. </p>
+
+</div>
+</div>
 <a id="a2b1593046a8f0326290f6ff71ed23fe9"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b1593046a8f0326290f6ff71ed23fe9">&#9670;&nbsp;</a></span>playerID</h2>
 
@@ -1000,6 +2675,102 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="ad9d6cf6eb451a15dd77c49d66b319565"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9d6cf6eb451a15dd77c49d66b319565">&#9670;&nbsp;</a></span>playerOwnedTiles</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Vector3 [] Player.playerOwnedTiles</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The locations of all tiles owned by this player. </p>
+
+</div>
+</div>
+<a id="a7314413a02fc99db53cabf9b777aafa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7314413a02fc99db53cabf9b777aafa2">&#9670;&nbsp;</a></span>playerState</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_data.html#a94fc6c846f97701cae6d029738b819f4">Data.GameState</a> Player.playerState = <a class="el" href="class_data.html#a94fc6c846f97701cae6d029738b819f4ac127ffb94eb3c091b7d5f5bc4446c4d0">Data.GameState.PLAYER_WAIT</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The state of the player. </p>
+
+</div>
+</div>
+<a id="a2d90204ad4775730557daf58419ccb16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d90204ad4775730557daf58419ccb16">&#9670;&nbsp;</a></span>resourceInventory</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;<a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a>, int&gt; Player.resourceInventory</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A dictionary with a resource type as a key, the value is the amount this player currently has </p>
+
+</div>
+</div>
+<a id="a305670a02e078cd03e9607dc65e2f2ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a305670a02e078cd03e9607dc65e2f2ae">&#9670;&nbsp;</a></span>robotCustomisationChoice</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> Player.robotCustomisationChoice = <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90ab50339a10e1de285ac99d4c3990b8693">Data.ResourceType.NONE</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The type of robot the user is selecting during customisation phase. </p>
+
+</div>
+</div>
 <a id="a27ea318b7c5ad8bc76b611ada986cec2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a27ea318b7c5ad8bc76b611ada986cec2">&#9670;&nbsp;</a></span>RoboticonPlacementOverlay</h2>
 
@@ -1013,6 +2784,78 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The roboticon placement prefab. </p>
+
+</div>
+</div>
+<a id="aa5e10901cc06c58c3cff5225affd3e8a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5e10901cc06c58c3cff5225affd3e8a">&#9670;&nbsp;</a></span>robotSelectionChoice</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90">Data.ResourceType</a> Player.robotSelectionChoice = <a class="el" href="class_data.html#a9f933c70ed680349c177ce9c77409e90ab50339a10e1de285ac99d4c3990b8693">Data.ResourceType.NONE</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The robot selection choice after customisation. </p>
+
+</div>
+</div>
+<a id="ac9df87de2e1202c880db5cfc86f9050c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9df87de2e1202c880db5cfc86f9050c">&#9670;&nbsp;</a></span>selectedTilesOverlays</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Dictionary&lt;GameObject, Vector3&gt; Player.selectedTilesOverlays = new Dictionary&lt;GameObject, Vector3&gt;()</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>All the currently open overlays. </p>
+
+</div>
+</div>
+<a id="aa90e5b7cf9c811bdcb433deff59aa3e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa90e5b7cf9c811bdcb433deff59aa3e4">&#9670;&nbsp;</a></span>sellingToMarket</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool Player.sellingToMarket</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether the user is selling to the market <code>true</code> implies they are otherwise <code>false</code> means they are buying from the market </p>
 
 </div>
 </div>
@@ -1048,6 +2891,30 @@ Properties</h2></td></tr>
 
 </div>
 </div>
+<a id="acd61fd6c8d3003e3a1f4a8430ad27a66"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd61fd6c8d3003e3a1f4a8430ad27a66">&#9670;&nbsp;</a></span>timerText</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Text Player.timerText</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The timer text displayed on the HUD for certain phases. </p>
+
+</div>
+</div>
 <h2 class="groupheader">Property Documentation</h2>
 <a id="a4b452c51cb7262fcfdcae31cc8192742"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4b452c51cb7262fcfdcae31cc8192742">&#9670;&nbsp;</a></span>ownedTiles</h2>
@@ -1064,7 +2931,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1079,7 +2946,7 @@ Properties</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 04:59:17 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2017 10:45:15 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

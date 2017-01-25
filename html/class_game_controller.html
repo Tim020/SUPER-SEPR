@@ -42,6 +42,8 @@ $(function() {
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#properties">Properties</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="class_game_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">GameController Class Reference</div>  </div>
@@ -91,12 +93,30 @@ Static Public Attributes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
-<tr class="memitem:a91fdf2a577c1808e2a7124d9cb9771b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_data.html#a94fc6c846f97701cae6d029738b819f4">Data.GameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#a91fdf2a577c1808e2a7124d9cb9771b1">state</a><code> [get]</code></td></tr>
+<tr class="memitem:a91fdf2a577c1808e2a7124d9cb9771b1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_data.html#a94fc6c846f97701cae6d029738b819f4">Data.GameState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#a91fdf2a577c1808e2a7124d9cb9771b1">state</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:a91fdf2a577c1808e2a7124d9cb9771b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current state the game is in.  <a href="#a91fdf2a577c1808e2a7124d9cb9771b1">More...</a><br /></td></tr>
 <tr class="separator:a91fdf2a577c1808e2a7124d9cb9771b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed5ad63c19f7afc8cf3aa23873720c13"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#aed5ad63c19f7afc8cf3aa23873720c13">currentPlayerTurn</a><code> [get]</code></td></tr>
+<tr class="memitem:aed5ad63c19f7afc8cf3aa23873720c13"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#aed5ad63c19f7afc8cf3aa23873720c13">currentPlayerTurn</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:aed5ad63c19f7afc8cf3aa23873720c13"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current player who is taking their turn at individual phases.  <a href="#aed5ad63c19f7afc8cf3aa23873720c13">More...</a><br /></td></tr>
 <tr class="separator:aed5ad63c19f7afc8cf3aa23873720c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a198cf6add46500e0f4df698fd774b01c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#a198cf6add46500e0f4df698fd774b01c">playersCompletedPhase</a> = 0</td></tr>
+<tr class="memdesc:a198cf6add46500e0f4df698fd774b01c"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of players that have completed the 3 individual phases.  <a href="#a198cf6add46500e0f4df698fd774b01c">More...</a><br /></td></tr>
+<tr class="separator:a198cf6add46500e0f4df698fd774b01c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4bade48516fc225bdd508fff8287615f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_player.html">Player</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#a4bade48516fc225bdd508fff8287615f">currentPlayer</a></td></tr>
+<tr class="memdesc:a4bade48516fc225bdd508fff8287615f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The player whos turn is currently is.  <a href="#a4bade48516fc225bdd508fff8287615f">More...</a><br /></td></tr>
+<tr class="separator:a4bade48516fc225bdd508fff8287615f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab41a46a630a8c664d73d60c5e355c066"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#ab41a46a630a8c664d73d60c5e355c066">firstTick</a> = false</td></tr>
+<tr class="memdesc:ab41a46a630a8c664d73d60c5e355c066"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether we are in the first update for the particular phase  <a href="#ab41a46a630a8c664d73d60c5e355c066">More...</a><br /></td></tr>
+<tr class="separator:ab41a46a630a8c664d73d60c5e355c066"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a6c0f51500dd5be45097f2ee28cfd3652"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_game_controller.html#a6c0f51500dd5be45097f2ee28cfd3652">numberOfPlayersNeeded</a> = 2</td></tr>
+<tr class="memdesc:a6c0f51500dd5be45097f2ee28cfd3652"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of players needed.  <a href="#a6c0f51500dd5be45097f2ee28cfd3652">More...</a><br /></td></tr>
+<tr class="separator:a6c0f51500dd5be45097f2ee28cfd3652"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to control the behaviour of the game, this handles moving between the various phases as well as making sure that all players are present </p>
@@ -252,6 +272,54 @@ Properties</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="a4bade48516fc225bdd508fff8287615f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4bade48516fc225bdd508fff8287615f">&#9670;&nbsp;</a></span>currentPlayer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_player.html">Player</a> GameController.currentPlayer</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The player whos turn is currently is. </p>
+
+</div>
+</div>
+<a id="ab41a46a630a8c664d73d60c5e355c066"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab41a46a630a8c664d73d60c5e355c066">&#9670;&nbsp;</a></span>firstTick</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool GameController.firstTick = false</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Whether we are in the first update for the particular phase </p>
+
+</div>
+</div>
 <a id="a47a1897c0b58d1ba2f424f1b83cb7bfb"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a47a1897c0b58d1ba2f424f1b83cb7bfb">&#9670;&nbsp;</a></span>instance</h2>
 
@@ -273,6 +341,54 @@ Properties</h2></td></tr>
 </div><div class="memdoc">
 
 <p>The instance. </p>
+
+</div>
+</div>
+<a id="a6c0f51500dd5be45097f2ee28cfd3652"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6c0f51500dd5be45097f2ee28cfd3652">&#9670;&nbsp;</a></span>numberOfPlayersNeeded</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GameController.numberOfPlayersNeeded = 2</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The number of players needed. </p>
+
+</div>
+</div>
+<a id="a198cf6add46500e0f4df698fd774b01c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a198cf6add46500e0f4df698fd774b01c">&#9670;&nbsp;</a></span>playersCompletedPhase</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int GameController.playersCompletedPhase = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The number of players that have completed the 3 individual phases. </p>
 
 </div>
 </div>
@@ -308,7 +424,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -333,7 +449,7 @@ Properties</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span></span>  </td>
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">private set</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -349,7 +465,7 @@ Properties</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 04:59:17 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2017 10:45:15 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>

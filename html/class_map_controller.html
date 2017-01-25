@@ -41,6 +41,8 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
+<a href="#pri-methods">Private Member Functions</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="class_map_controller-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">MapController Class Reference</div>  </div>
@@ -78,6 +80,21 @@ Static Public Attributes</h2></td></tr>
 <tr class="memitem:a4ca65879527d70a7f2e2efd413f9c16c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="class_map_controller.html">MapController</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_map_controller.html#a4ca65879527d70a7f2e2efd413f9c16c">instance</a></td></tr>
 <tr class="memdesc:a4ca65879527d70a7f2e2efd413f9c16c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance of the map controller to allow static access  <a href="#a4ca65879527d70a7f2e2efd413f9c16c">More...</a><br /></td></tr>
 <tr class="separator:a4ca65879527d70a7f2e2efd413f9c16c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
+Private Member Functions</h2></td></tr>
+<tr class="memitem:ae8e7b58d4b93359adea1507dec8fef62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_map_controller.html#ae8e7b58d4b93359adea1507dec8fef62">Update</a> ()</td></tr>
+<tr class="memdesc:ae8e7b58d4b93359adea1507dec8fef62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Update this instance.  <a href="#ae8e7b58d4b93359adea1507dec8fef62">More...</a><br /></td></tr>
+<tr class="separator:ae8e7b58d4b93359adea1507dec8fef62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
+<tr class="memitem:a37c5c362ec0a4a4b16e9e90adf6e4f24"><td class="memItemLeft" align="right" valign="top"><a class="el" href="class_tile.html">Tile</a> [,]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_map_controller.html#a37c5c362ec0a4a4b16e9e90adf6e4f24">tiles</a></td></tr>
+<tr class="memdesc:a37c5c362ec0a4a4b16e9e90adf6e4f24"><td class="mdescLeft">&#160;</td><td class="mdescRight">A 2D array of the tiles in the game, indexed by their position  <a href="#a37c5c362ec0a4a4b16e9e90adf6e4f24">More...</a><br /></td></tr>
+<tr class="separator:a37c5c362ec0a4a4b16e9e90adf6e4f24"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2c78d21b2f37cacc3359015ab24b9345"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_map_controller.html#a2c78d21b2f37cacc3359015ab24b9345">lastPlayers</a> = 0</td></tr>
+<tr class="memdesc:a2c78d21b2f37cacc3359015ab24b9345"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of players connected last time the update was run  <a href="#a2c78d21b2f37cacc3359015ab24b9345">More...</a><br /></td></tr>
+<tr class="separator:a2c78d21b2f37cacc3359015ab24b9345"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Class to handle the map. </p>
@@ -159,6 +176,34 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="ae8e7b58d4b93359adea1507dec8fef62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8e7b58d4b93359adea1507dec8fef62">&#9670;&nbsp;</a></span>Update()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MapController.Update </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Update this instance. </p>
+<p>Checks whether players have left or joined and will send updated map data to them </p>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
 <a id="ade8c2e7d9099aace76b770c16c1a2290"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ade8c2e7d9099aace76b770c16c1a2290">&#9670;&nbsp;</a></span>height</h2>
@@ -200,6 +245,54 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a2c78d21b2f37cacc3359015ab24b9345"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2c78d21b2f37cacc3359015ab24b9345">&#9670;&nbsp;</a></span>lastPlayers</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int MapController.lastPlayers = 0</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The number of players connected last time the update was run </p>
+
+</div>
+</div>
+<a id="a37c5c362ec0a4a4b16e9e90adf6e4f24"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37c5c362ec0a4a4b16e9e90adf6e4f24">&#9670;&nbsp;</a></span>tiles</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_tile.html">Tile</a> [,] MapController.tiles</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>A 2D array of the tiles in the game, indexed by their position </p>
+
+</div>
+</div>
 <a id="a35d0978b45837f614d2717b050c7879f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a35d0978b45837f614d2717b050c7879f">&#9670;&nbsp;</a></span>width</h2>
 
@@ -222,7 +315,7 @@ Static Public Attributes</h2></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Jan 24 2017 04:59:17 for Game by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jan 25 2017 10:45:15 for Game by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.13
 </small></address>
