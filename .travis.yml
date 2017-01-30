@@ -13,7 +13,9 @@ env:
     - GH_REPO_REF: github.com/Tim020/SUPER-SEPR.git
 before_install:
 - brew update
+- brew link --overwrite git-lfs
 - brew install doxygen
+- git-lfs pull
 - chmod +x ./Scripts/install.sh
 - chmod +x ./Scripts/test.sh
 - chmod +x ./Scripts/build.sh
