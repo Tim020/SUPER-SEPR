@@ -4,14 +4,32 @@ using UnityEngine;
 
 public class RandomEvent {
 
-    private GameObject eventGameObject;
+    private EventType eventType;
 
-    public RandomEvent(int craziness) {
-        eventGameObject = new RandomEventFactory().Create(craziness);
+    public EventType TypeOfEvent {
+        get {
+            return eventType;
+        }
+        set {
+            eventType = value;
+            switch(eventType) {
+                // Initialisation code
+                // not sure if required yet
+            }
+        }
     }
 
-    public void Instantiate() {
-        GameObject.Instantiate(eventGameObject, Vector3.zero, Quaternion.identity);
+    public enum EventType {
+        TEST1,
+        TEST2
     }
 
+    public void InvokeEvent() {
+        switch(TypeOfEvent) {
+            case EventType.TEST1:
+                break;
+            case EventType.TEST2:
+                break;
+        }
+    }
 }

@@ -168,11 +168,11 @@ public class GameManager : Object {
         }
 
         //Instantiate a random event (probability handled in the randomEventFactory) (Req 2.5.a, 2.5.b)
-        GameObject randomEventGameObject = randomEventFactory.Create(Random.Range(0, 101));
+        //GameObject randomEventGameObject = randomEventFactory.Create(Random.Range(0, 101));
 
-        if (randomEventGameObject != null) {
-            GameObject.Instantiate(randomEventGameObject);
-        }
+        //if (randomEventGameObject != null) {
+        //    GameObject.Instantiate(randomEventGameObject);
+        //}
 
         market.UpdatePrices();
     }
