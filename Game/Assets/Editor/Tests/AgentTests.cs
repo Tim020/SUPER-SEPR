@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System; //not sure where exceptions are coming from
+using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
 
@@ -12,7 +13,6 @@ public class AgentTests {
 	/// <summary>
 	/// Tests for the market.
 	/// </summary>
-
 	[TestFixture]
 	public class MarketTests {
 
@@ -39,25 +39,25 @@ public class AgentTests {
 			/// Checks the market resource amounts are initialized to the correct values.
 			/// </summary>
 			[Test]
-			public void Amount_Valid() {
-				ResourceGroup amount  = new ResourceGroup (16, 16, 0);
-				Assert.AreEqual (testMarket.GetResourceSellingPrices (), amount);
+			public void StartingCondtions_Amount() {
+				ResourceGroup amount = new ResourceGroup (16, 16, 0);
+				Assert.AreEqual (testMarket.GetResourceSellingPrices(), amount);
 			}
 
 			/// <summary>
 			/// Checks the market selling prices are initialized to the correct values.
 			/// </summary>
 			[Test]
-			public void SellPrice_Valid() {
+			public void StartingCondtions_SellPrice() {
 				ResourceGroup startingSellPrice = new ResourceGroup (10, 10, 10);
-				Assert.AreEqual (testMarket.GetResourceSellingPrices (), startingSellPrice);
+				Assert.AreEqual (testMarket.GetResourceSellingPrices(), startingSellPrice);
 			}
 
 			/// <summary>
 			/// Checks the market buying prices are initialized to the correct values.
 			/// </summary>
 			[Test]
-			public void BuyPrice_Valid() {
+			public void StartingCondtions_BuyPrice() {
 				ResourceGroup startingBuyingPrices = new ResourceGroup ();
 				Assert.AreEqual (testMarket.GetResourceBuyingPrices(), startingBuyingPrices);
 			}
@@ -66,17 +66,183 @@ public class AgentTests {
 			/// Checks that the correct number of roboticons are for sale.
 			/// </summary>
 			[Test]
-			public void RoboticonAmount_Valid() {
-				Assert.AreEqual (testMarket.GetNumRoboticonsForSale (), 12);
+			public void StartingCondtions_RoboticonAmount() {
+				Assert.AreEqual (testMarket.GetNumRoboticonsForSale(), 12);
 			}
 
 			/// <summary>
 			/// Checks that the market funds are initialized to the correct value.
 			/// </summary>
 			[Test]
-			public void MarketFunds_Valid() {
-				Assert.AreEqual (testMarket.GetMoney (), 100);
+			public void StartingCondtions_MarketFunds() {
+				Assert.AreEqual (testMarket.GetMoney(), 100);
 			}
+		}
+
+
+		/// <summary>
+		/// Testing the buy functionality of the market.
+		/// </summary>
+		[TestFixture]
+		public class BuyFromTests {
+
+			//TODO do tests on negative values, requires quick work on market to resolve
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market testMarket;
+
+			/// <summary>
+			/// The dummy buy order.
+			/// </summary>
+			ResourceGroup order;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				testMarket = new Market ();
+				//set resources to make testing simpler
+				testMarket.SetResources (new ResourceGroup (16, 16, 16));
+			}
+
+			/// <summary>
+			/// Checks that the market loses resources when being bought from.
+			/// </summary>
+			[Test]
+			public void BuyFrom_Resources() {
+				order = new ResourceGroup (1, 1, 1);
+				ResourceGroup expectedMarketLevels = new ResourceGroup (15, 15, 15);
+				testMarket.BuyFrom (order);
+				Assert.AreEqual (expectedMarketLevels, testMarket.GetResources());
+			}
+
+			/// <summary>
+			/// Checks that the market gains money when being bought from.
+			/// </summary>
+			public void BuyFrom_Money() {
+				order = new ResourceGroup (1, 1, 1);
+				testMarket.BuyFrom (order);
+				Assert.AreEqual (130, testMarket.GetMoney ());
+			}
+
+
+			/// <summary>
+			/// Checks that the trade is invalid (i.e. exception thrown) if more resource are purchased than are available.
+			/// </summary>
+			[Test]
+			public void BuyFrom_NotEnoughResources() {
+				order = new ResourceGroup (1, 1, 1);
+				//setting resources for ease
+				testMarket.SetResources (new ResourceGroup (0, 0, 0));
+				ArgumentException result = Assert.Throws (typeof (ArgumentException), new TestDelegate (testMarket.BuyFrom (order)));
+				Assert.Equals (result.Message, "Market does not have enough resources to perform this transaction.");
+			}
+
+		}
+
+
+		/// <summary>
+		/// Testing the functionality of selling to the market.
+		/// </summary>
+		[TestFixture]
+		public class SellTo {
+
+			//TODO do tests on negative values, requires quick work on market to resolve
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market testMarket;
+
+			/// <summary>
+			/// The dummy sell order.
+			/// </summary>
+			ResourceGroup order;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				testMarket = new Market ();
+				//set resources to make testing simpler
+				testMarket.SetResources (new ResourceGroup (16, 16, 16));
+			}
+
+			/// <summary>
+			/// Checks that the market gains resources when being sold to.
+			/// </summary>
+			[Test]
+			public void SellTo_Resources() {
+				order = new ResourceGroup (1, 1, 1);
+				ResourceGroup expectedMarketLevels = new ResourceGroup (17, 17, 17);
+				testMarket.SellTo (order);
+				Assert.Equals (expectedMarketLevels, testMarket.GetResources ());
+			}
+
+			/// <summary>
+			/// Checks that the market loses money when being sold to.
+			/// </summary>
+			[Test]
+			public void SellTo_Money() {
+				order = new ResourceGroup (1, 1, 1);
+				testMarket.SellTo (order);
+				Assert.AreEqual (70, testMarket.GetMoney ());
+			}
+
+			/// <summary>
+			/// Chekcs selling is invalid (i.e. throws exception) if the market has no money.
+			/// </summary>
+			[Test]
+			public void SellTo_NotEnoughMoney() {
+				order = new ResourceGroup (1, 1, 1);
+				testMarket.SetMoney (0);
+				ArgumentException result = Assert.Throws (typeof(ArgumentException), new TestDelegate (testMarket.SellTo (order)));
+				Assert.Equals ("Market does not have enough money to perform this transaction.", result.Message);
+			}
+		
+		}
+
+		[TestFixture]
+		public class RoboticonProductionTests {
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market testMarket;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				testMarket = new Market ();
+				//set resources to make testing simpler
+				testMarket.SetResources (new ResourceGroup (16, 16, 16));
+			}
+
+			/// <summary>
+			/// Checks that more roboticons are produced.
+			/// </summary>
+			[Test]
+			public void RobProduction_NumRoboticons() {
+				testMarket.ProduceRoboticon ();
+				Assert.AreEqual (13, testMarket.GetNumRoboticonsForSale ());
+			}
+
+			/// <summary>
+			/// Checks that ore is lost in production.
+			/// </summary>
+			[Test]
+			public void RobProduction_Resources() {
+				testMarket.ProduceRoboticon ();
+				ResourceGroup expectedMarketLevel = new ResourceGroup (16, 16, 15);
+				Assert.Equals (expectedMarketLevel, testMarket.GetResources ());
+			}
+
 		}
 
 	}
