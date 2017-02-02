@@ -43,7 +43,7 @@ public class AgentTests {
 			[Test]
 			public void StartingCondtions_Amount() {
 				ResourceGroup amount = new ResourceGroup(16, 16, 0);
-				Assert.AreEqual(testMarket.GetResourceSellingPrices(), amount);
+				Assert.AreEqual(amount, testMarket.GetResources());
 			}
 
 			/// <summary>
@@ -52,7 +52,7 @@ public class AgentTests {
 			[Test]
 			public void StartingCondtions_SellPrice() {
 				ResourceGroup startingSellPrice = new ResourceGroup(10, 10, 10);
-				Assert.AreEqual(testMarket.GetResourceSellingPrices(), startingSellPrice);
+				Assert.AreEqual(startingSellPrice,testMarket.GetResourceSellingPrices());
 			}
 
 			/// <summary>
@@ -60,8 +60,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_BuyPrice() {
-				ResourceGroup startingBuyingPrices = new ResourceGroup();
-				Assert.AreEqual(testMarket.GetResourceBuyingPrices(), startingBuyingPrices);
+				ResourceGroup startingBuyingPrices = new ResourceGroup(10, 10, 10);
+				Assert.AreEqual(startingBuyingPrices, testMarket.GetResourceBuyingPrices());
 			}
 
 			/// <summary>
@@ -69,7 +69,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_RoboticonAmount() {
-				Assert.AreEqual(testMarket.GetNumRoboticonsForSale(), 12);
+				Assert.AreEqual(12, testMarket.GetNumRoboticonsForSale());
 			}
 
 			/// <summary>
@@ -77,7 +77,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_MarketFunds() {
-				Assert.AreEqual(testMarket.GetMoney(), 100);
+				Assert.AreEqual(100, testMarket.GetMoney());
 			}
 		}
 
@@ -249,8 +249,8 @@ public class AgentTests {
 			[Test]
 			public void RobProduction_Resources() {
 				testMarket.ProduceRoboticon();
-				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 15);
-				Assert.AreSame(expectedMarketLevel, testMarket.GetResources());
+				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
+				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
 
 		}
