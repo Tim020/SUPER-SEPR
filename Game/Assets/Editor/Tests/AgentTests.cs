@@ -71,7 +71,7 @@ public class AgentTests {
 			public void StartingCondtions_RoboticonAmount() {
 				Assert.AreEqual(12, testMarket.GetNumRoboticonsForSale());
 			}
-
+				
 			/// <summary>
 			/// Checks that the market funds are initialized to the correct value.
 			/// </summary>
@@ -87,8 +87,6 @@ public class AgentTests {
 		/// </summary>
 		[TestFixture]
 		public class BuyFromTests {
-
-			//TODO do tests on negative values, requires quick work on market to resolve
 
 			/// <summary>
 			/// The dummy market.
@@ -147,6 +145,21 @@ public class AgentTests {
 					Assert.Fail();
 				}
 			}
+
+			/// <summary>
+			/// Checks that the trade is invalid (i.e. exception thrown) if negative resource are purchased.
+			/// </summary>
+			[Test]
+			public void BuyFrom_NegativeResources() {
+				order = new ResourceGroup(-1, -1, -1);
+				try {
+					testMarket.BuyFrom(order);
+				} catch (ArgumentException e) {
+					Assert.AreSame(e.Message, "Market cannot complete a transaction for negative resources.");
+				} catch (Exception) {
+					Assert.Fail();
+				}
+			}
 		}
 
 
@@ -155,8 +168,6 @@ public class AgentTests {
 		/// </summary>
 		[TestFixture]
 		public class SellTo {
-
-			//TODO do tests on negative values, requires quick work on market to resolve
 
 			/// <summary>
 			/// The dummy market.
@@ -200,7 +211,7 @@ public class AgentTests {
 			}
 
 			/// <summary>
-			/// Chekcs selling is invalid (i.e. throws exception) if the market has no money.
+			/// Checks selling is invalid (i.e. throws exception) if the market has no money.
 			/// </summary>
 			[Test]
 			public void SellTo_NotEnoughMoney() {
@@ -210,6 +221,21 @@ public class AgentTests {
 					testMarket.SellTo(order);
 				} catch (ArgumentException e) {
 					Assert.AreSame(e.Message, "Market does not have enough money to perform this transaction.");
+				} catch {
+					Assert.Fail();
+				}
+			}
+
+			/// <summary>
+			/// Checks selling is invalid (i.e. exception thrown) if selling negative resource.
+			/// </summary>
+			[Test]
+			public void SellTo_NegativeResources() {
+				order = new ResourceGroup(-1, -1, -1);
+				try {
+					testMarket.SellTo(order);
+				} catch (ArgumentException e) {
+					Assert.AreSame(e.Message, "Market cannot complete a transaction for negative resources.");
 				} catch {
 					Assert.Fail();
 				}
