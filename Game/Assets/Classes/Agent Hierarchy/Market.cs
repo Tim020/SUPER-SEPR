@@ -48,8 +48,8 @@ public class Market : Agent {
 	/// <param name="price"></param>
 	public void BuyFrom(ResourceGroup resourcesToBuy) {
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food
-		                                || resourcesToBuy.energy > resources.energy
-		                                || resourcesToBuy.ore > resources.ore);
+		                          || resourcesToBuy.energy > resources.energy
+		                          || resourcesToBuy.ore > resources.ore);
 
 		if (hasEnoughResources) {
 			//Requires subtraction overload
@@ -68,18 +68,10 @@ public class Market : Agent {
 	/// <param name="resource"></param>
 	/// <param name="price"></param>
 	public void SellTo(ResourceGroup resourcesToSell) {
-		if (resourcesToSell.getFood() < 0) {
-			throw new ArgumentException("Negative food values cannot be sold.");
+		if (resourcesToSell.getFood() < 0 || resourcesToSell.getEnergy() < 0 || resourcesToSell.getOre() < 0) {
+			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-
-		if (resourcesToSell.getEnergy() < 0) {
-			throw new ArgumentException("Negative energy values cannot be sold.");
-		}
-
-		if (resourcesToSell.getOre() < 0) {
-			throw new ArgumentException("Negtaive ore values cannot be sold.");
-		}
-
+	
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 
 		if (price <= money) {
