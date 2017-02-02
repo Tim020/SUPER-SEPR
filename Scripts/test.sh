@@ -73,8 +73,8 @@ logFile="$(pwd)/unity.log"
 travecho "$(cat "$logFile")"
 travecho 'travis_fold:end:compile'
 if [ -f "$(pwd)/Game/EditorTestResults.xml" ]; then
-	reportunit "$(pwd)/Game/EditorTestResults.xml" "$(pwd)/Game/TestResults.html"
-	zip -r "$(pwd)/Game/TestResults.zip" "$(pwd)/Game/EditorTestResults.xml" "$(pwd)/Game/TestResults.html"
+	#reportunit "$(pwd)/Game/EditorTestResults.xml" "$(pwd)/Game/TestResults.html"
+	zip -r "$(pwd)/Game/TestResults.zip" "$(pwd)/Game/EditorTestResults.xml" #"$(pwd)/Game/TestResults.html"
 	curl -T "$(pwd)/Game/TestResults.zip" "ftp://mavenrepo.uoy-sepr.smithsmodding.com/$version-$TRAVIS_BUILD_NUMBER-$TRAVIS_BRANCH/" --user "$FTP_USER:$FTP_PASSWORD" --ftp-create-dirs
 fi
 travecho 'travis_fold:start:tests'
