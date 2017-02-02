@@ -186,7 +186,7 @@ public class AgentTests {
 				order = new ResourceGroup(1, 1, 1);
 				ResourceGroup expectedMarketLevels = new ResourceGroup(17, 17, 17);
 				testMarket.SellTo(order);
-				Assert.Equals(expectedMarketLevels, testMarket.GetResources());
+				Assert.IsTrue(expectedMarketLevels.Equals(testMarket.GetResources()));
 			}
 
 			/// <summary>
@@ -250,7 +250,7 @@ public class AgentTests {
 			public void RobProduction_Resources() {
 				testMarket.ProduceRoboticon();
 				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 15);
-				Assert.Equals(expectedMarketLevel, testMarket.GetResources());
+				Assert.AreSame(expectedMarketLevel, testMarket.GetResources());
 			}
 
 		}
