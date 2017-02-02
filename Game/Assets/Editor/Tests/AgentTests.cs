@@ -1,4 +1,6 @@
-﻿using System; //not sure where exceptions are coming from
+﻿using System;
+
+//not sure where exceptions are coming from
 using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
@@ -40,8 +42,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_Amount() {
-				ResourceGroup amount = new ResourceGroup (16, 16, 0);
-				Assert.AreEqual (testMarket.GetResourceSellingPrices(), amount);
+				ResourceGroup amount = new ResourceGroup(16, 16, 0);
+				Assert.AreEqual(testMarket.GetResourceSellingPrices(), amount);
 			}
 
 			/// <summary>
@@ -49,8 +51,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_SellPrice() {
-				ResourceGroup startingSellPrice = new ResourceGroup (10, 10, 10);
-				Assert.AreEqual (testMarket.GetResourceSellingPrices(), startingSellPrice);
+				ResourceGroup startingSellPrice = new ResourceGroup(10, 10, 10);
+				Assert.AreEqual(testMarket.GetResourceSellingPrices(), startingSellPrice);
 			}
 
 			/// <summary>
@@ -58,8 +60,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_BuyPrice() {
-				ResourceGroup startingBuyingPrices = new ResourceGroup ();
-				Assert.AreEqual (testMarket.GetResourceBuyingPrices(), startingBuyingPrices);
+				ResourceGroup startingBuyingPrices = new ResourceGroup();
+				Assert.AreEqual(testMarket.GetResourceBuyingPrices(), startingBuyingPrices);
 			}
 
 			/// <summary>
@@ -67,7 +69,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_RoboticonAmount() {
-				Assert.AreEqual (testMarket.GetNumRoboticonsForSale(), 12);
+				Assert.AreEqual(testMarket.GetNumRoboticonsForSale(), 12);
 			}
 
 			/// <summary>
@@ -75,7 +77,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_MarketFunds() {
-				Assert.AreEqual (testMarket.GetMoney(), 100);
+				Assert.AreEqual(testMarket.GetMoney(), 100);
 			}
 		}
 
@@ -103,9 +105,9 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market ();
+				testMarket = new Market();
 				//set resources to make testing simpler
-				testMarket.SetResources (new ResourceGroup (16, 16, 16));
+				testMarket.SetResources(new ResourceGroup(16, 16, 16));
 			}
 
 			/// <summary>
@@ -113,19 +115,19 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void BuyFrom_Resources() {
-				order = new ResourceGroup (1, 1, 1);
-				ResourceGroup expectedMarketLevels = new ResourceGroup (15, 15, 15);
-				testMarket.BuyFrom (order);
-				Assert.AreEqual (expectedMarketLevels, testMarket.GetResources());
+				order = new ResourceGroup(1, 1, 1);
+				ResourceGroup expectedMarketLevels = new ResourceGroup(15, 15, 15);
+				testMarket.BuyFrom(order);
+				Assert.AreEqual(expectedMarketLevels, testMarket.GetResources());
 			}
 
 			/// <summary>
 			/// Checks that the market gains money when being bought from.
 			/// </summary>
 			public void BuyFrom_Money() {
-				order = new ResourceGroup (1, 1, 1);
-				testMarket.BuyFrom (order);
-				Assert.AreEqual (130, testMarket.GetMoney ());
+				order = new ResourceGroup(1, 1, 1);
+				testMarket.BuyFrom(order);
+				Assert.AreEqual(130, testMarket.GetMoney());
 			}
 
 
@@ -134,13 +136,17 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void BuyFrom_NotEnoughResources() {
-				order = new ResourceGroup (1, 1, 1);
+				order = new ResourceGroup(1, 1, 1);
 				//setting resources for ease
-				testMarket.SetResources (new ResourceGroup (0, 0, 0));
-				ArgumentException result = Assert.Throws (typeof (ArgumentException), new TestDelegate (testMarket.BuyFrom (order)));
-				Assert.Equals (result.Message, "Market does not have enough resources to perform this transaction.");
+				testMarket.SetResources(new ResourceGroup(0, 0, 0));	
+				try {
+					testMarket.BuyFrom(order);
+				} catch (ArgumentException e) {
+					Assert.AreSame(e.Message, "Market does not have enough resources to perform this transaction.");
+				} catch (Exception) {
+					Assert.Fail();
+				}
 			}
-
 		}
 
 
@@ -167,9 +173,9 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market ();
+				testMarket = new Market();
 				//set resources to make testing simpler
-				testMarket.SetResources (new ResourceGroup (16, 16, 16));
+				testMarket.SetResources(new ResourceGroup(16, 16, 16));
 			}
 
 			/// <summary>
@@ -177,10 +183,10 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void SellTo_Resources() {
-				order = new ResourceGroup (1, 1, 1);
-				ResourceGroup expectedMarketLevels = new ResourceGroup (17, 17, 17);
-				testMarket.SellTo (order);
-				Assert.Equals (expectedMarketLevels, testMarket.GetResources ());
+				order = new ResourceGroup(1, 1, 1);
+				ResourceGroup expectedMarketLevels = new ResourceGroup(17, 17, 17);
+				testMarket.SellTo(order);
+				Assert.Equals(expectedMarketLevels, testMarket.GetResources());
 			}
 
 			/// <summary>
@@ -188,9 +194,9 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void SellTo_Money() {
-				order = new ResourceGroup (1, 1, 1);
-				testMarket.SellTo (order);
-				Assert.AreEqual (70, testMarket.GetMoney ());
+				order = new ResourceGroup(1, 1, 1);
+				testMarket.SellTo(order);
+				Assert.AreEqual(70, testMarket.GetMoney());
 			}
 
 			/// <summary>
@@ -198,12 +204,16 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void SellTo_NotEnoughMoney() {
-				order = new ResourceGroup (1, 1, 1);
-				testMarket.SetMoney (0);
-				ArgumentException result = Assert.Throws (typeof(ArgumentException), new TestDelegate (testMarket.SellTo (order)));
-				Assert.Equals ("Market does not have enough money to perform this transaction.", result.Message);
+				order = new ResourceGroup(1, 1, 1);
+				testMarket.SetMoney(0);
+				try {
+					testMarket.SellTo(order);
+				} catch (ArgumentException e) {
+					Assert.AreSame(e.Message, "Market does not have enough money to perform this transaction.");
+				} catch {
+					Assert.Fail();
+				}
 			}
-		
 		}
 
 		[TestFixture]
@@ -219,9 +229,9 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market ();
+				testMarket = new Market();
 				//set resources to make testing simpler
-				testMarket.SetResources (new ResourceGroup (16, 16, 16));
+				testMarket.SetResources(new ResourceGroup(16, 16, 16));
 			}
 
 			/// <summary>
@@ -229,8 +239,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_NumRoboticons() {
-				testMarket.ProduceRoboticon ();
-				Assert.AreEqual (13, testMarket.GetNumRoboticonsForSale ());
+				testMarket.ProduceRoboticon();
+				Assert.AreEqual(13, testMarket.GetNumRoboticonsForSale());
 			}
 
 			/// <summary>
@@ -238,9 +248,9 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_Resources() {
-				testMarket.ProduceRoboticon ();
-				ResourceGroup expectedMarketLevel = new ResourceGroup (16, 16, 15);
-				Assert.Equals (expectedMarketLevel, testMarket.GetResources ());
+				testMarket.ProduceRoboticon();
+				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 15);
+				Assert.Equals(expectedMarketLevel, testMarket.GetResources());
 			}
 
 		}
