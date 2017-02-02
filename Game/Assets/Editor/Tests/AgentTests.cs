@@ -270,12 +270,24 @@ public class AgentTests {
 			}
 
 			/// <summary>
-			/// Checks that ore is lost in production.
+			/// Checks that ore is lost in roboticon production.
 			/// </summary>
 			[Test]
 			public void RobProduction_Resources() {
 				testMarket.ProduceRoboticon();
 				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
+				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
+			}
+
+			/// <summary>
+			/// Checks that roboticons aren't produced if there aren't enough resources.
+			/// </summary>
+			[Test]
+			public void RobProduction_NotEnoughResources() {
+				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
+				//as production shouldn't occur at less than 12 market should not change
+				testMarket.SetResources(expectedMarketLevel);
+				testMarket.ProduceRoboticon();
 				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
 
