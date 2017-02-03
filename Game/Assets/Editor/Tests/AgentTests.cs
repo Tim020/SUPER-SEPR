@@ -139,6 +139,7 @@ public class AgentTests {
 				testMarket.SetResources(new ResourceGroup(0, 0, 0));	
 				try {
 					testMarket.BuyFrom(order);
+					Assert.Fail();
 				} catch (ArgumentException e) {
 					Assert.AreSame(e.Message, "Market does not have enough resources to perform this transaction.");
 				} catch (Exception) {
@@ -154,6 +155,7 @@ public class AgentTests {
 				order = new ResourceGroup(-1, -1, -1);
 				try {
 					testMarket.BuyFrom(order);
+					Assert.Fail();
 				} catch (ArgumentException e) {
 					Assert.AreSame(e.Message, "Market cannot complete a transaction for negative resources.");
 				} catch (Exception) {
@@ -167,7 +169,7 @@ public class AgentTests {
 		/// Testing the functionality of selling to the market.
 		/// </summary>
 		[TestFixture]
-		public class SellTo {
+		public class SellToTests {
 
 			/// <summary>
 			/// The dummy market.
@@ -219,9 +221,10 @@ public class AgentTests {
 				testMarket.SetMoney(0);
 				try {
 					testMarket.SellTo(order);
+					Assert.Fail();
 				} catch (ArgumentException e) {
-					Assert.AreSame(e.Message, "Market does not have enough money to perform this transaction.");
-				} catch {
+					Assert.AreSame("Market does not have enough money to perform this transaction.", e.Message);
+				} catch (Exception) {
 					Assert.Fail();
 				}
 			}
@@ -234,9 +237,10 @@ public class AgentTests {
 				order = new ResourceGroup(-1, -1, -1);
 				try {
 					testMarket.SellTo(order);
+					Assert.Fail();
 				} catch (ArgumentException e) {
-					Assert.AreSame(e.Message, "Market cannot complete a transaction for negative resources.");
-				} catch {
+					Assert.AreSame("Market cannot complete a transaction for negative resources.", e.Message);
+				} catch (Exception) {
 					Assert.Fail();
 				}
 			}
@@ -294,5 +298,310 @@ public class AgentTests {
 		}
 
 	}
+		
+	/// <summary>
+	/// Tests for the human player.
+	/// </summary>
+	[TestFixture]
+	class HumanTests {
 
+		/// <summary>
+		/// Tile aquisition tests of human players.
+		/// </summary>
+		[TestFixture]
+		class TileAcquisitionTests {  
+
+			/// <summary>
+			/// The test human.
+			/// </summary>
+			Human testHuman;
+
+			/// <summary>
+			/// The test tile.
+			/// </summary>
+			TestTile testTile;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
+				testHuman = new Human(testResources, "Test", 500);
+				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+			}
+
+			/// <summary>
+			/// Checks that tile acquisition is performed when a tile is not owned.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_NotOwned() {
+				testHuman.AcquireTile(testTile);
+				Assert.AreEqual(testTile, testHuman.GetOwnedTiles()[0]); 
+			}
+
+			/// <summary>
+			/// Checks that tile acquisition fails if a tile is owned.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_Owned() {
+				//giving the tile an owner
+				testHuman.AcquireTile(testTile);
+				try {
+					testHuman.AcquireTile(testTile);
+					Assert.Fail();
+				} catch (Exception e) {
+					Assert.AreSame("Tried to acquire a tile which is already owned by this player.", e.Message);
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// Roboticon acquisition tests.
+		/// </summary>
+		[TestFixture]
+		class RoboticonAcquisitionTests {
+
+			/// <summary>
+			/// The test human.
+			/// </summary>
+			Human testHuman;
+
+
+			/// <summary>
+			/// The test roboticon.
+			/// </summary>
+			Roboticon testRoboticon;
+
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
+				testHuman = new Human(testResources, "Test", 500);
+				testRoboticon = new Roboticon();
+			}
+
+			/// <summary>
+			/// Checks whether the aquired robotion is added to the list.
+			/// </summary>
+			[Test]
+			public void RoboticonAcquisition_NotOwned() {
+				testHuman.AcquireRoboticon(testRoboticon);
+				Assert.AreEqual(testRoboticon, testHuman.GetRoboticons()[0]);
+				testHuman.AcquireRoboticon(testRoboticon);
+			}
+
+			/// <summary>
+			/// Checks that the same roboticon cannot be aquired robotion multiple times.
+			/// </summary>
+			[Test]
+			public void RoboticonAcquisition_Owned() {
+				testHuman.AcquireRoboticon(testRoboticon);
+				try {
+					testHuman.AcquireRoboticon(testRoboticon);
+					Assert.Fail();
+				} catch (ArgumentException e) {
+					Assert.AreSame("Cannot acquire the same roboticon twice.", e.Message);
+				} catch (Exception) {
+					Assert.Fail();
+				}
+			}
+
+		}
+
+		[TestFixture]
+		public class RoboticonInstallationTests {
+
+			/// <summary>
+			/// The test human.
+			/// </summary>
+			Human testHuman;
+
+			/// <summary>
+			/// The test roboticon.
+			/// </summary>
+			Roboticon testRoboticon;
+
+			/// <summary>
+			/// The test tile.
+			/// </summary>
+			TestTile testTile;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
+				testHuman = new Human(testResources, "Test", 500);
+				testRoboticon = new Roboticon();
+				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				testHuman.AcquireRoboticon(testRoboticon);
+			}
+
+			/// <summary>
+			/// Checks that a roboticon is installed if no roboticon is present.
+			/// </summary>
+			[Test]
+			public void RoboticonInstallation_NoRoboticonPresent() {
+				testHuman.AcquireTile(testTile);
+				testHuman.InstallRoboticon(testRoboticon, testTile);
+				Assert.AreEqual(testRoboticon, testTile.GetInstalledRoboticons()[0]);
+			}
+
+			/// <summary>
+			/// Checks that installing duplicate roboticons is invalid.
+			/// </summary>
+			[Test]
+			public void RoboticonInstallation_DuplicateRoboticon() {
+				testHuman.AcquireTile(testTile);
+				testHuman.InstallRoboticon(testRoboticon, testTile);
+				try {
+					testHuman.InstallRoboticon(testRoboticon, testTile);
+					Assert.Fail();
+				} catch (Exception e) {
+					Assert.AreSame("Roboticon already exists on this tile\n", e.Message);
+				}
+			}
+
+			/// <summary>
+			/// Checks that multiple may be installed on a single tile.
+			/// </summary>
+			[Test]
+			public void RoboticonInstallation_RoboticonPresent() {
+				Roboticon robot = new Roboticon();
+				testHuman.AcquireTile(testTile);
+				testHuman.InstallRoboticon(testRoboticon, testTile);
+				testHuman.InstallRoboticon(robot, testTile);
+				Assert.IsTrue(robot.Equals(testTile.GetInstalledRoboticons()[1]) && testRoboticon.Equals(testTile.GetInstalledRoboticons()[0]));
+			}
+
+		}
+
+		class RoboticonUpgradeTests {
+
+			/// <summary>
+			/// The test human.
+			/// </summary>
+			Human testHuman;
+
+			/// <summary>
+			/// The test roboticon.
+			/// </summary>
+			Roboticon testRoboticon;
+
+			/// <summary>
+			/// The test upgrade.
+			/// </summary>
+			ResourceGroup testUpgrade;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
+				testHuman = new Human(testResources, "Test", 500);
+				testRoboticon = new Roboticon();
+				testHuman.AcquireRoboticon(testRoboticon);
+			}
+
+			/// <summary>
+			/// Checks that a positive roboticon upgrade on a owned roboticon modifies that roboticon.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_PositiveUpgrade() {
+				testUpgrade = new ResourceGroup(1, 1, 1);
+				ResourceGroup expected = testRoboticon.GetUpgrades() + testUpgrade;
+				testHuman.UpgradeRoboticon(testRoboticon, testUpgrade);
+				Assert.AreEqual(expected, testRoboticon.GetUpgrades());
+			}
+
+
+			/// <summary>
+			/// Checks that a negative roboticon is invalid.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_NegativeUpgrade() {
+				testUpgrade = new ResourceGroup(-1, -1, -1);
+				try {
+					testHuman.UpgradeRoboticon(testRoboticon, testUpgrade);
+					Assert.Fail();
+				} catch (ArgumentException e) {
+					Assert.Pass();
+				} catch (Exception) {
+					Assert.Fail();
+				}
+			}
+
+			/// <summary>
+			/// Checks that upgrading an unowned roboticon is invalid.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_UnownedRoboticon() {
+				Roboticon robot = new Roboticon();
+				testUpgrade = new ResourceGroup(1, 1, 1);
+				try {
+					testHuman.UpgradeRoboticon(robot, testUpgrade);
+					Assert.Fail();
+				} catch (ArgumentException e) {
+					Assert.Pass();
+				} catch (Exception) {
+					Assert.Fail();
+				}
+			}
+
+		}
+
+		/*[TestFixture]
+		class ScoreTests {
+
+			/// <summary>
+			/// The test human.
+			/// </summary>
+			Human testHuman;
+
+			/// <summary>
+			/// The test tile.
+			/// </summary>
+			TestTile testTile;
+
+			/// <summary>
+			/// The test roboticon.
+			/// </summary>
+			Roboticon testRoboticon;
+
+			[SetUp]
+			public void Setup() {
+				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
+				Human testHuman = new Human(testResources, "Test", 500);
+				TestTile testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				Roboticon testRoboticon = new Roboticon();
+				testHuman.AcquireRoboticon(testRoboticon);
+				testHuman.AcquireTile(testTile);
+			}
+
+			[Test]
+			public void Score_NoInstalledRoboticons() {
+				Assert.AreEqual(0, testHuman.CalculateScore());
+			}
+
+			[Test]
+			public void Score_InstalledNormalRoboticon() {
+				testHuman.InstallRoboticon(testRoboticon, testTile);
+				Assert.AreEqual(6, testHuman.CalculateScore());
+			}
+
+			public void Score_InstalledUpgradedRoboticon() {
+
+			}
+
+		}*/
+
+	}
+	
 }

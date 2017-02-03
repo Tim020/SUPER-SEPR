@@ -11,12 +11,12 @@ public class Tile {
     //Currently each roboticon upgrade adds this amount to the production of its resource
     public const int ROBOTICON_UPGRADE_WEIGHT = 1;
 
-    private int tileId;
-    private ResourceGroup resourcesGenerated;
-    private Player owner;
-    private List<Roboticon> installedRoboticons = new List<Roboticon>();
-    private TileObject tileObject;
-    private bool tileIsSelected = false;
+    protected int tileId;
+	protected ResourceGroup resourcesGenerated;
+	protected Player owner;
+	protected List<Roboticon> installedRoboticons = new List<Roboticon>();
+	protected TileObject tileObject;
+	protected bool tileIsSelected = false;
 
     public Tile(ResourceGroup resources, Vector2 mapDimensions, int tileId, Player owner = null) {
         resourcesGenerated = resources;
@@ -119,7 +119,7 @@ public class Tile {
         tileObject.Instantiate(mapCenterPosition);
     }
 
-    public void SetOwner(Player player) {
+    public virtual void SetOwner(Player player) {
         owner = player;
         TileNormal();
     }
