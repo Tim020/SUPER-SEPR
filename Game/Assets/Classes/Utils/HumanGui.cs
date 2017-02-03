@@ -96,11 +96,7 @@ public class HumanGui {
 
 	public void SellToMarket(ResourceGroup resourcesToSell, int sellPrice) {
 		ResourceGroup humanResources = currentHuman.GetResources();
-		bool humanHasEnoughResources =
-			humanResources.food >= resourcesToSell.food &&
-			humanResources.energy >= resourcesToSell.energy &&
-			humanResources.ore >= resourcesToSell.ore;
-
+		bool humanHasEnoughResources = humanResources.food >= resourcesToSell.food && humanResources.energy >= resourcesToSell.energy && humanResources.ore >= resourcesToSell.ore;
 		if (humanHasEnoughResources) {
 			try {
 				gameManager.market.SellTo(resourcesToSell);
@@ -164,14 +160,13 @@ public class HumanGui {
 	public void InstallRoboticon(Roboticon roboticon) {
 		if (currentSelectedTile.GetOwner() == currentHuman) {
 			if (roboticon.IsInstalledToTile()) {
-				//TOFO - Play "roboticon is already installed to a tile "animation"
+				//TODO - Play "roboticon is already installed to a tile "animation"
 			} else {
 				currentHuman.InstallRoboticon(roboticon, currentSelectedTile);
 				canvas.RefreshTileInfoWindow();
 			}
 		} else {
-			throw new Exception(
-				"Tried to install roboticon to tile which is not owned by the current player. This should not happen.");
+			throw new Exception("Tried to install roboticon to tile which is not owned by the current player. This should not happen.");
 		}
 	}
 

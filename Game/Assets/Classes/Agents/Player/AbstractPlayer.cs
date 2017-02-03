@@ -85,7 +85,7 @@ public abstract class AbstractPlayer : Agent {
     }
 
     public bool IsHuman() {
-        return GetType().ToString() == "Human";
+		return GetType().ToString() == typeof(HumanPlayer).ToString();
     }
 
     public string GetName() {
