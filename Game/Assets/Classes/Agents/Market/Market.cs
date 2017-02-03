@@ -2,6 +2,9 @@
 
 using System;
 
+/// <summary>
+/// The market class.
+/// </summary>
 public class Market : Agent {
 
 	/// <summary>
@@ -159,19 +162,34 @@ public class Market : Agent {
 		}
 	}
 
-
+	/// <summary>
+	/// Gets the number roboticons for sale.
+	/// </summary>
+	/// <returns>The number roboticons for sale.</returns>
 	public int GetNumRoboticonsForSale() {
 		return numRoboticonsForSale;
 	}
 
+	/// <summary>
+	/// Gets the resource buying prices.
+	/// </summary>
+	/// <returns>The resource buying prices.</returns>
 	public ResourceGroup GetResourceBuyingPrices() {
 		return resourceBuyingPrices;
 	}
 
+	/// <summary>
+	/// Gets the resource selling prices.
+	/// </summary>
+	/// <returns>The resource selling prices.</returns>
 	public ResourceGroup GetResourceSellingPrices() {
 		return resourceSellingPrices;
 	}
 
+	/// <summary>
+	/// Gets the roboticon selling price.
+	/// </summary>
+	/// <returns>The roboticon selling price.</returns>
 	public int GetRoboticonSellingPrice() {
 		return roboticonBuyingPrice;
 	}
