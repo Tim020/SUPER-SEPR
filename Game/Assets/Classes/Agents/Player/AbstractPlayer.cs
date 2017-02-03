@@ -124,7 +124,7 @@ public abstract class AbstractPlayer : Agent {
 		tile.InstallRoboticon(roboticon);
 		roboticon.InstallRoboticonToTile();
 	}
-		
+
 	public void PutItemUpForAuction() {
 		//TODO - interface with auction. Not a priority.
 	}
@@ -154,6 +154,6 @@ public abstract class AbstractPlayer : Agent {
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public abstract void Act(GameManager.GameState state);
+	public abstract void Act(Data.GameState state);
 
 }

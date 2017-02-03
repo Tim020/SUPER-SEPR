@@ -42,10 +42,10 @@ public class AIPlayer : AbstractPlayer {
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void Act(GameManager.GameState state) {
+	public override void Act(Data.GameState state) {
 		//TODO - AI action
 		switch (state) {
-			case GameManager.GameState.ACQUISITION:
+			case Data.GameState.ACQUISITION:
 				Tile tileToAcquire = ChooseTileToAcquire();
 				if (tileToAcquire.GetOwner() == null) {
 					AcquireTile(tileToAcquire);
@@ -64,7 +64,7 @@ public class AIPlayer : AbstractPlayer {
 	private Tile ChooseTileToAcquire() {
 		//TODO - intelligent decision of best tile in map.
 		Map map = GameHandler.GetGameManager().GetMap();
-		int numTiles = (int)(map.MAP_DIMENSIONS.x * map.MAP_DIMENSIONS.y);
+		int numTiles = (int) (map.MAP_DIMENSIONS.x * map.MAP_DIMENSIONS.y);
 
 		return map.GetTile(Random.Range(0, numTiles));
 	}

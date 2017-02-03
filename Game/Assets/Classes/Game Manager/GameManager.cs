@@ -13,30 +13,6 @@ using Random = UnityEngine.Random;
 public class GameManager : Object {
 
 	/// <summary>
-	/// The different states possible in the game
-	/// </summary>
-	public enum GameState : int {
-
-		ACQUISITION,
-		PURCHASE,
-		INSTALLATION,
-		PRODUCTION,
-		AUCTION
-
-	}
-
-	/// <summary>
-	/// The human readable names of all the different game states
-	/// </summary>
-	public static string[] stateNames = new string[5] {
-		"Acquisition",
-		"Purchase",
-		"Installation",
-		"Production",
-		"Auction"
-	};
-
-	/// <summary>
 	/// The name of the game.
 	/// </summary>
 	public string gameName;
@@ -69,7 +45,7 @@ public class GameManager : Object {
 	/// <summary>
 	/// The current state of the game.
 	/// </summary>
-	private GameState currentState = GameState.ACQUISITION;
+	private Data.GameState currentState = Data.GameState.ACQUISITION;
 
 	/// <summary>
 	/// The current player.
@@ -92,15 +68,6 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Gets the string representation of the given GameState.
-	/// </summary>
-	/// <returns>The phase name.</returns>
-	/// <param name="state">The GameState.</param>
-	public static string StateToPhaseName(GameState state) {
-		return stateNames[(int)state];
-	}
-
-	/// <summary>
 	/// Starts the instance of this game.
 	/// Initialises the GUI and Map elements.
 	/// </summary>
@@ -116,7 +83,7 @@ public class GameManager : Object {
 	/// Gets the current state of the game.
 	/// </summary>
 	/// <returns>The current state.</returns>
-	public GameState GetCurrentState() {
+	public Data.GameState GetCurrentState() {
 		return currentState;
 	}
 
@@ -158,10 +125,10 @@ public class GameManager : Object {
 	//TODO: Rewrite me please.
 	private void PlayerAct() {
 		// If we've moved on to the production phase, run the function that handles the logic for the production phase.
-		if (currentState == GameState.PRODUCTION) {
+		if (currentState == Data.GameState.PRODUCTION) {
 			ProcessProductionPhase();
 			//Reset the state counter after the production (final) phase
-			currentState = GameState.ACQUISITION; 
+			currentState = Data.GameState.ACQUISITION; 
 		} else {
 			currentState++;
 		}

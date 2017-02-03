@@ -9,7 +9,7 @@ public class HumanGui {
 	public static GameObject humanGuiGameObject;
 
 	private HumanPlayer currentHuman;
-	private GameManager.GameState currentPhase;
+	private Data.GameState currentPhase;
 	private GameManager gameManager;
 
 	private CanvasScript canvas;
@@ -19,14 +19,14 @@ public class HumanGui {
 	private const string humanGuiGameObjectPath = "Prefabs/GUI/Player GUI Canvas";
 
 	public HumanGui() {
-		humanGuiGameObject = (GameObject)Resources.Load(humanGuiGameObjectPath);
+		humanGuiGameObject = (GameObject) Resources.Load(humanGuiGameObjectPath);
 
 		if (humanGuiGameObject == null) {
 			throw new ArgumentException("Could not find human GUI GameObject at the specified path.");
 		}
 	}
 
-	public void DisplayGui(HumanPlayer human, GameManager.GameState phase) {
+	public void DisplayGui(HumanPlayer human, Data.GameState phase) {
 		currentHuman = human;
 		currentPhase = phase;
 
@@ -38,7 +38,7 @@ public class HumanGui {
 		canvas.RefreshTileInfoWindow();
 		canvas.HideMarketWindow();
 
-		canvas.SetCurrentPhaseText(GameManager.StateToPhaseName(phase) + " Phase");
+		canvas.SetCurrentPhaseText(Data.StateToPhaseName(phase) + " Phase");
 	}
 
 	public void SetCurrentPlayerName(string name) {
@@ -176,7 +176,7 @@ public class HumanGui {
 	}
 
 	private void ShowHelpBox() {
-		canvas.ShowHelpBox(GuiTextStore.GetHelpBoxText(currentPhase));
+		canvas.ShowHelpBox(Data.GetHelpBoxText(currentPhase));
 	}
 
 	private void HideHelpBox() {
