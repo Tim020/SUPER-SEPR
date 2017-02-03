@@ -91,13 +91,13 @@ public class TileInfoWindowScript : MonoBehaviour {
 		ResourceGroup tileBaseResources = currentTile.GetBaseResourcesGenerated();
 		ResourceGroup tileTotalResources = currentTile.GetTotalResourcesGenerated();
 
-		foodBase.text = tileBaseResources.getFood().ToString();
-		energyBase.text = tileBaseResources.getEnergy().ToString();
-		oreBase.text = tileBaseResources.getOre().ToString();
+		foodBase.text = tileBaseResources.GetFood().ToString();
+		energyBase.text = tileBaseResources.GetEnergy().ToString();
+		oreBase.text = tileBaseResources.GetOre().ToString();
 
-		foodTotal.text = tileTotalResources.getFood().ToString();
-		energyTotal.text = tileTotalResources.getEnergy().ToString();
-		oreTotal.text = tileTotalResources.getOre().ToString();
+		foodTotal.text = tileTotalResources.GetFood().ToString();
+		energyTotal.text = tileTotalResources.GetEnergy().ToString();
+		oreTotal.text = tileTotalResources.GetOre().ToString();
 	}
 
 	private void UpdatePriceText(int price) {

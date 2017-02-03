@@ -35,6 +35,10 @@ public class HumanPlayer : AbstractPlayer {
 		humanGui.DisplayGui(this, state);
 	}
 
+	/// <summary>
+	/// Gets the GUI element for this player.
+	/// </summary>
+	/// <returns>The main GUI overlay.</returns>
 	public HumanGui GetHumanGui() {
 		return humanGui;
 	}

@@ -130,7 +130,7 @@ public class Market : Agent {
 	/// <param name="resourcesToSell">The resources the player wishes to sell to the market</param>
 	/// <exception cref="System.ArgumentException">When the market does not have enough money to complete the transaction.</exception>
 	public void SellTo(ResourceGroup resourcesToSell) {
-		if (resourcesToSell.getFood() < 0 || resourcesToSell.getEnergy() < 0 || resourcesToSell.getOre() < 0) {
+		if (resourcesToSell.GetFood() < 0 || resourcesToSell.GetEnergy() < 0 || resourcesToSell.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
 	

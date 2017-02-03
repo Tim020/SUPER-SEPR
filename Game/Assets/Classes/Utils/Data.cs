@@ -18,6 +18,18 @@ public class Data {
 	}
 
 	/// <summary>
+	/// Tile owner type.
+	/// </summary>
+	public enum TileOwnerType {
+
+		CURRENT_PLAYER,
+		ENEMY,
+		UNOWNED
+
+	}
+
+
+	/// <summary>
 	/// The human readable names of all the different game states
 	/// </summary>
 	public static string[] stateNames = new string[5] {

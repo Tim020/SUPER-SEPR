@@ -182,8 +182,20 @@ public class GameManager : Object {
 		return map;
 	}
 
+	/// <summary>
+	/// Gets the human player in this game.
+	/// </summary>
+	/// <returns>The human player.</returns>
 	public HumanPlayer GetHumanPlayer() {
 		return human;
+	}
+
+	/// <summary>
+	/// Gets the AI player in this game.
+	/// </summary>
+	/// <returns>The AI player.</returns>
+	public AIPlayer GetAIPlayer() {
+		return ai;
 	}
 
 }
