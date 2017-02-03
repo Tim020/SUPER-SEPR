@@ -99,7 +99,7 @@ public class CanvasScript : MonoBehaviour {
 	public void ShowRoboticonList() {
 		List<Roboticon> roboticonsToDisplay = new List<Roboticon>();
 
-		foreach (Roboticon roboticon in humanGui.GetCurrentHumanRoboticonList()) {
+		foreach (Roboticon roboticon in GameHandler.GetGameManager().GetHumanPlayer().GetRoboticons()) {
 			roboticonsToDisplay.Add(roboticon);
 		}
 

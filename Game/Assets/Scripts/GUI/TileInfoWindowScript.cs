@@ -45,7 +45,7 @@ public class TileInfoWindowScript : MonoBehaviour {
 
 			case Data.GameState.INSTALLATION:
 				acquireTileButton.SetActive(false);
-				if (tile.GetOwner() == uiCanvas.GetHumanGui().GetCurrentHuman()) {
+				if (tile.GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 					installRoboticonButton.SetActive(true);
 				} else {
 					installRoboticonButton.SetActive(false);

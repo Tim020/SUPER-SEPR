@@ -19,9 +19,8 @@ public class HumanPlayer : AbstractPlayer {
 	public void SetGuiElement(HumanGui gui, CanvasScript canvas) {
 		this.humanGui = gui;
 		humanGui.SetCanvasScript(canvas);
-		humanGui.SetGameManager(GameHandler.GetGameManager());
 		canvas.SetHumanGui(humanGui);
-		humanGui.DisplayGui(this, Data.GameState.ACQUISITION);
+		humanGui.DisplayGui(Data.GameState.ACQUISITION);
 	}
 
 	/// <summary>
@@ -32,7 +31,7 @@ public class HumanPlayer : AbstractPlayer {
 		humanGui.DisableGui();
 		humanGui.SetCurrentPlayerName(this.name);
 		//TODO: Something?
-		humanGui.DisplayGui(this, state);
+		humanGui.DisplayGui(state);
 	}
 
 	/// <summary>

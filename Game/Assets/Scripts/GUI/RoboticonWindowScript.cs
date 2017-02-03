@@ -33,7 +33,7 @@ public class RoboticonWindowScript : MonoBehaviour {
 			ShowRoboticonUpgradeButtons();
 		} else if (currentState == Data.GameState.INSTALLATION) {
 			HumanGui humanGui = canvas.GetHumanGui();
-			if (humanGui.GetCurrentSelectedTile().GetOwner() == humanGui.GetCurrentHuman()) {
+			if (humanGui.GetCurrentSelectedTile().GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 				ShowRoboticonInstallButtons();
 			}
 		} else {
