@@ -10,7 +10,7 @@ public class GuiTextStore {
         "This is the Auction Phase."
     };
 
-    public static string GetHelpBoxText(GameManager.States phase) {
+    public static string GetHelpBoxText(GameManager.GameState phase) {
         return helpBoxText[(int) phase];
     }
 

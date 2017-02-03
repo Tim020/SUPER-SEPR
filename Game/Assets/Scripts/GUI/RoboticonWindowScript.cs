@@ -27,10 +27,10 @@ public class RoboticonWindowScript : MonoBehaviour {
             AddRoboticon(roboticon);
         }
 
-        GameManager.States currentState = GameHandler.GetGameManager().GetCurrentState();
-        if (currentState == GameManager.States.PURCHASE) {
+        GameManager.GameState currentState = GameHandler.GetGameManager().GetCurrentState();
+        if (currentState == GameManager.GameState.PURCHASE) {
             ShowRoboticonUpgradeButtons();
-        } else if (currentState == GameManager.States.INSTALLATION) {
+        } else if (currentState == GameManager.GameState.INSTALLATION) {
             HumanGui humanGui = canvas.GetHumanGui();
             if (humanGui.GetCurrentSelectedTile().GetOwner() == humanGui.GetCurrentHuman()) {
                 ShowRoboticonInstallButtons();

@@ -9,7 +9,7 @@ public class HumanGui {
 	public static GameObject humanGuiGameObject;
 
 	private HumanPlayer currentHuman;
-	private GameManager.States currentPhase;
+	private GameManager.GameState currentPhase;
 	private GameManager gameManager;
 
 	private CanvasScript canvas;
@@ -26,7 +26,7 @@ public class HumanGui {
 		}
 	}
 
-	public void DisplayGui(HumanPlayer human, GameManager.States phase) {
+	public void DisplayGui(HumanPlayer human, GameManager.GameState phase) {
 		currentHuman = human;
 		currentPhase = phase;
 
@@ -71,7 +71,7 @@ public class HumanGui {
 		if (currentHuman.GetMoney() >= buyPrice) {
 			try {
 				gameManager.market.BuyFrom(resourcesToBuy);
-			} catch (ArgumentException e) {
+			} catch (ArgumentException) {
 				//TODO - Implement separate animation for when the market does not have enough resources
 				canvas.marketScript.PlayPurchaseDeclinedAnimation();
 				return;

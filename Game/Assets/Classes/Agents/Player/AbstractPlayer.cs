@@ -154,6 +154,6 @@ public abstract class AbstractPlayer : Agent {
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public abstract void Act(GameManager.States state);
+	public abstract void Act(GameManager.GameState state);
 
 }

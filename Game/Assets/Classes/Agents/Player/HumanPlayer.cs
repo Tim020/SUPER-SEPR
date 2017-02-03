@@ -2,6 +2,8 @@
 
 public class HumanPlayer : AbstractPlayer {
 
+	private HumanGui humanGui;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HumanPlayer"/> class.
 	/// </summary>
@@ -14,11 +16,27 @@ public class HumanPlayer : AbstractPlayer {
 		this.money = money;
 	}
 
+	public void SetGuiElement(HumanGui gui, CanvasScript canvas) {
+		this.humanGui = gui;
+		humanGui.SetCanvasScript(canvas);
+		humanGui.SetGameManager(GameHandler.GetGameManager());
+		canvas.SetHumanGui(humanGui);
+		humanGui.DisplayGui(this, GameManager.GameState.ACQUISITION);
+	}
+
 	/// <summary>
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void Act(GameManager.States state) {
+	public override void Act(GameManager.GameState state) {
+		humanGui.DisableGui();
+		humanGui.SetCurrentPlayerName(this.name);
+		//TODO: Something?
+		humanGui.DisplayGui(this, state);
+	}
+
+	public HumanGui GetHumanGui(){
+		return humanGui;
 	}
 
 }

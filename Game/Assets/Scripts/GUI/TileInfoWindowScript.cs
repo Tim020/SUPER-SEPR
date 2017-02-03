@@ -31,10 +31,10 @@ public class TileInfoWindowScript : MonoBehaviour {
         UpdatePriceText(tile.GetPrice());
         uiCanvas.RefreshRoboticonList();
 
-        GameManager.States gamePhase = GameHandler.GetGameManager().GetCurrentState();
+        GameManager.GameState gamePhase = GameHandler.GetGameManager().GetCurrentState();
 
         switch (gamePhase) {
-            case GameManager.States.ACQUISITION:
+            case GameManager.GameState.ACQUISITION:
                 installRoboticonButton.SetActive(false);
                 if (tile.GetOwner() == null) {
                     acquireTileButton.SetActive(true);
@@ -43,7 +43,7 @@ public class TileInfoWindowScript : MonoBehaviour {
                 }
                 break;
 
-            case GameManager.States.INSTALLATION:
+            case GameManager.GameState.INSTALLATION:
                 acquireTileButton.SetActive(false);
                 if (tile.GetOwner() == uiCanvas.GetHumanGui().GetCurrentHuman()) {
                     installRoboticonButton.SetActive(true);

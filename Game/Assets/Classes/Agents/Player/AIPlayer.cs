@@ -42,10 +42,10 @@ public class AIPlayer : AbstractPlayer {
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void Act(GameManager.States state) {
+	public override void Act(GameManager.GameState state) {
 		//TODO - AI action
 		switch (state) {
-			case GameManager.States.ACQUISITION:
+			case GameManager.GameState.ACQUISITION:
 				Tile tileToAcquire = ChooseTileToAcquire();
 				if (tileToAcquire.GetOwner() == null) {
 					AcquireTile(tileToAcquire);
