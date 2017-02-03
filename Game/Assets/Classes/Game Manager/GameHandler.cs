@@ -15,7 +15,7 @@ public static class GameHandler {
     /// <param name="gameName"></param>
     /// <param name="players"></param>
     /// <returns></returns>
-    public static void CreateNew(string gameName, List<Player> players) {
+    public static void CreateNew(string gameName, List<AbstractPlayer> players) {
         gameManager = new GameManager(gameName, players);
     }
 

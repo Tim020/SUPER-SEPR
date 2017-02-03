@@ -13,12 +13,12 @@ public class Tile {
 
     private int tileId;
     private ResourceGroup resourcesGenerated;
-    private Player owner;
+    private AbstractPlayer owner;
     private List<Roboticon> installedRoboticons = new List<Roboticon>();
     private TileObject tileObject;
     private bool tileIsSelected = false;
 
-    public Tile(ResourceGroup resources, Vector2 mapDimensions, int tileId, Player owner = null) {
+    public Tile(ResourceGroup resources, Vector2 mapDimensions, int tileId, AbstractPlayer owner = null) {
         resourcesGenerated = resources;
         this.owner = owner;
         this.tileId = tileId;
@@ -119,12 +119,12 @@ public class Tile {
         tileObject.Instantiate(mapCenterPosition);
     }
 
-    public void SetOwner(Player player) {
+    public void SetOwner(AbstractPlayer player) {
         owner = player;
         TileNormal();
     }
 
-    public Player GetOwner() {
+    public AbstractPlayer GetOwner() {
         return owner;
     }
 

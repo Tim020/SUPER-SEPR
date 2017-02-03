@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-public abstract class Player : Agent {
+public abstract class AbstractPlayer : Agent {
 
     protected string name;
     protected int score;

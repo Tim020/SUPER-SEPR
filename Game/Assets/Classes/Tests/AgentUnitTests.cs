@@ -209,7 +209,7 @@ public class AgentUnitTests
         //As player is an abstract class, a choice was made to instantiate player as a human (1.4), therefore testing of these two Classes will be done concurrently
         ResourceGroup humanResources = new ResourceGroup(50, 50, 50);
         ResourceGroup testGroup = new ResourceGroup(2, 2, 2);
-        Human testHuman = new Human(humanResources, "Test", 500);
+        HumanPlayer testHuman = new HumanPlayer(humanResources, "Test", 500);
         Tile testTile1 = new Tile(testGroup, new Vector2(0, 0), 1);
         Tile testTile2 = new Tile(testGroup, new Vector2(0, 1), 2);
         Tile testTile3 = new Tile(testGroup, new Vector2(1, 0), 3);

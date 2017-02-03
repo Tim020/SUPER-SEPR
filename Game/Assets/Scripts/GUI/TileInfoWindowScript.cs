@@ -104,7 +104,7 @@ public class TileInfoWindowScript : MonoBehaviour {
         priceText.text = "£" + price.ToString();
     }
 
-    private void UpdateOwnerText(Player owner) {
+    private void UpdateOwnerText(AbstractPlayer owner) {
         if (owner == null) {
             ownerText.text = "Unowned";
         } else if (owner == GameHandler.GetGameManager().GetCurrentPlayer()) {

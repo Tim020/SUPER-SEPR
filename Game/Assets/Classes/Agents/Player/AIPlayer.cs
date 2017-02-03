@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-public class AI : Player {
+public class AIPlayer : AbstractPlayer {
 
     private enum DifficultyLevel {
 
@@ -17,7 +17,7 @@ public class AI : Player {
     //The AI will attempt to meet this resource distribution.
     private readonly ResourceGroup OptimalResourceFractions = new ResourceGroup(33, 33, 34);
 
-    public AI(ResourceGroup resources, string name, int money) {
+    public AIPlayer(ResourceGroup resources, string name, int money) {
         this.name = name;
         this.resources = resources;
     }
