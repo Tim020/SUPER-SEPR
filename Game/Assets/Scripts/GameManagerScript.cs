@@ -28,10 +28,17 @@ public class GameManagerScript : MonoBehaviour {
 	void Start() {
 		DontDestroyOnLoad(this);
 
-		GameHandler.CreateNew(gameName, new HumanPlayer(new ResourceGroup(50, 50, 50), "Player", 100), new AIPlayer(new ResourceGroup(50, 50, 50), "AI", 100));
+		GameHandler.CreateNew(gameName, new HumanPlayer(new ResourceGroup(50, 50, 50), 0, "Player", 100), new AIPlayer(new ResourceGroup(50, 50, 50), 1, "AI", 100));
 		GameHandler.GetGameManager().StartGame();
 
 		SceneManager.LoadScene(GAME_SCENE_INDEX);
+	}
+
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
+	void Update() {
+		GameHandler.GetGameManager().Update();
 	}
 
 }

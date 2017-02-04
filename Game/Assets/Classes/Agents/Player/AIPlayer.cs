@@ -8,11 +8,9 @@ public class AIPlayer : AbstractPlayer {
 	/// Difficulty level enum.
 	/// </summary>
 	private enum DifficultyLevel {
-
 		EASY,
 		MEDIUM,
 		HARD
-
 	}
 
 	/// <summary>
@@ -32,7 +30,8 @@ public class AIPlayer : AbstractPlayer {
 	/// <param name="resources">Starting resources.</param>
 	/// <param name="name">Player name.</param>
 	/// <param name="money">Starting money.</param>
-	public AIPlayer(ResourceGroup resources, string name, int money) {
+	public AIPlayer(ResourceGroup resources, int ID, string name, int money) {
+		this.playerID = ID;
 		this.resources = resources;
 		this.name = name;
 		this.money = money;
@@ -42,10 +41,10 @@ public class AIPlayer : AbstractPlayer {
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void Act(Data.GameState state) {
+	public override void StartPhase(Data.GameState state) {
 		//TODO - AI action
 		switch (state) {
-			case Data.GameState.ACQUISITION:
+			case Data.GameState.TILE_PURCHASE:
 				Tile tileToAcquire = ChooseTileToAcquire();
 				if (tileToAcquire.GetOwner() == null) {
 					AcquireTile(tileToAcquire);
@@ -53,8 +52,8 @@ public class AIPlayer : AbstractPlayer {
 				break;
 		}
 
-		//This must be done to signify the end of the AI turn.
-		GameHandler.GetGameManager().CurrentPlayerEndTurn();
+		// This must be done to signify the end of the AI turn.
+		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
 	}
 
 	/// <summary>
@@ -64,7 +63,7 @@ public class AIPlayer : AbstractPlayer {
 	private Tile ChooseTileToAcquire() {
 		//TODO - intelligent decision of best tile in map.
 		Map map = GameHandler.GetGameManager().GetMap();
-		int numTiles = (int) (map.MAP_DIMENSIONS.x * map.MAP_DIMENSIONS.y);
+		int numTiles = (int)(map.MAP_DIMENSIONS.x * map.MAP_DIMENSIONS.y);
 
 		return map.GetTile(Random.Range(0, numTiles));
 	}

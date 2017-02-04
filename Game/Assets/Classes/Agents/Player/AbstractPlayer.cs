@@ -8,6 +8,8 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class AbstractPlayer : Agent {
 
+	public int playerID { protected set; get; }
+
 	/// <summary>
 	/// The name of this player.
 	/// </summary>
@@ -150,10 +152,6 @@ public abstract class AbstractPlayer : Agent {
 		return name;
 	}
 
-	/// <summary>
-	/// Act based on the specified state.
-	/// </summary>
-	/// <param name="state">The current game state.</param>
-	public abstract void Act(Data.GameState state);
+	public abstract void StartPhase(Data.GameState state);
 
 }

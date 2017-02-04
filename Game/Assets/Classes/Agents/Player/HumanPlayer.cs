@@ -10,7 +10,8 @@ public class HumanPlayer : AbstractPlayer {
 	/// <param name="resources">Starting resources.</param>
 	/// <param name="name">Name.</param>
 	/// <param name="money">Starting money.</param>
-	public HumanPlayer(ResourceGroup resources, string name, int money) {
+	public HumanPlayer(ResourceGroup resources, int ID, string name, int money) {
+		this.playerID = ID;
 		this.resources = resources;
 		this.name = name;
 		this.money = money;
@@ -20,14 +21,14 @@ public class HumanPlayer : AbstractPlayer {
 		this.humanGui = gui;
 		humanGui.SetCanvasScript(canvas);
 		canvas.SetHumanGui(humanGui);
-		humanGui.DisplayGui(Data.GameState.ACQUISITION);
+		humanGui.DisplayGui(Data.GameState.TILE_PURCHASE);
 	}
 
 	/// <summary>
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void Act(Data.GameState state) {
+	public override void StartPhase(Data.GameState state) {
 		humanGui.DisableGui();
 		humanGui.SetCurrentPlayerName(this.name);
 		//TODO: Something?

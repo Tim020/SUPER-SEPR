@@ -5,6 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = System.Object;
 using Random = UnityEngine.Random;
+using System.Linq;
+using System.Collections;
+using System.Diagnostics;
+using UnityEditorInternal;
+using System.Runtime.InteropServices;
+using System.IO;
 
 [Serializable]
 /// <summary>
@@ -16,16 +22,6 @@ public class GameManager : Object {
 	/// The name of the game.
 	/// </summary>
 	public string gameName;
-
-	/// <summary>
-	/// The HumanPlayer in the game instance.
-	/// </summary>
-	private HumanPlayer human;
-
-	/// <summary>
-	/// The AIPlayer in this game instance.
-	/// </summary>
-	private AIPlayer ai;
 
 	/// <summary>
 	/// The market instance.
@@ -45,12 +41,38 @@ public class GameManager : Object {
 	/// <summary>
 	/// The current state of the game.
 	/// </summary>
-	private Data.GameState currentState = Data.GameState.ACQUISITION;
+	private Data.GameState state = Data.GameState.COLLEGE_SELECTION;
 
 	/// <summary>
 	/// The current player.
 	/// </summary>
 	private AbstractPlayer currentPlayer;
+
+	/// <summary>
+	/// The number of players who have completed the phase.
+	/// </summary>
+	private int playersCompletedPhase = 0;
+
+	/// <summary>
+	/// The ID of the player who's turn it currently is.
+	/// </summary>
+	/// <value>The current player turn.</value>
+	public int currentPlayerTurn { get; private set; }
+
+	/// <summary>
+	/// Whether this is the first tick of the game state.
+	/// </summary>
+	private bool firstTick;
+
+	/// <summary>
+	/// The timer for phases 2 and 3.
+	/// </summary>
+	public Stopwatch timer;
+
+	/// <summary>
+	/// The players in the game.
+	/// </summary>
+	private Dictionary<int, AbstractPlayer> players = new Dictionary<int, AbstractPlayer>();
 
 	/// <summary>
 	/// Creates a new instance of the GameManager
@@ -60,8 +82,8 @@ public class GameManager : Object {
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
 		this.gameName = gameName;
-		this.human = human;
-		this.ai = ai;
+		players.Add(0, human);
+		players.Add(1, ai);
 		market = new Market();
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
@@ -74,9 +96,127 @@ public class GameManager : Object {
 	public void StartGame() {
 		SetUpGui();
 		SetUpMap();
+	}
 
-		//TODO: NOPE!
-		PlayerAct();
+	/// <summary>
+	/// Update this instance.
+	/// State machine to handle the transition between game phases.
+	/// </summary>
+	public void Update() {
+		if (state == Data.GameState.COLLEGE_SELECTION) {
+			//TODO: do we want to add college's back from our requirements?
+			state = Data.GameState.GAME_WAIT;
+		} else if (state == Data.GameState.GAME_WAIT) {
+			currentPlayer = (AbstractPlayer)players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
+			currentPlayerTurn = currentPlayer.playerID;
+			state = Data.GameState.TILE_PURCHASE;
+			firstTick = true;
+		} else if (state == Data.GameState.TILE_PURCHASE) {
+			if (firstTick) {
+				currentPlayer.StartPhase(state);
+			}
+			firstTick = false;
+		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+				state = Data.GameState.ROBOTICON_PLACEMENT;
+				firstTick = true;
+				timer = System.Diagnostics.Stopwatch.StartNew();
+			} else {
+				if (firstTick) {
+					timer = System.Diagnostics.Stopwatch.StartNew();
+					currentPlayer.StartPhase(state);
+				}
+				firstTick = false;
+			}
+		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+				state = Data.GameState.PLAYER_FINISH;
+				firstTick = true;
+				timer.Stop();
+			} else {
+				if (firstTick) {
+					timer = System.Diagnostics.Stopwatch.StartNew();
+					currentPlayer.StartPhase(state);
+				}
+				firstTick = false;
+			}
+		} else if (state == Data.GameState.PLAYER_FINISH) {
+			if (firstTick) {
+				currentPlayer.StartPhase(state);
+			}
+			firstTick = false;
+			playersCompletedPhase++;
+			if (playersCompletedPhase == players.Count) {
+				state = Data.GameState.PRODUCTION;
+				firstTick = true;
+			} else {
+				state = Data.GameState.GAME_WAIT;
+				firstTick = true;
+			}
+		} else if (state == Data.GameState.PRODUCTION) {
+			foreach (AbstractPlayer p in players.Values) {
+				p.Produce();
+			}
+			market.UpdatePrices();
+			playersCompletedPhase = 0;
+			state = Data.GameState.AUCTION;
+			firstTick = true;
+		} else if (state == Data.GameState.AUCTION) {
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.StartPhase(state);
+				}
+			}
+			firstTick = false;
+			if (playersCompletedPhase == players.Count) {
+				state = Data.GameState.RECYCLE;
+				firstTick = true;
+			}
+		} else if (state == Data.GameState.RECYCLE) {
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.StartPhase(state);
+				}
+			}
+			firstTick = false;
+			playersCompletedPhase = 0;
+			state = Data.GameState.GAME_WAIT;
+			firstTick = true;
+		}
+	}
+
+	/// <summary>
+	/// Called when the player has finished their turn for a particular phase.
+	/// </summary>
+	/// <param name="state">The state that was completed.</param>
+	/// <param name="args">Optional arguments.</param>
+	/// <exception cref="System.ArgumentException">If the optional arguments are not correct for the state.</exception>
+	public void OnPlayerCompletedPhase(Data.GameState state, params Object[] args) {
+		switch (state) {
+			case Data.GameState.TILE_PURCHASE:
+				this.state = Data.GameState.ROBOTICON_CUSTOMISATION;
+				firstTick = true;
+				break;
+			case Data.GameState.ROBOTICON_CUSTOMISATION:
+				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
+					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
+				}
+				bool choseRobot = (bool)args[0];
+				if (choseRobot) {
+					this.state = Data.GameState.ROBOTICON_PLACEMENT;
+				} else {
+					this.state = Data.GameState.PLAYER_FINISH;
+				}
+				firstTick = true;
+				break;
+			case Data.GameState.ROBOTICON_PLACEMENT:
+				this.state = Data.GameState.PLAYER_FINISH;
+				firstTick = true;
+				break;
+			case Data.GameState.AUCTION:
+				playersCompletedPhase++;
+				break;
+		}
 	}
 
 	/// <summary>
@@ -84,7 +224,7 @@ public class GameManager : Object {
 	/// </summary>
 	/// <returns>The current state.</returns>
 	public Data.GameState GetCurrentState() {
-		return currentState;
+		return state;
 	}
 
 	/// <summary>
@@ -111,7 +251,7 @@ public class GameManager : Object {
 		HumanGui gui = new HumanGui();
 		GameObject guiGameObject = GameObject.Instantiate(HumanGui.humanGuiGameObject);
 		MonoBehaviour.DontDestroyOnLoad(guiGameObject);
-		human.SetGuiElement(gui, guiGameObject.GetComponent<CanvasScript>());
+		GetHumanPlayer().SetGuiElement(gui, guiGameObject.GetComponent<CanvasScript>());
 	}
 
 	/// <summary>
@@ -122,44 +262,8 @@ public class GameManager : Object {
 		map.Instantiate();
 	}
 
-	//TODO: Rewrite me please.
-	private void PlayerAct() {
-		// If we've moved on to the production phase, run the function that handles the logic for the production phase.
-		if (currentState == Data.GameState.PRODUCTION) {
-			ProcessProductionPhase();
-			//Reset the state counter after the production (final) phase
-			currentState = Data.GameState.ACQUISITION; 
-		} else {
-			currentState++;
-		}
-
-		currentPlayer.Act(currentState);
-		map.UpdateMap();
-	}
-
-	public void CurrentPlayerEndTurn() {
-		PlayerAct();
-	}
-
 	private void ShowWinner(AbstractPlayer player) {
 		//Handle exiting the game, showing a winner screen (leaderboard) and returning to main menu
-	}
-
-	/// <summary>
-	/// Processes the production phase.
-	/// </summary>
-	private void ProcessProductionPhase() {
-		//TODO: This should happen somewhere else!
-		AbstractPlayer winner = GetWinnerIfGameHasEnded();
-		if (winner != null) {
-			ShowWinner(winner);
-			return;
-		}
-
-		human.Produce();
-		ai.Produce();
-
-		market.UpdatePrices();
 	}
 
 	//TODO: Call this from somewhere
@@ -187,15 +291,7 @@ public class GameManager : Object {
 	/// </summary>
 	/// <returns>The human player.</returns>
 	public HumanPlayer GetHumanPlayer() {
-		return human;
-	}
-
-	/// <summary>
-	/// Gets the AI player in this game.
-	/// </summary>
-	/// <returns>The AI player.</returns>
-	public AIPlayer GetAIPlayer() {
-		return ai;
+		return (HumanPlayer)players[0];
 	}
 
 }

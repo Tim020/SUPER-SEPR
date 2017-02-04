@@ -7,27 +7,29 @@ public class Data {
 	/// <summary>
 	/// The different states possible in the game
 	/// </summary>
-	public enum GameState : int {
-
-		ACQUISITION,
-		PURCHASE,
-		INSTALLATION,
+	/// <summary>
+	/// Game state.
+	/// </summary>
+	public enum GameState {
+		COLLEGE_SELECTION,
+		GAME_WAIT,
+		TILE_PURCHASE,
+		ROBOTICON_CUSTOMISATION,
+		ROBOTICON_PLACEMENT,
+		PLAYER_FINISH,
 		PRODUCTION,
-		AUCTION
-
+		AUCTION,
+		RECYCLE
 	}
 
 	/// <summary>
 	/// Tile owner type.
 	/// </summary>
 	public enum TileOwnerType {
-
 		CURRENT_PLAYER,
 		ENEMY,
 		UNOWNED
-
 	}
-
 
 	/// <summary>
 	/// The human readable names of all the different game states

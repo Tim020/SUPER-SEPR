@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 /// <summary>
 /// Pure data class to handle things to do with the game - the GameManager instance and saving and loading
@@ -38,7 +39,7 @@ public static class GameHandler {
 		FileStream stream;
 		stream = File.Open(filePath, FileMode.Open);
 		BinaryFormatter formatter = new BinaryFormatter();
-		GameManager returnedGameManager = (GameManager)formatter.Deserialize(stream);
+		GameManager returnedGameManager = (GameManager) formatter.Deserialize(stream);
 		stream.Close();
 
 		gameManager = returnedGameManager;

@@ -34,7 +34,7 @@ public class TileInfoWindowScript : MonoBehaviour {
 		Data.GameState gamePhase = GameHandler.GetGameManager().GetCurrentState();
 
 		switch (gamePhase) {
-			case Data.GameState.ACQUISITION:
+			case Data.GameState.TILE_PURCHASE:
 				installRoboticonButton.SetActive(false);
 				if (tile.GetOwner() == null) {
 					acquireTileButton.SetActive(true);
@@ -43,7 +43,7 @@ public class TileInfoWindowScript : MonoBehaviour {
 				}
 				break;
 
-			case Data.GameState.INSTALLATION:
+			case Data.GameState.ROBOTICON_PLACEMENT:
 				acquireTileButton.SetActive(false);
 				if (tile.GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 					installRoboticonButton.SetActive(true);

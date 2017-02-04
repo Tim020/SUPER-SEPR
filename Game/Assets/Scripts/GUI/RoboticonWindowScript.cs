@@ -29,9 +29,9 @@ public class RoboticonWindowScript : MonoBehaviour {
 		}
 
 		Data.GameState currentState = GameHandler.GetGameManager().GetCurrentState();
-		if (currentState == Data.GameState.PURCHASE) {
+		if (currentState == Data.GameState.AUCTION) {
 			ShowRoboticonUpgradeButtons();
-		} else if (currentState == Data.GameState.INSTALLATION) {
+		} else if (currentState == Data.GameState.ROBOTICON_PLACEMENT) {
 			HumanGui humanGui = canvas.GetHumanGui();
 			if (humanGui.GetCurrentSelectedTile().GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 				ShowRoboticonInstallButtons();
@@ -56,7 +56,7 @@ public class RoboticonWindowScript : MonoBehaviour {
 	public void AddRoboticon(Roboticon roboticon) {
 		LoadRoboticonTemplate();
 
-		GameObject roboticonGuiObject = (GameObject) Instantiate(roboticonTemplate);
+		GameObject roboticonGuiObject = (GameObject)Instantiate(roboticonTemplate);
 		roboticonGuiObject.transform.SetParent(roboticonIconsList.transform, true);
 		RectTransform guiObjectTransform = roboticonGuiObject.GetComponent<RectTransform>();
 
@@ -120,7 +120,7 @@ public class RoboticonWindowScript : MonoBehaviour {
 	/// </summary>
 	private void LoadRoboticonTemplate() {
 		if (roboticonTemplate == null) {
-			roboticonTemplate = (GameObject) Resources.Load(ROBOTICON_TEMPLATE_PATH);
+			roboticonTemplate = (GameObject)Resources.Load(ROBOTICON_TEMPLATE_PATH);
 
 			if (roboticonTemplate == null) {
 				throw new ArgumentException("Cannot find roboticon template at the specified path.");

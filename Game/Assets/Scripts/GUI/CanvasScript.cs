@@ -55,7 +55,7 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void ShowMarketWindow() {
-		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.PURCHASE) {
+		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION) {
 			marketScript.gameObject.SetActive(true);
 		} else {
 			//TODO - Error message "Market cannot be accessed in this phase."

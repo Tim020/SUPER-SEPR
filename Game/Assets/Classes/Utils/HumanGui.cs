@@ -42,7 +42,7 @@ public class HumanGui {
 	/// </summary>
 	/// <exception cref="System.ArgumentException">If the prefab failed to load.</exception>
 	public HumanGui() {
-		humanGuiGameObject = (GameObject) Resources.Load(humanGuiGameObjectPath);
+		humanGuiGameObject = (GameObject)Resources.Load(humanGuiGameObjectPath);
 
 		if (humanGuiGameObject == null) {
 			throw new ArgumentException("Could not find human GUI GameObject at the specified path.");
@@ -79,7 +79,7 @@ public class HumanGui {
 	/// End the phase for the human player.
 	/// </summary>
 	public void EndPhase() {
-		GameHandler.GetGameManager().CurrentPlayerEndTurn();
+		GameHandler.GetGameManager().OnPlayerCompletedPhase(currentPhase);
 	}
 
 	/// <summary>
