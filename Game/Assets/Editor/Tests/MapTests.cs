@@ -53,6 +53,7 @@ public class MapTests {
 	/// <summary>
 	/// Checks that the remaining number of tiles is accurate.
 	/// </summary>
+	[Test]
 	public void GetNumUnownedTiles_Accurate() {
 		Assert.AreEqual(100, testMap.GetNumUnownedTilesRemaining());
 	}
