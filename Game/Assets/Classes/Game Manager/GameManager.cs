@@ -65,7 +65,7 @@ public class GameManager : Object {
 	/// <summary>
 	/// The timer for phases 2 and 3.
 	/// </summary>
-	public Stopwatch timer;
+	public Stopwatch timer = new Stopwatch();
 
 	/// <summary>
 	/// The players in the game.
@@ -101,6 +101,7 @@ public class GameManager : Object {
 	/// State machine to handle the transition between game phases.
 	/// </summary>
 	public void Update() {
+		UnityEngine.Debug.Log(state);
 		if (state == Data.GameState.COLLEGE_SELECTION) {
 			//TODO: do we want to add college's back from our requirements?
 			state = Data.GameState.GAME_WAIT;
@@ -118,7 +119,6 @@ public class GameManager : Object {
 			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
 				state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
-				timer = System.Diagnostics.Stopwatch.StartNew();
 			} else {
 				if (firstTick) {
 					timer = System.Diagnostics.Stopwatch.StartNew();
@@ -152,10 +152,12 @@ public class GameManager : Object {
 				firstTick = true;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
-			foreach (AbstractPlayer p in players.Values) {
-				p.Produce();
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.Produce();
+				}
+				market.UpdatePrices();
 			}
-			market.UpdatePrices();
 			playersCompletedPhase = 0;
 			state = Data.GameState.AUCTION;
 			firstTick = true;
@@ -213,6 +215,7 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.AUCTION:
+				//FIXME: This *probably* won't work.
 				playersCompletedPhase++;
 				break;
 		}
