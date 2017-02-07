@@ -3,44 +3,56 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
+/// <summary>
+/// Pure data class to handle things to do with the game - the GameManager instance and saving and loading
+/// </summary>
 public static class GameHandler {
 
-    public static GameManager gameManager;
+	/// <summary>
+	/// The instance of the GameManager we are running.
+	/// </summary>
+	private static GameManager gameManager;
 
-    /// <summary>
-    /// Throws System.ArgumentException if given a list of players not containing any
-    /// Human players.
-    /// </summary>
-    /// <param name="gameName"></param>
-    /// <param name="players"></param>
-    /// <returns></returns>
-    public static void CreateNew(string gameName, List<AbstractPlayer> players) {
-        gameManager = new GameManager(gameName, players);
-    }
+	/// <summary>
+	/// Creates a new game instance.
+	/// </summary>
+	/// <param name="gameName">The name of the game</param>
+	/// <param name="human">The HumanPlayer</param>
+	/// <param name="ai">The AIPlayer</param>
+	public static void CreateNew(string gameName, HumanPlayer human, AIPlayer ai) {
+		gameManager = new GameManager(gameName, human, ai);
+	}
 
-    public static void Save(GameManager gameManagerToSave, string filePath) {
-        Stream stream = File.Open(filePath, FileMode.Create);
-        BinaryFormatter formatter = new BinaryFormatter();
+	//TODO
+	public static void Save(GameManager gameManagerToSave, string filePath) {
+		Stream stream = File.Open(filePath, FileMode.Create);
+		BinaryFormatter formatter = new BinaryFormatter();
 
-        formatter.Serialize(stream, gameManagerToSave);
-        stream.Close();
-    }
+		formatter.Serialize(stream, gameManagerToSave);
+		stream.Close();
+	}
 
-    public static GameManager Load(string filePath) {
-        FileStream stream;
-        stream = File.Open(filePath, FileMode.Open);
-        BinaryFormatter formatter = new BinaryFormatter();
-        GameManager returnedGameManager = (GameManager) formatter.Deserialize(stream);
-        stream.Close();
+	//TODO
+	public static GameManager Load(string filePath) {
+		FileStream stream;
+		stream = File.Open(filePath, FileMode.Open);
+		BinaryFormatter formatter = new BinaryFormatter();
+		GameManager returnedGameManager = (GameManager) formatter.Deserialize(stream);
+		stream.Close();
 
-        gameManager = returnedGameManager;
+		gameManager = returnedGameManager;
 
-        return returnedGameManager;
-    }
+		return returnedGameManager;
+	}
 
-    public static GameManager GetGameManager() {
-        return gameManager;
-    }
+	/// <summary>
+	/// Gets the game manager instance.
+	/// </summary>
+	/// <returns>The game manager.</returns>
+	public static GameManager GetGameManager() {
+		return gameManager;
+	}
 
 }

@@ -5,200 +5,293 @@ using System.Collections.Generic;
 using UnityEngine;
 using Object = System.Object;
 using Random = UnityEngine.Random;
+using System.Linq;
+using System.Collections;
+using System.Diagnostics;
+using UnityEditorInternal;
+using System.Runtime.InteropServices;
+using System.IO;
 
 [Serializable]
+/// <summary>
+/// The GameManager - represents the current instance of the game being played.
+/// </summary>
 public class GameManager : Object {
 
-	public enum States : int {
-
-		ACQUISITION,
-		PURCHASE,
-		INSTALLATION,
-		PRODUCTION,
-		AUCTION
-
-	}
-
-	public static string[] stateNames = new string[5] {
-		"Acquisition",
-		"Purchase",
-		"Installation",
-		"Production",
-		"Auction"
-	};
-
-	public Market market;
+	/// <summary>
+	/// The name of the game.
+	/// </summary>
 	public string gameName;
 
-	private List<AbstractPlayer> players;
-	private int currentPlayerIndex;
-	private RandomEventFactory randomEventFactory;
-	private Map map;
-	private States currentState = States.ACQUISITION;
-	private HumanGui humanGui;
-
-	public static string StateToPhaseName(States state) {
-		return stateNames[(int)state];
-	}
+	/// <summary>
+	/// The market instance.
+	/// </summary>
+	public Market market;
 
 	/// <summary>
-	/// Don't use this constructor. Use the CreateNew method of the GameHandler object.
-	/// Throws System.ArgumentException if given a player list with no human players.
+	/// The random event factory.
 	/// </summary>
-	/// <param name="gameName"></param>
-	/// <param name="players"></param>
-	public GameManager(string gameName, List<AbstractPlayer> players) {
+	private RandomEventFactory randomEventFactory;
+
+	/// <summary>
+	/// The map.
+	/// </summary>
+	private Map map;
+
+	/// <summary>
+	/// The current state of the game.
+	/// </summary>
+	private Data.GameState state = Data.GameState.COLLEGE_SELECTION;
+
+	/// <summary>
+	/// The current player.
+	/// </summary>
+	private AbstractPlayer currentPlayer;
+
+	/// <summary>
+	/// The number of players who have completed the phase.
+	/// </summary>
+	private int playersCompletedPhase = 0;
+
+	/// <summary>
+	/// The ID of the player who's turn it currently is.
+	/// </summary>
+	/// <value>The current player turn.</value>
+	public int currentPlayerTurn { get; private set; }
+
+	/// <summary>
+	/// Whether this is the first tick of the game state.
+	/// </summary>
+	private bool firstTick;
+
+	/// <summary>
+	/// The timer for phases 2 and 3.
+	/// </summary>
+	public Stopwatch timer;
+
+	/// <summary>
+	/// The players in the game.
+	/// </summary>
+	private Dictionary<int, AbstractPlayer> players = new Dictionary<int, AbstractPlayer>();
+
+	/// <summary>
+	/// Creates a new instance of the GameManager
+	/// </summary>
+	/// <param name="gameName">Name of the game</param>
+	/// <param name="human">The HumanPlayer</param>
+	/// <param name="ai">The AIPlayer</param>
+	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
 		this.gameName = gameName;
-		this.players = players;
-		FormatPlayerList(this.players);
+		players.Add(0, human);
+		players.Add(1, ai);
 		market = new Market();
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
 
+	/// <summary>
+	/// Starts the instance of this game.
+	/// Initialises the GUI and Map elements.
+	/// </summary>
 	public void StartGame() {
 		SetUpGui();
 		SetUpMap();
-
-		PlayerAct();
 	}
 
-	public void CurrentPlayerEndTurn() {
-		PlayerAct();
-	}
-
-	public States GetCurrentState() {
-		return currentState;
-	}
-
-	public AbstractPlayer GetCurrentPlayer() {
-		if (currentPlayerIndex == 0) {
-			return players[players.Count - 1];
-		}
-		return players[currentPlayerIndex - 1];
-	}
-
-	public AbstractPlayer GetWinnerIfGameHasEnded() {
-		//Game ends if there are no remaining unowned tiles (Req 2.3.a)
-		if (map.GetNumUnownedTilesRemaining() == 0) {
-			float highestScore = Mathf.NegativeInfinity;
-			AbstractPlayer winner = null;
-
-			for (int i = 0; i < players.Count; i++) {
-				//Player with the highest score wins (Req 2.3.c)
-				int currentScore = players[i].CalculateScore();
-				if (currentScore > highestScore) {
-					highestScore = currentScore;
-					winner = players[i];
+	/// <summary>
+	/// Update this instance.
+	/// State machine to handle the transition between game phases.
+	/// </summary>
+	public void Update() {
+		if (state == Data.GameState.COLLEGE_SELECTION) {
+			//TODO: do we want to add college's back from our requirements?
+			state = Data.GameState.GAME_WAIT;
+		} else if (state == Data.GameState.GAME_WAIT) {
+			currentPlayer = (AbstractPlayer)players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
+			currentPlayerTurn = currentPlayer.playerID;
+			state = Data.GameState.TILE_PURCHASE;
+			firstTick = true;
+		} else if (state == Data.GameState.TILE_PURCHASE) {
+			if (firstTick) {
+				currentPlayer.StartPhase(state);
+			}
+			firstTick = false;
+		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+				state = Data.GameState.ROBOTICON_PLACEMENT;
+				firstTick = true;
+				timer = System.Diagnostics.Stopwatch.StartNew();
+			} else {
+				if (firstTick) {
+					timer = System.Diagnostics.Stopwatch.StartNew();
+					currentPlayer.StartPhase(state);
+				}
+				firstTick = false;
+			}
+		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+				state = Data.GameState.PLAYER_FINISH;
+				firstTick = true;
+				timer.Stop();
+			} else {
+				if (firstTick) {
+					timer = System.Diagnostics.Stopwatch.StartNew();
+					currentPlayer.StartPhase(state);
+				}
+				firstTick = false;
+			}
+		} else if (state == Data.GameState.PLAYER_FINISH) {
+			if (firstTick) {
+				currentPlayer.StartPhase(state);
+			}
+			firstTick = false;
+			playersCompletedPhase++;
+			if (playersCompletedPhase == players.Count) {
+				state = Data.GameState.PRODUCTION;
+				firstTick = true;
+			} else {
+				state = Data.GameState.GAME_WAIT;
+				firstTick = true;
+			}
+		} else if (state == Data.GameState.PRODUCTION) {
+			foreach (AbstractPlayer p in players.Values) {
+				p.Produce();
+			}
+			market.UpdatePrices();
+			playersCompletedPhase = 0;
+			state = Data.GameState.AUCTION;
+			firstTick = true;
+		} else if (state == Data.GameState.AUCTION) {
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.StartPhase(state);
 				}
 			}
-
-			if (highestScore != Mathf.NegativeInfinity) {
-				return winner;
+			firstTick = false;
+			if (playersCompletedPhase == players.Count) {
+				state = Data.GameState.RECYCLE;
+				firstTick = true;
 			}
+		} else if (state == Data.GameState.RECYCLE) {
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.StartPhase(state);
+				}
+			}
+			firstTick = false;
+			playersCompletedPhase = 0;
+			state = Data.GameState.GAME_WAIT;
+			firstTick = true;
 		}
+	}
 
+	/// <summary>
+	/// Called when the player has finished their turn for a particular phase.
+	/// </summary>
+	/// <param name="state">The state that was completed.</param>
+	/// <param name="args">Optional arguments.</param>
+	/// <exception cref="System.ArgumentException">If the optional arguments are not correct for the state.</exception>
+	public void OnPlayerCompletedPhase(Data.GameState state, params Object[] args) {
+		switch (state) {
+			case Data.GameState.TILE_PURCHASE:
+				this.state = Data.GameState.ROBOTICON_CUSTOMISATION;
+				firstTick = true;
+				break;
+			case Data.GameState.ROBOTICON_CUSTOMISATION:
+				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
+					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
+				}
+				bool choseRobot = (bool)args[0];
+				if (choseRobot) {
+					this.state = Data.GameState.ROBOTICON_PLACEMENT;
+				} else {
+					this.state = Data.GameState.PLAYER_FINISH;
+				}
+				firstTick = true;
+				break;
+			case Data.GameState.ROBOTICON_PLACEMENT:
+				this.state = Data.GameState.PLAYER_FINISH;
+				firstTick = true;
+				break;
+			case Data.GameState.AUCTION:
+				playersCompletedPhase++;
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Gets the current state of the game.
+	/// </summary>
+	/// <returns>The current state.</returns>
+	public Data.GameState GetCurrentState() {
+		return state;
+	}
+
+	/// <summary>
+	/// Gets the current player.
+	/// </summary>
+	/// <returns>The current player.</returns>
+	public AbstractPlayer GetCurrentPlayer() {
+		return currentPlayer;
+	}
+
+	/// <summary>
+	/// TODO: FIX ME/Actually write this method someone please! :)
+	/// Gets the winner when the game has ended.
+	/// </summary>
+	/// <returns>The winner if game has ended.</returns>
+	public AbstractPlayer GetWinnerIfGameHasEnded() {
 		return null;
 	}
 
+	/// <summary>
+	/// Sets up GUI gameObject.
+	/// </summary>
 	private void SetUpGui() {
-		humanGui = new HumanGui();
+		HumanGui gui = new HumanGui();
 		GameObject guiGameObject = GameObject.Instantiate(HumanGui.humanGuiGameObject);
 		MonoBehaviour.DontDestroyOnLoad(guiGameObject);
-
-		CanvasScript canvas = guiGameObject.GetComponent<CanvasScript>();
-		humanGui.SetCanvasScript(canvas);
-		humanGui.SetGameManager(this);
-		canvas.SetHumanGui(humanGui);
-
-		//players[0] will always be a human player. (See FormatPlayerList)
-		humanGui.DisplayGui((HumanPlayer)players[0], currentState);
+		GetHumanPlayer().SetGuiElement(gui, guiGameObject.GetComponent<CanvasScript>());
 	}
 
+	/// <summary>
+	/// Sets up map.
+	/// </summary>
 	private void SetUpMap() {
 		map = new Map();
 		map.Instantiate();
-	}
-
-	private void PlayerAct() {
-		//Check that the current player exists, if not then we have iterated through all players and need to move on to the next stage.
-		if (currentPlayerIndex >= players.Count) {
-			//If we've moved on to the production phase, run the function that handles the logic for the production phase.
-			if (currentState == States.PRODUCTION) {
-				ProcessProductionPhase();
-				currentState = States.ACQUISITION; //Reset the state counter after the production (final) phase
-			} else {
-				currentState++;
-			}
-			currentPlayerIndex = 0;
-		}
-
-		//Call the Act function for the current player, passing the state to it.
-		AbstractPlayer currentPlayer = players[currentPlayerIndex];
-
-		humanGui.DisableGui(); //Disable the Gui in between turns. Re-enabled in the human Act function.
-		humanGui.SetCurrentPlayerName(currentPlayer.GetName());
-		currentPlayerIndex++;
-
-		currentPlayer.Act(currentState);
-		if (currentPlayer is HumanPlayer) {
-			humanGui.DisplayGui((HumanPlayer)currentPlayer, currentState);
-		}
-		map.UpdateMap();
 	}
 
 	private void ShowWinner(AbstractPlayer player) {
 		//Handle exiting the game, showing a winner screen (leaderboard) and returning to main menu
 	}
 
-	private void ProcessProductionPhase() {
-		AbstractPlayer winner = GetWinnerIfGameHasEnded();
-		if (winner != null) {
-			ShowWinner(winner);
-			return;
-		}
-
-		for (int i = 0; i < players.Count; i++) {
-			players[i].Produce();
-		}
-
+	//TODO: Call this from somewhere
+	/// <summary>
+	/// Processes the random events.
+	/// </summary>
+	private void ProcessRandomEvents() {
 		//Instantiate a random event (probability handled in the randomEventFactory) (Req 2.5.a, 2.5.b)
 		GameObject randomEventGameObject = randomEventFactory.Create(Random.Range(0, 101));
-
 		if (randomEventGameObject != null) {
 			GameObject.Instantiate(randomEventGameObject);
 		}
-
-		market.UpdatePrices();
 	}
 
 	/// <summary>
-	/// Sorts the player list so that human players always go first. Mutates players.
+	/// Gets the map.
 	/// </summary>
-	/// <param name="players"></param>
-	/// <returns></returns>
-	private void FormatPlayerList(List<AbstractPlayer> players) {
-		players.Sort(delegate(AbstractPlayer p1, AbstractPlayer p2) {
-			if (p1.IsHuman() && p2.IsHuman()) {
-				return 0;
-			}
-			if (p1.IsHuman()) {
-				return -1;
-			}
-			return 1;
-		});
-
-		if (!players[0].IsHuman()) {
-			throw new ArgumentException("GameManager was given a player list not containing any Human players.");
-		}
-	}
-
+	/// <returns>The map.</returns>
 	public Map GetMap() {
 		return map;
 	}
 
-	public HumanGui GetHumanGui() {
-		return humanGui;
+	/// <summary>
+	/// Gets the human player in this game.
+	/// </summary>
+	/// <returns>The human player.</returns>
+	public HumanPlayer GetHumanPlayer() {
+		return (HumanPlayer)players[0];
 	}
 
 }

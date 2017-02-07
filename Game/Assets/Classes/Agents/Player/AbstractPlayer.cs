@@ -8,6 +8,8 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class AbstractPlayer : Agent {
 
+	public int playerID { protected set; get; }
+
 	/// <summary>
 	/// The name of this player.
 	/// </summary>
@@ -124,7 +126,7 @@ public abstract class AbstractPlayer : Agent {
 		tile.InstallRoboticon(roboticon);
 		roboticon.InstallRoboticonToTile();
 	}
-		
+
 	public void PutItemUpForAuction() {
 		//TODO - interface with auction. Not a priority.
 	}
@@ -150,10 +152,6 @@ public abstract class AbstractPlayer : Agent {
 		return name;
 	}
 
-	/// <summary>
-	/// Act based on the specified state.
-	/// </summary>
-	/// <param name="state">The current game state.</param>
-	public abstract void Act(GameManager.States state);
+	public abstract void StartPhase(Data.GameState state);
 
 }

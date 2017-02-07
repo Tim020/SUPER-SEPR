@@ -2,23 +2,45 @@
 
 public class HumanPlayer : AbstractPlayer {
 
+	private HumanGui humanGui;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HumanPlayer"/> class.
 	/// </summary>
 	/// <param name="resources">Starting resources.</param>
 	/// <param name="name">Name.</param>
 	/// <param name="money">Starting money.</param>
-	public HumanPlayer(ResourceGroup resources, string name, int money) {
+	public HumanPlayer(ResourceGroup resources, int ID, string name, int money) {
+		this.playerID = ID;
 		this.resources = resources;
 		this.name = name;
 		this.money = money;
+	}
+
+	public void SetGuiElement(HumanGui gui, CanvasScript canvas) {
+		this.humanGui = gui;
+		humanGui.SetCanvasScript(canvas);
+		canvas.SetHumanGui(humanGui);
+		humanGui.DisplayGui(Data.GameState.TILE_PURCHASE);
 	}
 
 	/// <summary>
 	/// Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void Act(GameManager.States state) {
+	public override void StartPhase(Data.GameState state) {
+		humanGui.DisableGui();
+		humanGui.SetCurrentPlayerName(this.name);
+		//TODO: Something?
+		humanGui.DisplayGui(state);
+	}
+
+	/// <summary>
+	/// Gets the GUI element for this player.
+	/// </summary>
+	/// <returns>The main GUI overlay.</returns>
+	public HumanGui GetHumanGui() {
+		return humanGui;
 	}
 
 }
