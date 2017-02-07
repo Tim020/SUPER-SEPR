@@ -6,7 +6,7 @@ public class HalfPlayerResource : RandomEvent {
 
     public override void InvokeEvent() {
         base.InvokeEvent();
-        AbstractPlayer player = GameManager.instance.players[Random.Range(0, GameManager.instance.players.Count)];
+        AbstractPlayer player = (AbstractPlayer) GameManager.instance.players[Random.Range(0, GameManager.instance.players.Count)];
         Debug.Log("RANDOM EVENT: Half Player Resource. Player ID " + player.playerID);
 
         ResourceGroup resources = player.GetResources();

@@ -70,7 +70,9 @@ public class GameManager : Object {
 	/// <summary>
 	/// The players in the game.
 	/// </summary>
-	private OrderedDictionary players = new OrderedDictionary();
+	public OrderedDictionary players = new OrderedDictionary();
+
+    public static GameManager instance;
 
 	/// <summary>
 	/// Creates a new instance of the GameManager
@@ -79,6 +81,7 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
+        instance = this;
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);

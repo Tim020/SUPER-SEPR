@@ -36,7 +36,9 @@ public class RandomEventFactory {
     /// Initialises the list of events
     /// </summary>
     private void PopulateEventLists() {
-        crazyEvents.Add(new HalfPlayerResource());
+        regularEvents.Add(new HalfPlayerResource());
+
+        crazyEvents.Add(new DonaldTrump());
     }
 
     /// <summary>
@@ -58,14 +60,18 @@ public class RandomEventFactory {
     /// <returns>The event that occured</returns>
     private RandomEvent ChooseEvent(int craziness) {
         if (regEventsLength == 0 && crazyEventsLength == 0) {
-            Debug.LogWarning("No random events to instantiate.");
+            Debug.LogWarning("No random events to select");
         }
 
         if (craziness > 80 && crazyEventsLength > 0) {
+            Debug.Log("Crazy Event Selected");
             return crazyEvents[Random.Range(0, crazyEventsLength)];
         } else if (craziness <= 80 && regEventsLength > 0) {
+            Debug.Log("Regular Event Selected");
             return regularEvents[Random.Range(0, regEventsLength)];
         }
+
+        Debug.LogWarning("No event selected");
         return null;
     }
 }

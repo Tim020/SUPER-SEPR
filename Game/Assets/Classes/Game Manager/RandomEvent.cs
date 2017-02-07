@@ -2,11 +2,7 @@
 
 public abstract class RandomEvent {
 
-    public RandomEvent() {
+    public RandomEvent() { }
 
-    }
-
-    public virtual void InvokeEvent() {
-
-    }
+    public virtual void InvokeEvent() { }
 }
