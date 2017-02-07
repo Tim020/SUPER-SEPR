@@ -36,7 +36,7 @@ public class RandomEventFactory {
     /// Initialises the list of events
     /// </summary>
     private void PopulateEventLists() {
-
+        crazyEvents.Add(new HalfPlayerResource());
     }
 
     /// <summary>
