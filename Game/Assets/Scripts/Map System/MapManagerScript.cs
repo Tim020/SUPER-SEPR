@@ -42,7 +42,7 @@ public class MapManagerScript : MonoBehaviour {
                     if (Input.GetMouseButtonUp(LEFT_MOUSE_BUTTON)) {
                         if (currentTileSelected != null) {
                             currentTileSelected
-                                .TileNormal(); //Reset the previously selected tile before overwriting the variable
+                                .SetOwnershipColor(); //Reset the previously selected tile before overwriting the variable
                         }
 
                         currentTileSelected = hitTile;
@@ -50,7 +50,7 @@ public class MapManagerScript : MonoBehaviour {
                     } else {
                         if (lastTileHovered != null && lastTileHovered != currentTileSelected) {
                             lastTileHovered
-                                .TileNormal(); //Reset the previously hovered tile before overwriting the variable, but not if the previous tile is currently selected.
+                                .SetOwnershipColor(); //Reset the previously hovered tile before overwriting the variable, but not if the previous tile is currently selected.
                         }
 
                         lastTileHovered = hitTile;
