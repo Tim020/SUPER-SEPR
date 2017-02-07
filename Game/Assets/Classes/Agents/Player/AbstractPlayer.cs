@@ -102,8 +102,13 @@ public abstract class AbstractPlayer : Agent {
 	/// Adds the roboticon to the list of ones owned by the player.
 	/// </summary>
 	/// <param name="roboticon">The Roboticon being purchased.</param>
+	/// <exception cref="System.ArgumentException">When trying to acquire an owned roboticon</exception>
 	public void AcquireRoboticon(Roboticon roboticon) {
-		ownedRoboticons.Add(roboticon);
+		if (ownedRoboticons.Contains(roboticon)) {
+			throw new ArgumentException("Cannot acquire an already owned roboticon.");
+		} else {
+			ownedRoboticons.Add(roboticon);
+		}
 	}
 
 	/// <summary>
@@ -112,8 +117,13 @@ public abstract class AbstractPlayer : Agent {
 	/// </summary>
 	/// <param name="roboticon">The Roboticon.</param>
 	/// <param name="upgrade">The ResourceGroup indicating upgrade values.</param>
+	/// <exception cref="System.ArgumentException">When trying to upgrade a roboticon that is not owned</exception>
 	public void UpgradeRoboticon(Roboticon roboticon, ResourceGroup upgrade) {
-		roboticon.Upgrade(upgrade);
+		if (ownedRoboticons.Contains(roboticon)) {
+			roboticon.Upgrade(upgrade);
+		} else {
+			throw new ArgumentException("Cannot upgrade a roboticon the player does not own.");
+		}
 	}
 
 	/// <summary>
