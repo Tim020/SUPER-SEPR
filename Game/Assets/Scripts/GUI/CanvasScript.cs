@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//TODO: COMMENTS AND DOC STRINGS!
 public class CanvasScript : MonoBehaviour {
 
 	public HelpBoxScript helpBox;
@@ -55,7 +56,7 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void ShowMarketWindow() {
-		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION) {
+		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION || GameHandler.GetGameManager().GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			marketScript.gameObject.SetActive(true);
 		} else {
 			//TODO - Error message "Market cannot be accessed in this phase."
