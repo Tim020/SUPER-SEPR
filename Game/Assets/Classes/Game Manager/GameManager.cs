@@ -11,6 +11,7 @@ using System.Diagnostics;
 using UnityEditorInternal;
 using System.Runtime.InteropServices;
 using System.IO;
+using System.Collections.Specialized;
 
 [Serializable]
 /// <summary>
@@ -72,7 +73,7 @@ public class GameManager : Object {
 	/// <summary>
 	/// The players in the game.
 	/// </summary>
-	private Dictionary<int, AbstractPlayer> players = new Dictionary<int, AbstractPlayer>();
+	private OrderedDictionary players = new OrderedDictionary();
 
 	/// <summary>
 	/// Creates a new instance of the GameManager
