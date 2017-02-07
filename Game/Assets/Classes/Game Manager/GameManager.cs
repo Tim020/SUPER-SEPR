@@ -266,16 +266,11 @@ public class GameManager : Object {
 		//Handle exiting the game, showing a winner screen (leaderboard) and returning to main menu
 	}
 
-	//TODO: Call this from somewhere
 	/// <summary>
-	/// Processes the random events.
+	/// Use the event factory instance to try and make a random event occur. There is a chance an event will not occur.
 	/// </summary>
-	private void ProcessRandomEvents() {
-		//Instantiate a random event (probability handled in the randomEventFactory) (Req 2.5.a, 2.5.b)
-		GameObject randomEventGameObject = randomEventFactory.Create(Random.Range(0, 101));
-		if (randomEventGameObject != null) {
-			GameObject.Instantiate(randomEventGameObject);
-		}
+	private void TryRandomEvent() {
+        randomEventFactory.StartEvent();
 	}
 
 	/// <summary>

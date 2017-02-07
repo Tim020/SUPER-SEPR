@@ -6,22 +6,22 @@ public class RandomEventFactory {
     /// <summary>
     /// The list of regualr events that can occur in the game
     /// </summary>
-    public List<RandomEvent> regularEvents = new List<RandomEvent>();
+    private List<RandomEvent> regularEvents = new List<RandomEvent>();
 
     /// <summary>
     /// The list of crazy events that can occur in the game
     /// </summary>
-    public List<RandomEvent> crazyEvents = new List<RandomEvent>();
+    private List<RandomEvent> crazyEvents = new List<RandomEvent>();
 
     /// <summary>
     /// The number of unique regular events
     /// </summary>
-    public int regEventsLength;
+    private int regEventsLength;
 
     /// <summary>
     /// The number of unique crazy events
     /// </summary>
-    public int crazyEventsLength;
+    private int crazyEventsLength;
 
     /// <summary>
     /// The constructor for the event factory, which initialises the list of events
@@ -35,7 +35,7 @@ public class RandomEventFactory {
     /// <summary>
     /// Initialises the list of events
     /// </summary>
-    public void PopulateEventLists() {
+    private void PopulateEventLists() {
 
     }
 
@@ -43,12 +43,12 @@ public class RandomEventFactory {
     /// Picks an event at random to invoke. There is a chance no event will occur
     /// </summary>
     /// <returns>The event that occured (null if no event occured)</returns>
-    public RandomEvent StartEvent() {
+    public void StartEvent() {
         int chance = Random.Range(0, 10);
         if (chance > 6) {
-            return ChooseEvent(Random.Range(0, 101));
+            RandomEvent e = ChooseEvent(Random.Range(0, 101));
+            e.InvokeEvent();
         }
-        return null;
     }
 
     /// <summary>
@@ -56,10 +56,9 @@ public class RandomEventFactory {
     /// </summary>
     /// <param name="craziness">How crazy the event should be</param>
     /// <returns>The event that occured</returns>
-    public RandomEvent ChooseEvent(int craziness) {
+    private RandomEvent ChooseEvent(int craziness) {
         if (regEventsLength == 0 && crazyEventsLength == 0) {
             Debug.LogWarning("No random events to instantiate.");
-            return null;
         }
 
         if (craziness > 80 && crazyEventsLength > 0) {
