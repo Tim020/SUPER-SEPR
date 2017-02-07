@@ -2,22 +2,60 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomEventFactory
-{
+public class RandomEventFactory {
+    /// <summary>
+    /// The list of regualr events that can occur in the game
+    /// </summary>
     public List<RandomEvent> regularEvents = new List<RandomEvent>();
+
+    /// <summary>
+    /// The list of crazy events that can occur in the game
+    /// </summary>
     public List<RandomEvent> crazyEvents = new List<RandomEvent>();
+
+    /// <summary>
+    /// The number of unique regular events
+    /// </summary>
     public int regEventsLength;
+
+    /// <summary>
+    /// The number of unique crazy events
+    /// </summary>
     public int crazyEventsLength;
 
+    /// <summary>
+    /// The constructor for the event factory, which initialises the list of events
+    /// </summary>
     public RandomEventFactory() {
+        PopulateEventLists();
         regEventsLength = regularEvents.Count;
         crazyEventsLength = crazyEvents.Count;
     }
 
-    public RandomEvent StartEvent() {
-        return ChooseEvent(Random.Range(0, 101));
+    /// <summary>
+    /// Initialises the list of events
+    /// </summary>
+    public void PopulateEventLists() {
+
     }
 
+    /// <summary>
+    /// Picks an event at random to invoke. There is a chance no event will occur
+    /// </summary>
+    /// <returns>The event that occured (null if no event occured)</returns>
+    public RandomEvent StartEvent() {
+        int chance = Random.Range(0, 10);
+        if (chance > 6) {
+            return ChooseEvent(Random.Range(0, 101));
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Picks an event at random to invoke
+    /// </summary>
+    /// <param name="craziness">How crazy the event should be</param>
+    /// <returns>The event that occured</returns>
     public RandomEvent ChooseEvent(int craziness) {
         if (regEventsLength == 0 && crazyEventsLength == 0) {
             Debug.LogWarning("No random events to instantiate.");
