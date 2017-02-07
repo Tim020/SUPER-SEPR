@@ -177,6 +177,7 @@ public class GameManager : Object {
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
 				}
+				TryRandomEvent();
 			}
 			firstTick = false;
 			playersCompletedPhase = 0;
@@ -270,7 +271,7 @@ public class GameManager : Object {
 	/// Use the event factory instance to try and make a random event occur. There is a chance an event will not occur.
 	/// </summary>
 	private void TryRandomEvent() {
-        randomEventFactory.StartEvent();
+		randomEventFactory.StartEvent();
 	}
 
 	/// <summary>
