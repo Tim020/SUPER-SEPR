@@ -75,7 +75,7 @@ public class AIPlayer : AbstractPlayer {
 		Tile[] tiles = new Tile[map.GetNumUnownedTilesRemaining()];
 		int i = 0;
 
-		foreach (Tile t in GameHandler.GetGameManager().GetMap()) {
+		foreach (Tile t in GameHandler.GetGameManager().GetMap().GetTiles()) {
 			if (t.GetOwner() == null) {
 				tiles[i] = t;
 				i++;
