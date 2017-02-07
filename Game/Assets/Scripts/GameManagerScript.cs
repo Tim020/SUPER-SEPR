@@ -4,28 +4,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/// <summary>
+/// Game manager script, attached to the GameManager game object.
+/// </summary>
 public class GameManagerScript : MonoBehaviour {
 
-    public const int GAME_SCENE_INDEX = 1;
-    public string gameName = "game";
+	/// <summary>
+	/// The index of the scene which represents the Game Scene
+	/// </summary>
+	public const int GAME_SCENE_INDEX = 1;
 
-    // Use this for initialization
-    void Start() {
-        //TODO - Implement main menu and loading/saving.
-        DontDestroyOnLoad(this);
+	/// <summary>
+	/// The name of the game.
+	/// </summary>
+	public string gameName = "game";
 
-        ///TEMP - TODO - Implement player screen
-        List<Player> players = new List<Player>();
-        players.Add(new Human(new ResourceGroup(50, 999, 50), "Buddy", 999));
-        // players.Add(new Human(new ResourceGroup(5, 8, 9), "Joe", 10));
-        //players.Add(new Human(new ResourceGroup(55, 8, 9), "Hugo", 10));
-        //players.Add(new Human(new ResourceGroup(5, 8, 9), "Richard", 10));
+	// Use this for initialization
+	//TODO - Implement main menu and loading/saving.
+	/// <summary>
+	/// Start this instance.
+	/// Creates a new instance of the GameManager and starts said instance.
+	/// </summary>
+	void Start() {
+		DontDestroyOnLoad(this);
 
-        GameHandler.CreateNew(gameName, players);
-        GameHandler.GetGameManager().StartGame();
+		GameHandler.CreateNew(gameName, new HumanPlayer(new ResourceGroup(50, 50, 50), 0, "Player", 100), new AIPlayer(new ResourceGroup(50, 50, 50), 1, "AI", 100));
+		GameHandler.GetGameManager().StartGame();
 
-        SceneManager.LoadScene(GAME_SCENE_INDEX); //LoadScene is asynchronous
-        ///
-    }
+		SceneManager.LoadScene(GAME_SCENE_INDEX);
+	}
+
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
+	void Update() {
+		GameHandler.GetGameManager().Update();
+	}
 
 }
