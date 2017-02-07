@@ -62,10 +62,51 @@ public class AIPlayer : AbstractPlayer {
 	/// <returns>The tile to acquire.</returns>
 	private Tile ChooseTileToAcquire() {
 		//TODO - intelligent decision of best tile in map.
-		Map map = GameHandler.GetGameManager().GetMap();
-		int numTiles = (int)(map.MAP_DIMENSIONS.x * map.MAP_DIMENSIONS.y);
+		Tile[] tiles = getAvailableTiles();
+		return tiles[Random.Range(0, tiles.Length)];
+	}
 
-		return map.GetTile(Random.Range(0, numTiles));
+	/// <summary>
+	/// Gets the available tiles from the map.
+	/// </summary>
+	/// <returns>A list of the available tiles.</returns>
+	private Tile[] getAvailableTiles() {
+		Map map = GameHandler.GetGameManager().GetMap();
+		Tile[] tiles = new Tile[map.GetNumUnownedTilesRemaining()];
+		int i = 0;
+
+		foreach (Tile t in GameHandler.GetGameManager().GetMap()) {
+			if (t.GetOwner() == null) {
+				tiles[i] = t;
+				i++;
+			}
+		}
+
+		return tiles;
+	}
+
+	/// <summary>
+	/// Gets the human player money.
+	/// </summary>
+	/// <returns>The human player money.</returns>
+	private int getHumanPlayerMoney() {
+		return GameHandler.GetGameManager().GetHumanPlayer().GetMoney();
+	}
+
+	/// <summary>
+	/// Gets the human player resources.
+	/// </summary>
+	/// <returns>The human player resources.</returns>
+	private ResourceGroup getHumanPlayerResources() {
+		return GameHandler.GetGameManager().GetHumanPlayer().GetResources();
+	}
+
+	/// <summary>
+	/// Gets the human total resources.
+	/// </summary>
+	/// <returns>The human total resources.</returns>
+	private ResourceGroup getHumanTotalResources() {
+		return GameHandler.GetGameManager().GetHumanPlayer().CalculateTotalResourcesGenerated();
 	}
 
 	/// <summary>
