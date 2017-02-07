@@ -31,7 +31,7 @@ public class TileTests {
 	/// </summary>
 	[Test]
 	public void CorrectObjectConstructor() {
-		Vector2 realPos = testTile.GetTileObject().GetTilePosition();
+		Vector2 realPos = testTile.GetTileGraphic().GetTilePosition();
 		Debug.Log(realPos.x == 2);
 		Debug.Log(realPos.y == 1);
 		Assert.IsTrue(realPos.x == 2 && realPos.y == 1);

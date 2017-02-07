@@ -177,7 +177,7 @@ public class Tile {
 	/// Sets the owner of this tile.
 	/// </summary>
 	/// <param name="player">The player who now owns this tile.</param>
-	public void SetOwner(AbstractPlayer player) {
+	public virtual void SetOwner(AbstractPlayer player) {
 		owner = player;
 		SetOwnershipColor();
 	}

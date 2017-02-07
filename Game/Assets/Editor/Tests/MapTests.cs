@@ -31,7 +31,7 @@ public class MapTests {
 	/// </summary>
 	[Test]
 	public void GetTile_Posative() {
-		Assert.AreEqual(0, testMap.GetTile(0).GetId());
+		Assert.AreEqual(0, testMap.GetTile(0).GetID());
 	}
 
 
