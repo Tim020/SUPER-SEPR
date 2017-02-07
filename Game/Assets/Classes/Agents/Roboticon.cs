@@ -60,7 +60,11 @@ public class Roboticon {
 	/// Upgrade the roboticon wit the specified upgrades.
 	/// </summary>
 	/// <param name="upgrades">The upgrades to apply.</param>
+	/// <exception cref="System.ArgumentException">When an upgrade contains a negative value</exception>
 	public void Upgrade(ResourceGroup upgrades) {
+		if (upgrades.energy < 0 || upgrades.food < 0 || upgrades.ore < 0) {
+			throw new ArgumentException("Cannot apply negative upgrades");
+		}
 		this.upgrades += upgrades;
 	}
 
@@ -68,7 +72,11 @@ public class Roboticon {
 	/// Downgrade the specified roboticon with the specified resource amounts.
 	/// </summary>
 	/// <param name="downgrades">Downgrades.</param>
+	/// /// <exception cref="System.ArgumentException">When a downgrade contains a negative value</exception>
 	public void Downgrade(ResourceGroup downgrades) {
+		if (downgrades.energy < 0 || downgrades.food < 0 || downgrades.ore < 0) {
+			throw new ArgumentException("Cannot apply negative downgrades");
+		}
 		upgrades -= downgrades;
 	}
 
