@@ -95,7 +95,7 @@ public class HumanGui {
 	/// </summary>
 	/// <param name="tile">The tile to purchase.</param>
 	public void PurchaseTile(Tile tile) {
-		if (tile.GetPrice() < GameHandler.GetGameManager().GetHumanPlayer().GetMoney()) {
+		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= tile.GetPrice()) {
 			GameHandler.GetGameManager().GetHumanPlayer().SetMoney(GameHandler.GetGameManager().GetHumanPlayer().GetMoney() - tile.GetPrice());
 			GameHandler.GetGameManager().GetHumanPlayer().AcquireTile(tile);
 			UpdateResourceBar();
