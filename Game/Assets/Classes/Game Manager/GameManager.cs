@@ -79,10 +79,10 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
+		market = new Market();
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);
-		market = new Market();
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
@@ -203,7 +203,7 @@ public class GameManager : Object {
 //				}
 //				bool choseRobot = (bool)args[0];
 //				if (choseRobot) {
-					this.state = Data.GameState.ROBOTICON_PLACEMENT;
+				this.state = Data.GameState.ROBOTICON_PLACEMENT;
 //				} else {
 //					this.state = Data.GameState.PLAYER_FINISH;
 //				}
