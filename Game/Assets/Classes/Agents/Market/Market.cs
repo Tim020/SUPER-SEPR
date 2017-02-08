@@ -194,4 +194,7 @@ public class Market : Agent {
 		return roboticonBuyingPrice;
 	}
 
+	public int GetMarketMoney() {
+		return money;
+	}
 }
