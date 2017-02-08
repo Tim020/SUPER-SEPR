@@ -85,12 +85,12 @@ public class GameManager : Object {
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
         instance = this;
-		this.gameName = gameName;
-		players.Add(0, human);
-		players.Add(1, ai);
 		market = new Market();
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
+		this.gameName = gameName;
+		players.Add(0, human);
+		players.Add(1, ai);
 	}
 
 	/// <summary>
