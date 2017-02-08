@@ -14,8 +14,7 @@ public class DonaldTrump : RandomEvent {
             foreach(Tile t in p.GetOwnedTiles()) {
                 t.GetInstalledRoboticons().Clear();
             }
-            List<Roboticon> roboticons = p.GetRoboticons();
-            roboticons.Clear();
+            p.GetRoboticons().Clear();
         }
     }
 }

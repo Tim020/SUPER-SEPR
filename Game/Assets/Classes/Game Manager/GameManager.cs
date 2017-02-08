@@ -72,6 +72,9 @@ public class GameManager : Object {
 	/// </summary>
 	public OrderedDictionary players = new OrderedDictionary();
 
+    /// <summary>
+    /// The game manager instance.
+    /// </summary>
     public static GameManager instance;
 
 	/// <summary>
