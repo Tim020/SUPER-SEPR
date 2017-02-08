@@ -2,7 +2,8 @@
 
 public abstract class RandomEvent {
 
-    public RandomEvent() { }
-
-    public virtual void InvokeEvent() { }
+    /// <summary>
+    /// The method all inheriting events must implement. Called when the event starts.
+    /// </summary>
+    public abstract void InvokeEvent();
 }
