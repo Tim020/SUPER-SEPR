@@ -198,15 +198,15 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
-					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
-				}
-				bool choseRobot = (bool)args[0];
-				if (choseRobot) {
+//				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
+//					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
+//				}
+//				bool choseRobot = (bool)args[0];
+//				if (choseRobot) {
 					this.state = Data.GameState.ROBOTICON_PLACEMENT;
-				} else {
-					this.state = Data.GameState.PLAYER_FINISH;
-				}
+//				} else {
+//					this.state = Data.GameState.PLAYER_FINISH;
+//				}
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
