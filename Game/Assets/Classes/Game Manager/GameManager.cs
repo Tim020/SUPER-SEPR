@@ -101,6 +101,7 @@ public class GameManager : Object {
 	/// State machine to handle the transition between game phases.
 	/// </summary>
 	public void Update() {
+		UnityEngine.Debug.Log(state);
 		if (state == Data.GameState.COLLEGE_SELECTION) {
 			//TODO: do we want to add college's back from our requirements?
 			state = Data.GameState.GAME_WAIT;
