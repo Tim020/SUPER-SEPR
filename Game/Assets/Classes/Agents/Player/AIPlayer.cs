@@ -1,6 +1,7 @@
 ﻿// Game Executable hosted at: http://www-users.york.ac.uk/~jwa509/alpha01BugFree.exe
 
 using UnityEngine;
+using System;
 
 public class AIPlayer : AbstractPlayer {
 
@@ -85,6 +86,45 @@ public class AIPlayer : AbstractPlayer {
 		return tiles;
 	}
 
+
+	/// <summary>
+	/// Gets the best tile for acquisition.
+	/// </summary>
+	/// <returns>The best possible tile for acquisition</returns>
+	private Tile getBestTile() {
+		Tile[] availableTiles = getAvailableTiles();
+	
+		if (availableTiles.Length == 0) {
+			throw new ArgumentException("No avaialbe tiles.");
+		}
+
+		TileChoice best = new TileChoice();
+		TileChoice current;
+
+		foreach (Tile t in availableTiles) {
+			current = scoreTile(t);
+			if (current > best) {
+				best = current;
+			}
+		}
+
+		return best.tile;
+	}
+
+
+	/// <summary>
+	/// Scores the tile.
+	/// </summary>
+	/// <returns>The tile choice with the correct score</returns>
+	/// <param name="tile">The tile to score</param>
+	private TileChoice scoreTile(Tile tile) {
+		TileChoice scoredTile;
+		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
+		scoredTile = new TileChoice(tile, tileScore);
+		return scoredTile;
+	}
+
 	/// <summary>
 	/// Gets the human player money.
 	/// </summary>
@@ -158,6 +198,55 @@ public class AIPlayer : AbstractPlayer {
 	public Tile GetOptimalTileForRoboticon(Roboticon roboticon) {
 		//TODO - decide best tile for supplied roboticon.
 		return null;
+	}
+
+
+	class TileChoice {
+
+		public Tile tile;
+		public int score;
+
+		public TileChoice() {
+			this.score = -1000;
+		}
+
+		public TileChoice(Tile tile, int score) {
+			this.tile = tile;
+			this.score = score;
+		}
+
+		public static bool operator >(TileChoice tc1, TileChoice tc2) {
+			if (tc1.score > tc2.score) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public static bool operator <(TileChoice tc1, TileChoice tc2) {
+			if (tc1.score < tc2.score) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public static bool operator ==(TileChoice tc1, TileChoice tc2) {
+			if (tc1.score == tc2.score) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		public static bool operator !=(TileChoice tc1, TileChoice tc2) {
+			if (tc1.score != tc2.score) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 	}
 
 }
