@@ -57,7 +57,6 @@ public class HumanGui {
 		currentPhase = phase;
 
 		ShowHelpBox();
-
 		UpdateResourceBar();
 		canvas.RefreshRoboticonList();
 		canvas.EnableEndPhaseButton();
