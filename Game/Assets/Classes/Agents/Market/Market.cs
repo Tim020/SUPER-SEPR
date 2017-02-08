@@ -113,6 +113,9 @@ public class Market : Agent {
 	/// <param name="resourcesToBuy">The resources the player is wishing to buy</param>
 	/// <exception cref="System.ArgumentException">When the market does not have enough resources to complete the transaction</exception>
 	public void BuyFrom(ResourceGroup resourcesToBuy) {
+		if (resourcesToBuy.GetFood() < 0 || resourcesToBuy.GetEnergy() < 0 || resourcesToBuy.GetOre() < 0) {
+			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
+		}
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food || resourcesToBuy.energy > resources.energy || resourcesToBuy.ore > resources.ore);
 		if (hasEnoughResources) {
 			//Requires subtraction overload
