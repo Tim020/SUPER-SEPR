@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 public class AIPlayer : AbstractPlayer {
 
@@ -47,9 +48,17 @@ public class AIPlayer : AbstractPlayer {
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
 				Tile tileToAcquire = ChooseTileToAcquire();
-				if (tileToAcquire.GetOwner() == null) {
-					AcquireTile(tileToAcquire);
-				}
+				AcquireTile(tileToAcquire);
+				break;
+			case Data.GameState.ROBOTICON_CUSTOMISATION:
+				//make choice of whether to buy a roboticon and if so do we customise
+				//do we upgrade an already existing roboticon
+				break;
+			case Data.GameState.ROBOTICON_PLACEMENT:
+				//place the new roboticon if relevent
+				break;
+			case Data.GameState.AUCTION:
+				//auction phase
 				break;
 		}
 
@@ -62,9 +71,7 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>The tile to acquire.</returns>
 	private Tile ChooseTileToAcquire() {
-		//TODO - intelligent decision of best tile in map.
-		Tile[] tiles = getAvailableTiles();
-		return tiles[Random.Range(0, tiles.Length)];
+		return getBestTile();
 	}
 
 	/// <summary>
@@ -187,7 +194,21 @@ public class AIPlayer : AbstractPlayer {
 	private bool ShouldPurchaseRoboticon() {
 		//TODO - decide if new roboticon purchase is 
 		// justified.
-		return false;
+		List<Tile> unmannedTiles = new List<Tile>();
+			
+		foreach (Tile t in ownedTiles) {
+			if (t.GetInstalledRoboticons().Count == 0) {
+				unmannedTiles.Add(t);
+			}
+		}
+
+		if (GameHandler.GetGameManager().market.GetNumRoboticonsForSale() == 0) {
+			return false;
+		} else if (unmannedTiles.Count > 0 && GameHandler.GetGameManager().market.GetRoboticonSellingPrice() < money) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/// <summary>
