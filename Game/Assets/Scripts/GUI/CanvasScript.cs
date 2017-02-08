@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//TODO: COMMENTS AND DOC STRINGS!
 public class CanvasScript : MonoBehaviour {
 
 	public HelpBoxScript helpBox;
