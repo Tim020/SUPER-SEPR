@@ -6,6 +6,9 @@ using UnityEngine;
 
 //TODO: This probably needs a meaningful name and a new folder location
 //TODO: Needs a rewrite based on the new requirement for only having one player
+using UnityEditorInternal;
+
+
 public class HumanGui {
 
 	/// <summary>
@@ -36,6 +39,8 @@ public class HumanGui {
 	//TODO: not entirely sure what this is or what it's used for?
 	public const string ANIM_TRIGGER_FLASH_RED = "Flash Red";
 
+	private bool purchasedRoboticon;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HumanGui"/> class.
 	/// Loads the humanGuiGameObject prefab.
@@ -57,6 +62,10 @@ public class HumanGui {
 		currentPhase = phase;
 
 		ShowHelpBox();
+
+		if (phase == Data.GameState.ROBOTICON_CUSTOMISATION || phase == Data.GameState.ROBOTICON_PLACEMENT) {
+			ShowPhaseTimerBox();
+		}
 
 		UpdateResourceBar();
 		canvas.RefreshRoboticonList();
@@ -87,6 +96,7 @@ public class HumanGui {
 	/// </summary>
 	public void DisableGui() {
 		UpdateResourceBar();
+		HidePhaseTimerBox();
 		canvas.HideRoboticonUpgradesWindow();
 		canvas.DisableEndPhaseButton();
 	}
@@ -96,7 +106,7 @@ public class HumanGui {
 	/// </summary>
 	/// <param name="tile">The tile to purchase.</param>
 	public void PurchaseTile(Tile tile) {
-		if (tile.GetPrice() < GameHandler.GetGameManager().GetHumanPlayer().GetMoney()) {
+		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= tile.GetPrice()) {
 			GameHandler.GetGameManager().GetHumanPlayer().SetMoney(GameHandler.GetGameManager().GetHumanPlayer().GetMoney() - tile.GetPrice());
 			GameHandler.GetGameManager().GetHumanPlayer().AcquireTile(tile);
 			UpdateResourceBar();
@@ -129,6 +139,8 @@ public class HumanGui {
 				GameHandler.GetGameManager().GetHumanPlayer().AcquireRoboticon(newRoboticon);
 				canvas.AddRoboticonToList(newRoboticon);
 			}
+
+			purchasedRoboticon = roboticonsToBuy > 0;
 
 			ResourceGroup currentResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
 			GameHandler.GetGameManager().GetHumanPlayer().SetResources(currentResources + resourcesToBuy);
@@ -244,7 +256,7 @@ public class HumanGui {
 	/// Shows the help box.
 	/// </summary>
 	private void ShowHelpBox() {
-		canvas.ShowHelpBox(Data.GetHelpBoxText(currentPhase));
+		canvas.ShowHelpBox();
 	}
 
 	/// <summary>
@@ -252,6 +264,20 @@ public class HumanGui {
 	/// </summary>
 	private void HideHelpBox() {
 		canvas.HideHelpBox();
+	}
+
+	/// <summary>
+	/// Shows the phase timer box.
+	/// </summary>
+	private void ShowPhaseTimerBox() {
+		canvas.ShowPhaseTimerBox();
+	}
+
+	/// <summary>
+	/// Hides the phase timer box.
+	/// </summary>
+	private void HidePhaseTimerBox() {
+		canvas.HidePhaseTimerBox();
 	}
 
 }

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CanvasScript : MonoBehaviour {
 
 	public HelpBoxScript helpBox;
+	public PhaseTimerScript phaseTimer;
 	public GameObject optionsMenu;
 	public RoboticonWindowScript roboticonList;
 	public MarketScript marketScript;
@@ -55,7 +56,7 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void ShowMarketWindow() {
-		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION) {
+		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION || GameHandler.GetGameManager().GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			marketScript.gameObject.SetActive(true);
 		} else {
 			//TODO - Error message "Market cannot be accessed in this phase."
@@ -140,12 +141,20 @@ public class CanvasScript : MonoBehaviour {
 		currentPlayerText.text = name;
 	}
 
-	public void ShowHelpBox(string helpBoxText) {
-		helpBox.ShowHelpBox(helpBoxText);
+	public void ShowHelpBox() {
+		helpBox.ShowHelpBox(Data.GetHelpBoxText(GameHandler.GetGameManager().GetCurrentState()));
 	}
 
 	public void HideHelpBox() {
 		helpBox.HideHelpBox();
+	}
+
+	public void ShowPhaseTimerBox() {
+		phaseTimer.ShowTimerBox();
+	}
+
+	public void HidePhaseTimerBox() {
+		phaseTimer.HideTimerBox();
 	}
 
 	public void SetResourceLabels(ResourceGroup resources, int money) {

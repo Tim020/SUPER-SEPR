@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using System.Runtime.Remoting.Contexts;
 
 [Serializable]
 /// <summary>
@@ -65,12 +66,17 @@ public class GameManager : Object {
 	/// <summary>
 	/// The timer for phases 2 and 3.
 	/// </summary>
-	public Stopwatch timer;
+	public Stopwatch timer = new Stopwatch();
 
 	/// <summary>
 	/// The players in the game.
 	/// </summary>
 	private OrderedDictionary players = new OrderedDictionary();
+
+	/// <summary>
+	/// The phase time in seconds.
+	/// </summary>
+	private const int phaseTimeInSeconds = 60;
 
 	/// <summary>
 	/// Creates a new instance of the GameManager
@@ -79,10 +85,10 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
+		market = new Market();
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);
-		market = new Market();
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
@@ -115,10 +121,9 @@ public class GameManager : Object {
 			}
 			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
-			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+			if (timer.Elapsed.TotalSeconds > phaseTimeInSeconds && !firstTick) {
 				state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
-				timer = System.Diagnostics.Stopwatch.StartNew();
 			} else {
 				if (firstTick) {
 					timer = System.Diagnostics.Stopwatch.StartNew();
@@ -127,7 +132,7 @@ public class GameManager : Object {
 				firstTick = false;
 			}
 		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
-			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+			if (timer.Elapsed.TotalSeconds > phaseTimeInSeconds && !firstTick) {
 				state = Data.GameState.PLAYER_FINISH;
 				firstTick = true;
 				timer.Stop();
@@ -152,10 +157,12 @@ public class GameManager : Object {
 				firstTick = true;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
-			foreach (AbstractPlayer p in players.Values) {
-				p.Produce();
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.Produce();
+				}
+				market.UpdatePrices();
 			}
-			market.UpdatePrices();
 			playersCompletedPhase = 0;
 			state = Data.GameState.AUCTION;
 			firstTick = true;
@@ -197,15 +204,15 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
-					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
-				}
-				bool choseRobot = (bool)args[0];
-				if (choseRobot) {
-					this.state = Data.GameState.ROBOTICON_PLACEMENT;
-				} else {
-					this.state = Data.GameState.PLAYER_FINISH;
-				}
+//				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
+//					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
+//				}
+//				bool choseRobot = (bool)args[0];
+//				if (choseRobot) {
+				this.state = Data.GameState.ROBOTICON_PLACEMENT;
+//				} else {
+//					this.state = Data.GameState.PLAYER_FINISH;
+//				}
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
@@ -213,6 +220,7 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.AUCTION:
+				//FIXME: This *probably* won't work.
 				playersCompletedPhase++;
 				break;
 		}
@@ -286,6 +294,22 @@ public class GameManager : Object {
 	/// <returns>The human player.</returns>
 	public HumanPlayer GetHumanPlayer() {
 		return (HumanPlayer)players[0];
+	}
+
+	/// <summary>
+	/// Gets the elapsed time of the timer in seconds.
+	/// </summary>
+	/// <returns>Elapsed time in seconds.</returns>
+	public int GetTimerInSeconds() {
+		return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
+	}
+
+	/// <summary>
+	/// Gets the remaining time for the current phase.
+	/// </summary>
+	/// <returns>Remaining time in seconds.</returns>
+	public int GetPhaseTimeRemaining() {
+		return phaseTimeInSeconds - GetTimerInSeconds();
 	}
 
 }
