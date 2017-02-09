@@ -86,11 +86,11 @@ public class GameManager : Object {
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
         instance = this;
 		market = new Market();
-		randomEventFactory = new RandomEventFactory();
-		map = new Map();
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);
+		randomEventFactory = new RandomEventFactory();
+		map = new Map();
 	}
 
 	/// <summary>
@@ -204,6 +204,7 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
+<<<<<<< HEAD
 				//if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
 				//	throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
 				//}
@@ -213,6 +214,17 @@ public class GameManager : Object {
 				//} else {
 				//	this.state = Data.GameState.PLAYER_FINISH;
 				//}
+=======
+//				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
+//					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
+//				}
+//				bool choseRobot = (bool)args[0];
+//				if (choseRobot) {
+				this.state = Data.GameState.ROBOTICON_PLACEMENT;
+//				} else {
+//					this.state = Data.GameState.PLAYER_FINISH;
+//				}
+>>>>>>> development-phases
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
