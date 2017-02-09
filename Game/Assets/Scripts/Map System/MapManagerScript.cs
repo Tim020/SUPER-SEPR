@@ -32,33 +32,36 @@ public class MapManagerScript : MonoBehaviour {
         Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit) &&
-            !eventSystem.IsPointerOverGameObject()) //Ray hit something and cursor is not over GUI object
-        {
-            if (hit.collider.tag == "mapTile") {
-                Tile hitTile = map.GetTile(hit.collider.GetComponent<MapTileScript>().GetTileId());
+		if (Physics.Raycast (ray, out hit) &&
+		          !eventSystem.IsPointerOverGameObject ()) { //Ray hit something and cursor is not over GUI object
+			if (hit.collider.tag == "mapTile") {
+				Tile hitTile = map.GetTile (hit.collider.GetComponent<MapTileScript> ().GetTileId ());
 
-                if (hitTile != currentTileSelected) {
-                    if (Input.GetMouseButtonUp(LEFT_MOUSE_BUTTON)) {
-                        if (currentTileSelected != null) {
-                            currentTileSelected
-                                .SetOwnershipColor(); //Reset the previously selected tile before overwriting the variable
-                        }
+				if (hitTile != currentTileSelected) {
+					if (Input.GetMouseButtonUp (LEFT_MOUSE_BUTTON)) {
+						if (currentTileSelected != null) {
+							currentTileSelected
+                                .SetOwnershipColor (); //Reset the previously selected tile before overwriting the variable
+						}
 
-                        currentTileSelected = hitTile;
-                        hitTile.TileSelected();
-                    } else {
-                        if (lastTileHovered != null && lastTileHovered != currentTileSelected) {
-                            lastTileHovered
-                                .SetOwnershipColor(); //Reset the previously hovered tile before overwriting the variable, but not if the previous tile is currently selected.
-                        }
+						currentTileSelected = hitTile;
+						hitTile.TileSelected ();
+					} else {
+						if (lastTileHovered != null && lastTileHovered != currentTileSelected) {
+							lastTileHovered
+                                .SetOwnershipColor (); //Reset the previously hovered tile before overwriting the variable, but not if the previous tile is currently selected.
+						}
 
-                        lastTileHovered = hitTile;
-                        hitTile.TileHovered();
-                    }
-                }
-            }
-        }
+						lastTileHovered = hitTile;
+						hitTile.TileHovered ();
+					}
+				}
+			}
+		} else {
+			if (lastTileHovered != null && lastTileHovered != currentTileSelected) {
+				lastTileHovered.SetOwnershipColor ();
+			}
+		}
     }
 
 }
