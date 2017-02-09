@@ -36,6 +36,8 @@ public class HumanGui {
 	//TODO: not entirely sure what this is or what it's used for?
 	public const string ANIM_TRIGGER_FLASH_RED = "Flash Red";
 
+	private bool purchasedRoboticon;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HumanGui"/> class.
 	/// Loads the humanGuiGameObject prefab.
@@ -129,6 +131,8 @@ public class HumanGui {
 				GameHandler.GetGameManager().GetHumanPlayer().AcquireRoboticon(newRoboticon);
 				canvas.AddRoboticonToList(newRoboticon);
 			}
+
+			purchasedRoboticon = roboticonsToBuy > 0;
 
 			ResourceGroup currentResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
 			GameHandler.GetGameManager().GetHumanPlayer().SetResources(currentResources + resourcesToBuy);
@@ -244,7 +248,7 @@ public class HumanGui {
 	/// Shows the help box.
 	/// </summary>
 	private void ShowHelpBox() {
-		canvas.ShowHelpBox(Data.GetHelpBoxText(currentPhase));
+		canvas.ShowHelpBox();
 	}
 
 	/// <summary>

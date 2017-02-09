@@ -19,21 +19,24 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
-        value: 250
-        inSlope: -140.25
-        outSlope: -140.25
-        tangentMode: 10
-      - time: 0.6666667
-        value: 156.5
-        inSlope: -82.875
-        outSlope: -82.875
-        tangentMode: 10
-      - time: 1
-        value: 148
-        inSlope: -25.500002
-        outSlope: -25.500002
-        tangentMode: 10
+      - serializedVersion: 2
+        time: 0
+        value: 395
+        inSlope: -142.5
+        outSlope: -142.5
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.6666667
+        value: 300
+        inSlope: -86.25
+        outSlope: -86.25
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 1
+        value: 290
+        inSlope: -30.000002
+        outSlope: -30.000002
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -80,21 +83,24 @@ AnimationClip:
   - curve:
       serializedVersion: 2
       m_Curve:
-      - time: 0
-        value: 250
-        inSlope: -140.25
-        outSlope: -140.25
-        tangentMode: 10
-      - time: 0.6666667
-        value: 156.5
-        inSlope: -82.875
-        outSlope: -82.875
-        tangentMode: 10
-      - time: 1
-        value: 148
-        inSlope: -25.500002
-        outSlope: -25.500002
-        tangentMode: 10
+      - serializedVersion: 2
+        time: 0
+        value: 395
+        inSlope: -142.5
+        outSlope: -142.5
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 0.6666667
+        value: 300
+        inSlope: -86.25
+        outSlope: -86.25
+        tangentMode: 34
+      - serializedVersion: 2
+        time: 1
+        value: 290
+        inSlope: -30.000002
+        outSlope: -30.000002
+        tangentMode: 34
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -106,4 +112,5 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_GenerateMotionCurves: 0
+  m_IsEmpty: 0
   m_Events: []

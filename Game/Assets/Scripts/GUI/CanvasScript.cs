@@ -140,8 +140,8 @@ public class CanvasScript : MonoBehaviour {
 		currentPlayerText.text = name;
 	}
 
-	public void ShowHelpBox(string helpBoxText) {
-		helpBox.ShowHelpBox(helpBoxText);
+	public void ShowHelpBox() {
+		helpBox.ShowHelpBox(Data.GetHelpBoxText(GameHandler.GetGameManager().GetCurrentState()));
 	}
 
 	public void HideHelpBox() {
