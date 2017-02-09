@@ -248,7 +248,7 @@ public class HumanGui {
 	/// Shows the help box.
 	/// </summary>
 	private void ShowHelpBox() {
-		canvas.ShowHelpBox(Data.GetHelpBoxText(currentPhase));
+		canvas.ShowHelpBox();
 	}
 
 	/// <summary>
