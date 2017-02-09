@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CanvasScript : MonoBehaviour {
 
 	public HelpBoxScript helpBox;
+	public PhaseTimerScript phaseTimer;
 	public GameObject optionsMenu;
 	public RoboticonWindowScript roboticonList;
 	public MarketScript marketScript;
@@ -146,6 +147,14 @@ public class CanvasScript : MonoBehaviour {
 
 	public void HideHelpBox() {
 		helpBox.HideHelpBox();
+	}
+
+	public void ShowPhaseTimerBox() {
+		phaseTimer.ShowTimerBox();
+	}
+
+	public void HidePhaseTimerBox() {
+		phaseTimer.HideTimerBox();
 	}
 
 	public void SetResourceLabels(ResourceGroup resources, int money) {

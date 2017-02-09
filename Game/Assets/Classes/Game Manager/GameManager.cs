@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Collections.Specialized;
+using System.Runtime.Remoting.Contexts;
 
 [Serializable]
 /// <summary>
@@ -73,6 +74,11 @@ public class GameManager : Object {
 	private OrderedDictionary players = new OrderedDictionary();
 
 	/// <summary>
+	/// The phase time in seconds.
+	/// </summary>
+	private const int phaseTimeInSeconds = 60;
+
+	/// <summary>
 	/// Creates a new instance of the GameManager
 	/// </summary>
 	/// <param name="gameName">Name of the game</param>
@@ -115,7 +121,7 @@ public class GameManager : Object {
 			}
 			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
-			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+			if (timer.Elapsed.TotalSeconds > phaseTimeInSeconds && !firstTick) {
 				state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
 			} else {
@@ -126,7 +132,7 @@ public class GameManager : Object {
 				firstTick = false;
 			}
 		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
-			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+			if (timer.Elapsed.TotalSeconds > phaseTimeInSeconds && !firstTick) {
 				state = Data.GameState.PLAYER_FINISH;
 				firstTick = true;
 				timer.Stop();
@@ -288,6 +294,22 @@ public class GameManager : Object {
 	/// <returns>The human player.</returns>
 	public HumanPlayer GetHumanPlayer() {
 		return (HumanPlayer)players[0];
+	}
+
+	/// <summary>
+	/// Gets the elapsed time of the timer in seconds.
+	/// </summary>
+	/// <returns>Elapsed time in seconds.</returns>
+	public int GetTimerInSeconds() {
+		return Mathf.FloorToInt((float)timer.Elapsed.TotalSeconds);
+	}
+
+	/// <summary>
+	/// Gets the remaining time for the current phase.
+	/// </summary>
+	/// <returns>Remaining time in seconds.</returns>
+	public int GetPhaseTimeRemaining() {
+		return phaseTimeInSeconds - GetTimerInSeconds();
 	}
 
 }
