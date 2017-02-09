@@ -6,6 +6,9 @@ using UnityEngine;
 
 //TODO: This probably needs a meaningful name and a new folder location
 //TODO: Needs a rewrite based on the new requirement for only having one player
+using UnityEditorInternal;
+
+
 public class HumanGui {
 
 	/// <summary>
@@ -60,6 +63,10 @@ public class HumanGui {
 
 		ShowHelpBox();
 
+		if (phase == Data.GameState.ROBOTICON_CUSTOMISATION || phase == Data.GameState.ROBOTICON_PLACEMENT) {
+			ShowPhaseTimerBox();
+		}
+
 		UpdateResourceBar();
 		canvas.RefreshRoboticonList();
 		canvas.EnableEndPhaseButton();
@@ -89,6 +96,7 @@ public class HumanGui {
 	/// </summary>
 	public void DisableGui() {
 		UpdateResourceBar();
+		HidePhaseTimerBox();
 		canvas.HideRoboticonUpgradesWindow();
 		canvas.DisableEndPhaseButton();
 	}
@@ -256,6 +264,20 @@ public class HumanGui {
 	/// </summary>
 	private void HideHelpBox() {
 		canvas.HideHelpBox();
+	}
+
+	/// <summary>
+	/// Shows the phase timer box.
+	/// </summary>
+	private void ShowPhaseTimerBox() {
+		canvas.ShowPhaseTimerBox();
+	}
+
+	/// <summary>
+	/// Hides the phase timer box.
+	/// </summary>
+	private void HidePhaseTimerBox() {
+		canvas.HidePhaseTimerBox();
 	}
 
 }
