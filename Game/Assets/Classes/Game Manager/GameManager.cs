@@ -72,10 +72,10 @@ public class GameManager : Object {
 	/// </summary>
 	public OrderedDictionary players = new OrderedDictionary();
 
-    /// <summary>
-    /// The game manager instance.
-    /// </summary>
-    public static GameManager instance;
+	/// <summary>
+	/// The game manager instance.
+	/// </summary>
+	public static GameManager instance;
 
 	/// <summary>
 	/// Creates a new instance of the GameManager
@@ -84,7 +84,7 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
-        instance = this;
+		instance = this;
 		market = new Market();
 		this.gameName = gameName;
 		players.Add(0, human);
@@ -204,27 +204,7 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-<<<<<<< HEAD
-				//if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
-				//	throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
-				//}
-				//bool choseRobot = (bool)args[0];
-				//if (choseRobot) {
-					this.state = Data.GameState.ROBOTICON_PLACEMENT;
-				//} else {
-				//	this.state = Data.GameState.PLAYER_FINISH;
-				//}
-=======
-//				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
-//					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
-//				}
-//				bool choseRobot = (bool)args[0];
-//				if (choseRobot) {
 				this.state = Data.GameState.ROBOTICON_PLACEMENT;
-//				} else {
-//					this.state = Data.GameState.PLAYER_FINISH;
-//				}
->>>>>>> development-phases
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
