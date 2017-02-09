@@ -65,7 +65,7 @@ public class GameManager : Object {
 	/// <summary>
 	/// The timer for phases 2 and 3.
 	/// </summary>
-	public Stopwatch timer;
+	public Stopwatch timer = new Stopwatch();
 
 	/// <summary>
 	/// The players in the game.
@@ -79,10 +79,10 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
+		market = new Market();
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);
-		market = new Market();
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
@@ -118,7 +118,6 @@ public class GameManager : Object {
 			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
 				state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
-				timer = System.Diagnostics.Stopwatch.StartNew();
 			} else {
 				if (firstTick) {
 					timer = System.Diagnostics.Stopwatch.StartNew();
@@ -152,10 +151,12 @@ public class GameManager : Object {
 				firstTick = true;
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
-			foreach (AbstractPlayer p in players.Values) {
-				p.Produce();
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.Produce();
+				}
+				market.UpdatePrices();
 			}
-			market.UpdatePrices();
 			playersCompletedPhase = 0;
 			state = Data.GameState.AUCTION;
 			firstTick = true;
@@ -197,15 +198,15 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
-					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
-				}
-				bool choseRobot = (bool)args[0];
-				if (choseRobot) {
-					this.state = Data.GameState.ROBOTICON_PLACEMENT;
-				} else {
-					this.state = Data.GameState.PLAYER_FINISH;
-				}
+//				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
+//					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
+//				}
+//				bool choseRobot = (bool)args[0];
+//				if (choseRobot) {
+				this.state = Data.GameState.ROBOTICON_PLACEMENT;
+//				} else {
+//					this.state = Data.GameState.PLAYER_FINISH;
+//				}
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
@@ -213,6 +214,7 @@ public class GameManager : Object {
 				firstTick = true;
 				break;
 			case Data.GameState.AUCTION:
+				//FIXME: This *probably* won't work.
 				playersCompletedPhase++;
 				break;
 		}
