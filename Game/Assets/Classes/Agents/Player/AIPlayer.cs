@@ -2,7 +2,7 @@
 
 using UnityEngine;
 using System;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 
 public class AIPlayer : AbstractPlayer {
 
@@ -19,6 +19,9 @@ public class AIPlayer : AbstractPlayer {
 	/// The difficulty of this AI.
 	/// </summary>
 	private DifficultyLevel difficulty;
+
+
+	private Tile previousInstallation = null;
 
 	/// <summary>
 	/// The optimal resource fractions.
@@ -44,26 +47,55 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state) {
-		//TODO - AI action
+		bool except = false;
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
-				Tile tileToAcquire = ChooseTileToAcquire();
-				AcquireTile(tileToAcquire);
-				break;
+				try {
+					Tile tileToAcquire = ChooseTileToAcquire();
+					AcquireTile(tileToAcquire);
+					money -= tileToAcquire.GetPrice();
+					break;
+				} catch (NullReferenceException e) {
+					except = true;
+					GameHandler.GetGameManager().OnPlayerCompletedPhase(state, false);
+					break;
+				}
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				//make choice of whether to buy a roboticon and if so do we customise
-				//do we upgrade an already existing roboticon
+				if (ShouldPurchaseRoboticon()) {
+					int price = GameHandler.GetGameManager().market.GetRoboticonSellingPrice();
+					Roboticon r = new Roboticon();
+					money -= price;
+					ownedRoboticons.Add(r);
+
+					ResourceGroup upgrade;
+					if (GetUnmannedTiles().Count > 1) {
+						upgrade = ChooseBestRoboticonUpgrade(InstallationTile());
+					} else if (previousInstallation != null) {
+						upgrade = ChooseBestRoboticonUpgrade(previousInstallation);
+					} else {
+						break;
+					}
+
+					if ((upgrade * Roboticon.UPGRADEVALUE).Sum() < money) {
+						UpgradeRoboticon(r, upgrade);
+						money -= (upgrade * Roboticon.UPGRADEVALUE).Sum();
+					}
+				} else {
+					GameHandler.GetGameManager().OnPlayerCompletedPhase(state, false);
+				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
-				//place the new roboticon if relevent
+				InstallRoboticon(ownedRoboticons[ownedRoboticons.Count - 1], ownedTiles[ownedTiles.Count - 1]);
 				break;
 			case Data.GameState.AUCTION:
 				//auction phase
 				break;
 		}
 
-		// This must be done to signify the end of the AI turn.
-		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
+		if (!except) {
+			// This must be done to signify the end of the AI turn.
+			GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
+		}
 	}
 
 	/// <summary>
@@ -71,14 +103,14 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>The tile to acquire.</returns>
 	private Tile ChooseTileToAcquire() {
-		return getBestTile();
+		return GetBestTile();
 	}
 
 	/// <summary>
 	/// Gets the available tiles from the map.
 	/// </summary>
 	/// <returns>A list of the available tiles.</returns>
-	private Tile[] getAvailableTiles() {
+	private Tile[] GetAvailableTiles() {
 		Map map = GameHandler.GetGameManager().GetMap();
 		Tile[] tiles = new Tile[map.GetNumUnownedTilesRemaining()];
 		int i = 0;
@@ -98,8 +130,8 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the best tile for acquisition.
 	/// </summary>
 	/// <returns>The best possible tile for acquisition</returns>
-	private Tile getBestTile() {
-		Tile[] availableTiles = getAvailableTiles();
+	private Tile GetBestTile() {
+		Tile[] availableTiles = GetAvailableTiles();
 	
 		if (availableTiles.Length == 0) {
 			throw new ArgumentException("No avaialbe tiles.");
@@ -109,22 +141,26 @@ public class AIPlayer : AbstractPlayer {
 		TileChoice current;
 
 		foreach (Tile t in availableTiles) {
-			current = scoreTile(t);
-			if (current > best) {
+			current = ScoreTile(t);
+			if (current > best && current.tile.GetPrice() < money) {
 				best = current;
 			}
 		}
 
-		return best.tile;
+		if (best.tile == null) {
+			throw new NullReferenceException("Not enough funds");
+		} else {
+			return best.tile;
+		}
 	}
 
 
 	/// <summary>
-	/// Scores the tile.
+	/// Scores the fitness of a tile.
 	/// </summary>
 	/// <returns>The tile choice with the correct score</returns>
 	/// <param name="tile">The tile to score</param>
-	private TileChoice scoreTile(Tile tile) {
+	private TileChoice ScoreTile(Tile tile) {
 		TileChoice scoredTile;
 		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
@@ -136,7 +172,7 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the human player money.
 	/// </summary>
 	/// <returns>The human player money.</returns>
-	private int getHumanPlayerMoney() {
+	private int GetHumanPlayerMoney() {
 		return GameHandler.GetGameManager().GetHumanPlayer().GetMoney();
 	}
 
@@ -144,15 +180,15 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the human player resources.
 	/// </summary>
 	/// <returns>The human player resources.</returns>
-	private ResourceGroup getHumanPlayerResources() {
+	private ResourceGroup GetHumanPlayerResources() {
 		return GameHandler.GetGameManager().GetHumanPlayer().GetResources();
 	}
 
 	/// <summary>
-	/// Gets the human total resources.
+	/// Gets the human player total resources.
 	/// </summary>
 	/// <returns>The human total resources.</returns>
-	private ResourceGroup getHumanTotalResources() {
+	private ResourceGroup GetHumanTotalResources() {
 		return GameHandler.GetGameManager().GetHumanPlayer().CalculateTotalResourcesGenerated();
 	}
 
@@ -160,10 +196,16 @@ public class AIPlayer : AbstractPlayer {
 	/// Chooses the best roboticon upgrade.
 	/// </summary>
 	/// <returns>The best roboticon upgrade.</returns>
-	/// <param name="roboticon">The roboticon to upgrade.</param>
-	private ResourceGroup ChooseBestRoboticonUpgrade(Roboticon roboticon) {
-		//TODO - intelligent decision of best upgrade.
-		return new ResourceGroup(1, 0, 0);
+	/// <param name="tile">The tile where the roboticon is located.</param>
+	private ResourceGroup ChooseBestRoboticonUpgrade(Tile tile) {
+		ResourceGroup tileResources = tile.GetTotalResourcesGenerated();
+		if (tileResources.energy >= tileResources.food && tileResources.energy >= tileResources.ore) {
+			return new ResourceGroup(1, 0, 0);
+		} else if (tileResources.food >= tileResources.energy && tileResources.food >= tileResources.ore) {
+			return new ResourceGroup(0, 1, 0);
+		} else {
+			return new ResourceGroup(0, 0, 1);
+		}
 	}
 
 	/// <summary>
@@ -188,12 +230,10 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Shoulds the AI purchase a roboticon.
+	/// Gets the a list of tiles that have no installed roboticon.
 	/// </summary>
-	/// <returns><c>true</c>, if purchase roboticon was shoulded, <c>false</c> otherwise.</returns>
-	private bool ShouldPurchaseRoboticon() {
-		//TODO - decide if new roboticon purchase is 
-		// justified.
+	/// <returns>The unmanned tiles.</returns>
+	private List<Tile> GetUnmannedTiles() {
 		List<Tile> unmannedTiles = new List<Tile>();
 			
 		foreach (Tile t in ownedTiles) {
@@ -201,6 +241,35 @@ public class AIPlayer : AbstractPlayer {
 				unmannedTiles.Add(t);
 			}
 		}
+		return unmannedTiles;
+	}
+
+	/// <summary>
+	/// Gets the best tile fo roboticon installation.
+	/// </summary>
+	/// <returns>The tile.</returns>
+	private Tile InstallationTile() {
+		List<Tile> unmannedTiles = GetUnmannedTiles();
+		if (unmannedTiles.Count > 0) {
+			TileChoice best = new TileChoice();
+			TileChoice current = new TileChoice();
+			foreach (Tile t in unmannedTiles) {
+				current = ScoreTile(t);
+				if (current > best) {
+					best = current;
+				}
+			}
+			return best.tile;
+		}
+		throw new ArgumentException(); 
+	}
+
+	/// <summary>
+	/// Checks whether the AI should purchase a roboticon.
+	/// </summary>
+	/// <returns><c>true</c>, if the AI should purchase a roboticon <c>false</c> otherwise.</returns>
+	private bool ShouldPurchaseRoboticon() {
+		List<Tile> unmannedTiles = GetUnmannedTiles();
 
 		if (GameHandler.GetGameManager().market.GetNumRoboticonsForSale() == 0) {
 			return false;
@@ -224,8 +293,8 @@ public class AIPlayer : AbstractPlayer {
 
 	class TileChoice {
 
-		public Tile tile;
-		public int score;
+		public Tile tile {get; private set;}
+		public int score {get; private set;}
 
 		public TileChoice() {
 			this.score = -1000;
@@ -269,5 +338,4 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 	}
-
 }
