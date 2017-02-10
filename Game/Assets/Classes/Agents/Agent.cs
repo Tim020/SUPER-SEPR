@@ -35,7 +35,7 @@ public abstract class Agent {
 	/// </summary>
 	/// <param name="type">The resource type.</param>
 	/// <exception cref="System.ArgumentException">If the specified type is <c>Data.ResourceType.NONE</c></exception>
-	public void GetResourceAmount(Data.ResourceType type) {
+	public float GetResourceAmount(Data.ResourceType type) {
 		switch (type) {
 			case Data.ResourceType.ENERGY:
 				return resources.GetEnergy();
