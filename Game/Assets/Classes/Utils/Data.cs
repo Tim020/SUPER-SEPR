@@ -5,6 +5,16 @@ using UnityEngine;
 public class Data {
 
 	/// <summary>
+	/// Types of resources available in the game
+	/// </summary>
+	public enum ResourceType {
+		ORE,
+		FOOD,
+		ENERGY,
+		NONE
+	}
+
+	/// <summary>
 	/// The different states possible in the game
 	/// </summary>
 	/// <summary>
