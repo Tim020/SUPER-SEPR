@@ -20,8 +20,17 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	private DifficultyLevel difficulty;
 
-
+    /// <summary>
+    /// The previous installation.
+    /// </summary>
 	private Tile previousInstallation = null;
+
+    /// <summary>
+    /// The current roboticon.
+    /// </summary>
+    private Roboticon currentRoboticon = null;
+
+    private ResourceGroup bestPrice = null;
 
 	/// <summary>
 	/// The optimal resource fractions.
@@ -50,60 +59,87 @@ public class AIPlayer : AbstractPlayer {
 		bool except = false;
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
+                Debug.Log("Im in tile purchase");
+                Debug.Log("Funds stand at " + money);
 				try {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
 					money -= tileToAcquire.GetPrice();
+                    Debug.Log("I aquired tile:" + tileToAcquire.GetID());
+                    Debug.Log("Funds stand at " + money);
 					break;
 				} catch (NullReferenceException e) {
-					except = true;
-					GameHandler.GetGameManager().OnPlayerCompletedPhase(state, false);
+                    Debug.Log("I didn't acquire a tile as I only have this much money: " + money);
 					break;
 				}
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
+                Debug.Log("Im in roboticon customisation");
+                except = true;
 				if (ShouldPurchaseRoboticon()) {
 					int price = GameHandler.GetGameManager().market.GetRoboticonSellingPrice();
 					Roboticon r = new Roboticon();
 					money -= price;
 					ownedRoboticons.Add(r);
+                    currentRoboticon = r;
 
-					ResourceGroup upgrade;
-					if (GetUnmannedTiles().Count > 1) {
-						upgrade = ChooseBestRoboticonUpgrade(InstallationTile());
-					} else if (previousInstallation != null) {
-						upgrade = ChooseBestRoboticonUpgrade(previousInstallation);
-					} else {
-						break;
-					}
-
-					if ((upgrade * Roboticon.UPGRADEVALUE).Sum() < money) {
-						UpgradeRoboticon(r, upgrade);
-						money -= (upgrade * Roboticon.UPGRADEVALUE).Sum();
-					}
+                    GameHandler.GetGameManager().OnPlayerCompletedPhase(state, true);
+                    Debug.Log("Funds stand at " + money);
 				} else {
 					GameHandler.GetGameManager().OnPlayerCompletedPhase(state, false);
 				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
-				InstallRoboticon(ownedRoboticons[ownedRoboticons.Count - 1], ownedTiles[ownedTiles.Count - 1]);
+                Debug.Log("Im in roboticon placement");
+                if (currentRoboticon != null) {
+				    InstallRoboticon(currentRoboticon, InstallationTile());
+                    currentRoboticon = null;
+                }
 				break;
 			case Data.GameState.AUCTION:
-				//auction phase
+                Debug.Log("Im in auction");
+                ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+                Market market = GameHandler.GetGameManager().market;
+                int om = money;
+
+                if (bestPrice != null) {
+                    ResourceGroup sellingAmounts = resources / 4;
+
+                    if (currentPrice.energy < bestPrice.energy) {
+                        sellingAmounts.energy = 0;
+                    } else {
+                        bestPrice.energy = currentPrice.energy;
+                    }
+                    if (currentPrice.food < bestPrice.food) {
+                        sellingAmounts.food = 0;
+                    } else {
+                        bestPrice.food = currentPrice.food;
+                    }
+                    if (currentPrice.ore < bestPrice.ore) {
+                        sellingAmounts.ore = 0;
+                    } else {
+                        bestPrice.ore = currentPrice.ore;
+                    }
+
+                    while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
+                        sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), 
+                            Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1));
+                    }
+
+                    money -= (sellingAmounts * currentPrice).Sum();
+                    resources -= sellingAmounts;
+                    market.SellTo(sellingAmounts);
+                    Debug.Log("We've made " + (money - om));
+                } else {
+                    bestPrice = currentPrice;
+                }
 				break;
 		}
 
 		if (!except) {
 			// This must be done to signify the end of the AI turn.
+            Debug.Log("Finished");
 			GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
 		}
-	}
-
-	/// <summary>
-	/// Chooses the tile to acquire.
-	/// </summary>
-	/// <returns>The tile to acquire.</returns>
-	private Tile ChooseTileToAcquire() {
-		return GetBestTile();
 	}
 
 	/// <summary>
@@ -130,19 +166,18 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the best tile for acquisition.
 	/// </summary>
 	/// <returns>The best possible tile for acquisition</returns>
-	private Tile GetBestTile() {
+    private Tile ChooseTileToAcquire() {
 		Tile[] availableTiles = GetAvailableTiles();
-	
+        TileChoice best = new TileChoice();
+        TileChoice current;
+
 		if (availableTiles.Length == 0) {
 			throw new ArgumentException("No avaialbe tiles.");
 		}
-
-		TileChoice best = new TileChoice();
-		TileChoice current;
-
+             
 		foreach (Tile t in availableTiles) {
 			current = ScoreTile(t);
-			if (current > best && current.tile.GetPrice() < money) {
+			if (current > best && current.tile.GetPrice() <= money) {
 				best = current;
 			}
 		}
@@ -164,6 +199,7 @@ public class AIPlayer : AbstractPlayer {
 		TileChoice scoredTile;
 		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
+        tileScore /= tile.GetPrice();
 		scoredTile = new TileChoice(tile, tileScore);
 		return scoredTile;
 	}
