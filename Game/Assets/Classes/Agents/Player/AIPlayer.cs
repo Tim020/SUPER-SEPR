@@ -6,24 +6,10 @@ using System.Collections.Generic;
 
 public class AIPlayer : AbstractPlayer {
 
-	/// <summary>
-	/// Difficulty level enum.
-	/// </summary>
-	private enum DifficultyLevel {
-		EASY,
-		MEDIUM,
-		HARD
-	}
-
-	/// <summary>
-	/// The difficulty of this AI.
-	/// </summary>
-	private DifficultyLevel difficulty;
-
     /// <summary>
-    /// The previous installation.
+    /// First time through the acquisition phase
     /// </summary>
-	private Tile previousInstallation = null;
+    private Boolean first = true;
 
     /// <summary>
     /// The current roboticon.
@@ -33,7 +19,7 @@ public class AIPlayer : AbstractPlayer {
     /// <summary>
     /// The best market price seen so far.
     /// </summary>
-    private ResourceGroup bestPrice = null;
+    private ResourceGroup bestPrice = new ResourceGroup(-1, -1, -1);
 
 	/// <summary>
 	/// The optimal resource fractions.
@@ -64,21 +50,40 @@ public class AIPlayer : AbstractPlayer {
 			case Data.GameState.TILE_PURCHASE:
                 Debug.Log("Im in tile purchase");
                 Debug.Log("Funds stand at " + money);
+                if (first) {
+                    first = false;
+                    Tile tileToAcquire = Array.Find(GetAvailableTiles(), t => t.GetPrice() < money - 15);
+                    AcquireTile(tileToAcquire);
+                    money -= tileToAcquire.GetPrice();
+                    Debug.Log("I aquired tile:" + tileToAcquire.GetID());
+                    Debug.Log("Funds stand at " + money);
+                    break;                   
+                }
 				try {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
 					money -= tileToAcquire.GetPrice();
                     Debug.Log("I aquired tile:" + tileToAcquire.GetID());
                     Debug.Log("Funds stand at " + money);
-					break;
-				} catch (NullReferenceException e) {
+				} catch (NullReferenceException) {
                     Debug.Log("I didn't acquire a tile as I only have this much money: " + money);
-					break;
-				}
+				} catch (ArgumentException) {}
+                break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-                Debug.Log("Im in roboticon customisation");
+                Debug.Log("LOOK IM HERE: Im in roboticon customisation");
                 except = true;
+                try {
+                    if (ShouldUpgrade()) {
+                        Debug.Log("Im going to upgrade a roboticon");
+                        Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
+                        Debug.Log("Im upgrading roboticon: " + upgrade.Head.GetName());
+                        UpgradeRoboticon(upgrade.Head, upgrade.Tail);
+                        money -= Roboticon.UPGRADEVALUE;
+                    }
+                } catch (NullReferenceException) {Debug.Log("Im not upgrading anyting.");}
+
 				if (ShouldPurchaseRoboticon()) {
+                    Debug.Log("Im buying a roboticon.");
 					int price = GameHandler.GetGameManager().market.GetRoboticonSellingPrice();
 					Roboticon r = new Roboticon();
 					money -= price;
@@ -89,26 +94,27 @@ public class AIPlayer : AbstractPlayer {
                     Debug.Log("Funds stand at " + money);
 				} else {
 					GameHandler.GetGameManager().OnPlayerCompletedPhase(state, false);
+                    Debug.Log("Im not buying a roboticon.");
 				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
                 Debug.Log("Im in roboticon placement");
-                if (currentRoboticon != null) {
-				    InstallRoboticon(currentRoboticon, InstallationTile());
-                    currentRoboticon = null;
-                }
+                try {
+                    if (currentRoboticon != null) {
+                        Tile install = InstallationTile();
+    				    InstallRoboticon(currentRoboticon, install);
+                        Debug.Log("Ive installed " + currentRoboticon.GetName() + " at tile " + install.GetID());
+                        currentRoboticon = null;
+                    }
+                } catch (ArgumentException) {Debug.Log("No where to install a roboticon.");}
 				break;
 			case Data.GameState.AUCTION:
                 Debug.Log("Im in auction");
-                ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+                ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
                 int om = money;
 
-                if (bestPrice != null) {
-                    SellToMarket();
-                    Debug.Log("We've made " + (money - om));
-                } else {
-                    bestPrice = currentPrice;
-                }
+                SellToMarket();
+                Debug.Log("We've made " + (om - money));
 				break;
 		}
 
@@ -124,25 +130,71 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>A list of the available tiles.</returns>
 	private Tile[] GetAvailableTiles() {
-		Map map = GameHandler.GetGameManager().GetMap();
-		Tile[] tiles = new Tile[map.GetNumUnownedTilesRemaining()];
-		int i = 0;
-
-		foreach (Tile t in GameHandler.GetGameManager().GetMap().GetTiles()) {
-			if (t.GetOwner() == null) {
-				tiles[i] = t;
-				i++;
-			}
-		}
-
-		return tiles;
+        return GameHandler.GetGameManager().GetMap().GetTiles().FindAll(t => t.GetOwner() == null).ToArray();
 	}
+
+    /// <summary>
+    /// Gets the manned tiles.
+    /// </summary>
+    /// <returns>The manned tiles.</returns>
+    private Tile[] GetMannedTiles() {
+        return ownedTiles.FindAll(t => t.GetInstalledRoboticons().Count == 1).ToArray();
+    }
+
+    /// <summary>
+    /// Checks whether we should upgrade a roboticon. 
+    /// </summary>
+    /// <returns><c>true</c>, if an upgrade should happen, <c>false</c> otherwise.</returns>
+    private Boolean ShouldUpgrade() {
+        if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADEVALUE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Chooses the best upgrade and the best roboticon for it.
+    /// </summary>
+    /// <returns>The upgrade.</returns>
+    /// <exception cref="System.NullReferenceException">If there aren't any roboticons to upgrade.</exception>
+    private Tuple<Roboticon, ResourceGroup> ChooseUpgrade() {
+        Tile[] mannedTiles = GetMannedTiles();
+        TileChoice best = new TileChoice();
+        TileChoice current;
+
+        foreach (Tile t in mannedTiles) {
+            ResourceGroup tResources = t.GetTotalResourcesGenerated();
+            if (tResources.energy >= 10 || tResources.food >= 10 || tResources.ore >= 10) {
+                continue;
+            } else {
+                current = ScoreTile(t);
+                if (current > best) {
+                    best = current;
+                }
+            }
+        }
+
+        if (best != null) {
+            ResourceGroup upgrade = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+            if (upgrade.energy >= upgrade.food && upgrade.energy >= upgrade.ore) {
+                upgrade = new ResourceGroup(0, 1, 0);
+            } else if (upgrade.food >= upgrade.energy && upgrade.food >= upgrade.ore) {
+                upgrade = new ResourceGroup(1, 0, 0);
+            } else {
+                upgrade = new ResourceGroup(0, 0, 1);
+            }
+            return new Tuple<Roboticon, ResourceGroup>(best.tile.GetInstalledRoboticons()[0], upgrade);
+        } else {
+            throw new NullReferenceException("No roboticon to upgrade.");
+        }
+    }
 
     /// <summary>
     /// Sells to the market.
     /// </summary>
     private void SellToMarket() {
-        ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+        ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
         Market market = GameHandler.GetGameManager().market;
         ResourceGroup sellingAmounts = resources / 4;
 
@@ -176,6 +228,8 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the best tile for acquisition.
 	/// </summary>
 	/// <returns>The best possible tile for acquisition</returns>
+    /// <exception cref="System.NullReferenceException">If the AI doesn't have enough money.</exception>
+    /// <exception cref="System.ArgumentException">If there aren't any available tiles.</exception>
     private Tile ChooseTileToAcquire() {
 		Tile[] availableTiles = GetAvailableTiles();
         TileChoice best = new TileChoice();
@@ -207,9 +261,9 @@ public class AIPlayer : AbstractPlayer {
 	/// <param name="tile">The tile to score</param>
 	private TileChoice ScoreTile(Tile tile) {
 		TileChoice scoredTile;
-		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
-        tileScore /= tile.GetPrice();
+        tileScore -= tile.GetPrice();
 		scoredTile = new TileChoice(tile, tileScore);
 		return scoredTile;
 	}
@@ -294,6 +348,7 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the best tile fo roboticon installation.
 	/// </summary>
 	/// <returns>The tile.</returns>
+    /// <exception cref="System.ArgumentException">If all tiles owned tiles are occupied with a roboticon.</exception>
 	private Tile InstallationTile() {
 		List<Tile> unmannedTiles = GetUnmannedTiles();
 		if (unmannedTiles.Count > 0) {
@@ -306,8 +361,9 @@ public class AIPlayer : AbstractPlayer {
 				}
 			}
 			return best.tile;
-		}
-		throw new ArgumentException(); 
+		} else {
+            throw new ArgumentException("No tile needs more roboticons.");
+        }
 	}
 
 	/// <summary>
@@ -325,7 +381,7 @@ public class AIPlayer : AbstractPlayer {
 			return false;
 		}
 	}
-
+    
 	class TileChoice {
 
 		public Tile tile {get; private set;}
@@ -373,4 +429,19 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 	}
+
+    /// <summary>
+    /// A generic Tuple.
+    /// </summary>
+    class Tuple<T1 , T2> {
+
+        public T1 Head {get; private set;}
+        public T2 Tail {get; private set;}
+
+        internal Tuple(T1 head, T2 tail) {
+            Head = head;
+            Tail = tail;
+        } 
+        
+    }
 }
