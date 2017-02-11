@@ -30,6 +30,9 @@ public class AIPlayer : AbstractPlayer {
     /// </summary>
     private Roboticon currentRoboticon = null;
 
+    /// <summary>
+    /// The best market price seen so far.
+    /// </summary>
     private ResourceGroup bestPrice = null;
 
 	/// <summary>
@@ -98,36 +101,10 @@ public class AIPlayer : AbstractPlayer {
 			case Data.GameState.AUCTION:
                 Debug.Log("Im in auction");
                 ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-                Market market = GameHandler.GetGameManager().market;
                 int om = money;
 
                 if (bestPrice != null) {
-                    ResourceGroup sellingAmounts = resources / 4;
-
-                    if (currentPrice.energy < bestPrice.energy) {
-                        sellingAmounts.energy = 0;
-                    } else {
-                        bestPrice.energy = currentPrice.energy;
-                    }
-                    if (currentPrice.food < bestPrice.food) {
-                        sellingAmounts.food = 0;
-                    } else {
-                        bestPrice.food = currentPrice.food;
-                    }
-                    if (currentPrice.ore < bestPrice.ore) {
-                        sellingAmounts.ore = 0;
-                    } else {
-                        bestPrice.ore = currentPrice.ore;
-                    }
-
-                    while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
-                        sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), 
-                            Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1));
-                    }
-
-                    money -= (sellingAmounts * currentPrice).Sum();
-                    resources -= sellingAmounts;
-                    market.SellTo(sellingAmounts);
+                    SellToMarket();
                     Debug.Log("We've made " + (money - om));
                 } else {
                     bestPrice = currentPrice;
@@ -161,6 +138,39 @@ public class AIPlayer : AbstractPlayer {
 		return tiles;
 	}
 
+    /// <summary>
+    /// Sells to the market.
+    /// </summary>
+    private void SellToMarket() {
+        ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+        Market market = GameHandler.GetGameManager().market;
+        ResourceGroup sellingAmounts = resources / 4;
+
+        if (currentPrice.energy < bestPrice.energy) {
+            sellingAmounts.energy = 0;
+        } else {
+            bestPrice.energy = currentPrice.energy;
+        }
+        if (currentPrice.food < bestPrice.food) {
+            sellingAmounts.food = 0;
+        } else {
+            bestPrice.food = currentPrice.food;
+        }
+        if (currentPrice.ore < bestPrice.ore) {
+            sellingAmounts.ore = 0;
+        } else {
+            bestPrice.ore = currentPrice.ore;
+        }
+
+        while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
+            sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), 
+                Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1));
+        }
+
+        money -= (sellingAmounts * currentPrice).Sum();
+        resources -= sellingAmounts;
+        market.SellTo(sellingAmounts);
+    }
 
 	/// <summary>
 	/// Gets the best tile for acquisition.
@@ -315,17 +325,6 @@ public class AIPlayer : AbstractPlayer {
 			return false;
 		}
 	}
-
-	/// <summary>
-	/// Gets the optimal tile for the given roboticon.
-	/// </summary>
-	/// <returns>The optimal tile for roboticon.</returns>
-	/// <param name="roboticon">The roboticon.</param>
-	public Tile GetOptimalTileForRoboticon(Roboticon roboticon) {
-		//TODO - decide best tile for supplied roboticon.
-		return null;
-	}
-
 
 	class TileChoice {
 
