@@ -114,7 +114,7 @@ public class AIPlayer : AbstractPlayer {
                 int om = money;
 
                 SellToMarket();
-                Debug.Log("We've made " + (om - money));
+                Debug.Log("We've made " + (money - om));
 				break;
 		}
 
@@ -216,10 +216,10 @@ public class AIPlayer : AbstractPlayer {
 
         while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
             sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), 
-                Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1));
+                Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
         }
 
-        money -= (sellingAmounts * currentPrice).Sum();
+        money += (sellingAmounts * currentPrice).Sum();
         resources -= sellingAmounts;
         market.SellTo(sellingAmounts);
     }
