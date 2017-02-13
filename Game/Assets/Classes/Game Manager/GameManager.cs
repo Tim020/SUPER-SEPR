@@ -9,7 +9,6 @@ using System.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Collections.Specialized;
-using System.Runtime.Remoting.Contexts;
 
 [Serializable]
 /// <summary>
@@ -72,7 +71,7 @@ public class GameManager : Object {
 	/// The players in the game.
 	/// </summary>
 	private OrderedDictionary players = new OrderedDictionary();
-
+	
 	/// <summary>
 	/// The phase time in seconds.
 	/// </summary>
@@ -117,77 +116,78 @@ public class GameManager : Object {
 			firstTick = true;
 		} else if (state == Data.GameState.TILE_PURCHASE) {
 			if (firstTick) {
+				UnityEngine.Debug.Log("First tick: " + state);
 				currentPlayer.StartPhase(state);
+				firstTick = false;
 			}
-			firstTick = false;
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
-			if (timer.Elapsed.TotalSeconds > phaseTimeInSeconds && !firstTick) {
-				state = Data.GameState.ROBOTICON_PLACEMENT;
-				firstTick = true;
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+				OnPlayerCompletedPhase(state);
 			} else {
 				if (firstTick) {
-					timer = System.Diagnostics.Stopwatch.StartNew();
+					UnityEngine.Debug.Log("First tick: " + state);
 					currentPlayer.StartPhase(state);
+					firstTick = false;
 				}
-				firstTick = false;
 			}
 		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
-			if (timer.Elapsed.TotalSeconds > phaseTimeInSeconds && !firstTick) {
-				state = Data.GameState.PLAYER_FINISH;
-				firstTick = true;
-				timer.Stop();
+			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
+				OnPlayerCompletedPhase(state);
 			} else {
 				if (firstTick) {
-					timer = System.Diagnostics.Stopwatch.StartNew();
+					UnityEngine.Debug.Log("First tick: " + state);
 					currentPlayer.StartPhase(state);
+					firstTick = false;
 				}
-				firstTick = false;
 			}
 		} else if (state == Data.GameState.PLAYER_FINISH) {
 			if (firstTick) {
+				UnityEngine.Debug.Log("First tick: " + state);
 				currentPlayer.StartPhase(state);
-			}
-			firstTick = false;
-			playersCompletedPhase++;
-			if (playersCompletedPhase == players.Count) {
-				state = Data.GameState.PRODUCTION;
-				firstTick = true;
-			} else {
-				state = Data.GameState.GAME_WAIT;
-				firstTick = true;
+				firstTick = false;
+				playersCompletedPhase++;
+				if (playersCompletedPhase == players.Count) {
+					state = Data.GameState.PRODUCTION;
+					firstTick = true;
+				} else {
+					state = Data.GameState.GAME_WAIT;
+					firstTick = true;
+				}
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
 			if (firstTick) {
+				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
 				market.UpdatePrices();
+				playersCompletedPhase = 0;
+				state = Data.GameState.AUCTION;
+				firstTick = true;
 			}
-			playersCompletedPhase = 0;
-			state = Data.GameState.AUCTION;
-			firstTick = true;
 		} else if (state == Data.GameState.AUCTION) {
 			if (firstTick) {
+				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
 				}
+				firstTick = false;
 			}
-			firstTick = false;
 			if (playersCompletedPhase == players.Count) {
 				state = Data.GameState.RECYCLE;
 				firstTick = true;
 			}
 		} else if (state == Data.GameState.RECYCLE) {
 			if (firstTick) {
+				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
 				}
 				TryRandomEvent();
+				playersCompletedPhase = 0;
+				state = Data.GameState.GAME_WAIT;
+				firstTick = true;
 			}
-			firstTick = false;
-			playersCompletedPhase = 0;
-			state = Data.GameState.GAME_WAIT;
-			firstTick = true;
 		}
 	}
 
@@ -200,19 +200,13 @@ public class GameManager : Object {
 	public void OnPlayerCompletedPhase(Data.GameState state, params Object[] args) {
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
+				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_CUSTOMISATION;
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-//				if (args.Length != 1 && !(args[0].GetType() is Boolean)) {
-//					throw new ArgumentException("The PlayerCompletedPhase method for the state ROBOTICON_CUSTOMISATION requires 1 boolean parameter");
-//				}
-//				bool choseRobot = (bool)args[0];
-//				if (choseRobot) {
+				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_PLACEMENT;
-//				} else {
-//					this.state = Data.GameState.PLAYER_FINISH;
-//				}
 				firstTick = true;
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
@@ -295,7 +289,7 @@ public class GameManager : Object {
 	public HumanPlayer GetHumanPlayer() {
 		return (HumanPlayer)players[0];
 	}
-
+	
 	/// <summary>
 	/// Gets the elapsed time of the timer in seconds.
 	/// </summary>
