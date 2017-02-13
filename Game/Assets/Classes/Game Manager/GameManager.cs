@@ -89,6 +89,7 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
+		instance = this;
 		market = new Market();
 		this.gameName = gameName;
 		players.Add(0, human);
