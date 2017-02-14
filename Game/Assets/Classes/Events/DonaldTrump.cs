@@ -15,5 +15,9 @@ public class DonaldTrump : RandomEvent {
             p.GetRoboticons().Clear();
         }
         Debug.Log("RANDOM EVENT: Donald Trump joined the game... And immediately deports all Roboticons");
+        Transform parent = GameObject.FindGameObjectWithTag("uiCanvas").transform;
+        GameObject sprite = GameObject.Instantiate(Resources.Load("Prefabs/GUI/Events/DonaldTrump") as GameObject);
+        sprite.transform.SetParent(parent);
+        GameObject.Destroy(sprite, 3f);
     }
 }
