@@ -123,7 +123,7 @@ public class Tile {
 	/// </summary>
 	/// <returns>The list of installed roboticons.</returns>
 	public List<Roboticon> GetInstalledRoboticons() {
-		return installedRoboticons;
+        return installedRoboticons;
 	}
 
 	/// <summary>

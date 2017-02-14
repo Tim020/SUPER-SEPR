@@ -21,8 +21,4 @@ public class DonaldTrump : RandomEvent {
 
         Debug.Log("RANDOM EVENT: Donald Trump joined the game... And immediately deports all Roboticons");
     }
-
-    private void HideSprite() {
-
-    }
 }
