@@ -61,7 +61,7 @@ public class Tile {
 		this.owner = owner;
 		this.tileID = tileId;
 
-		Vector2 tilePosition = new Vector2(tileId % mapDimensions.x, (int) (tileId / mapDimensions.y));
+		Vector2 tilePosition = new Vector2(tileId % mapDimensions.x, (int)(tileId / mapDimensions.y));
 		tileGraphic = new TileGraphic(tileId, tilePosition, new Vector2(TILE_SIZE, TILE_SIZE));
 	}
 
@@ -87,7 +87,7 @@ public class Tile {
 		if (!tileIsSelected) {
 			if (owner == null) {
 				tileGraphic.OnTileOwnershipChanged(Data.TileOwnerType.UNOWNED);
-			} else if (owner == GameHandler.GetGameManager().GetCurrentPlayer()) {
+			} else if (owner == GameHandler.GetGameManager().GetHumanPlayer()) {
 				tileGraphic.OnTileOwnershipChanged(Data.TileOwnerType.CURRENT_PLAYER);
 			} else {
 				tileGraphic.OnTileOwnershipChanged(Data.TileOwnerType.ENEMY);
@@ -358,7 +358,7 @@ public class Tile {
 		/// </summary>
 		private void LoadTileGridGameobject() {
 			if (TILE_GRID_GAMEOBJECT == null) {
-				TILE_GRID_GAMEOBJECT = (GameObject) Resources.Load(TILE_GRID_PREFAB_PATH);
+				TILE_GRID_GAMEOBJECT = (GameObject)Resources.Load(TILE_GRID_PREFAB_PATH);
 				tileGridPrefabSize = TILE_GRID_GAMEOBJECT.GetComponent<Renderer>().bounds.size;
 			}
 		}

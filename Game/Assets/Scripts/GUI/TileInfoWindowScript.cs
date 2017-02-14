@@ -107,7 +107,7 @@ public class TileInfoWindowScript : MonoBehaviour {
 	private void UpdateOwnerText(AbstractPlayer owner) {
 		if (owner == null) {
 			ownerText.text = "Unowned";
-		} else if (owner == GameHandler.GetGameManager().GetCurrentPlayer()) {
+		} else if (owner == GameHandler.GetGameManager().GetHumanPlayer()) {
 			ownerText.text = "You";
 		} else {
 			ownerText.text = owner.GetName();
