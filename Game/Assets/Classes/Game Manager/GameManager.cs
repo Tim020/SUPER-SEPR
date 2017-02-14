@@ -9,7 +9,6 @@ using System.Linq;
 using System.Collections;
 using System.Diagnostics;
 using System.Collections.Specialized;
-using System.Runtime.Remoting.Contexts;
 
 [Serializable]
 /// <summary>
@@ -82,7 +81,7 @@ public class GameManager : Object {
 	/// The players in the game.
 	/// </summary>
 	public OrderedDictionary players = new OrderedDictionary();
-
+	
 	/// <summary>
 	/// The game manager instance.
 	/// </summary>
@@ -221,7 +220,6 @@ public class GameManager : Object {
 				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_CUSTOMISATION;
 				FirstTick = true;
-			  UnityEngine.Debug.Log(FirstTick);
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
 				timer = System.Diagnostics.Stopwatch.StartNew();
@@ -309,7 +307,7 @@ public class GameManager : Object {
 	public HumanPlayer GetHumanPlayer() {
 		return (HumanPlayer)players[0];
 	}
-
+	
 	/// <summary>
 	/// Gets the elapsed time of the timer in seconds.
 	/// </summary>
