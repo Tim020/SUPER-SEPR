@@ -220,7 +220,6 @@ public class GameManager : Object {
 				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_CUSTOMISATION;
 				FirstTick = true;
-			UnityEngine.Debug.Log(FirstTick);
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
 				timer = System.Diagnostics.Stopwatch.StartNew();
