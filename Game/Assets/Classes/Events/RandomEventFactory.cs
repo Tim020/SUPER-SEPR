@@ -46,12 +46,12 @@ public class RandomEventFactory {
     /// </summary>
     /// <returns>The event that occured (null if no event occured)</returns>
     public void StartEvent() {
-        if (Random.Range(0, 10) > 6) {
-            RandomEvent e = ChooseEvent(PickEventCategory());
+        //if (Random.Range(0, 10) > 6) {
+            RandomEvent e = ChooseEvent(1);//PickEventCategory());
             e.InvokeEvent();
-        } else {
-            Debug.Log("By chance an event will not be occuring");
-        }
+        //} else {
+        //    Debug.Log("By chance an event will not be occuring");
+        //}
     }
 
     /// <summary>
