@@ -1,6 +1,7 @@
 ﻿// Game Executable hosted at: http://www-users.york.ac.uk/~jwa509/alpha01BugFree.exe
 
 using System;
+using System.Collections.Generic;
 
 /// <summary>
 /// The market class.
@@ -97,6 +98,11 @@ public class Market : Agent {
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
 	/// <summary>
+	/// A list of all current standing player trades
+	/// </summary>
+	private List<P2PTrade> playerTrades;
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
 	/// </summary>
 	public Market() {
@@ -105,6 +111,7 @@ public class Market : Agent {
 		resources = new ResourceGroup(STARTING_FOOD_AMOUNT, STARTING_ENERGY_AMOUNT, STARTING_ORE_AMOUNT);
 		numRoboticonsForSale = STARTING_ROBOTICON_AMOUNT;
 		money = STARTING_MONEY;
+		playerTrades = new List<P2PTrade>();
 	}
 
 	/// <summary>
@@ -145,6 +152,31 @@ public class Market : Agent {
 			money = money - price;
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
+		}
+	}
+
+	/// <summary>
+	/// Creates a new player trade. This will remove the resource from the player but not give them any money.
+	/// </summary>
+	/// <param name="player">Player wishing to sell their resources.</param>
+	/// <param name="type">The type of resource the player is selling.</param>
+	/// <param name="resourceAmount">The amount of resource the player is selling.</param>
+	/// <param name="unitPrice">Unit price the player wishes to sell at.</param>
+	public void CreatePlayerTrade(AbstractPlayer player, Data.ResourceType type, int resourceAmount, float unitPrice) {
+		if (player.GetResourceAmount(type) >= resourceAmount) {
+			playerTrades.Add(new P2PTrade(player, type, resourceAmount, unitPrice));
+			player.DeductResouce(type, resourceAmount);
+		}
+	}
+
+	/// <summary>
+	/// Cancels the player trade. This will give the player back their resources.
+	/// </summary>
+	/// <param name="trade">The trade to cancel.</param>
+	public void CancelPlayerTrade(P2PTrade trade) {
+		if (playerTrades.Contains(trade)) {
+			trade.host.GiveResouce(trade.resource, trade.resourceAmount);
+			playerTrades.Remove(trade);
 		}
 	}
 
@@ -195,6 +227,54 @@ public class Market : Agent {
 	/// <returns>The roboticon selling price.</returns>
 	public int GetRoboticonSellingPrice() {
 		return roboticonBuyingPrice;
+	}
+
+	/// <summary>
+	/// Class to represent an offer being made by a player, contains information about the offer such as resource type, amount and unit price
+	/// </summary>
+	public class P2PTrade {
+
+		/// <summary>
+		/// The player who is selling this resource/owns this deal
+		/// </summary>
+		public AbstractPlayer host;
+
+		/// <summary>
+		/// The type of resource the player is selling
+		/// </summary>
+		public Data.ResourceType resource;
+
+		/// <summary>
+		/// The amount of the resource the player is selling
+		/// </summary>
+		public int resourceAmount;
+
+		/// <summary>
+		/// The unit price the player is selling at
+		/// </summary>
+		public float unitPrice;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MarketController+P2PTrade"/> class.
+		/// </summary>
+		/// <param name="host">The owner of this sale</param>
+		/// <param name="resource">The resource type</param>
+		/// <param name="resourceAmount">The resource amount.</param>
+		/// <param name="unitPrice">The unit price.</param>
+		public P2PTrade(AbstractPlayer host, Data.ResourceType resource, int resourceAmount, float unitPrice) {
+			this.host = host;
+			this.resource = resource;
+			this.resourceAmount = resourceAmount;
+			this.unitPrice = unitPrice;
+		}
+
+		/// <summary>
+		/// Gets the total cost of this trade
+		/// </summary>
+		/// <returns>The total cost of the deal</returns>
+		public float GetTotalCost() {
+			return resourceAmount * unitPrice;
+		}
 	}
 
 }
