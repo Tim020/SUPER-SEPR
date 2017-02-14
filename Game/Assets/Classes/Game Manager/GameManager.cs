@@ -80,8 +80,13 @@ public class GameManager : Object {
 	/// <summary>
 	/// The players in the game.
 	/// </summary>
-	private OrderedDictionary players = new OrderedDictionary();
+	public OrderedDictionary players = new OrderedDictionary();
 	
+	/// <summary>
+	/// The game manager instance.
+	/// </summary>
+	public static GameManager instance;
+
 	/// <summary>
 	/// The phase time in seconds.
 	/// </summary>
@@ -94,6 +99,7 @@ public class GameManager : Object {
 	/// <param name="human">The HumanPlayer</param>
 	/// <param name="ai">The AIPlayer</param>
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
+		instance = this;
 		market = new Market();
 		this.gameName = gameName;
 		players.Add(0, human);
@@ -214,7 +220,6 @@ public class GameManager : Object {
 				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_CUSTOMISATION;
 				FirstTick = true;
-			UnityEngine.Debug.Log(FirstTick);
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
 				timer = System.Diagnostics.Stopwatch.StartNew();
