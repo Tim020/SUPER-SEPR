@@ -63,6 +63,8 @@ public class MarketScript : MonoBehaviour {
     }
 
     public void OnBuyButtonPress() {
+		marketMoney.text = "£" + market.GetMarketMoney().ToString ();
+
         ResourceGroup resourcesToBuy = new ResourceGroup();
         resourcesToBuy.food = int.Parse(foodBuyAmount.text);
         resourcesToBuy.energy = int.Parse(energyBuyAmount.text);
@@ -72,9 +74,12 @@ public class MarketScript : MonoBehaviour {
         int buyPrice = int.Parse(totalBuyPrice.text.Substring(1));
 
         uiCanvas.BuyFromMarket(resourcesToBuy, roboticonsToBuy, buyPrice);
+
     }
 
     public void OnSellButtonPress() {
+		marketMoney.text = "£" + market.GetMarketMoney().ToString ();
+
         ResourceGroup resourcesToSell = new ResourceGroup();
         resourcesToSell.food = int.Parse(foodSellAmount.text);
         resourcesToSell.energy = int.Parse(energySellAmount.text);
@@ -83,7 +88,7 @@ public class MarketScript : MonoBehaviour {
         int sellPrice = int.Parse(totalSellPrice.text.Substring(1));
 
         uiCanvas.SellToMarket(resourcesToSell, sellPrice);
-    }
+	}
 
     public void PlayPurchaseDeclinedAnimation() {
         totalBuyPrice.GetComponent<Animator>().SetTrigger(HumanGui.ANIM_TRIGGER_FLASH_RED);
@@ -108,6 +113,7 @@ public class MarketScript : MonoBehaviour {
         int roboticonPrice = int.Parse(roboticonBuyAmount.text) * market.GetRoboticonSellingPrice();
 
         totalBuyPrice.text = "£" + (foodPrice + energyPrice + orePrice + roboticonPrice).ToString();
+
     }
 
     public void UpdateTotalSellPrice() {
@@ -118,6 +124,7 @@ public class MarketScript : MonoBehaviour {
         int orePrice = int.Parse(oreSellAmount.text) * sellingPrices.ore;
 
         totalSellPrice.text = "£" + (foodPrice + energyPrice + orePrice).ToString();
+
     }
 
     private void UpdateShownMarketPrices() {
