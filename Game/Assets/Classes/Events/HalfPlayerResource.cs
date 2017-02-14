@@ -8,7 +8,8 @@ public class HalfPlayerResource : RandomEvent {
     /// The implementation of the method that is called when the event starts.
     /// </summary>
     public override void InvokeEvent() {
-        AbstractPlayer player = (AbstractPlayer) GameManager.instance.players[Random.Range(0, GameManager.instance.players.Count)];
+        Debug.Log(GameManager.instance.players.Count);
+        AbstractPlayer player = (AbstractPlayer)GameManager.instance.players[UnityEngine.Random.Range(0, GameManager.instance.players.Count)];
         ResourceGroup resources = player.GetResources();
         resources.energy /= 2;
         resources.food /= 2;
