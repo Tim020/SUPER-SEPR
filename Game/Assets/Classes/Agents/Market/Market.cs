@@ -229,6 +229,11 @@ public class Market : Agent {
 		return roboticonBuyingPrice;
 	}
 
+
+	public int GetMarketMoney() {
+		return money;
+	}
+  
 	/// <summary>
 	/// Class to represent an offer being made by a player, contains information about the offer such as resource type, amount and unit price
 	/// </summary>
@@ -276,5 +281,4 @@ public class Market : Agent {
 			return resourceAmount * unitPrice;
 		}
 	}
-
 }

@@ -20,6 +20,7 @@ public class MarketScript : MonoBehaviour {
     public Text totalBuyPrice;
     public Text totalSellPrice;
 
+	public Text marketMoney;
     #endregion
 
     #region Resource amount labels
@@ -131,6 +132,8 @@ public class MarketScript : MonoBehaviour {
         foodSellPrice.text = "£" + sellingPrices.food.ToString();
         energySellPrice.text = "£" + sellingPrices.energy.ToString();
         oreSellPrice.text = "£" + sellingPrices.ore.ToString();
+
+		marketMoney.text = "£" + market.GetMarketMoney().ToString ();
     }
 
 }
