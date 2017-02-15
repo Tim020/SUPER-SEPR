@@ -303,13 +303,13 @@ public class AgentTests {
 	/// Tests for the human player.
 	/// </summary>
 	[TestFixture]
-	class HumanTests {
+	public class HumanTests {
 
 		/// <summary>
 		/// Tile aquisition tests of human players.
 		/// </summary>
 		[TestFixture]
-		class TileAcquisitionTests {
+		public class TileAcquisitionTests {
 
 			/// <summary>
 			/// The test human.
@@ -361,7 +361,7 @@ public class AgentTests {
 		/// Roboticon acquisition tests.
 		/// </summary>
 		[TestFixture]
-		class RoboticonAcquisitionTests {
+		public class RoboticonAcquisitionTests {
 
 			/// <summary>
 			/// The test human.
@@ -412,6 +412,9 @@ public class AgentTests {
 
 		}
 
+		/// <summary>
+		/// Roboticon installation tests.
+		/// </summary>
 		[TestFixture]
 		public class RoboticonInstallationTests {
 
@@ -481,7 +484,7 @@ public class AgentTests {
 
 		}
 
-		class RoboticonUpgradeTests {
+		public class RoboticonUpgradeTests {
 
 			/// <summary>
 			/// The test human.
@@ -554,6 +557,56 @@ public class AgentTests {
 					Assert.Fail();
 				}
 			}
+
+		}
+
+		/// <summary>
+		/// AI tests.
+		/// </summary>
+		[TestFixture]
+		public class AITests {
+
+			/// <summary>
+			/// Tile purchase tests.
+			/// </summary>
+			[TestFixture]
+			public class TilePurchaseTests {
+
+				/// <summary>
+				/// The test ai.
+				/// </summary>
+				private AIPlayer testAi;
+
+				/// <summary>
+				/// The test game.
+				/// </summary>
+				private GameManager testGame;
+
+				/// <summary>
+				/// Setup this instance.
+				/// </summary>
+				[SetUp]
+				public void Setup() {
+					testAi = new AIPlayer(new ResourceGroup(50, 50, 50), 0, "Jarvis", 0);
+					testGame = new GameManager("Test", new HumanPlayer(new ResourceGroup(0, 0, 0), 1, "Tony", 0), testAi);
+					testGame.Update();
+				}
+
+			}
+
+
+			/// <summary>
+			/// The test Ai.
+			/// </summary>
+			private AIPlayer testAi;
+
+			/// <summary>
+			/// The test game.
+			/// </summary>
+			private GameManager testGame;
+
+
+
 
 		}
 
