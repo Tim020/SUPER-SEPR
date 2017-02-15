@@ -16,6 +16,7 @@ public class CanvasScript : MonoBehaviour {
 	public Text currentPlayerText;
 	public Text currentPhaseText;
 	public RoboticonUpgradesWindowScript roboticonUpgradesWindow;
+	public AuctionScript auctionScript;
 
 	#region Resource Labels
 
@@ -73,6 +74,14 @@ public class CanvasScript : MonoBehaviour {
 
 	public void HideOptionsMenu() {
 		optionsMenu.SetActive(false);
+	}
+
+	public void ShowAuctionMenu() {
+		auctionScript.gameObject.SetActive(true);
+	}
+
+	public void HideAuctionMenu() {
+		auctionScript.gameObject.SetActive(false);
 	}
 
 	public void PurchaseTile(Tile tile) {
