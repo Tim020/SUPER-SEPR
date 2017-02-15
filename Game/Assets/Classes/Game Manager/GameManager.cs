@@ -64,7 +64,6 @@ public class GameManager : Object {
 	/// </summary>
 	private bool FirstTick {
 		set{
-			UnityEngine.Debug.Log("Changed to: " + value + " | " + state + " | " + currentPlayerTurn);
 			firstTick = value;
 		}
 		get{
@@ -132,17 +131,14 @@ public class GameManager : Object {
 			FirstTick = true;
 		} else if (state == Data.GameState.TILE_PURCHASE) {
 			if (FirstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				FirstTick = false;
 				currentPlayer.StartPhase(state);
 			}
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
-			//UnityEngine.Debug.Log(FirstTick);
 			if (timer.Elapsed.TotalSeconds > 60 && !FirstTick) {
 				OnPlayerCompletedPhase(state);
 			} else {
 				if (FirstTick) {
-					UnityEngine.Debug.Log("First tick: " + state);
 					FirstTick = false;
 					currentPlayer.StartPhase(state);
 				}
@@ -152,14 +148,12 @@ public class GameManager : Object {
 				OnPlayerCompletedPhase(state);
 			} else {
 				if (FirstTick) {
-					UnityEngine.Debug.Log("First tick: " + state);
 					FirstTick = false;	
 					currentPlayer.StartPhase(state);
 				}
 			}
 		} else if (state == Data.GameState.PLAYER_FINISH) {
 			if (FirstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				FirstTick = false;
 				currentPlayer.StartPhase(state);
 				playersCompletedPhase++;
@@ -173,7 +167,6 @@ public class GameManager : Object {
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
 			if (FirstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
@@ -184,7 +177,6 @@ public class GameManager : Object {
 			}
 		} else if (state == Data.GameState.AUCTION) {
 			if (FirstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				FirstTick = false;
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
@@ -196,7 +188,6 @@ public class GameManager : Object {
 			}
 		} else if (state == Data.GameState.RECYCLE) {
 			if (FirstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
 				}
@@ -225,7 +216,6 @@ public class GameManager : Object {
 				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_PLACEMENT;
 				FirstTick = true;
-				//UnityEngine.Debug.Log(firstTick);
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
 				this.state = Data.GameState.PLAYER_FINISH;
