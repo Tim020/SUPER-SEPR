@@ -16,7 +16,7 @@ public class CanvasScript : MonoBehaviour {
 	public Text currentPlayerText;
 	public Text currentPhaseText;
 	public RoboticonUpgradesWindowScript roboticonUpgradesWindow;
-	public AuctionScript auctionScript;
+	public AuctionTradesWindow auctionScript;
 
 	#region Resource Labels
 

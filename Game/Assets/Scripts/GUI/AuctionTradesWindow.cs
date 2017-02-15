@@ -40,11 +40,15 @@ public class AuctionTradesWindow : MonoBehaviour {
 
 		guiObjectTransform.localScale = new Vector3(1, 1, 1); //Undo Unity's instantiation meddling
 
-		RoboticonGuiElementScript tradeElementScript = guiObjectTransform.GetComponent<TradeGuiElementScript>();
-		tradeElementScript.SetRoboticon(trade);
+		TradeGuiElementScript tradeElementScript = guiObjectTransform.GetComponent<TradeGuiElementScript>();
+		tradeElementScript.SetTrade(trade);
 		tradeElementScript.SetButtonEventListeners(this);
 
 		currentDisplayedTrades.Add(tradeGuiObject);
+	}
+
+	public void TradeClicked(TradeGuiElementScript tradeGuiElementScript) {
+		
 	}
 
 	/// <summary>
