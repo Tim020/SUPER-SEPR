@@ -33,8 +33,7 @@ public class Market : Agent {
 	/// </summary>
 	private int roboticonBuyingPrice = 15;
 
-	#region Market Starting Constants
-
+    #region Market Starting Constants
 	/// <summary>
 	/// The amount of food the market starts with.
 	/// </summary>
@@ -101,6 +100,8 @@ public class Market : Agent {
 	/// A list of all current standing player trades
 	/// </summary>
 	private List<P2PTrade> playerTrades;
+
+    private ResourceGroup runningTotal = new ResourceGroup();
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
@@ -184,7 +185,16 @@ public class Market : Agent {
 	/// Updates the prices for resources based on supply and demand economics.
 	/// TODO: Implement this
 	/// </summary>
-	public void UpdatePrices() {
+
+    public void updateMarketSupply(ResourceGroup r)
+    {
+        runningTotal = runningTotal + r;
+        UnityEngine.Debug.Log("Market Total: " + runningTotal);
+    }
+
+
+    public void UpdatePrices() {
+
 	}
 
 	/// <summary>

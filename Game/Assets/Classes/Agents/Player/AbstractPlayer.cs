@@ -52,8 +52,10 @@ public abstract class AbstractPlayer : Agent {
 	/// Adds the total resources for all tiles owned by the player to the player's resources.
 	/// </summary>
 	public void Produce() {
-		resources += CalculateTotalResourcesGenerated();
-	}
+        ResourceGroup r = CalculateTotalResourcesGenerated();
+        resources += r;
+        GameManager.instance.market.updateMarketSupply(r);
+    }
 
 	/// <summary>
 	/// Returns the sum of all tile-generated resources.
@@ -65,7 +67,8 @@ public abstract class AbstractPlayer : Agent {
 		foreach (Tile tile in ownedTiles) {
 			totalResources += tile.GetTotalResourcesGenerated();
 		}
-		return totalResources;
+        UnityEngine.Debug.Log("Player: " + playerID + " | " + totalResources);
+        return totalResources;
 	}
 
 	/// <summary>

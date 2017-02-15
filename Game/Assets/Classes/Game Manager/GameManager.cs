@@ -64,7 +64,6 @@ public class GameManager : Object {
 	/// </summary>
 	private bool FirstTick {
 		set{
-			UnityEngine.Debug.Log("Changed to: " + value + " | " + state + " | " + currentPlayerTurn);
 			firstTick = value;
 		}
 		get{
