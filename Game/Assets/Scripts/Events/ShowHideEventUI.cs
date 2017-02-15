@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DonaldTrumpScript : MonoBehaviour {
+public class ShowHideEventUI : MonoBehaviour {
 
     public void StartEvent() {
         Invoke("HideSprite", 3f);
     }
 
-	private void HideSprite() {
+    private void HideSprite() {
         gameObject.SetActive(false);
     }
 }
