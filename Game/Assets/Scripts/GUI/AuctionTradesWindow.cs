@@ -8,12 +8,22 @@ public class AuctionTradesWindow : MonoBehaviour {
 	public CanvasScript canvas;
 	public GameObject tradeItemsList;
 	private GameObject tradePrefab;
-	public Text tradeMaxQuantity;
 	private List<GameObject> currentDisplayedTrades = new List<GameObject>();
 	private const string ROBOTICON_TEMPLATE_PATH = "Prefabs/GUI/TemplateAuctionTrade";
 	private Data.ResourceType selectedResource;
 	private int resourceMax;
+
+	public Text tradeQuantityText;
+	public Text tradeUnitPriceText;
+	public Text tradeTotalPrice;
 	private int tradeQuantity;
+	private int unitPrice;
+
+	public GameObject tradeConfirmation;
+	public Text resourceTypeConfirmation;
+	public Text resourceAmountConfirmation;
+	public Text unitPriceConfirmation;
+	public Text totalPriceConfirmation;
 
 	/// <summary>
 	/// Displays the list of P2PTrades given.
@@ -66,7 +76,11 @@ public class AuctionTradesWindow : MonoBehaviour {
 		Debug.Log("Press food");
 		selectedResource = Data.ResourceType.FOOD;
 		resourceMax = GameManager.instance.GetHumanPlayer().GetResourceAmount(Data.ResourceType.FOOD);
-		tradeMaxQuantity.text = "0 / " + resourceMax.ToString();
+		tradeQuantity = 0;
+		unitPrice = 0;
+		tradeQuantityText.text = "0 / " + resourceMax.ToString();
+		tradeUnitPriceText.text = "£0";
+		tradeTotalPrice.text = "Total: £0";
 		List<Market.P2PTrade> trades = new List<Market.P2PTrade>();
 		foreach (Market.P2PTrade t in GameManager.instance.market.GetPlayerTrades()) {
 			if (t.resource == Data.ResourceType.FOOD) {
@@ -83,7 +97,11 @@ public class AuctionTradesWindow : MonoBehaviour {
 		Debug.Log("Press energy");
 		selectedResource = Data.ResourceType.ENERGY;
 		resourceMax = GameManager.instance.GetHumanPlayer().GetResourceAmount(Data.ResourceType.ENERGY);
-		tradeMaxQuantity.text = "0 / " + resourceMax.ToString();
+		tradeQuantity = 0;
+		unitPrice = 0;
+		tradeQuantityText.text = "0 / " + resourceMax.ToString();
+		tradeUnitPriceText.text = "£0";
+		tradeTotalPrice.text = "Total: £0";
 		List<Market.P2PTrade> trades = new List<Market.P2PTrade>();
 		foreach (Market.P2PTrade t in GameManager.instance.market.GetPlayerTrades()) {
 			if (t.resource == Data.ResourceType.ENERGY) {
@@ -100,7 +118,11 @@ public class AuctionTradesWindow : MonoBehaviour {
 		Debug.Log("Press ore");
 		selectedResource = Data.ResourceType.ORE;
 		resourceMax = GameManager.instance.GetHumanPlayer().GetResourceAmount(Data.ResourceType.ORE);
-		tradeMaxQuantity.text = "0 / " + resourceMax.ToString();
+		tradeQuantity = 0;
+		unitPrice = 0;
+		tradeQuantityText.text = "0 / " + resourceMax.ToString();
+		tradeUnitPriceText.text = "£0";
+		tradeTotalPrice.text = "Total: £0";
 		List<Market.P2PTrade> trades = new List<Market.P2PTrade>();
 		foreach (Market.P2PTrade t in GameManager.instance.market.GetPlayerTrades()) {
 			if (t.resource == Data.ResourceType.ORE) {
@@ -121,7 +143,8 @@ public class AuctionTradesWindow : MonoBehaviour {
 			//Increase by 1
 			tradeQuantity = Math.Min(tradeQuantity + 1, resourceMax);
 		}
-		tradeMaxQuantity.text = tradeQuantity.ToString() + " / " + resourceMax.ToString();
+		tradeQuantityText.text = tradeQuantity.ToString() + " / " + resourceMax.ToString();
+		tradeTotalPrice.text = "Total: £" + (tradeQuantity * unitPrice).ToString();
 	}
 
 	/// <summary>
@@ -135,7 +158,74 @@ public class AuctionTradesWindow : MonoBehaviour {
 			//Decrease by 1
 			tradeQuantity = Math.Max(tradeQuantity - 1, 0);
 		}
-		tradeMaxQuantity.text = tradeQuantity.ToString() + " / " + resourceMax.ToString();
+		tradeQuantityText.text = tradeQuantity.ToString() + " / " + resourceMax.ToString();
+		tradeTotalPrice.text = "Total: £" + (tradeQuantity * unitPrice).ToString();
+	}
+
+	/// <summary>
+	/// Increases the trade unit price.
+	/// </summary>
+	public void IncreaseUnitPrice() {
+		if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+			//Increase by 5?
+			unitPrice = unitPrice + 5;
+		} else {
+			//Increase by 1
+			unitPrice = unitPrice + 1;
+		}
+		tradeUnitPriceText.text = "£" + unitPrice.ToString();
+		tradeTotalPrice.text = "Total: £" + (tradeQuantity * unitPrice).ToString();
+	}
+
+	/// <summary>
+	/// Decreases the trade unit price.
+	/// </summary>
+	public void DecreaseUnitPrice() {
+		if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift)) {
+			//Decrease by 5?
+			unitPrice = Math.Max(unitPrice - 5, 0);
+		} else {
+			//Decrease by 1
+			unitPrice = Math.Max(unitPrice - 1, 0);
+		}
+		tradeUnitPriceText.text = "£" + unitPrice.ToString();
+		tradeTotalPrice.text = "Total: £" + (tradeQuantity * unitPrice).ToString();
+	}
+
+	/// <summary>
+	/// Submits the current trade.
+	/// </summary>
+	public void SubmitTrade() {
+		if (canvas.ShowTradeConfirmation) {
+			resourceTypeConfirmation.text = "Resource Type: " + selectedResource;
+			resourceAmountConfirmation.text = "Quantity: " + tradeQuantity.ToString();
+			unitPriceConfirmation.text = "Unit Price: £" + unitPrice.ToString();
+			totalPriceConfirmation.text = "Total Price: £" + (tradeQuantity * unitPrice).ToString();
+			tradeConfirmation.SetActive(true);
+		} else {
+			CreateAndSubmitTrade();
+		}
+	}
+
+	public void CreateAndSubmitTrade() {
+		GameManager.instance.market.CreatePlayerTrade(GameManager.instance.GetHumanPlayer(), selectedResource, tradeQuantity, unitPrice);
+		ResetUI();
+	}
+
+	public void ResetUI() {
+		canvas.GetHumanGui().UpdateResourceBar();
+		tradeConfirmation.SetActive(false);
+		switch (selectedResource) {
+			case Data.ResourceType.FOOD:
+				SelectFood();
+				break;
+			case Data.ResourceType.ENERGY:
+				SelectEnergy();
+				break;
+			case Data.ResourceType.ORE:
+				SelectOre();
+				break;
+		}
 	}
 
 	public void TradeClicked(TradeGuiElementScript tradeGuiElementScript) {

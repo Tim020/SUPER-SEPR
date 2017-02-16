@@ -17,6 +17,7 @@ public class CanvasScript : MonoBehaviour {
 	public Text currentPhaseText;
 	public RoboticonUpgradesWindowScript roboticonUpgradesWindow;
 	public AuctionTradesWindow auctionScript;
+	public Toggle tradeConfirmationShow;
 
 	#region Resource Labels
 
@@ -31,6 +32,19 @@ public class CanvasScript : MonoBehaviour {
 	#endregion
 
 	private HumanGui humanGui;
+
+	private bool tradeConfirm = true;
+
+	public bool ShowTradeConfirmation {
+		private set { 
+			tradeConfirm = value;
+		} 
+
+		get {
+			return tradeConfirm;
+		}
+	}
+
 
 	public void EndPhase() {
 		humanGui.EndPhase();
@@ -190,6 +204,10 @@ public class CanvasScript : MonoBehaviour {
 	private string FormatResourceChangeLabel(int changeAmount) {
 		string sign = (changeAmount >= 0) ? "+" : "";
 		return "(" + sign + changeAmount.ToString() + ")";
+	}
+
+	public void TradeTogglePressed() {
+		ShowTradeConfirmation = tradeConfirmationShow.isOn;
 	}
 
 }
