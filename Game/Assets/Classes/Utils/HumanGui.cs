@@ -231,14 +231,17 @@ public class HumanGui {
 	/// Installs the roboticon.
 	/// TODO: This probably shouldn't be here as it is not tied to the UI.
 	/// </summary>
+	/// <returns><c>true</c>, if roboticon was installed, <c>false</c> otherwise.</returns>
 	/// <param name="roboticon">Roboticon.</param>
-	public void InstallRoboticon(Roboticon roboticon) {
+	public bool InstallRoboticon(Roboticon roboticon) {
 		if (currentSelectedTile.GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 			if (roboticon.IsInstalledToTile()) {
 				//TODO - Play "roboticon is already installed to a tile "animation"
+				return false;
 			} else {
 				GameHandler.GetGameManager().GetHumanPlayer().InstallRoboticon(roboticon, currentSelectedTile);
 				canvas.RefreshTileInfoWindow();
+				return true;
 			}
 		} else {
 			throw new Exception("Tried to install roboticon to tile which is not owned by the current player. This should not happen.");

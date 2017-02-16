@@ -101,8 +101,8 @@ public class RoboticonWindowScript : MonoBehaviour {
 	/// Install the given roboticon to the current selected tile.
 	/// </summary>
 	/// <param name="roboticon"></param>
-	public void InstallRoboticon(Roboticon roboticon) {
-		canvas.InstallRoboticon(roboticon);
+	public bool InstallRoboticon(Roboticon roboticon) {
+		return canvas.InstallRoboticon(roboticon);
 	}
 
 	private void ClearRoboticonList() {

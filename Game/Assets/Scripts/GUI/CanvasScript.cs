@@ -158,8 +158,8 @@ public class CanvasScript : MonoBehaviour {
 		humanGui.UpgradeRoboticon(roboticon, upgrades);
 	}
 
-	public void InstallRoboticon(Roboticon roboticon) {
-		humanGui.InstallRoboticon(roboticon);
+	public bool InstallRoboticon(Roboticon roboticon) {
+		return humanGui.InstallRoboticon(roboticon);
 	}
 
 	public void SetCurrentPlayerName(string name) {
