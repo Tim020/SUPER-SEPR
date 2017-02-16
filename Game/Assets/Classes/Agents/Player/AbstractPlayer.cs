@@ -31,11 +31,16 @@ public abstract class AbstractPlayer : Agent {
 	protected List<Tile> ownedTiles = new List<Tile>();
 
 	/// <summary>
-	/// Calculates the score for the player.
+	/// The resources owned by this player.
 	/// </summary>
-	/// <returns>The player's score.</returns>
+	protected List<ResourceGroup> ownedResources = new List<ResourceGroup>();
+
+	/// <summary>
+	/// Calculates the score for the player by adding score from tiles, roboticons, resources and money.
+	/// </summary>
+	/// <returns> The player's score </returns>
 	public int CalculateScore() {
-		int totalScore = 0;
+		int totalScore = 0 + money;
 		foreach (Tile tile in ownedTiles) {
 			ResourceGroup tileResources = tile.GetTotalResourcesGenerated();
 			totalScore += tileResources.energy + tileResources.food + tileResources.ore;
@@ -45,6 +50,18 @@ public abstract class AbstractPlayer : Agent {
 			totalScore += roboticon.GetPrice();
 		}
 
+		/// <summary>
+		/// Calculates the score from resources by multiplying the player's remaining resources with the selling price.
+		/// </summary>
+		foreach (ResourceGroup resources in ownedResources) {
+			ResourceGroup ResourceSellingPrices = Market.GetResourceSellingPrices();
+			ResourceGroup EnergyTotal = ResourceSellingPrices * resources.energy;
+			ResourceGroup FoodTotal = ResourceSellingPrices * resources.food;
+			ResourceGroup OreTotal = ResourceSellingPrices * resources.ore;
+			totalScore += EnergyTotal + FoodTotal + OreTotal;
+
+		}
+			
 		return totalScore;
 	}
 
