@@ -229,11 +229,22 @@ public class Market : Agent {
 		return roboticonBuyingPrice;
 	}
 
-
+	/// <summary>
+	/// Gets the market's money.
+	/// </summary>
+	/// <returns>The market's money.</returns>
 	public int GetMarketMoney() {
 		return money;
 	}
-  
+
+	/// <summary>
+	/// Gets the player trades.
+	/// </summary>
+	/// <returns>The player trades.</returns>
+	public List<P2PTrade> GetPlayerTrades() {
+		return playerTrades;
+	}
+
 	/// <summary>
 	/// Class to represent an offer being made by a player, contains information about the offer such as resource type, amount and unit price
 	/// </summary>
