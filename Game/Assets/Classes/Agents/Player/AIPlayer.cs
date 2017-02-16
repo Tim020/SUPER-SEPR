@@ -78,7 +78,7 @@ public class AIPlayer : AbstractPlayer {
 						Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
 						//Debug.Log("I'm upgrading roboticon: " + upgrade.Head.GetName());
 						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
-						money -= Roboticon.UPGRADEVALUE;
+						money -= Roboticon.UPGRADE_VALUE;
 					}
 				} catch (NullReferenceException) {
 					//Debug.Log("I'm not upgrading anyting.");
@@ -146,7 +146,7 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns><c>true</c>, if an upgrade should happen, <c>false</c> otherwise.</returns>
 	private Boolean ShouldUpgrade() {
-		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADEVALUE) {
+		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADE_VALUE) {
 			return true;
 		} else {
 			return false;

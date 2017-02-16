@@ -44,7 +44,7 @@ public class CanvasScript : MonoBehaviour {
 			return tradeConfirm;
 		}
 	}
-		
+
 	public void EndPhase() {
 		humanGui.EndPhase();
 	}
@@ -152,10 +152,6 @@ public class CanvasScript : MonoBehaviour {
 
 	public void HideRoboticonUpgradesWindow() {
 		roboticonUpgradesWindow.Hide();
-	}
-
-	public void UpgradeRoboticon(Roboticon roboticon, ResourceGroup upgrades) {
-		humanGui.UpgradeRoboticon(roboticon, upgrades);
 	}
 
 	public bool InstallRoboticon(Roboticon roboticon) {

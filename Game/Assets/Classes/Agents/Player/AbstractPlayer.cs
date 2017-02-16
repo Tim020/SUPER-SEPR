@@ -120,7 +120,7 @@ public abstract class AbstractPlayer : Agent {
 	/// <exception cref="System.ArgumentException">When trying to upgrade a roboticon that is not owned</exception>
 	public void UpgradeRoboticon(Roboticon roboticon, ResourceGroup upgrade) {
 		if (ownedRoboticons.Contains(roboticon)) {
-			roboticon.Upgrade(upgrade);
+			roboticon.UpgradeProductionValues(upgrade);
 		} else {
 			throw new ArgumentException("Cannot upgrade a roboticon the player does not own.");
 		}

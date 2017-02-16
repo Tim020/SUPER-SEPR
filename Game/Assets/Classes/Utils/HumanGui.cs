@@ -207,27 +207,6 @@ public class HumanGui {
 	}
 
 	/// <summary>
-	/// Upgrades the roboticon.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
-	/// </summary>
-	/// <param name="roboticon">Roboticon.</param>
-	/// <param name="upgrades">Upgrades.</param>
-	public void UpgradeRoboticon(Roboticon roboticon, ResourceGroup upgrades) {
-		AbstractPlayer currentPlayer = GameHandler.GetGameManager().GetCurrentPlayer();
-		int upgradeCost = (upgrades * Roboticon.UPGRADEVALUE).Sum();
-
-		if (currentPlayer.GetMoney() >= upgradeCost) {
-			currentPlayer.SetMoney(currentPlayer.GetMoney() - upgradeCost);
-			roboticon.Upgrade(upgrades);
-			UpdateResourceBar();
-			canvas.ShowRoboticonUpgradesWindow(roboticon);
-			canvas.RefreshTileInfoWindow();
-		} else {
-			//TODO - Purchase decline anim
-		}
-	}
-
-	/// <summary>
 	/// Installs the roboticon.
 	/// TODO: This probably shouldn't be here as it is not tied to the UI.
 	/// </summary>

@@ -515,9 +515,9 @@ public class AgentTests {
 			[Test]
 			public void RoboticonUpgrade_PositiveUpgrade() {
 				testUpgrade = new ResourceGroup(1, 1, 1);
-				ResourceGroup expected = testRoboticon.GetUpgrades() + testUpgrade;
+				ResourceGroup expected = testRoboticon.GetProductionValues() + testUpgrade;
 				testHuman.UpgradeRoboticon(testRoboticon, testUpgrade);
-				Assert.AreEqual(expected, testRoboticon.GetUpgrades());
+				Assert.AreEqual(expected, testRoboticon.GetProductionValues());
 			}
 
 
