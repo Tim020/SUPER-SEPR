@@ -207,7 +207,7 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void TradeTogglePressed() {
-		ShowTradeConfirmation = tradeConfirmationShow.isOn;
+		ShowTradeConfirmation = !tradeConfirmationShow.isOn;
 	}
 
 }
