@@ -3410,7 +3410,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &1973515792084776
 GameObject:
   m_ObjectHideFlags: 1
@@ -9789,9 +9789,11 @@ MonoBehaviour:
   oreBuyPrice: {fileID: 114448401178520800}
   oreSellPrice: {fileID: 114714198645840778}
   roboticonBuyPrice: {fileID: 114761784754107400}
+  marketFoodAmount: {fileID: 114166821201820004}
+  marketEnergyAmount: {fileID: 114351933282635160}
+  marketOreAmount: {fileID: 114653679803043588}
   totalBuyPrice: {fileID: 114607676259703170}
   totalSellPrice: {fileID: 114648656529235356}
-  marketMoney: {fileID: 114397349286923398}
   foodBuyAmount: {fileID: 114443502999683828}
   foodSellAmount: {fileID: 114697976612714056}
   energyBuyAmount: {fileID: 114016058538572182}
@@ -9799,6 +9801,7 @@ MonoBehaviour:
   oreBuyAmount: {fileID: 114281468603150904}
   oreSellAmount: {fileID: 114378762169928922}
   roboticonBuyAmount: {fileID: 114311280149283772}
+  marketMoney: {fileID: 114397349286923398}
 --- !u!114 &114743017753487722
 MonoBehaviour:
   m_ObjectHideFlags: 1

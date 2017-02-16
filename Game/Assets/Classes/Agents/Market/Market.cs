@@ -129,6 +129,7 @@ public class Market : Agent {
 			resources -= resourcesToBuy;
 			//Overloading * to perform element-wise product to get total gain
 			money = money + (resourcesToBuy * resourceSellingPrices).Sum();
+			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
 		} else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
@@ -149,6 +150,7 @@ public class Market : Agent {
 			resources += resourcesToSell;
 			//Overloading * to perform element-wise product to get total expenditure
 			money = money - price;
+			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}

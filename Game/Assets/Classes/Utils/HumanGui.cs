@@ -260,4 +260,8 @@ public class HumanGui {
 		canvas.HidePhaseTimerBox();
 	}
 
+	public CanvasScript GetCanvasScript() {
+		return canvas;
+	}
+
 }
