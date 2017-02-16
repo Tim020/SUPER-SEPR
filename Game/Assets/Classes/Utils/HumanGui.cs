@@ -6,9 +6,6 @@ using UnityEngine;
 
 //TODO: This probably needs a meaningful name and a new folder location
 //TODO: Needs a rewrite based on the new requirement for only having one player
-using UnityEditorInternal;
-
-
 public class HumanGui {
 
 	/// <summary>
