@@ -25,6 +25,15 @@ public class AuctionTradesWindow : MonoBehaviour {
 	public Text unitPriceConfirmation;
 	public Text totalPriceConfirmation;
 
+	public GameObject purchaseRemoveConfirmation;
+	public Text resourceTypePurchaseRemove;
+	public Text resourceAmountPurchaseRemove;
+	public Text unitPricePurchaseRemove;
+	public Text totalPricePurchaseRemove;
+	public Text playerPurchaseRemove;
+	public GameObject confirmTrade, cancelTrade;
+	private TradeGuiElementScript selectedTrade;
+
 	/// <summary>
 	/// Displays the list of P2PTrades given.
 	/// </summary>
@@ -207,14 +216,24 @@ public class AuctionTradesWindow : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Creates and submits a new player trade.
+	/// </summary>
 	public void CreateAndSubmitTrade() {
 		GameManager.instance.market.CreatePlayerTrade(GameManager.instance.GetHumanPlayer(), selectedResource, tradeQuantity, unitPrice);
 		ResetUI();
 	}
 
+	/// <summary>
+	/// Resets the auction UI.
+	/// </summary>
 	public void ResetUI() {
 		canvas.GetHumanGui().UpdateResourceBar();
 		tradeConfirmation.SetActive(false);
+		purchaseRemoveConfirmation.SetActive(false);
+		confirmTrade.SetActive(false);
+		cancelTrade.SetActive(false);
+		selectedTrade = null;
 		switch (selectedResource) {
 			case Data.ResourceType.FOOD:
 				SelectFood();
@@ -228,8 +247,53 @@ public class AuctionTradesWindow : MonoBehaviour {
 		}
 	}
 
-	public void TradeClicked(TradeGuiElementScript tradeGuiElementScript) {
-		
+	/// <summary>
+	/// Closes the purchase/cancel popup menu.
+	/// </summary>
+	public void ClosePurchaseCancelPopup() {
+		ResetUI();
+	}
+
+	/// <summary>
+	/// Called when the player clicks on the button in the confirmation window to cancel their own trade.
+	/// </summary>
+	public void CancelTrade() {
+		if (selectedTrade != null) {
+			GameManager.instance.market.CancelPlayerTrade(GameManager.instance.GetHumanPlayer(), selectedTrade.trade);
+		}
+		ResetUI();
+	}
+
+	/// <summary>
+	/// Called when the player clicks the button in the confirmation menu to purchase the trade.
+	/// </summary>
+	public void PurchaseTrade() {
+		if (selectedTrade != null) {
+			GameManager.instance.market.PurchasePlayerTrade(GameManager.instance.GetHumanPlayer(), selectedTrade.trade);
+		}
+		ResetUI();
+	}
+
+	/// <summary>
+	/// Called when a trade item is clicked on the list.
+	/// Opens a dialog box corresponding to that trade.
+	/// </summary>
+	/// <param name="tradeElement">Trade element that was clicked.</param>
+	public void TradeClicked(TradeGuiElementScript tradeElement) {	
+		selectedTrade = tradeElement;
+		resourceTypePurchaseRemove.text = "Resource Type: " + tradeElement.trade.resource;
+		resourceAmountPurchaseRemove.text = "Quantity: " + tradeElement.trade.resourceAmount.ToString();
+		unitPricePurchaseRemove.text = "Unit Price: £" + tradeElement.trade.unitPrice.ToString();
+		totalPricePurchaseRemove.text = "Total Price: £" + (tradeElement.trade.resourceAmount * tradeElement.trade.unitPrice).ToString();
+		playerPurchaseRemove.text = "Player: " + tradeElement.trade.host.GetName();
+		if (tradeElement.trade.host == GameManager.instance.GetHumanPlayer()) {
+			cancelTrade.SetActive(true);
+			confirmTrade.SetActive(false);
+		} else {
+			confirmTrade.SetActive(true);
+			cancelTrade.SetActive(false);
+		}
+		purchaseRemoveConfirmation.SetActive(true);
 	}
 
 	/// <summary>

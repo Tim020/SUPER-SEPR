@@ -120,4 +120,24 @@ public abstract class Agent {
 		money = moneyToSet;
 	}
 
+	/// <summary>
+	/// Deducts a specified amount of money
+	/// </summary>
+	/// <param name="moneyToDeduct">Money to deduct.</param>
+	public void DeductMoney(int moneyToDeduct) {
+		if (moneyToDeduct > 0 && money - moneyToDeduct >= 0) {
+			money -= moneyToDeduct;
+		}
+	}
+
+	/// <summary>
+	/// Gives a specified amount of money.
+	/// </summary>
+	/// <param name="moneyToGive">Money to give.</param>
+	public void GiveMoney(int moneyToGive) {
+		if (moneyToGive > 0) {
+			money += moneyToGive;
+		}
+	}
+
 }

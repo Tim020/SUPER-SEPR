@@ -143,7 +143,6 @@ public class Market : Agent {
 		if (resourcesToSell.GetFood() < 0 || resourcesToSell.GetEnergy() < 0 || resourcesToSell.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-	
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 
 		if (price <= money) {
@@ -162,7 +161,7 @@ public class Market : Agent {
 	/// <param name="type">The type of resource the player is selling.</param>
 	/// <param name="resourceAmount">The amount of resource the player is selling.</param>
 	/// <param name="unitPrice">Unit price the player wishes to sell at.</param>
-	public void CreatePlayerTrade(AbstractPlayer player, Data.ResourceType type, int resourceAmount, float unitPrice) {
+	public void CreatePlayerTrade(AbstractPlayer player, Data.ResourceType type, int resourceAmount, int unitPrice) {
 		if (player.GetResourceAmount(type) >= resourceAmount) {
 			playerTrades.Add(new P2PTrade(player, type, resourceAmount, unitPrice));
 			player.DeductResouce(type, resourceAmount);
@@ -173,9 +172,46 @@ public class Market : Agent {
 	/// Cancels the player trade. This will give the player back their resources.
 	/// </summary>
 	/// <param name="trade">The trade to cancel.</param>
-	public void CancelPlayerTrade(P2PTrade trade) {
-		if (playerTrades.Contains(trade)) {
+	public void CancelPlayerTrade(AbstractPlayer player, P2PTrade trade) {
+		if (playerTrades.Contains(trade) && trade.host == player) {
 			trade.host.GiveResouce(trade.resource, trade.resourceAmount);
+			playerTrades.Remove(trade);
+		}
+	}
+
+	/// <summary>
+	/// Determines whether this player instance can afford the specified player trade.
+	/// </summary>
+	/// <returns><c>true</c> if this player can afford the player trade; otherwise, <c>false</c>.</returns>
+	/// <param name="player">The player wishing to purchase the trade.</param>
+	/// <param name="trade">The trade the player wishes to purchase.</param>
+	private bool CanPlayerAffordTrade(AbstractPlayer player, P2PTrade trade) {
+		if (player.GetMoney() >= trade.GetTotalCost()) {
+			return true;
+		}
+		return false;
+	}
+
+	/// <summary>
+	/// Determines whether this player can purchase the given trade.
+	/// </summary>
+	/// <returns><c>true</c> if the player is able to purchase the trade; otherwise, <c>false</c>.</returns>
+	/// <param name="player">Player.</param>
+	/// <param name="trade">Trade.</param>
+	public bool IsPlayerTradeValid(AbstractPlayer player, P2PTrade trade) {
+		return CanPlayerAffordTrade(player, trade) && trade.host != player && playerTrades.Contains(trade);
+	}
+
+	/// <summary>
+	/// Purchases the player trade for the given player and trade.
+	/// </summary>
+	/// <param name="player">The player wishing to purchase the trade.</param>
+	/// <param name="trade">The trade the player wishes to purchase.</param>
+	public void PurchasePlayerTrade(AbstractPlayer player, P2PTrade trade) {
+		if (IsPlayerTradeValid(player, trade)) {
+			player.GiveResouce(trade.resource, trade.resourceAmount);
+			player.DeductMoney(trade.GetTotalCost());
+			trade.host.GiveMoney(trade.GetTotalCost());
 			playerTrades.Remove(trade);
 		}
 	}
@@ -268,7 +304,7 @@ public class Market : Agent {
 		/// <summary>
 		/// The unit price the player is selling at
 		/// </summary>
-		public float unitPrice;
+		public int unitPrice;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="MarketController+P2PTrade"/> class.
@@ -277,7 +313,7 @@ public class Market : Agent {
 		/// <param name="resource">The resource type</param>
 		/// <param name="resourceAmount">The resource amount.</param>
 		/// <param name="unitPrice">The unit price.</param>
-		public P2PTrade(AbstractPlayer host, Data.ResourceType resource, int resourceAmount, float unitPrice) {
+		public P2PTrade(AbstractPlayer host, Data.ResourceType resource, int resourceAmount, int unitPrice) {
 			this.host = host;
 			this.resource = resource;
 			this.resourceAmount = resourceAmount;
@@ -288,7 +324,7 @@ public class Market : Agent {
 		/// Gets the total cost of this trade
 		/// </summary>
 		/// <returns>The total cost of the deal</returns>
-		public float GetTotalCost() {
+		public int GetTotalCost() {
 			return resourceAmount * unitPrice;
 		}
 	}

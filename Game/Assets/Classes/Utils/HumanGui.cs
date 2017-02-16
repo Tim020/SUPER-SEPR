@@ -72,6 +72,7 @@ public class HumanGui {
 		canvas.EnableEndPhaseButton();
 		canvas.RefreshTileInfoWindow();
 		canvas.HideMarketWindow();
+		canvas.HideAuctionMenu();
 
 		canvas.SetCurrentPhaseText(Data.StateToPhaseName(phase) + " Phase");
 	}

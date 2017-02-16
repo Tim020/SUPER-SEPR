@@ -44,8 +44,7 @@ public class CanvasScript : MonoBehaviour {
 			return tradeConfirm;
 		}
 	}
-
-
+		
 	public void EndPhase() {
 		humanGui.EndPhase();
 	}
@@ -71,10 +70,13 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void ShowMarketWindow() {
-		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION || GameHandler.GetGameManager().GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
+		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION || GameManager.instance.GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			marketScript.gameObject.SetActive(true);
 		} else {
 			//TODO - Error message "Market cannot be accessed in this phase."
+		}
+		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION) {
+			auctionScript.gameObject.SetActive(true);
 		}
 	}
 
