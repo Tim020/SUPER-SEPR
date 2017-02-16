@@ -16,6 +16,8 @@ public class CanvasScript : MonoBehaviour {
 	public Text currentPlayerText;
 	public Text currentPhaseText;
 	public RoboticonUpgradesWindowScript roboticonUpgradesWindow;
+	public AuctionTradesWindow auctionScript;
+	public Toggle tradeConfirmationShow;
 
 	#region Resource Labels
 
@@ -31,6 +33,18 @@ public class CanvasScript : MonoBehaviour {
 
 	private HumanGui humanGui;
 
+	private bool tradeConfirm = true;
+
+	public bool ShowTradeConfirmation {
+		private set { 
+			tradeConfirm = value;
+		} 
+
+		get {
+			return tradeConfirm;
+		}
+	}
+		
 	public void EndPhase() {
 		humanGui.EndPhase();
 	}
@@ -56,10 +70,13 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void ShowMarketWindow() {
-		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.AUCTION || GameHandler.GetGameManager().GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
+		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION || GameManager.instance.GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			marketScript.gameObject.SetActive(true);
 		} else {
 			//TODO - Error message "Market cannot be accessed in this phase."
+		}
+		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION) {
+			auctionScript.gameObject.SetActive(true);
 		}
 	}
 
@@ -73,6 +90,14 @@ public class CanvasScript : MonoBehaviour {
 
 	public void HideOptionsMenu() {
 		optionsMenu.SetActive(false);
+	}
+
+	public void ShowAuctionMenu() {
+		auctionScript.gameObject.SetActive(true);
+	}
+
+	public void HideAuctionMenu() {
+		auctionScript.gameObject.SetActive(false);
 	}
 
 	public void PurchaseTile(Tile tile) {
@@ -181,6 +206,10 @@ public class CanvasScript : MonoBehaviour {
 	private string FormatResourceChangeLabel(int changeAmount) {
 		string sign = (changeAmount >= 0) ? "+" : "";
 		return "(" + sign + changeAmount.ToString() + ")";
+	}
+
+	public void TradeTogglePressed() {
+		ShowTradeConfirmation = !tradeConfirmationShow.isOn;
 	}
 
 }

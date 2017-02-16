@@ -72,6 +72,7 @@ public class HumanGui {
 		canvas.EnableEndPhaseButton();
 		canvas.RefreshTileInfoWindow();
 		canvas.HideMarketWindow();
+		canvas.HideAuctionMenu();
 
 		canvas.SetCurrentPhaseText(Data.StateToPhaseName(phase) + " Phase");
 	}
@@ -247,7 +248,7 @@ public class HumanGui {
 	/// <summary>
 	/// Updates the resource bar.
 	/// </summary>
-	private void UpdateResourceBar() {
+	public void UpdateResourceBar() {
 		canvas.SetResourceLabels(GameHandler.GetGameManager().GetHumanPlayer().GetResources(), GameHandler.GetGameManager().GetHumanPlayer().GetMoney());
 		canvas.SetResourceChangeLabels(GameHandler.GetGameManager().GetHumanPlayer().CalculateTotalResourcesGenerated());
 	}

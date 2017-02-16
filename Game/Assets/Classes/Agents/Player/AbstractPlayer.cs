@@ -164,4 +164,14 @@ public abstract class AbstractPlayer : Agent {
 
 	public abstract void StartPhase(Data.GameState state);
 
+	public override bool Equals(object obj) {
+		if (obj == null || GetType() != obj.GetType()) {
+			return false;
+		}
+
+		AbstractPlayer playerToCompare = (AbstractPlayer)obj;
+
+		return playerToCompare.playerID == playerID;
+	}
+
 }
