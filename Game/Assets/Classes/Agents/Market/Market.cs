@@ -130,11 +130,21 @@ public class Market : Agent {
 			resources -= resourcesToBuy;
 			//Overloading * to perform element-wise product to get total gain
 			money = money + (resourcesToBuy * resourceSellingPrices).Sum();
+            //call the function to update global market supply
+            updateMarketSupplyOnBuy(resourcesToBuy);
 		} else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
 	}
+/// <summary>
+/// Updates global market supply when the user buys something
+/// </summary>
+/// <param name="resourcesToBuy"></param>
+    public void updateMarketSupplyOnBuy (ResourceGroup resourcesToBuy) {
 
+        runningTotal -= resourcesToBuy;
+
+    }
 	/// <summary>
 	/// Sell resources to the market.
 	/// </summary>
@@ -186,6 +196,12 @@ public class Market : Agent {
 	/// TODO: Implement this
 	/// </summary>
 
+
+   
+    /// <summary>
+    /// Keeps a running total of all the resources that have been mined so far
+    /// <param name="r">Player supply total</param>
+    /// </summary>
     public void updateMarketSupply(ResourceGroup r)
     {
         runningTotal = runningTotal + r;
