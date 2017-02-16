@@ -19,8 +19,6 @@ public class CanvasScript : MonoBehaviour {
 	public AuctionTradesWindow auctionScript;
 	public Toggle tradeConfirmationShow;
 
-	#region Resource Labels
-
 	public Text foodLabel;
 	public Text foodChangeLabel;
 	public Text energyLabel;
@@ -28,8 +26,6 @@ public class CanvasScript : MonoBehaviour {
 	public Text oreLabel;
 	public Text oreChangeLabel;
 	public Text moneyLabel;
-
-	#endregion
 
 	private HumanGui humanGui;
 
@@ -59,14 +55,6 @@ public class CanvasScript : MonoBehaviour {
 
 	public void SetCurrentPhaseText(string text) {
 		currentPhaseText.text = text;
-	}
-
-	public void BuyFromMarket(ResourceGroup resources, int roboticonsToBuy, int price) {
-		humanGui.BuyFromMarket(resources, roboticonsToBuy, price);
-	}
-
-	public void SellToMarket(ResourceGroup resources, int price) {
-		humanGui.SellToMarket(resources, price);
 	}
 
 	public void ShowMarketWindow() {

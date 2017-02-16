@@ -11,16 +11,12 @@ public class TileInfoWindowScript : MonoBehaviour {
 	public Text priceText;
 	public Text ownerText;
 
-	#region Resource Labels
-
 	public Text foodBase;
 	public Text energyBase;
 	public Text oreBase;
 	public Text foodTotal;
 	public Text energyTotal;
 	public Text oreTotal;
-
-	#endregion
 
 	private Tile currentTile;
 

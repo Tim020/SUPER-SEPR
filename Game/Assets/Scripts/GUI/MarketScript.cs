@@ -2,10 +2,11 @@
 
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class MarketScript : MonoBehaviour {
 
-	public CanvasScript uiCanvas;
+	public CanvasScript canvas;
 
 	public Text foodBuyPrice;
 	public Text foodSellPrice;
@@ -17,6 +18,7 @@ public class MarketScript : MonoBehaviour {
 	public Text marketFoodAmount;
 	public Text marketEnergyAmount;
 	public Text marketOreAmount;
+	public Text marketRoboticonAmount;
 
 	public Text totalBuyPrice;
 	public Text totalSellPrice;
@@ -61,7 +63,7 @@ public class MarketScript : MonoBehaviour {
 	/// <summary>
 	/// Enables the interactions with the input boxes for resource amounts.
 	/// </summary>
-	public void EnableResourceInteractions(){
+	public void EnableResourceInteractions() {
 		foodBuyAmount.interactable = true;
 		energyBuyAmount.interactable = true;
 		oreBuyAmount.interactable = true;
@@ -73,7 +75,7 @@ public class MarketScript : MonoBehaviour {
 	/// <summary>
 	/// Disables the interactions with the input boxes for resource amounts.
 	/// </summary>
-	public void DisableResourceInteractions(){
+	public void DisableResourceInteractions() {
 		foodBuyAmount.interactable = false;
 		energyBuyAmount.interactable = false;
 		oreBuyAmount.interactable = false;
@@ -92,7 +94,21 @@ public class MarketScript : MonoBehaviour {
 		int roboticonsToBuy = int.Parse(roboticonBuyAmount.text);
 		int buyPrice = int.Parse(totalBuyPrice.text.Substring(1));
 
-		uiCanvas.BuyFromMarket(resourcesToBuy, roboticonsToBuy, buyPrice);
+		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice && market.GetNumRoboticonsForSale() >= roboticonsToBuy) {
+			try {
+				GameHandler.GetGameManager().market.BuyFrom(GameManager.instance.GetHumanPlayer(), resourcesToBuy);
+			} catch (ArgumentException) {
+				canvas.marketScript.PlayPurchaseDeclinedAnimation();
+				return;
+			}
+			for (int i = 0; i < roboticonsToBuy; i++) {
+				Roboticon newRoboticon = market.BuyRoboticon(GameManager.instance.GetHumanPlayer());
+				canvas.AddRoboticonToList(newRoboticon);
+			}
+			canvas.GetHumanGui().UpdateResourceBar();
+		} else {
+			canvas.marketScript.PlayPurchaseDeclinedAnimation();
+		}
 	}
 
 	public void OnSellButtonPress() {
@@ -105,7 +121,20 @@ public class MarketScript : MonoBehaviour {
 
 		int sellPrice = int.Parse(totalSellPrice.text.Substring(1));
 
-		uiCanvas.SellToMarket(resourcesToSell, sellPrice);
+		ResourceGroup humanResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
+		bool hasEnoughResources = humanResources.food >= resourcesToSell.food && humanResources.energy >= resourcesToSell.energy && humanResources.ore >= resourcesToSell.ore;
+		if (hasEnoughResources) {
+			try {
+				GameHandler.GetGameManager().market.SellTo(GameManager.instance.GetHumanPlayer(), resourcesToSell);
+			} catch (ArgumentException e) {
+				//TODO - Implement separate animation for when the market does not have enough resources
+				canvas.marketScript.PlaySaleDeclinedAnimation();
+				return;
+			}
+			canvas.GetHumanGui().UpdateResourceBar();
+		} else {
+			canvas.marketScript.PlaySaleDeclinedAnimation();
+		}
 	}
 
 	public void PlayPurchaseDeclinedAnimation() {
@@ -167,6 +196,7 @@ public class MarketScript : MonoBehaviour {
 		marketFoodAmount.text = "/" + marketResources.food.ToString();
 		marketEnergyAmount.text = "/" + marketResources.energy.ToString();
 		marketOreAmount.text = "/" + marketResources.ore.ToString();
+		marketRoboticonAmount.text = "/" + market.GetNumRoboticonsForSale();
 	}
 
 }

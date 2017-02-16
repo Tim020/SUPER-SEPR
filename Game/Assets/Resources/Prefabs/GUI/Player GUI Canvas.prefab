@@ -9781,7 +9781,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c1a36aa8d29fef47ae35b4da19e9a03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiCanvas: {fileID: 114316558843742158}
+  canvas: {fileID: 114316558843742158}
   foodBuyPrice: {fileID: 114182897106766036}
   foodSellPrice: {fileID: 114867910982016162}
   energyBuyPrice: {fileID: 114320902665180808}
@@ -9792,6 +9792,7 @@ MonoBehaviour:
   marketFoodAmount: {fileID: 114166821201820004}
   marketEnergyAmount: {fileID: 114351933282635160}
   marketOreAmount: {fileID: 114653679803043588}
+  marketRoboticonAmount: {fileID: 114242084641489778}
   totalBuyPrice: {fileID: 114607676259703170}
   totalSellPrice: {fileID: 114648656529235356}
   foodBuyAmount: {fileID: 114443502999683828}

@@ -33,10 +33,10 @@ public class HumanGui {
 	/// </summary>
 	private Tile currentSelectedTile;
 
-	//TODO: not entirely sure what this is or what it's used for?
+	/// <summary>
+	/// Used to make UI text flash red when an incorrect action is performed.
+	/// </summary>
 	public const string ANIM_TRIGGER_FLASH_RED = "Flash Red";
-
-	private bool purchasedRoboticon;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HumanGui"/> class.
@@ -110,71 +110,6 @@ public class HumanGui {
 			UpdateResourceBar();
 		} else {
 			canvas.tileWindow.PlayPurchaseDeclinedAnimation();
-		}
-	}
-
-	/// <summary>
-	/// Buys resources from the market.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
-	/// </summary>
-	/// <param name="resourcesToBuy">Resources to buy.</param>
-	/// <param name="roboticonsToBuy">Roboticons to buy.</param>
-	/// <param name="buyPrice">Buy price.</param>
-	public void BuyFromMarket(ResourceGroup resourcesToBuy, int roboticonsToBuy, int buyPrice) {
-		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice) {
-			try {
-				GameHandler.GetGameManager().market.BuyFrom(resourcesToBuy);
-			} catch (ArgumentException) {
-				//TODO - Implement separate animation for when the market does not have enough resources
-				canvas.marketScript.PlayPurchaseDeclinedAnimation();
-				return;
-			}
-
-			GameHandler.GetGameManager().GetHumanPlayer().SetMoney(GameHandler.GetGameManager().GetHumanPlayer().GetMoney() - buyPrice);
-
-			for (int i = 0; i < roboticonsToBuy; i++) {
-				Roboticon newRoboticon = new Roboticon();
-				GameHandler.GetGameManager().GetHumanPlayer().AcquireRoboticon(newRoboticon);
-				canvas.AddRoboticonToList(newRoboticon);
-			}
-
-			purchasedRoboticon = roboticonsToBuy > 0;
-
-			ResourceGroup currentResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-			GameHandler.GetGameManager().GetHumanPlayer().SetResources(currentResources + resourcesToBuy);
-
-			UpdateResourceBar();
-		} else {
-			canvas.marketScript.PlayPurchaseDeclinedAnimation();
-		}
-	}
-
-	/// <summary>
-	/// Sells resources to market.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
-	/// </summary>
-	/// <param name="resourcesToSell">Resources to sell.</param>
-	/// <param name="sellPrice">Sell price.</param>
-	public void SellToMarket(ResourceGroup resourcesToSell, int sellPrice) {
-		ResourceGroup humanResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-		bool hasEnoughResources = humanResources.food >= resourcesToSell.food && humanResources.energy >= resourcesToSell.energy && humanResources.ore >= resourcesToSell.ore;
-		if (hasEnoughResources) {
-			try {
-				GameHandler.GetGameManager().market.SellTo(resourcesToSell);
-			} catch (ArgumentException e) {
-				//TODO - Implement separate animation for when the market does not have enough resources
-				canvas.marketScript.PlaySaleDeclinedAnimation();
-				return;
-			}
-
-			GameHandler.GetGameManager().GetHumanPlayer().SetMoney(GameHandler.GetGameManager().GetHumanPlayer().GetMoney() + sellPrice);
-
-			ResourceGroup currentResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-			GameHandler.GetGameManager().GetHumanPlayer().SetResources(currentResources - resourcesToSell);
-
-			UpdateResourceBar();
-		} else {
-			canvas.marketScript.PlaySaleDeclinedAnimation();
 		}
 	}
 
@@ -260,6 +195,10 @@ public class HumanGui {
 		canvas.HidePhaseTimerBox();
 	}
 
+	/// <summary>
+	/// Gets the canvas script.
+	/// </summary>
+	/// <returns>The canvas script.</returns>
 	public CanvasScript GetCanvasScript() {
 		return canvas;
 	}

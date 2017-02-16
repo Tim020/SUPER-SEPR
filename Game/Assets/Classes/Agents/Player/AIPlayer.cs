@@ -86,11 +86,7 @@ public class AIPlayer : AbstractPlayer {
 
 				if (ShouldPurchaseRoboticon()) {
 					//Debug.Log("I'm buying a roboticon.");
-					int price = GameHandler.GetGameManager().market.GetRoboticonSellingPrice();
-					Roboticon r = new Roboticon();
-					money -= price;
-					ownedRoboticons.Add(r);
-					currentRoboticon = r;
+					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
 
 					//Debug.Log("Funds stand at " + money);
 				} else {
@@ -215,13 +211,10 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
-			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), 
-				Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
+			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
 		}
 
-		money += (sellingAmounts * currentPrice).Sum();
-		resources -= sellingAmounts;
-		market.SellTo(sellingAmounts);
+		market.SellTo(this, sellingAmounts);
 	}
 
 	/// <summary>
