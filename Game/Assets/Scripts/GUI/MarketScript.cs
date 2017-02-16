@@ -30,7 +30,6 @@ public class MarketScript : MonoBehaviour {
 	public InputField roboticonBuyAmount;
 	public Text marketMoney;
 
-
 	private Market market;
 
 	public char ValidatePositiveInput(string text, int charIndex, char addedChar) {
@@ -43,7 +42,9 @@ public class MarketScript : MonoBehaviour {
 		}
 	}
 
-	// Use this for initialization
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start() {
 		market = GameHandler.GetGameManager().market;
 		SetMarketValues();
@@ -55,6 +56,30 @@ public class MarketScript : MonoBehaviour {
 		foodSellAmount.onValidateInput += ValidatePositiveInput;
 		energySellAmount.onValidateInput += ValidatePositiveInput;
 		oreSellAmount.onValidateInput += ValidatePositiveInput;
+	}
+
+	/// <summary>
+	/// Enables the interactions with the input boxes for resource amounts.
+	/// </summary>
+	public void EnableResourceInteractions(){
+		foodBuyAmount.interactable = true;
+		energyBuyAmount.interactable = true;
+		oreBuyAmount.interactable = true;
+		foodSellAmount.interactable = true;
+		energySellAmount.interactable = true;
+		oreSellAmount.interactable = true;
+	}
+
+	/// <summary>
+	/// Disables the interactions with the input boxes for resource amounts.
+	/// </summary>
+	public void DisableResourceInteractions(){
+		foodBuyAmount.interactable = false;
+		energyBuyAmount.interactable = false;
+		oreBuyAmount.interactable = false;
+		foodSellAmount.interactable = false;
+		energySellAmount.interactable = false;
+		oreSellAmount.interactable = false;
 	}
 
 	public void OnBuyButtonPress() {

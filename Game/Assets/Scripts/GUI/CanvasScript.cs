@@ -77,6 +77,9 @@ public class CanvasScript : MonoBehaviour {
 		}
 		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION) {
 			auctionScript.gameObject.SetActive(true);
+			marketScript.EnableResourceInteractions();
+		} else {
+			marketScript.DisableResourceInteractions();
 		}
 	}
 
