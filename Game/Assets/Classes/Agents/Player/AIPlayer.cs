@@ -13,12 +13,6 @@ public class AIPlayer : AbstractPlayer {
 	private Roboticon currentRoboticon = null;
 
 	/// <summary>
-	/// The optimal resource fractions.
-	/// The AI will attempt to meet this resource distribution.
-	/// </summary>
-	private readonly ResourceGroup OptimalResourceFractions = new ResourceGroup(33, 33, 34);
-
-	/// <summary>
 	/// Prediction that the buying price droping and the selling price rising
 	/// </summary>
 	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
@@ -57,9 +51,7 @@ public class AIPlayer : AbstractPlayer {
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
 				try {
 					if (ShouldUpgrade()) {
-						Debug.Log("I'm going to upgrade a roboticon");
 						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
-						//Debug.Log("I'm upgrading roboticon: " + upgrade.Head.GetName());
 						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
 						money -= Roboticon.UPGRADE_VALUE;
 					}
@@ -69,11 +61,7 @@ public class AIPlayer : AbstractPlayer {
 				}
 
 				if (ShouldPurchaseRoboticon()) {
-					//Debug.Log("I'm buying a roboticon.");
 					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
-					//Debug.Log("Funds stand at " + money);
-				} else {
-					//Debug.Log("I'm not buying a roboticon.");
 				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
@@ -91,6 +79,8 @@ public class AIPlayer : AbstractPlayer {
 				//TODO: Implement buying from market
 				UpdateSellingPrediction();
 				SellToMarket();
+				UpdatBuyingPrediction();
+				BuyFromMarket();
 				break;
 		}
 
@@ -104,8 +94,8 @@ public class AIPlayer : AbstractPlayer {
 	private void UpdateSellingPrediction() {
 		ResourceGroup[] prices = GetSellingPriceHistory();
 		ResourceGroup[] priceDiff = GetPriceDifference(prices);
-		ResourceGroup currentRun = new ResourceGroup(CurrentRun(Data.ResourceType.FOOD, priceDiff), CurrentRun(Data.ResourceType.ENERGY, priceDiff), CurrentRun(Data.ResourceType.ORE, priceDiff));
-		ResourceGroup avgRun = new ResourceGroup(AvgRun(Data.ResourceType.FOOD, priceDiff), AvgRun(Data.ResourceType.ENERGY, priceDiff), AvgRun(Data.ResourceType.ORE, priceDiff));
+		ResourceGroup currentRun = new ResourceGroup(CurrentPositiveRun(Data.ResourceType.FOOD, priceDiff), CurrentPositiveRun(Data.ResourceType.ENERGY, priceDiff), CurrentPositiveRun(Data.ResourceType.ORE, priceDiff));
+		ResourceGroup avgRun = new ResourceGroup(AvgPosativeRun(Data.ResourceType.FOOD, priceDiff), AvgPosativeRun(Data.ResourceType.ENERGY, priceDiff), AvgPosativeRun(Data.ResourceType.ORE, priceDiff));
 		ResourcePrediction newPrediction;
 
 		float energyPrediction = 1 - ((Array.FindAll(priceDiff, r => r.energy > 0).Length - (float) currentRun.energy) / prices.Length);
@@ -126,12 +116,39 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
+	/// Updates the buying prediction.
+	/// </summary>
+	private void UpdatBuyingPrediction() {
+		ResourceGroup[] prices = GetBuyingPriceHistory();
+		ResourceGroup[] priceDiff = GetPriceDifference(prices);
+		ResourceGroup currentRun = new ResourceGroup(CurrentNegativeRun(Data.ResourceType.FOOD, priceDiff), CurrentNegativeRun(Data.ResourceType.ENERGY, priceDiff), CurrentNegativeRun(Data.ResourceType.ORE, priceDiff));
+		ResourceGroup avgRun = new ResourceGroup(AvgNegativeRun(Data.ResourceType.FOOD, priceDiff), AvgNegativeRun(Data.ResourceType.ENERGY, priceDiff), AvgNegativeRun(Data.ResourceType.ORE, priceDiff));
+		ResourcePrediction newPrediction;
+
+		float energyPrediction = 1 - ((Array.FindAll(priceDiff, r => r.energy < 0).Length - (float) currentRun.energy) / prices.Length);
+		float foodPrediction = 1 - ((Array.FindAll(priceDiff, r => r.food < 0).Length - (float) currentRun.food) / prices.Length);
+		float orePrediction = 1 - ((Array.FindAll(priceDiff, r => r.ore < 0).Length - (float) currentRun.ore) / prices.Length);
+
+		newPrediction = new ResourcePrediction(foodPrediction, energyPrediction, orePrediction);
+
+		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
+		foreach (Data.ResourceType t in types) {
+			if (currentRun.GetResource(t) > avgRun.GetResource(t)) {
+				float diff = currentRun.GetResource(t) - avgRun.GetResource(t) / currentRun.GetResource(t);
+				newPrediction.SetResource(t, currentPrediction.Tail.GetResource(t) - diff);
+			}
+		}
+
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, newPrediction);
+	}
+
+	/// <summary>
 	/// Calculates the run of increasing resources.
 	/// </summary>
 	/// <returns>The run.</returns>
 	/// <param name="resource">Resource.</param>
 	/// <param name="diff">The changes in price.</param>
-	private int CurrentRun(Data.ResourceType resource, ResourceGroup[] diff) {
+	private int CurrentPositiveRun(Data.ResourceType resource, ResourceGroup[] diff) {
 		for (int i = diff.Length - 1; i > 0; i--) {
 			if (diff[i].GetResource(resource) <= 0) {
 				return diff.Length - (i + 1);
@@ -141,18 +158,52 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Calculates the average of all resource runs.
+	/// Calculates the run of decreasing resources.
+	/// </summary>
+	/// <returns>The run.</returns>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">The changes in price.</param>
+	private int CurrentNegativeRun(Data.ResourceType resource, ResourceGroup[] diff) {
+		for (int i = diff.Length - 1; i > 0; i--) {
+			if (diff[i].GetResource(resource) >= 0) {
+				return diff.Length - (i + 1);
+			}
+		}
+		return 0;
+	}
+
+	/// <summary>
+	/// Calculates the average of all posative resource runs.
 	/// </summary>
 	/// <returns>The average run length.</returns>
 	/// <param name="resource">Resource.</param>
 	/// <param name="diff">The changes in price.</param>
-	private int AvgRun(Data.ResourceType resource, ResourceGroup[] diff) {
+	private int AvgPosativeRun(Data.ResourceType resource, ResourceGroup[] diff) {
 		int count = 0;
 		int totalRunLength = 0;
 		for (int i = diff.Length - 1; i > 0; i++) {
-			if (diff[i].GetResource(resource) > 0) {
+			if (diff[i].GetResource(resource) >= 0) {
 				totalRunLength++;
-			} else {
+			} else if (i != 0 && diff[i - 1].GetResource(resource) > 0) {
+				count++;
+			}
+		}
+		return totalRunLength/count;
+	}
+
+	/// <summary>
+	/// Calculates the average of all negative resource runs.
+	/// </summary>
+	/// <returns>The average run length.</returns>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">The changes in price.</param>
+	private int AvgNegativeRun(Data.ResourceType resource, ResourceGroup[] diff) {
+		int count = 0;
+		int totalRunLength = 0;
+		for (int i = diff.Length - 1; i > 0; i++) {
+			if (diff[i].GetResource(resource) <= 0) {
+				totalRunLength++;
+			} else if (i != 0 && diff[i - 1].GetResource(resource) > 0) {
 				count++;
 			}
 		}
@@ -181,10 +232,8 @@ public class AIPlayer : AbstractPlayer {
 	/// <returns>The selling price history.</returns>
 	private ResourceGroup[] GetSellingPriceHistory() {
 		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
-		int i = 0;
-		foreach (Data.Tuple<ResourceGroup, ResourceGroup> v in GameHandler.GetGameManager().market.resourcePriceHistory.Values) {
-			sellingPirces[i] = v.Tail;
-			i++;
+		for (int i = 0; i < sellingPirces.Length; i++) {
+			sellingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
 		}
 		return sellingPirces;
 	}
@@ -194,13 +243,11 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>The buying price history.</returns>
 	private ResourceGroup[] GetBuyingPriceHistory() {
-		ResourceGroup[] buyingPrices = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
-		int i = 0;
-		foreach (Data.Tuple<ResourceGroup, ResourceGroup> v in GameHandler.GetGameManager().market.resourcePriceHistory.Values) {
-			buyingPrices[i] = v.Head;
-			i++;
+		ResourceGroup[] buyingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
+		for (int i = 0; i < buyingPirces.Length; i++) {
+			buyingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
 		}
-		return buyingPrices;
+		return buyingPirces;
 	}
 
 	/// <summary>
@@ -294,6 +341,30 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
+	/// Buy from market.
+	/// </summary>
+	private void BuyFromMarket() {
+		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		Market market = GameHandler.GetGameManager().market;
+		ResourceGroup buyingAmounts = resources / 3;
+
+		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
+		foreach (Data.ResourceType t in types) {
+			if (currentPrediction.Tail.GetResource(t) >= 0.75) {
+				buyingAmounts.SetResource(t, 0);
+			} else if (currentPrediction.Tail.GetResource(t) > 0.3 && Random.Range(0, 1) > 0.3) {
+				buyingAmounts.SetResource(t, 0);
+			}
+		}
+
+		while ((buyingAmounts * currentPrice).Sum() > money / 2) {
+			buyingAmounts = new ResourceGroup(Mathf.Max(buyingAmounts.food - 1, 0), Mathf.Max(buyingAmounts.energy - 1, 0), Mathf.Max(buyingAmounts.ore - 1, 0));
+		}
+
+		market.BuyFrom(this, buyingAmounts);
+	}
+
+	/// <summary>
 	/// Gets the best tile for acquisition.
 	/// </summary>
 	/// <returns>The best possible tile for acquisition</returns>
@@ -375,27 +446,6 @@ public class AIPlayer : AbstractPlayer {
 		} else {
 			return new ResourceGroup(0, 0, 1);
 		}
-	}
-
-	/// <summary>
-	/// Returns a resource group in which each resource value signifies
-	/// the necessity of that resource from 0 to 100, where 0 is not 
-	/// necessary at all and 100 is absolutely necessary.
-	/// </summary>
-	/// <returns></returns>
-	private ResourceGroup GetResourceNecessityWeights() {
-		int totalResources = resources.food + resources.energy + resources.ore;
-		ResourceGroup necessityWeights;
-
-		if (totalResources != 0) {
-			necessityWeights = new ResourceGroup();
-			necessityWeights.food = 50 + OptimalResourceFractions.food - 100 * resources.food / totalResources;
-			necessityWeights.energy = 50 + OptimalResourceFractions.energy - 100 * resources.energy / totalResources;
-			necessityWeights.ore = 50 + OptimalResourceFractions.ore - 100 * resources.ore / totalResources;
-		} else {
-			necessityWeights = OptimalResourceFractions;
-		}
-		return necessityWeights;
 	}
 
 	/// <summary>
