@@ -252,10 +252,19 @@ public class GameManager : Object {
 	/// <returns>The winner if game has ended. Ends Game.</returns>
 	public AbstractPlayer GetWinnerIfGameHasEnded() {
 		var RemainingTiles = Map.GetNumUnownedTilesRemaining();
-		if ((RemainingTiles.Equals(0))) {
+		var topScore = -1;
+		string winner;
+		if (RemainingTiles <= 0) {
+			foreach (AbstractPlayer p in players.Values) {
+				if(p.CalculateScore >= topScore) {
+					topScore = p.CalculateScore();
+					winner = p.ToString();
+					Console.WriteLine(winner); 
+				}
 			GameManager.ShowWinner();
 			Application.Quit();
-	}
+}
+}
 }
 
 	/// <summary>
@@ -277,18 +286,14 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// TODO: FINISH IF STATEMENT TO RETURN PLAYER WITH HIGHEST SCORE AS WINNER
+	/// TODO: CREATE UI TO DISPLAY WINNER
 	/// Shows the winner.
 	/// </summary>
 	/// <param name="player">The player who won.</param>
 	private void ShowWinner(AbstractPlayer player) {
-		foreach (AbstractPlayer p in players.Values) {
-			p.CalculateScore();
-			if() {
 
-		}
 	}
-	}
+
 	
 	/// <summary>
 	/// Use the event factory instance to try and make a random event occur. There is a chance an event will not occur.
