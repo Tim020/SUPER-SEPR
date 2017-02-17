@@ -160,7 +160,8 @@ public class Market : Agent {
 
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
-			resources += resourcesToSell;
+            UpdateMarketSupplyOnSell(resourcesToSell);
+            resources += resourcesToSell;
 			money = money - price;
 			player.SetResources(player.GetResources() - resourcesToSell);
 			player.GiveMoney(price);
