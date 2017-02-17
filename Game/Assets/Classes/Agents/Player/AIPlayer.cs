@@ -8,6 +8,11 @@ using Random = UnityEngine.Random;
 public class AIPlayer : AbstractPlayer {
 
 	/// <summary>
+	/// First time through the acquisition phase
+	/// </summary>
+	private Boolean first = true;
+
+	/// <summary>
 	/// The current roboticon.
 	/// </summary>
 	private Roboticon currentRoboticon = null;
@@ -39,47 +44,64 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state) {
+		Debug.Log("AI: " + state);
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
+				//Debug.Log("I'm in tile purchase");
+				//Debug.Log("Funds stand at " + money);
+				if (first) {
+					first = false;
+					Tile tileToAcquire = Array.Find(GetAvailableTiles(), t => t.GetPrice() < money - 15);
+					AcquireTile(tileToAcquire);
+					money -= tileToAcquire.GetPrice();
+					//Debug.Log("I aquired tile:" + tileToAcquire.GetID());
+					//Debug.Log("Funds stand at " + money);
+					break;                   
+				}
 				try {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
 					money -= tileToAcquire.GetPrice();
 				} catch (NullReferenceException) {
-					//means the ai didn't have enough funds to acquire a tile
+					//Debug.Log("I didn't acquire a tile as I only have this much money: " + money);
 				} catch (ArgumentException) {
-					//means there aren't any available tiles
 				}
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
+				//Debug.Log("LOOK IM HERE: I'm in roboticon customisation");
 				try {
 					if (ShouldUpgrade()) {
+
+						Debug.Log("I'm going to upgrade a roboticon");
 						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
+						//Debug.Log("I'm upgrading roboticon: " + upgrade.Head.GetName());
 						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
 						money -= Roboticon.UPGRADE_VALUE;
 					}
 				} catch (NullReferenceException) {
-					//means there's no roboticon to upgrade this is either because we don't own any
-					//or none pass the heuristic
+					//Debug.Log("I'm not upgrading anyting.");
 				}
 
 				if (ShouldPurchaseRoboticon()) {
 					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
+				} else {
+					//Debug.Log("I'm not buying a roboticon.");
 				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
+				//Debug.Log("Im in roboticon placement");
 				try {
 					if (currentRoboticon != null) {
 						Tile install = InstallationTile();
 						InstallRoboticon(currentRoboticon, install);
+						//Debug.Log("I've installed " + currentRoboticon.GetName() + " at tile " + install.GetID());
 						currentRoboticon = null;
 					}
 				} catch (ArgumentException) {
-					//there are no tiles that need more roboticons
+					//Debug.Log("No where to install a roboticon.");
 				}
 				break;
 			case Data.GameState.AUCTION:
-				//TODO: Implement buying from market
 				if (!firstPhase) {
 					UpdateSellingPrediction();
 					SellToMarket();
@@ -89,10 +111,12 @@ public class AIPlayer : AbstractPlayer {
 				} else {
 					firstPhase = false;
 				}
+
 				break;
 		}
-
 		// This must be done to signify the end of the AI turn.
+		//Debug.Log("Finished");
+		Debug.Log("AI calling finished for phase: " + state);
 		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
 	}
 
@@ -300,7 +324,6 @@ public class AIPlayer : AbstractPlayer {
 
 		foreach (Tile t in mannedTiles) {
 			ResourceGroup tResources = t.GetTotalResourcesGenerated();
-			//TODO: If we change how tiles operate, may need to consider depletion
 			if (tResources.energy >= 10 || tResources.food >= 10 || tResources.ore >= 10) {
 				continue;
 			} else {
@@ -380,9 +403,14 @@ public class AIPlayer : AbstractPlayer {
 		market.BuyFrom(this, buyingAmounts);
 	}
 
+	/// <summary>
+	/// Gamble with the market. Will gamble with up to half its money (randomly).
+	/// </summary>
 	private void Gamble() {
 		if (!soldToMarket) {
-			
+			if ((100 - GameManager.instance.casino.minRollNeeded) / GameManager.instance.casino.maxWinPercentage >= 0.5) {
+				GameManager.instance.casino.GambleMoney(this, Random.Range(0, GetMoney() / 2));
+			}
 		}
 	}
 
@@ -403,7 +431,7 @@ public class AIPlayer : AbstractPlayer {
              
 		foreach (Tile t in availableTiles) {
 			current = ScoreTile(t);
-			if (current > best && current.tile.GetPrice() <= money - 15) {
+			if (current > best && current.tile.GetPrice() <= money) {
 				best = current;
 			}
 		}
@@ -587,30 +615,6 @@ public class AIPlayer : AbstractPlayer {
 			} else {
 				return false;
 			}
-		}
-
-		/// <summary>
-		/// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="AIPlayer+TileChoice"/>.
-		/// </summary>
-		/// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="AIPlayer+TileChoice"/>.</param>
-		/// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
-		/// <see cref="AIPlayer+TileChoice"/>; otherwise, <c>false</c>.</returns>
-		public override bool Equals(object obj) {
-			if (obj.GetType() != GetType() || obj == null) {
-				return false;
-			} else if (this == obj) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-
-		/// <summary>
-		/// Serves as a hash function for a particular type.
-		/// </summary>
-		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
-		public override int GetHashCode() {
-			return tile.GetID().GetHashCode() + score.GetHashCode();
 		}
 
 	}
