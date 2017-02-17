@@ -128,7 +128,7 @@ public class Market : Agent {
 
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food || resourcesToBuy.energy > resources.energy || resourcesToBuy.ore > resources.ore);
 		if (hasEnoughResources) {
-			updateMarketSupplyOnBuy(resourcesToBuy);
+			UpdateMarketSupplyOnBuy(resourcesToBuy);
 			resources -= resourcesToBuy;
 			money = money + (resourcesToBuy * resourceSellingPrices).Sum();
 			player.SetResources(player.GetResources() + resourcesToBuy);
@@ -140,13 +140,13 @@ public class Market : Agent {
 	}
 	
 	/// <summary>
-	/// Updates global market supply when the user buys something
+	/// Updates global market supply when the user buys from the market
 	/// </summary>
 	/// <param name="resourcesToBuy"></param>
-    public void updateMarketSupplyOnBuy (ResourceGroup resourcesToBuy) {
+    public void UpdateMarketSupplyOnBuy (ResourceGroup resourcesToBuy) {
         runningTotal -= resourcesToBuy;
     }
-	
+  
 	/// <summary>
 	/// Sell resources to the market.
 	/// </summary>
@@ -169,13 +169,22 @@ public class Market : Agent {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
 	}
-
-	/// <summary>
-	/// Buy a Roboticon from the market if there are any.
-	/// </summary>
-	/// <returns>The roboticon bought by the player.</returns>
-	/// <param name="player">The player buying the roboticon.</param>
-	public Roboticon BuyRoboticon(AbstractPlayer player) {
+    
+    ///<summary>
+    ///Updates global market supply when use sells to the market
+    /// </summary>
+	///<param name="resourcesToSell"></param>
+    public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell)
+    {
+        runningTotal += resourcesToSell;
+    }
+    
+    /// <summary>
+    /// Buy a Roboticon from the market if there are any.
+    /// </summary>
+    /// <returns>The roboticon bought by the player.</returns>
+    /// <param name="player">The player buying the roboticon.</param>
+    public Roboticon BuyRoboticon(AbstractPlayer player) {
 		if (numRoboticonsForSale > 0) {
 			if (player.GetMoney() >= roboticonBuyingPrice) {
 				Roboticon r = new Roboticon();
