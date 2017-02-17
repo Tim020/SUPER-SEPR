@@ -61,7 +61,7 @@ public class TileTests {
 	public void TotalResources_WithInstallation() {
 		Roboticon testRoboticon = new Roboticon();
 		testTile.InstallRoboticon(testRoboticon);
-		ResourceGroup expected = testTile.GetBaseResourcesGenerated() + testTile.GetInstalledRoboticons()[0].GetUpgrades() * Tile.ROBOTICON_UPGRADE_WEIGHT;
+		ResourceGroup expected = testTile.GetBaseResourcesGenerated() + testTile.GetInstalledRoboticons()[0].GetProductionValues() * Tile.ROBOTICON_UPGRADE_WEIGHT;
 		Assert.AreEqual(expected, testTile.GetTotalResourcesGenerated());
 	}
 
