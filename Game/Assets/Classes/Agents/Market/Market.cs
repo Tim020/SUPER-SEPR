@@ -9,11 +9,6 @@ using System.Collections.Generic;
 public class Market : Agent {
 
 	/// <summary>
-	/// The casino instance.
-	/// </summary>
-	private Casino casino;
-
-	/// <summary>
 	/// The price the market is selling resources at - used when a player buys from the market.
 	/// </summary>
 	private ResourceGroup resourceSellingPrices;

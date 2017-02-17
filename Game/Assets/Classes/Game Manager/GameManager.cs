@@ -27,6 +27,11 @@ public class GameManager : Object {
 	public Market market;
 
 	/// <summary>
+	/// The casino instance.
+	/// </summary>
+	public Casino casino;
+
+	/// <summary>
 	/// The random event factory.
 	/// </summary>
 	private RandomEventFactory randomEventFactory;
@@ -96,6 +101,7 @@ public class GameManager : Object {
 	public GameManager(string gameName, HumanPlayer human, AIPlayer ai) {
 		instance = this;
 		market = new Market();
+		casino = new Casino(35);
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);
@@ -172,7 +178,7 @@ public class GameManager : Object {
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
-				market.UpdatePrices(playersCompletedPhase);
+				market.UpdatePrices(completePhaseCycles);
 				market.ProduceRoboticons();
 				playersCompletedPhase = 0;
 				state = Data.GameState.AUCTION;
