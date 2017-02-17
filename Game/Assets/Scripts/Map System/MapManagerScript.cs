@@ -5,63 +5,92 @@ using UnityEngine.EventSystems;
 
 public class MapManagerScript : MonoBehaviour {
 
-    private Map map;
-    private const int LEFT_MOUSE_BUTTON = 0;
+	/// <summary>
+	/// The map.
+	/// </summary>
+	private Map map;
 
-    private Tile lastTileHovered;
-    private Tile currentTileSelected;
-    private EventSystem eventSystem;
+	/// <summary>
+	/// The index of the left mouse button.
+	/// </summary>
+	private const int LEFT_MOUSE_BUTTON = 0;
 
-    void Start() {
-        eventSystem = EventSystem.current;
-    }
+	/// <summary>
+	/// The last tile hovered over.
+	/// </summary>
+	private Tile lastTileHovered;
 
-    // Update is called once per frame
-    void Update() {
-        if (map != null) {
-            CheckMouseHit();
-        }
-    }
+	/// <summary>
+	/// The current tile selected.
+	/// </summary>
+	private Tile currentTileSelected;
 
-    public void SetMap(Map map) {
-        this.map = map;
-    }
+	/// <summary>
+	/// The event system.
+	/// </summary>
+	private EventSystem eventSystem;
 
-    private void CheckMouseHit() {
-        Camera mainCamera = Camera.main;
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
+	void Start() {
+		eventSystem = EventSystem.current;
+	}
 
-		if (Physics.Raycast (ray, out hit) &&
-		          !eventSystem.IsPointerOverGameObject ()) { //Ray hit something and cursor is not over GUI object
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
+	void Update() {
+		if (map != null) {
+			CheckMouseHit();
+		}
+	}
+
+	/// <summary>
+	/// Sets the map.
+	/// </summary>
+	/// <param name="map">The map.</param>
+	public void SetMap(Map map) {
+		this.map = map;
+	}
+
+	/// <summary>
+	/// Checks wheter the mouse is over a tile.
+	/// </summary>
+	private void CheckMouseHit() {
+		Camera mainCamera = Camera.main;
+		Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+		RaycastHit hit;
+
+		//Ray hit something and cursor is not over GUI object
+		if (Physics.Raycast(ray, out hit) && !eventSystem.IsPointerOverGameObject()) { 
 			if (hit.collider.tag == "mapTile") {
-				Tile hitTile = map.GetTile (hit.collider.GetComponent<MapTileScript> ().GetTileId ());
+				Tile hitTile = map.GetTile(hit.collider.GetComponent<MapTileScript>().GetTileId());
 
 				if (hitTile != currentTileSelected) {
-					if (Input.GetMouseButtonUp (LEFT_MOUSE_BUTTON)) {
+					if (Input.GetMouseButtonUp(LEFT_MOUSE_BUTTON)) {
 						if (currentTileSelected != null) {
-							currentTileSelected
-                                .SetOwnershipColor (); //Reset the previously selected tile before overwriting the variable
+							//Reset the previously selected tile before overwriting the variable
+							currentTileSelected.SetOwnershipColor(); 
 						}
 
 						currentTileSelected = hitTile;
-						hitTile.TileSelected ();
+						hitTile.TileSelected();
 					} else {
 						if (lastTileHovered != null && lastTileHovered != currentTileSelected) {
-							lastTileHovered
-                                .SetOwnershipColor (); //Reset the previously hovered tile before overwriting the variable, but not if the previous tile is currently selected.
+							//Reset the previously hovered tile before overwriting the variable, but not if the previous tile is currently selected.
+							lastTileHovered.SetOwnershipColor();
 						}
-
 						lastTileHovered = hitTile;
-						hitTile.TileHovered ();
+						hitTile.TileHovered();
 					}
 				}
 			}
 		} else {
 			if (lastTileHovered != null && lastTileHovered != currentTileSelected) {
-				lastTileHovered.SetOwnershipColor ();
+				lastTileHovered.SetOwnershipColor();
 			}
 		}
-    }
+	}
 
 }

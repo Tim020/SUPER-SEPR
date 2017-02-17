@@ -9,12 +9,12 @@ public class Roboticon {
 	/// <summary>
 	/// The amount of money needed to upgrade once.
 	/// </summary>
-	public const int UPGRADEVALUE = 50;
+	public const int UPGRADE_VALUE = 50;
 
 	/// <summary>
 	/// The production values of the Roboticon.
 	/// </summary>
-	private ResourceGroup upgrades;
+	private ResourceGroup productionValues;
 
 	/// <summary>
 	/// The name of the Roboticon.
@@ -31,7 +31,7 @@ public class Roboticon {
 	/// </summary>
 	public Roboticon() {
 		name = "RBN#" + (Random.Range(1000, 9999));
-		upgrades = new ResourceGroup(Random.Range(1, 4), Random.Range(1, 4), Random.Range(1, 4));
+		productionValues = new ResourceGroup(Random.Range(1, 4), Random.Range(1, 4), Random.Range(1, 4));
 	}
 
 	/// <summary>
@@ -41,7 +41,7 @@ public class Roboticon {
 	/// <param name="name">The name.</param>
 	public Roboticon(ResourceGroup upgrades, string name = "") {
 		this.name = name;
-		this.upgrades = upgrades;
+		this.productionValues = upgrades;
 	}
 
 	/// <summary>
@@ -61,11 +61,11 @@ public class Roboticon {
 	/// </summary>
 	/// <param name="upgrades">The upgrades to apply.</param>
 	/// <exception cref="System.ArgumentException">When an upgrade contains a negative value</exception>
-	public void Upgrade(ResourceGroup upgrades) {
+	public void UpgradeProductionValues(ResourceGroup upgrades) {
 		if (upgrades.energy < 0 || upgrades.food < 0 || upgrades.ore < 0) {
 			throw new ArgumentException("Cannot apply negative upgrades");
 		}
-		this.upgrades += upgrades;
+		this.productionValues += upgrades;
 	}
 
 	/// <summary>
@@ -77,7 +77,7 @@ public class Roboticon {
 		if (downgrades.energy < 0 || downgrades.food < 0 || downgrades.ore < 0) {
 			throw new ArgumentException("Cannot apply negative downgrades");
 		}
-		upgrades -= downgrades;
+		productionValues -= downgrades;
 	}
 
 	/// <summary>
@@ -85,15 +85,15 @@ public class Roboticon {
 	/// </summary>
 	/// <returns>The price.</returns>
 	public int GetPrice() {
-		return (upgrades * UPGRADEVALUE).Sum();
+		return (productionValues * UPGRADE_VALUE).Sum();
 	}
 
 	/// <summary>
 	/// Get the upgrade pattern on this roboticon.
 	/// </summary>
 	/// <returns>The upgrade pattern.</returns>
-	public ResourceGroup GetUpgrades() {
-		return upgrades;
+	public ResourceGroup GetProductionValues() {
+		return productionValues;
 	}
 
 	/// <summary>

@@ -26,14 +26,12 @@ public class Market : Agent {
 	/// <summary>
 	/// The number roboticons the market has available for sale.
 	/// </summary>
-	private int numRoboticonsForSale;
+	private int numRoboticonsForSale = 15;
 
 	/// <summary>
 	/// The price the market is selling roboticons for - used when a player buys a roboticon.
 	/// </summary>
 	private int roboticonBuyingPrice = 15;
-
-	#region Market Starting Constants
 
 	/// <summary>
 	/// The amount of food the market starts with.
@@ -90,8 +88,6 @@ public class Market : Agent {
 	/// </summary>
 	private const int STARTING_MONEY = 100;
 
-	#endregion
-
 	/// <summary>
 	/// The amount of ore required for producing more roboticons.
 	/// </summary>
@@ -117,18 +113,21 @@ public class Market : Agent {
 	/// <summary>
 	/// Buy resources from the market.
 	/// </summary>
+	/// <param name="player">The player buying from the market.</param>
 	/// <param name="resourcesToBuy">The resources the player is wishing to buy</param>
 	/// <exception cref="System.ArgumentException">When the market does not have enough resources to complete the transaction</exception>
-	public void BuyFrom(ResourceGroup resourcesToBuy) {
+	public virtual void BuyFrom(AbstractPlayer player, ResourceGroup resourcesToBuy) {
 		if (resourcesToBuy.GetFood() < 0 || resourcesToBuy.GetEnergy() < 0 || resourcesToBuy.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
+
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food || resourcesToBuy.energy > resources.energy || resourcesToBuy.ore > resources.ore);
 		if (hasEnoughResources) {
-			//Requires subtraction overload
 			resources -= resourcesToBuy;
-			//Overloading * to perform element-wise product to get total gain
 			money = money + (resourcesToBuy * resourceSellingPrices).Sum();
+			player.SetResources(player.GetResources() + resourcesToBuy);
+			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
+			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
 		} else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
@@ -137,21 +136,44 @@ public class Market : Agent {
 	/// <summary>
 	/// Sell resources to the market.
 	/// </summary>
+	/// <param name="player">The player selling to the market.</param>
 	/// <param name="resourcesToSell">The resources the player wishes to sell to the market</param>
 	/// <exception cref="System.ArgumentException">When the market does not have enough money to complete the transaction.</exception>
-	public void SellTo(ResourceGroup resourcesToSell) {
+	public virtual void SellTo(AbstractPlayer player, ResourceGroup resourcesToSell) {
 		if (resourcesToSell.GetFood() < 0 || resourcesToSell.GetEnergy() < 0 || resourcesToSell.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 
-		if (price <= money) {
+		int price = (resourcesToSell * resourceBuyingPrices).Sum();
+		if (money >= price) {
 			resources += resourcesToSell;
-			//Overloading * to perform element-wise product to get total expenditure
 			money = money - price;
+			player.SetResources(player.GetResources() - resourcesToSell);
+			player.GiveMoney(price);
+			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
+	}
+
+	/// <summary>
+	/// Buy a Roboticon from the market if there are any.
+	/// </summary>
+	/// <returns>The roboticon bought by the player.</returns>
+	/// <param name="player">The player buying the roboticon.</param>
+	public Roboticon BuyRoboticon(AbstractPlayer player) {
+		if (numRoboticonsForSale > 0) {
+			if (player.GetMoney() >= roboticonBuyingPrice) {
+				Roboticon r = new Roboticon();
+				player.AcquireRoboticon(r);
+				player.DeductMoney(roboticonBuyingPrice);
+				money += roboticonBuyingPrice;
+				numRoboticonsForSale--;
+				GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
+				return r;
+			}
+		} 
+		return null;
 	}
 
 	/// <summary>
@@ -224,10 +246,12 @@ public class Market : Agent {
 	}
 
 	/// <summary>
-	/// Produces the roboticon if enough resources are available.
+	/// Produces roboticons if enough resources are available.
+	/// Will use up to half of it's available ore to produce roboticons.
+	/// TODO: This will probably need fine tuning at some point.
 	/// </summary>
-	public void ProduceRoboticon() {
-		if (resources.ore >= ROBOTICON_PRODUCTION_COST) {
+	public void ProduceRoboticons() {
+		for (int i = 0; i < (resources.ore / 2) / ROBOTICON_PRODUCTION_COST; i++) {
 			resources.ore -= ROBOTICON_PRODUCTION_COST;
 			numRoboticonsForSale++;
 		}

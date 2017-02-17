@@ -6,9 +6,6 @@ using UnityEngine;
 
 //TODO: This probably needs a meaningful name and a new folder location
 //TODO: Needs a rewrite based on the new requirement for only having one player
-using UnityEditorInternal;
-
-
 public class HumanGui {
 
 	/// <summary>
@@ -36,10 +33,10 @@ public class HumanGui {
 	/// </summary>
 	private Tile currentSelectedTile;
 
-	//TODO: not entirely sure what this is or what it's used for?
+	/// <summary>
+	/// Used to make UI text flash red when an incorrect action is performed.
+	/// </summary>
 	public const string ANIM_TRIGGER_FLASH_RED = "Flash Red";
-
-	private bool purchasedRoboticon;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="HumanGui"/> class.
@@ -117,71 +114,6 @@ public class HumanGui {
 	}
 
 	/// <summary>
-	/// Buys resources from the market.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
-	/// </summary>
-	/// <param name="resourcesToBuy">Resources to buy.</param>
-	/// <param name="roboticonsToBuy">Roboticons to buy.</param>
-	/// <param name="buyPrice">Buy price.</param>
-	public void BuyFromMarket(ResourceGroup resourcesToBuy, int roboticonsToBuy, int buyPrice) {
-		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice) {
-			try {
-				GameHandler.GetGameManager().market.BuyFrom(resourcesToBuy);
-			} catch (ArgumentException) {
-				//TODO - Implement separate animation for when the market does not have enough resources
-				canvas.marketScript.PlayPurchaseDeclinedAnimation();
-				return;
-			}
-
-			GameHandler.GetGameManager().GetHumanPlayer().SetMoney(GameHandler.GetGameManager().GetHumanPlayer().GetMoney() - buyPrice);
-
-			for (int i = 0; i < roboticonsToBuy; i++) {
-				Roboticon newRoboticon = new Roboticon();
-				GameHandler.GetGameManager().GetHumanPlayer().AcquireRoboticon(newRoboticon);
-				canvas.AddRoboticonToList(newRoboticon);
-			}
-
-			purchasedRoboticon = roboticonsToBuy > 0;
-
-			ResourceGroup currentResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-			GameHandler.GetGameManager().GetHumanPlayer().SetResources(currentResources + resourcesToBuy);
-
-			UpdateResourceBar();
-		} else {
-			canvas.marketScript.PlayPurchaseDeclinedAnimation();
-		}
-	}
-
-	/// <summary>
-	/// Sells resources to market.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
-	/// </summary>
-	/// <param name="resourcesToSell">Resources to sell.</param>
-	/// <param name="sellPrice">Sell price.</param>
-	public void SellToMarket(ResourceGroup resourcesToSell, int sellPrice) {
-		ResourceGroup humanResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-		bool hasEnoughResources = humanResources.food >= resourcesToSell.food && humanResources.energy >= resourcesToSell.energy && humanResources.ore >= resourcesToSell.ore;
-		if (hasEnoughResources) {
-			try {
-				GameHandler.GetGameManager().market.SellTo(resourcesToSell);
-			} catch (ArgumentException e) {
-				//TODO - Implement separate animation for when the market does not have enough resources
-				canvas.marketScript.PlaySaleDeclinedAnimation();
-				return;
-			}
-
-			GameHandler.GetGameManager().GetHumanPlayer().SetMoney(GameHandler.GetGameManager().GetHumanPlayer().GetMoney() + sellPrice);
-
-			ResourceGroup currentResources = GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-			GameHandler.GetGameManager().GetHumanPlayer().SetResources(currentResources - resourcesToSell);
-
-			UpdateResourceBar();
-		} else {
-			canvas.marketScript.PlaySaleDeclinedAnimation();
-		}
-	}
-
-	/// <summary>
 	/// Sets the canvas script.
 	/// </summary>
 	/// <param name="canvas">Canvas.</param>
@@ -207,38 +139,20 @@ public class HumanGui {
 	}
 
 	/// <summary>
-	/// Upgrades the roboticon.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
-	/// </summary>
-	/// <param name="roboticon">Roboticon.</param>
-	/// <param name="upgrades">Upgrades.</param>
-	public void UpgradeRoboticon(Roboticon roboticon, ResourceGroup upgrades) {
-		AbstractPlayer currentPlayer = GameHandler.GetGameManager().GetCurrentPlayer();
-		int upgradeCost = (upgrades * Roboticon.UPGRADEVALUE).Sum();
-
-		if (currentPlayer.GetMoney() >= upgradeCost) {
-			currentPlayer.SetMoney(currentPlayer.GetMoney() - upgradeCost);
-			roboticon.Upgrade(upgrades);
-			UpdateResourceBar();
-			canvas.ShowRoboticonUpgradesWindow(roboticon);
-			canvas.RefreshTileInfoWindow();
-		} else {
-			//TODO - Purchase decline anim
-		}
-	}
-
-	/// <summary>
 	/// Installs the roboticon.
 	/// TODO: This probably shouldn't be here as it is not tied to the UI.
 	/// </summary>
+	/// <returns><c>true</c>, if roboticon was installed, <c>false</c> otherwise.</returns>
 	/// <param name="roboticon">Roboticon.</param>
-	public void InstallRoboticon(Roboticon roboticon) {
+	public bool InstallRoboticon(Roboticon roboticon) {
 		if (currentSelectedTile.GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 			if (roboticon.IsInstalledToTile()) {
 				//TODO - Play "roboticon is already installed to a tile "animation"
+				return false;
 			} else {
 				GameHandler.GetGameManager().GetHumanPlayer().InstallRoboticon(roboticon, currentSelectedTile);
 				canvas.RefreshTileInfoWindow();
+				return true;
 			}
 		} else {
 			throw new Exception("Tried to install roboticon to tile which is not owned by the current player. This should not happen.");
@@ -279,6 +193,14 @@ public class HumanGui {
 	/// </summary>
 	private void HidePhaseTimerBox() {
 		canvas.HidePhaseTimerBox();
+	}
+
+	/// <summary>
+	/// Gets the canvas script.
+	/// </summary>
+	/// <returns>The canvas script.</returns>
+	public CanvasScript GetCanvasScript() {
+		return canvas;
 	}
 
 }
