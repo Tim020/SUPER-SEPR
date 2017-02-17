@@ -3,6 +3,7 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Random=UnityEngine.Random;
 
 public class AIPlayer : AbstractPlayer {
 
@@ -12,15 +13,15 @@ public class AIPlayer : AbstractPlayer {
 	private Roboticon currentRoboticon = null;
 
 	/// <summary>
-	/// The best market price seen so far.
-	/// </summary>
-	private ResourceGroup bestPrice = new ResourceGroup(-1, -1, -1);
-
-	/// <summary>
 	/// The optimal resource fractions.
 	/// The AI will attempt to meet this resource distribution.
 	/// </summary>
 	private readonly ResourceGroup OptimalResourceFractions = new ResourceGroup(33, 33, 34);
+
+	/// <summary>
+	/// Prediction that the buying price droping and the selling price rising
+	/// </summary>
+	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AIPlayer"/> class.
@@ -88,12 +89,118 @@ public class AIPlayer : AbstractPlayer {
 				break;
 			case Data.GameState.AUCTION:
 				//TODO: Implement buying from market
+				UpdateSellingPrediction();
 				SellToMarket();
 				break;
 		}
 
 		// This must be done to signify the end of the AI turn.
 		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
+	}
+
+	/// <summary>
+	/// Updates the selling prediction.
+	/// </summary>
+	private void UpdateSellingPrediction() {
+		ResourceGroup[] prices = GetSellingPriceHistory();
+		ResourceGroup[] priceDiff = GetPriceDifference(prices);
+		ResourceGroup currentRun = new ResourceGroup(CurrentRun(Data.ResourceType.FOOD, priceDiff), CurrentRun(Data.ResourceType.ENERGY, priceDiff), CurrentRun(Data.ResourceType.ORE, priceDiff));
+		ResourceGroup avgRun = new ResourceGroup(AvgRun(Data.ResourceType.FOOD, priceDiff), AvgRun(Data.ResourceType.ENERGY, priceDiff), AvgRun(Data.ResourceType.ORE, priceDiff));
+		ResourcePrediction newPrediction;
+
+		float energyPrediction = 1 - ((Array.FindAll(priceDiff, r => r.energy > 0).Length - (float) currentRun.energy) / prices.Length);
+		float foodPrediction = 1 - ((Array.FindAll(priceDiff, r => r.food > 0).Length - (float) currentRun.food) / prices.Length);
+		float orePrediction = 1 - ((Array.FindAll(priceDiff, r => r.ore > 0).Length - (float) currentRun.ore) / prices.Length);
+
+		newPrediction = new ResourcePrediction(foodPrediction, energyPrediction, orePrediction);
+
+		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
+		foreach (Data.ResourceType t in types) {
+			if (currentRun.GetResource(t) > avgRun.GetResource(t)) {
+				float diff = currentRun.GetResource(t) - avgRun.GetResource(t) / currentRun.GetResource(t);
+				newPrediction.SetResource(t, currentPrediction.Tail.GetResource(t) - diff);
+			}
+		}
+
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, newPrediction);
+	}
+
+	/// <summary>
+	/// Calculates the run of increasing resources.
+	/// </summary>
+	/// <returns>The run.</returns>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">The changes in price.</param>
+	private int CurrentRun(Data.ResourceType resource, ResourceGroup[] diff) {
+		for (int i = diff.Length - 1; i > 0; i--) {
+			if (diff[i].GetResource(resource) <= 0) {
+				return diff.Length - (i + 1);
+			}
+		}
+		return 0;
+	}
+
+	/// <summary>
+	/// Calculates the average of all resource runs.
+	/// </summary>
+	/// <returns>The average run length.</returns>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">The changes in price.</param>
+	private int AvgRun(Data.ResourceType resource, ResourceGroup[] diff) {
+		int count = 0;
+		int totalRunLength = 0;
+		for (int i = diff.Length - 1; i > 0; i++) {
+			if (diff[i].GetResource(resource) > 0) {
+				totalRunLength++;
+			} else {
+				count++;
+			}
+		}
+		return totalRunLength/count;
+	}
+
+	/// <summary>
+	/// Gets the price difference.
+	/// </summary>
+	/// <returns>The price difference.</returns>
+	/// <param name="prices">Prices.</param>
+	private ResourceGroup[] GetPriceDifference(ResourceGroup[] prices) {
+		if (prices.Length <= 1) {
+			throw new ArgumentException();
+		} 
+		ResourceGroup[] diff = new ResourceGroup[prices.Length - 2];
+		for (int i = 0; i < prices.Length; i++) {
+			diff[i] = prices[i+1] - prices[i];
+		}
+		return diff;
+	}
+
+	/// <summary>
+	/// Gets the selling price history.
+	/// </summary>
+	/// <returns>The selling price history.</returns>
+	private ResourceGroup[] GetSellingPriceHistory() {
+		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
+		int i = 0;
+		foreach (Data.Tuple<ResourceGroup, ResourceGroup> v in GameHandler.GetGameManager().market.resourcePriceHistory.Values) {
+			sellingPirces[i] = v.Tail;
+			i++;
+		}
+		return sellingPirces;
+	}
+
+	/// <summary>
+	/// Gets the buying price history.
+	/// </summary>
+	/// <returns>The buying price history.</returns>
+	private ResourceGroup[] GetBuyingPriceHistory() {
+		ResourceGroup[] buyingPrices = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
+		int i = 0;
+		foreach (Data.Tuple<ResourceGroup, ResourceGroup> v in GameHandler.GetGameManager().market.resourcePriceHistory.Values) {
+			buyingPrices[i] = v.Head;
+			i++;
+		}
+		return buyingPrices;
 	}
 
 	/// <summary>
@@ -168,22 +275,15 @@ public class AIPlayer : AbstractPlayer {
 	private void SellToMarket() {
 		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		Market market = GameHandler.GetGameManager().market;
-		ResourceGroup sellingAmounts = resources / 4;
+		ResourceGroup sellingAmounts = resources / 3;
 
-		if (currentPrice.energy < bestPrice.energy) {
-			sellingAmounts.energy = 0;
-		} else {
-			bestPrice.energy = currentPrice.energy;
-		}
-		if (currentPrice.food < bestPrice.food) {
-			sellingAmounts.food = 0;
-		} else {
-			bestPrice.food = currentPrice.food;
-		}
-		if (currentPrice.ore < bestPrice.ore) {
-			sellingAmounts.ore = 0;
-		} else {
-			bestPrice.ore = currentPrice.ore;
+		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
+		foreach (Data.ResourceType t in types) {
+			if (currentPrediction.Tail.GetResource(t) >= 0.75) {
+				sellingAmounts.SetResource(t, 0);
+			} else if (currentPrediction.Tail.GetResource(t) > 0.5 && Random.Range(0, 1) > 0.5) {
+				sellingAmounts.SetResource(t, 0);
+			}
 		}
 
 		while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
@@ -354,7 +454,7 @@ public class AIPlayer : AbstractPlayer {
 	/// <summary>
 	/// Class representing a ranked tile choice for best purchase options.
 	/// </summary>
-	class TileChoice {
+	private class TileChoice {
 
 		/// <summary>
 		/// Gets the tile.
@@ -441,5 +541,93 @@ public class AIPlayer : AbstractPlayer {
 			return tile.GetID().GetHashCode() + score.GetHashCode();
 		}
 
+	}
+
+	/// <summary>
+	/// A triplet of predictions regarding the resources food, energy, ore.
+	/// </summary>
+	private class ResourcePrediction {
+
+		/// <summary>
+		/// Gets the energy prediction.
+		/// </summary>
+		/// <value>The energy prediciton. </value>
+		public float energy { get; private set; }
+
+		/// <summary>
+		/// Gets the food prediction.
+		/// </summary>
+		/// <value>The food prediciton. </value>
+		public float food { get; private set; }
+
+		/// <summary>
+		/// Gets the ore prediction.
+		/// </summary>
+		/// <value>The ore prediciton. </value>
+		public float ore { get; private set; }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIPlayer+Prediction"/> class.
+		/// </summary>
+		public ResourcePrediction() {
+			this.food = 1;
+			this.energy = 1;
+			this.ore = 1;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIPlayer+Prediction"/> class.
+		/// </summary>
+		/// <param name="food">Food.</param>
+		/// <param name="energy">Energy.</param>
+		/// <param name="ore">Ore.</param>
+		public ResourcePrediction(float food, float energy, float ore) {
+			this.food = food;
+			this.energy = energy;
+			this.ore = ore;
+		}
+
+		/// <summary>
+		/// Gets the specified resource.
+		/// </summary>
+		/// <returns>The resource.</returns>
+		/// <param name="resource">Resource type.</param>
+		public float GetResource(Data.ResourceType resource) {
+			switch (resource) {
+			case Data.ResourceType.ENERGY:
+				return energy;
+				break;
+			case Data.ResourceType.FOOD:
+				return food;
+				break;
+			case Data.ResourceType.ORE:
+				return ore;
+				break;
+			default:
+				throw new ArgumentException("Illeagal resource type");
+			}
+		}
+
+		/// <summary>
+		/// Sets the specified resource value.
+		/// </summary>
+		/// <returns>The resource.</returns>
+		/// <param name="resource">Resource type.</param>
+		/// <param name="value">The value of the resource.</param> 
+		public void SetResource(Data.ResourceType resource, float value) {
+			switch (resource) {
+			case Data.ResourceType.ENERGY:
+				energy = value;
+				break;
+			case Data.ResourceType.FOOD:
+				food = value;
+				break;
+			case Data.ResourceType.ORE:
+				ore = value;
+				break;
+			default:
+				throw new ArgumentException("Illeagal resource type");
+			}
+		}
 	}
 }
