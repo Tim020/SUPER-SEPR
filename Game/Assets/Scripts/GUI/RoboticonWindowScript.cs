@@ -6,12 +6,29 @@ using UnityEngine;
 
 public class RoboticonWindowScript : MonoBehaviour {
 
+	/// <summary>
+	/// The canvas.
+	/// </summary>
 	public CanvasScript canvas;
-	public GameObject roboticonIconsList;
-	//Roboticon gui elements are added to this GUI content
 
+	/// <summary>
+	/// The owned roboticons list area.
+	/// </summary>
+	public GameObject roboticonIconsList;
+
+	/// <summary>
+	/// The roboticon template prefab.
+	/// </summary>
 	private GameObject roboticonTemplate;
+
+	/// <summary>
+	/// The currently displayed roboticons.
+	/// </summary>
 	private List<GameObject> currentlyDisplayedRoboticons = new List<GameObject>();
+
+	/// <summary>
+	/// The prefab location.
+	/// </summary>
 	private const string ROBOTICON_TEMPLATE_PATH = "Prefabs/GUI/TemplateRoboticon";
 
 	/// <summary>
@@ -33,7 +50,7 @@ public class RoboticonWindowScript : MonoBehaviour {
 			ShowRoboticonUpgradeButtons();
 		} else if (currentState == Data.GameState.ROBOTICON_PLACEMENT) {
 			HumanGui humanGui = canvas.GetHumanGui();
-			if (humanGui.GetCurrentSelectedTile().GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
+			if (humanGui.GetCurrentSelectedTile() != null && humanGui.GetCurrentSelectedTile().GetOwner() == GameHandler.GetGameManager().GetHumanPlayer()) {
 				ShowRoboticonInstallButtons();
 			}
 		} else {
@@ -41,6 +58,9 @@ public class RoboticonWindowScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Hides the roboticon list.
+	/// </summary>
 	public void HideRoboticonList() {
 		ClearRoboticonList();
 		currentlyDisplayedRoboticons = new List<GameObject>();
@@ -87,12 +107,19 @@ public class RoboticonWindowScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Hides the install and upgrade buttons.
+	/// </summary>
 	public void HideInstallAndUpgradeButtons() {
 		foreach (GameObject roboticonElement in currentlyDisplayedRoboticons) {
 			roboticonElement.GetComponent<RoboticonGuiElementScript>().HideButtons();
 		}
 	}
 
+	/// <summary>
+	/// Upgrades the roboticon.
+	/// </summary>
+	/// <param name="roboticon">Roboticon to upgrade.</param>
 	public void UpgradeRoboticon(Roboticon roboticon) {
 		canvas.ShowRoboticonUpgradesWindow(roboticon);
 	}
@@ -101,10 +128,13 @@ public class RoboticonWindowScript : MonoBehaviour {
 	/// Install the given roboticon to the current selected tile.
 	/// </summary>
 	/// <param name="roboticon"></param>
-	public void InstallRoboticon(Roboticon roboticon) {
-		canvas.InstallRoboticon(roboticon);
+	public bool InstallRoboticon(Roboticon roboticon) {
+		return canvas.InstallRoboticon(roboticon);
 	}
 
+	/// <summary>
+	/// Clears the roboticon list.
+	/// </summary>
 	private void ClearRoboticonList() {
 		if (currentlyDisplayedRoboticons.Count > 0) {
 			for (int i = currentlyDisplayedRoboticons.Count - 1; i >= 0; i--) {

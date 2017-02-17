@@ -152,7 +152,7 @@ public class Tile {
 
 		//TODO - Diminishing returns for additional roboticons (currently linear)
 		foreach (Roboticon roboticon in installedRoboticons) {
-			totalResources += roboticon.GetUpgrades() * ROBOTICON_UPGRADE_WEIGHT;
+			totalResources += roboticon.GetProductionValues() * ROBOTICON_UPGRADE_WEIGHT;
 		}
 
         return totalResources;

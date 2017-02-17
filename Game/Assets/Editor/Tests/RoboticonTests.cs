@@ -41,8 +41,8 @@ public class RoboticonTests {
 	public void Upgrade_Posative() {
 		ResourceGroup upgrade = new ResourceGroup(1, 1, 1);
 		ResourceGroup expected = new ResourceGroup(2, 2, 2);
-		testRoboticon.Upgrade(upgrade);
-		Assert.AreEqual(expected, testRoboticon.GetUpgrades());
+		testRoboticon.UpgradeProductionValues(upgrade);
+		Assert.AreEqual(expected, testRoboticon.GetProductionValues());
 	}
 
 
@@ -53,7 +53,7 @@ public class RoboticonTests {
 	public void Upgrade_Negative() {
 		try {
 			ResourceGroup upgrade = new ResourceGroup(-1, -1, -1);
-			testRoboticon.Upgrade(upgrade);
+			testRoboticon.UpgradeProductionValues(upgrade);
 			Assert.Fail();
 		} catch (ArgumentException e) {
 			Assert.Pass();
@@ -70,7 +70,7 @@ public class RoboticonTests {
 		ResourceGroup downgrade = new ResourceGroup(1, 1, 1);
 		ResourceGroup expected = new ResourceGroup(0, 0, 0);
 		testRoboticon.Downgrade(downgrade);
-		Assert.AreEqual(expected, testRoboticon.GetUpgrades());
+		Assert.AreEqual(expected, testRoboticon.GetProductionValues());
 	}
 
 	/// <summary>

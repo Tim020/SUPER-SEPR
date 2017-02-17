@@ -33,7 +33,7 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market();
+				testMarket = new DummyMarket();
 			}
 
 
@@ -89,6 +89,11 @@ public class AgentTests {
 		public class BuyFromTests {
 
 			/// <summary>
+			/// The dummy player.
+			/// </summary>
+			AbstractPlayer player;
+
+			/// <summary>
 			/// The dummy market.
 			/// </summary>
 			Market testMarket;
@@ -103,9 +108,12 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market();
+				testMarket = new DummyMarket();
 				//set resources to make testing simpler
 				testMarket.SetResources(new ResourceGroup(16, 16, 16));
+				player = new HumanPlayer(null, 0, "TestPlayer", 0);
+				player.SetMoney(9999);
+				player.SetResources(new ResourceGroup(9999, 9999, 9999));
 			}
 
 			/// <summary>
@@ -115,19 +123,20 @@ public class AgentTests {
 			public void BuyFrom_Resources() {
 				order = new ResourceGroup(1, 1, 1);
 				ResourceGroup expectedMarketLevels = new ResourceGroup(15, 15, 15);
-				testMarket.BuyFrom(order);
+				testMarket.BuyFrom(player, order);
 				Assert.AreEqual(expectedMarketLevels, testMarket.GetResources());
 			}
 
 			/// <summary>
 			/// Checks that the market gains money when being bought from.
 			/// </summary>
+			[Test]
 			public void BuyFrom_Money() {
+				int money = testMarket.GetMoney();
 				order = new ResourceGroup(1, 1, 1);
-				testMarket.BuyFrom(order);
-				Assert.AreEqual(130, testMarket.GetMoney());
+				testMarket.BuyFrom(player, order);
+				Assert.AreEqual(money + (order * testMarket.GetResourceSellingPrices()).Sum(), testMarket.GetMoney());
 			}
-
 
 			/// <summary>
 			/// Checks that the trade is invalid (i.e. exception thrown) if more resource are purchased than are available.
@@ -138,7 +147,7 @@ public class AgentTests {
 				//setting resources for ease
 				testMarket.SetResources(new ResourceGroup(0, 0, 0));	
 				try {
-					testMarket.BuyFrom(order);
+					testMarket.BuyFrom(player, order);
 					Assert.Fail();
 				} catch (ArgumentException e) {
 					Assert.Pass();
@@ -154,7 +163,7 @@ public class AgentTests {
 			public void BuyFrom_NegativeResources() {
 				order = new ResourceGroup(-1, -1, -1);
 				try {
-					testMarket.BuyFrom(order);
+					testMarket.BuyFrom(player, order);
 					Assert.Fail();
 				} catch (ArgumentException e) {
 					Assert.Pass();
@@ -172,6 +181,11 @@ public class AgentTests {
 		public class SellToTests {
 
 			/// <summary>
+			/// The dummy player.
+			/// </summary>
+			AbstractPlayer player;
+
+			/// <summary>
 			/// The dummy market.
 			/// </summary>
 			Market testMarket;
@@ -186,9 +200,12 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market();
+				testMarket = new DummyMarket();
 				//set resources to make testing simpler
 				testMarket.SetResources(new ResourceGroup(16, 16, 16));
+				player = new HumanPlayer(null, 0, "TestPlayer", 0);
+				player.SetMoney(9999);
+				player.SetResources(new ResourceGroup(9999, 9999, 9999));
 			}
 
 			/// <summary>
@@ -198,7 +215,7 @@ public class AgentTests {
 			public void SellTo_Resources() {
 				order = new ResourceGroup(1, 1, 1);
 				ResourceGroup expectedMarketLevels = new ResourceGroup(17, 17, 17);
-				testMarket.SellTo(order);
+				testMarket.SellTo(player, order);
 				Assert.IsTrue(expectedMarketLevels.Equals(testMarket.GetResources()));
 			}
 
@@ -208,7 +225,7 @@ public class AgentTests {
 			[Test]
 			public void SellTo_Money() {
 				order = new ResourceGroup(1, 1, 1);
-				testMarket.SellTo(order);
+				testMarket.SellTo(player, order);
 				Assert.AreEqual(70, testMarket.GetMoney());
 			}
 
@@ -220,7 +237,7 @@ public class AgentTests {
 				order = new ResourceGroup(1, 1, 1);
 				testMarket.SetMoney(0);
 				try {
-					testMarket.SellTo(order);
+					testMarket.SellTo(player, order);
 					Assert.Fail();
 				} catch (ArgumentException e) {
 					Assert.AreSame("Market does not have enough money to perform this transaction.", e.Message);
@@ -236,7 +253,7 @@ public class AgentTests {
 			public void SellTo_NegativeResources() {
 				order = new ResourceGroup(-1, -1, -1);
 				try {
-					testMarket.SellTo(order);
+					testMarket.SellTo(player, order);
 					Assert.Fail();
 				} catch (ArgumentException e) {
 					Assert.AreSame("Market cannot complete a transaction for negative resources.", e.Message);
@@ -249,6 +266,8 @@ public class AgentTests {
 		[TestFixture]
 		public class RoboticonProductionTests {
 
+			//TODO: Rewrite these tests to take into account the new method for producing roboticons.
+
 			/// <summary>
 			/// The dummy market.
 			/// </summary>
@@ -259,7 +278,7 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new Market();
+				testMarket = new DummyMarket();
 				//set resources to make testing simpler
 				testMarket.SetResources(new ResourceGroup(16, 16, 16));
 			}
@@ -269,7 +288,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_NumRoboticons() {
-				testMarket.ProduceRoboticon();
+				testMarket.ProduceRoboticons();
 				Assert.AreEqual(13, testMarket.GetNumRoboticonsForSale());
 			}
 
@@ -278,7 +297,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_Resources() {
-				testMarket.ProduceRoboticon();
+				testMarket.ProduceRoboticons();
 				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
 				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
@@ -291,7 +310,7 @@ public class AgentTests {
 				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
 				//as production shouldn't occur at less than 12 market should not change
 				testMarket.SetResources(expectedMarketLevel);
-				testMarket.ProduceRoboticon();
+				testMarket.ProduceRoboticons();
 				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
 
@@ -515,9 +534,9 @@ public class AgentTests {
 			[Test]
 			public void RoboticonUpgrade_PositiveUpgrade() {
 				testUpgrade = new ResourceGroup(1, 1, 1);
-				ResourceGroup expected = testRoboticon.GetUpgrades() + testUpgrade;
+				ResourceGroup expected = testRoboticon.GetProductionValues() + testUpgrade;
 				testHuman.UpgradeRoboticon(testRoboticon, testUpgrade);
-				Assert.AreEqual(expected, testRoboticon.GetUpgrades());
+				Assert.AreEqual(expected, testRoboticon.GetProductionValues());
 			}
 
 
