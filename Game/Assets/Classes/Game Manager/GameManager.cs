@@ -246,21 +246,17 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// TODO: FIX ME/Actually write this method someone please! :)
+	/// TODO: FIX ME
 	/// Gets the winner when the game has ended.
 	/// </summary>
-	/// <returns>The winner if game has ended.</returns>
+	/// <returns>The winner if game has ended. Ends Game.</returns>
 	public AbstractPlayer GetWinnerIfGameHasEnded() {
-		if ((Map.GetNumUnownedTilesRemaining().Equals(0)) {
-			GameManager.ShowWinner;
-			Application.Quit;
+		var RemainingTiles = Map.GetNumUnownedTilesRemaining();
+		if ((RemainingTiles.Equals(0))) {
+			GameManager.ShowWinner();
+			Application.Quit();
 	}
-	}
-	
-	/// <summary>
-	/// Ends the game when no unowned tiles are available.
-	/// </summary>
-
+}
 
 	/// <summary>
 	/// Sets up GUI gameObject.
@@ -281,17 +277,17 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
+	/// TODO: FINISH IF STATEMENT TO RETURN PLAYER WITH HIGHEST SCORE AS WINNER
 	/// Shows the winner.
 	/// </summary>
 	/// <param name="player">The player who won.</param>
-	public AbstractPlayer ShowWinner(AbstractPlayer player) {
-		foreach (AbstractPlayer p in players) {
+	private void ShowWinner(AbstractPlayer player) {
+		foreach (AbstractPlayer p in players.Values) {
 			p.CalculateScore();
-			if (p.CalculateScore > p.CalculateScore) {
-				AbstractPlayer winner = p.playerID;
-				return winner;
-			}
+			if() {
+
 		}
+	}
 	}
 	
 	/// <summary>
