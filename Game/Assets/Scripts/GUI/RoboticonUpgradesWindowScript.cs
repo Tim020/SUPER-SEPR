@@ -5,16 +5,49 @@ using UnityEngine.UI;
 
 public class RoboticonUpgradesWindowScript : MonoBehaviour {
 
+	/// <summary>
+	/// The main canvas.
+	/// </summary>
 	public CanvasScript canvas;
 
+	/// <summary>
+	/// The food upgrades amount text.
+	/// </summary>
 	public Text foodUpgradesAmount;
+
+	/// <summary>
+	/// The energy upgrades amount text.
+	/// </summary>
 	public Text energyUpgradesAmount;
+
+	/// <summary>
+	/// The ore upgrades amount text.
+	/// </summary>
 	public Text oreUpgradesAmount;
+
+	/// <summary>
+	/// The text element represting whether this roboticon has been installed on a tile.
+	/// </summary>
 	public Text installed;
+
+	/// <summary>
+	/// The food upgrade cost text.
+	/// </summary>
 	public Text foodCost;
+
+	/// <summary>
+	/// The energy upgrade cost text.
+	/// </summary>
 	public Text energyCost;
+
+	/// <summary>
+	/// The ore upgrade cost text.
+	/// </summary>
 	public Text oreCost;
 
+	/// <summary>
+	/// The roboticon being upgraded.
+	/// </summary>
 	private Roboticon roboticon;
 
 	/// <summary>

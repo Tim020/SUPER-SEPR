@@ -6,32 +6,119 @@ using System;
 
 public class MarketScript : MonoBehaviour {
 
+	/// <summary>
+	/// The canvas.
+	/// </summary>
 	public CanvasScript canvas;
 
+	/// <summary>
+	/// The food buy price text.
+	/// </summary>
 	public Text foodBuyPrice;
+
+	/// <summary>
+	/// The food sell price text.
+	/// </summary>
 	public Text foodSellPrice;
+
+	/// <summary>
+	/// The energy buy price text.
+	/// </summary>
 	public Text energyBuyPrice;
+
+	/// <summary>
+	/// The energy sell price text.
+	/// </summary>
 	public Text energySellPrice;
+
+	/// <summary>
+	/// The ore buy price text.
+	/// </summary>
 	public Text oreBuyPrice;
+
+	/// <summary>
+	/// The ore sell price text.
+	/// </summary>
 	public Text oreSellPrice;
+
+	/// <summary>
+	/// The roboticon buy price text.
+	/// </summary>
 	public Text roboticonBuyPrice;
+
+	/// <summary>
+	/// The market food amount text.
+	/// </summary>
 	public Text marketFoodAmount;
+
+	/// <summary>
+	/// The market energy amount text.
+	/// </summary>
 	public Text marketEnergyAmount;
+
+	/// <summary>
+	/// The market ore amount text.
+	/// </summary>
 	public Text marketOreAmount;
+
+	/// <summary>
+	/// The market roboticon amount text.
+	/// </summary>
 	public Text marketRoboticonAmount;
 
+	/// <summary>
+	/// The total buy price text.
+	/// </summary>
 	public Text totalBuyPrice;
+
+	/// <summary>
+	/// The total sell price text.
+	/// </summary>
 	public Text totalSellPrice;
 
+	/// <summary>
+	/// The food buy amount input.
+	/// </summary>
 	public InputField foodBuyAmount;
+
+	/// <summary>
+	/// The food sell amount input.
+	/// </summary>
 	public InputField foodSellAmount;
+
+	/// <summary>
+	/// The energy buy amount input.
+	/// </summary>
 	public InputField energyBuyAmount;
+
+	/// <summary>
+	/// The energy sell amount input.
+	/// </summary>
 	public InputField energySellAmount;
+
+	/// <summary>
+	/// The ore buy amount input.
+	/// </summary>
 	public InputField oreBuyAmount;
+
+	/// <summary>
+	/// The ore sell amount input.
+	/// </summary>
 	public InputField oreSellAmount;
+
+	/// <summary>
+	/// The roboticon buy amount input.
+	/// </summary>
 	public InputField roboticonBuyAmount;
+
+	/// <summary>
+	/// The market money input.
+	/// </summary>
 	public Text marketMoney;
 
+	/// <summary>
+	/// The market.
+	/// </summary>
 	private Market market;
 
 	public char ValidatePositiveInput(string text, int charIndex, char addedChar) {
@@ -84,6 +171,9 @@ public class MarketScript : MonoBehaviour {
 		oreSellAmount.interactable = false;
 	}
 
+	/// <summary>
+	/// Raises the buy button press event.
+	/// </summary>
 	public void OnBuyButtonPress() {
 		marketMoney.text = "£" + market.GetMarketMoney().ToString();
 
@@ -111,6 +201,9 @@ public class MarketScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Raises the sell button press event.
+	/// </summary>
 	public void OnSellButtonPress() {
 		marketMoney.text = "£" + market.GetMarketMoney().ToString();
 
@@ -137,14 +230,23 @@ public class MarketScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Plays the purchase declined animation.
+	/// </summary>
 	public void PlayPurchaseDeclinedAnimation() {
 		totalBuyPrice.GetComponent<Animator>().SetTrigger(HumanGui.ANIM_TRIGGER_FLASH_RED);
 	}
 
+	/// <summary>
+	/// Plays the sale declined animation.
+	/// </summary>
 	public void PlaySaleDeclinedAnimation() {
 		totalSellPrice.GetComponent<Animator>().SetTrigger(HumanGui.ANIM_TRIGGER_FLASH_RED);
 	}
 
+	/// <summary>
+	/// Sets the market resource values.
+	/// </summary>
 	public void SetMarketValues() {
 		UpdateShownMarketPrices();
 		UpdateTotalBuyPrice();
@@ -152,6 +254,9 @@ public class MarketScript : MonoBehaviour {
 		UpdateMarketResourceAmounts();
 	}
 
+	/// <summary>
+	/// Updates the total buy price.
+	/// </summary>
 	public void UpdateTotalBuyPrice() {
 		ResourceGroup buyingPrices = market.GetResourceBuyingPrices();
 
@@ -164,6 +269,9 @@ public class MarketScript : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// Updates the total sell price.
+	/// </summary>
 	public void UpdateTotalSellPrice() {
 		ResourceGroup sellingPrices = market.GetResourceSellingPrices();
 
@@ -175,6 +283,9 @@ public class MarketScript : MonoBehaviour {
 
 	}
 
+	/// <summary>
+	/// Updates the market resource prices.
+	/// </summary>
 	private void UpdateShownMarketPrices() {
 		ResourceGroup sellingPrices = market.GetResourceSellingPrices();
 		ResourceGroup buyingPrices = market.GetResourceBuyingPrices();
@@ -191,6 +302,9 @@ public class MarketScript : MonoBehaviour {
 		marketMoney.text = "£" + market.GetMarketMoney().ToString();
 	}
 
+	/// <summary>
+	/// Updates the market resource amounts.
+	/// </summary>
 	private void UpdateMarketResourceAmounts() {
 		ResourceGroup marketResources = market.GetResources();
 		marketFoodAmount.text = "/" + marketResources.food.ToString();

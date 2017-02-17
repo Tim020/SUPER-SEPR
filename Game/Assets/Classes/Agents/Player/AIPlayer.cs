@@ -375,16 +375,35 @@ public class AIPlayer : AbstractPlayer {
 		}
 	}
 
+	/// <summary>
+	/// Class representing a ranked tile choice for best purchase options.
+	/// </summary>
 	class TileChoice {
 
+		/// <summary>
+		/// Gets the tile.
+		/// </summary>
+		/// <value>The tile.</value>
 		public Tile tile { get; private set; }
 
+		/// <summary>
+		/// Gets the score.
+		/// </summary>
+		/// <value>The score.</value>
 		public int score { get; private set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
+		/// </summary>
 		public TileChoice() {
 			this.score = -1000;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
+		/// </summary>
+		/// <param name="tile">The tile this represents.</param>
+		/// <param name="score">The score of the tile.</param>
 		public TileChoice(Tile tile, int score) {
 			this.tile = tile;
 			this.score = score;

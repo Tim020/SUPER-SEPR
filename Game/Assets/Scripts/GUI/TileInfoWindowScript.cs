@@ -5,21 +5,70 @@ using UnityEngine.UI;
 
 public class TileInfoWindowScript : MonoBehaviour {
 
+	/// <summary>
+	/// The user interface canvas.
+	/// </summary>
 	public CanvasScript uiCanvas;
+
+	/// <summary>
+	/// The acquire tile button.
+	/// </summary>
 	public GameObject acquireTileButton;
+
+	/// <summary>
+	/// The install roboticon button.
+	/// </summary>
 	public GameObject installRoboticonButton;
+
+	/// <summary>
+	/// The price text.
+	/// </summary>
 	public Text priceText;
+
+	/// <summary>
+	/// The owner text.
+	/// </summary>
 	public Text ownerText;
 
+	/// <summary>
+	/// The food base amount text.
+	/// </summary>
 	public Text foodBase;
+
+	/// <summary>
+	/// The energy base amount text.
+	/// </summary>
 	public Text energyBase;
+
+	/// <summary>
+	/// The ore base amount text.
+	/// </summary>
 	public Text oreBase;
+
+	/// <summary>
+	/// The food total text.
+	/// </summary>
 	public Text foodTotal;
+
+	/// <summary>
+	/// The energy total text.
+	/// </summary>
 	public Text energyTotal;
+
+	/// <summary>
+	/// The ore total text.
+	/// </summary>
 	public Text oreTotal;
 
+	/// <summary>
+	/// The current tile.
+	/// </summary>
 	private Tile currentTile;
 
+	/// <summary>
+	/// Show the info window for the specified tile.
+	/// </summary>
+	/// <param name="tile">The tile to show info for.</param>
 	public void Show(Tile tile) {
 		currentTile = tile;
 		UpdateResourceTexts();
@@ -57,6 +106,9 @@ public class TileInfoWindowScript : MonoBehaviour {
 		gameObject.SetActive(true);
 	}
 
+	/// <summary>
+	/// Refresh this window.
+	/// </summary>
 	public void Refresh() {
 		if (currentTile != null) {
 			uiCanvas.RefreshRoboticonList();
@@ -64,10 +116,16 @@ public class TileInfoWindowScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Hide this window.
+	/// </summary>
 	public void Hide() {
 		gameObject.SetActive(false);
 	}
 
+	/// <summary>
+	/// Called when the player presses the buy button.
+	/// </summary>
 	public void AcquireTile() {
 		if (currentTile != null) {
 			uiCanvas.PurchaseTile(currentTile);
@@ -75,14 +133,23 @@ public class TileInfoWindowScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Opens the UI element that allows roboticons to be selected for installation.
+	/// </summary>
 	public void InstallRoboticon() {
 		uiCanvas.ShowRoboticonList();
 	}
 
+	/// <summary>
+	/// Plaies the purchase declined animation.
+	/// </summary>
 	public void PlayPurchaseDeclinedAnimation() {
 		priceText.GetComponent<Animator>().SetTrigger(HumanGui.ANIM_TRIGGER_FLASH_RED);
 	}
 
+	/// <summary>
+	/// Updates the resource amount text items.
+	/// </summary>
 	private void UpdateResourceTexts() {
 		ResourceGroup tileBaseResources = currentTile.GetBaseResourcesGenerated();
 		ResourceGroup tileTotalResources = currentTile.GetTotalResourcesGenerated();
@@ -96,10 +163,18 @@ public class TileInfoWindowScript : MonoBehaviour {
 		oreTotal.text = tileTotalResources.GetOre().ToString();
 	}
 
+	/// <summary>
+	/// Updates the price text.
+	/// </summary>
+	/// <param name="price">The tile price.</param>
 	private void UpdatePriceText(int price) {
 		priceText.text = "£" + price.ToString();
 	}
 
+	/// <summary>
+	/// Updates the owner text.
+	/// </summary>
+	/// <param name="owner">The tile owner.</param>
 	private void UpdateOwnerText(AbstractPlayer owner) {
 		if (owner == null) {
 			ownerText.text = "Unowned";

@@ -5,33 +5,134 @@ using UnityEngine.UI;
 
 public class AuctionTradesWindow : MonoBehaviour {
 
+	/// <summary>
+	/// The canvas.
+	/// </summary>
 	public CanvasScript canvas;
+
+	/// <summary>
+	/// The trade items list.
+	/// </summary>
 	public GameObject tradeItemsList;
+
+	/// <summary>
+	/// The trade item prefab.
+	/// </summary>
 	private GameObject tradePrefab;
+
+	/// <summary>
+	/// The current displayed trades.
+	/// </summary>
 	private List<GameObject> currentDisplayedTrades = new List<GameObject>();
+
+	/// <summary>
+	/// The location of the roboticon prefab template.
+	/// </summary>
 	private const string ROBOTICON_TEMPLATE_PATH = "Prefabs/GUI/TemplateAuctionTrade";
+
+	/// <summary>
+	/// The selected resource for player trades.
+	/// </summary>
 	private Data.ResourceType selectedResource;
+
+	/// <summary>
+	/// The maximum amount of the resource the player can trade.
+	/// </summary>
 	private int resourceMax;
 
+	/// <summary>
+	/// The trade quantity text.
+	/// </summary>
 	public Text tradeQuantityText;
+
+	/// <summary>
+	/// The trade unit price text.
+	/// </summary>
 	public Text tradeUnitPriceText;
+
+	/// <summary>
+	/// The trade total price.
+	/// </summary>
 	public Text tradeTotalPrice;
+
+	/// <summary>
+	/// The trade quantity.
+	/// </summary>
 	private int tradeQuantity;
+
+	/// <summary>
+	/// The unit price for the trade.
+	/// </summary>
 	private int unitPrice;
 
+	/// <summary>
+	/// The trade confirmation popup.
+	/// </summary>
 	public GameObject tradeConfirmation;
+
+	/// <summary>
+	/// The resource type in the confirmation popup.
+	/// </summary>
 	public Text resourceTypeConfirmation;
+
+	/// <summary>
+	/// The resource amount in the confirmation popup.
+	/// </summary>
 	public Text resourceAmountConfirmation;
+
+	/// <summary>
+	/// The unit price in the confirmation popup.
+	/// </summary>
 	public Text unitPriceConfirmation;
+
+	/// <summary>
+	/// The total price in the confirmation popup.
+	/// </summary>
 	public Text totalPriceConfirmation;
 
+	/// <summary>
+	/// The popup used when a trade is clicked on.
+	/// </summary>
 	public GameObject purchaseRemoveConfirmation;
+
+	/// <summary>
+	/// The resource type in the trade popup.
+	/// </summary>
 	public Text resourceTypePurchaseRemove;
+
+	/// <summary>
+	/// The resource amount in the trade popup.
+	/// </summary>
 	public Text resourceAmountPurchaseRemove;
+
+	/// <summary>
+	/// The unit price in the trade popup.
+	/// </summary>
 	public Text unitPricePurchaseRemove;
+
+	/// <summary>
+	/// The total price in the trade popup.
+	/// </summary>
 	public Text totalPricePurchaseRemove;
+
+	/// <summary>
+	/// The player in the trade popup.
+	/// </summary>
 	public Text playerPurchaseRemove;
-	public GameObject confirmTrade, cancelTrade;
+
+	/// <summary>
+	/// The confirm trade button.
+	/// </summary>
+	public GameObject confirmTrade;
+
+	/// <summary>
+	/// The cancel trade button.
+	/// </summary>
+	public GameObject cancelTrade;
+
+	/// <summary>
+	/// The currently selected trade.
+	/// </summary>
 	private TradeGuiElementScript selectedTrade;
 
 	/// <summary>

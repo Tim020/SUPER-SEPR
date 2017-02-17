@@ -5,28 +5,58 @@ using UnityEngine.EventSystems;
 
 public class MapManagerScript : MonoBehaviour {
 
+	/// <summary>
+	/// The map.
+	/// </summary>
 	private Map map;
+
+	/// <summary>
+	/// The index of the left mouse button.
+	/// </summary>
 	private const int LEFT_MOUSE_BUTTON = 0;
 
+	/// <summary>
+	/// The last tile hovered over.
+	/// </summary>
 	private Tile lastTileHovered;
+
+	/// <summary>
+	/// The current tile selected.
+	/// </summary>
 	private Tile currentTileSelected;
+
+	/// <summary>
+	/// The event system.
+	/// </summary>
 	private EventSystem eventSystem;
 
+	/// <summary>
+	/// Start this instance.
+	/// </summary>
 	void Start() {
 		eventSystem = EventSystem.current;
 	}
 
-	// Update is called once per frame
+	/// <summary>
+	/// Update this instance.
+	/// </summary>
 	void Update() {
 		if (map != null) {
 			CheckMouseHit();
 		}
 	}
 
+	/// <summary>
+	/// Sets the map.
+	/// </summary>
+	/// <param name="map">The map.</param>
 	public void SetMap(Map map) {
 		this.map = map;
 	}
 
+	/// <summary>
+	/// Checks wheter the mouse is over a tile.
+	/// </summary>
 	private void CheckMouseHit() {
 		Camera mainCamera = Camera.main;
 		Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
