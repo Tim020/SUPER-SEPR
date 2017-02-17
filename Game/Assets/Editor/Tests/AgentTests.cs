@@ -149,7 +149,7 @@ public class AgentTests {
 				try {
 					testMarket.BuyFrom(player, order);
 					Assert.Fail();
-				} catch (ArgumentException e) {
+				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
@@ -165,11 +165,22 @@ public class AgentTests {
 				try {
 					testMarket.BuyFrom(player, order);
 					Assert.Fail();
-				} catch (ArgumentException e) {
+				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
 				}
+			}
+
+			/// <summary>
+			/// Checks that the trade deducts the correct amount of money from the player.
+			/// </summary>
+			[Test]
+			public void BuyFrom_FundDecreasePlayer() {
+				order = new ResourceGroup(1, 1, 1);
+				int expectedFunds = player.GetMoney() - (order * testMarket.GetResourceBuyingPrices()).Sum();
+				testMarket.BuyFrom(player, order);
+				Assert.AreEqual(expectedFunds, player.GetMoney());
 			}
 		}
 
@@ -261,6 +272,18 @@ public class AgentTests {
 					Assert.Fail();
 				}
 			}
+
+			/// <summary>
+			/// Checks that the players funds increase on a successfull sale.
+			/// </summary>
+			[Test]
+			public void SellTo_FundIncreasePlayer() {
+				order = new ResourceGroup(1, 1, 1);
+				int expectedFunds = player.GetMoney() + (order * testMarket.GetResourceSellingPrices()).Sum();
+				testMarket.SellTo(player, order);
+				Assert.AreEqual(expectedFunds, player.GetMoney());
+			}
+
 		}
 
 		[TestFixture]
@@ -280,7 +303,7 @@ public class AgentTests {
 			public void Setup() {
 				testMarket = new DummyMarket();
 				//set resources to make testing simpler
-				testMarket.SetResources(new ResourceGroup(16, 16, 16));
+				testMarket.SetResources(new ResourceGroup(50, 50, 50));
 			}
 
 			/// <summary>
@@ -298,7 +321,7 @@ public class AgentTests {
 			[Test]
 			public void RobProduction_Resources() {
 				testMarket.ProduceRoboticons();
-				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
+				ResourceGroup expectedMarketLevel = new ResourceGroup(50, 50, 38);
 				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
 
@@ -422,7 +445,7 @@ public class AgentTests {
 				try {
 					testHuman.AcquireRoboticon(testRoboticon);
 					Assert.Fail();
-				} catch (ArgumentException e) {
+				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
@@ -552,7 +575,7 @@ public class AgentTests {
 				try {
 					testHuman.UpgradeRoboticon(testRoboticon, testUpgrade);
 					Assert.Fail();
-				} catch (ArgumentException e) {
+				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
@@ -570,7 +593,7 @@ public class AgentTests {
 					testHuman.UpgradeRoboticon(robot, testUpgrade);
 					Debug.Log("get here");
 					Assert.Fail();
-				} catch (ArgumentException e) {
+				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
