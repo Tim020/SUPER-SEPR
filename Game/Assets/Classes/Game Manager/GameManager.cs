@@ -251,8 +251,16 @@ public class GameManager : Object {
 	/// </summary>
 	/// <returns>The winner if game has ended.</returns>
 	public AbstractPlayer GetWinnerIfGameHasEnded() {
-		return null;
+		if ((Map.GetNumUnownedTilesRemaining().Equals(0)) {
+			GameManager.ShowWinner;
+			Application.Quit;
 	}
+	}
+	
+	/// <summary>
+	/// Ends the game when no unowned tiles are available.
+	/// </summary>
+
 
 	/// <summary>
 	/// Sets up GUI gameObject.
@@ -276,10 +284,16 @@ public class GameManager : Object {
 	/// Shows the winner.
 	/// </summary>
 	/// <param name="player">The player who won.</param>
-	private void ShowWinner(AbstractPlayer player) {
-		
+	public AbstractPlayer ShowWinner(AbstractPlayer player) {
+		foreach (AbstractPlayer p in players) {
+			p.CalculateScore();
+			if (p.CalculateScore > p.CalculateScore) {
+				AbstractPlayer winner = p.playerID;
+				return winner;
+			}
+		}
 	}
-
+	
 	/// <summary>
 	/// Use the event factory instance to try and make a random event occur. There is a chance an event will not occur.
 	/// </summary>
