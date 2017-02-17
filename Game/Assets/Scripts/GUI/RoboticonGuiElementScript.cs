@@ -5,44 +5,90 @@ using UnityEngine.UI;
 
 public class RoboticonGuiElementScript : MonoBehaviour {
 
-    public Text roboticonNameObject;
-    public GameObject installButton;
-    public GameObject upgradeButton;
-    public Roboticon roboticon;
-    private RoboticonWindowScript roboticonWindow;
+	/// <summary>
+	/// The roboticon name text.
+	/// </summary>
+	public Text roboticonName;
 
-    public void SetRoboticon(Roboticon roboticon) {
-        this.roboticon = roboticon;
-        roboticonNameObject.text = roboticon.GetName();
-    }
+	/// <summary>
+	/// The install button.
+	/// </summary>
+	public GameObject installButton;
 
-    public void SetButtonEventListeners(RoboticonWindowScript roboticonWindow) {
-        this.roboticonWindow = roboticonWindow;
-        installButton.GetComponent<Button>().onClick.AddListener(OnInstallClick);
-        upgradeButton.GetComponent<Button>().onClick.AddListener(OnUpgradeClick);
-    }
+	/// <summary>
+	/// The upgrade button.
+	/// </summary>
+	public GameObject upgradeButton;
 
-    public void ShowInstallButton() {
-        installButton.SetActive(true);
-        upgradeButton.SetActive(false);
-    }
+	/// <summary>
+	/// The roboticon this element represents.
+	/// </summary>
+	public Roboticon roboticon;
 
-    public void ShowUpgradeButton() {
-        installButton.SetActive(false);
-        upgradeButton.SetActive(true);
-    }
+	/// <summary>
+	/// The main roboticon window.
+	/// </summary>
+	private RoboticonWindowScript roboticonWindow;
 
-    public void HideButtons() {
-        installButton.SetActive(false);
-        upgradeButton.SetActive(false);
-    }
+	/// <summary>
+	/// Sets the roboticon.
+	/// </summary>
+	/// <param name="roboticon">The roboticon this element represents.</param>
+	public void SetRoboticon(Roboticon roboticon) {
+		this.roboticon = roboticon;
+		roboticonName.text = roboticon.GetName();
+	}
 
-    public void OnInstallClick() {
-        roboticonWindow.InstallRoboticon(roboticon);
-    }
+	/// <summary>
+	/// Sets the button event listeners.
+	/// </summary>
+	/// <param name="roboticonWindow">The main roboticon window.</param>
+	public void SetButtonEventListeners(RoboticonWindowScript roboticonWindow) {
+		this.roboticonWindow = roboticonWindow;
+		installButton.GetComponent<Button>().onClick.AddListener(OnInstallClick);
+		upgradeButton.GetComponent<Button>().onClick.AddListener(OnUpgradeClick);
+	}
 
-    public void OnUpgradeClick() {
-        roboticonWindow.UpgradeRoboticon(roboticon);
-    }
+	/// <summary>
+	/// Shows the install button.
+	/// </summary>
+	public void ShowInstallButton() {
+		if (!roboticon.IsInstalledToTile()) {
+			installButton.SetActive(true);
+		}
+		upgradeButton.SetActive(false);
+	}
+
+	/// <summary>
+	/// Shows the upgrade button.
+	/// </summary>
+	public void ShowUpgradeButton() {
+		installButton.SetActive(false);
+		upgradeButton.SetActive(true);
+	}
+
+	/// <summary>
+	/// Hides all buttons.
+	/// </summary>
+	public void HideButtons() {
+		installButton.SetActive(false);
+		upgradeButton.SetActive(false);
+	}
+
+	/// <summary>
+	/// Called when the install button is clicked.
+	/// </summary>
+	public void OnInstallClick() {
+		if (roboticonWindow.InstallRoboticon(roboticon)) {
+			upgradeButton.SetActive(false);
+		}
+	}
+
+	/// <summary>
+	/// Called when the upgrade button is clicked.
+	/// </summary>
+	public void OnUpgradeClick() {
+		roboticonWindow.UpgradeRoboticon(roboticon);
+	}
 
 }

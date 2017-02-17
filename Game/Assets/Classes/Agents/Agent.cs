@@ -34,7 +34,7 @@ public abstract class Agent {
 	/// </summary>
 	/// <param name="type">The resource type.</param>
 	/// <exception cref="System.ArgumentException">If the specified type is <c>Data.ResourceType.NONE</c></exception>
-	public float GetResourceAmount(Data.ResourceType type) {
+	public int GetResourceAmount(Data.ResourceType type) {
 		switch (type) {
 			case Data.ResourceType.ENERGY:
 				return resources.GetEnergy();
@@ -118,6 +118,26 @@ public abstract class Agent {
 	/// <param name="moneyToSet">Amount of money.</param>
 	public void SetMoney(int moneyToSet) {
 		money = moneyToSet;
+	}
+
+	/// <summary>
+	/// Deducts a specified amount of money
+	/// </summary>
+	/// <param name="moneyToDeduct">Money to deduct.</param>
+	public void DeductMoney(int moneyToDeduct) {
+		if (moneyToDeduct > 0 && money - moneyToDeduct >= 0) {
+			money -= moneyToDeduct;
+		}
+	}
+
+	/// <summary>
+	/// Gives a specified amount of money.
+	/// </summary>
+	/// <param name="moneyToGive">Money to give.</param>
+	public void GiveMoney(int moneyToGive) {
+		if (moneyToGive > 0) {
+			money += moneyToGive;
+		}
 	}
 
 }

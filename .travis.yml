@@ -15,8 +15,6 @@ before_install:
 - brew update
 - brew install doxygen
 - brew install git-lfs
-- brew install nuget
-- nuget install ReportUnit
 - chmod +x ./Scripts/install.sh
 - chmod +x ./Scripts/test.sh
 - chmod +x ./Scripts/build.sh

@@ -58,7 +58,7 @@ public class AIPlayer : AbstractPlayer {
 					if (ShouldUpgrade()) {
 						Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
 						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
-						money -= Roboticon.UPGRADEVALUE;
+						money -= Roboticon.UPGRADE_VALUE;
 					}
 				} catch (NullReferenceException) {
 					//means there's no roboticon to upgrade this is either because we don't own any
@@ -66,12 +66,11 @@ public class AIPlayer : AbstractPlayer {
 				}
 
 				if (ShouldPurchaseRoboticon()) {
-					//TODO: market interface for creating roboticons and buying roboticons
-					int price = GameHandler.GetGameManager().market.GetRoboticonSellingPrice();
-					Roboticon r = new Roboticon();
-					money -= price;
-					ownedRoboticons.Add(r);
-					currentRoboticon = r;
+					//Debug.Log("I'm buying a roboticon.");
+					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
+					//Debug.Log("Funds stand at " + money);
+				} else {
+					//Debug.Log("I'm not buying a roboticon.");
 				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
@@ -116,7 +115,7 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns><c>true</c>, if an upgrade should happen, <c>false</c> otherwise.</returns>
 	private Boolean ShouldUpgrade() {
-		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADEVALUE) {
+		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADE_VALUE) {
 			return true;
 		} else {
 			return false;
@@ -186,13 +185,10 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
-			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), 
-				Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
+			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
 		}
 
-		money += (sellingAmounts * currentPrice).Sum();
-		resources -= sellingAmounts;
-		market.SellTo(sellingAmounts);
+		market.SellTo(this, sellingAmounts);
 	}
 
 	/// <summary>
@@ -353,16 +349,35 @@ public class AIPlayer : AbstractPlayer {
 		}
 	}
 
+	/// <summary>
+	/// Class representing a ranked tile choice for best purchase options.
+	/// </summary>
 	class TileChoice {
 
+		/// <summary>
+		/// Gets the tile.
+		/// </summary>
+		/// <value>The tile.</value>
 		public Tile tile { get; private set; }
 
+		/// <summary>
+		/// Gets the score.
+		/// </summary>
+		/// <value>The score.</value>
 		public int score { get; private set; }
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
+		/// </summary>
 		public TileChoice() {
 			this.score = -1000;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
+		/// </summary>
+		/// <param name="tile">The tile this represents.</param>
+		/// <param name="score">The score of the tile.</param>
 		public TileChoice(Tile tile, int score) {
 			this.tile = tile;
 			this.score = score;

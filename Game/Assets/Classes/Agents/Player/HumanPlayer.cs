@@ -17,6 +17,11 @@ public class HumanPlayer : AbstractPlayer {
 		this.money = money;
 	}
 
+	/// <summary>
+	/// Sets up the GUI elements
+	/// </summary>
+	/// <param name="gui">The HumanGui interface class.</param>
+	/// <param name="canvas">The actual UI script.</param>
 	public void SetGuiElement(HumanGui gui, CanvasScript canvas) {
 		this.humanGui = gui;
 		humanGui.SetCanvasScript(canvas);
