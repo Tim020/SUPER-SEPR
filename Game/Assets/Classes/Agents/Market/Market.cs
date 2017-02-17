@@ -102,6 +102,8 @@ public class Market : Agent {
 
 	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
+    private Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistoryDetailed;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
 	/// </summary>
@@ -113,6 +115,7 @@ public class Market : Agent {
 		money = STARTING_MONEY;
 		playerTrades = new List<P2PTrade>();
 		resourcePriceHistory = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
+        resourcePriceHistoryDetailed = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
 	}
 
 	/// <summary>
@@ -134,7 +137,8 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() + resourcesToBuy);
 			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
-		} else {
+            UpdateResourcePrices();
+        } else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
 	}
@@ -166,6 +170,7 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() - resourcesToSell);
 			player.GiveMoney(price);
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
+            UpdateResourcePrices();
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
@@ -258,6 +263,12 @@ public class Market : Agent {
 			player.GiveResouce(trade.resource, trade.resourceAmount);
 			player.DeductMoney(trade.GetTotalCost());
 			trade.host.GiveMoney(trade.GetTotalCost());
+            switch (trade.resource)
+            {
+                case Data.ResourceType.FOOD:
+                    ResourceGroup price = new ResourceGroup(trade.unitPrice, 0, 0);
+                    break;
+            }
 			playerTrades.Remove(trade);
 		}
 	}
@@ -275,10 +286,13 @@ public class Market : Agent {
 	/// Updates the prices for resources based on supply and demand economics.
 	/// TODO: Implement this
 	/// </summary>
-	public void UpdatePrices(int phaseID) {
-
+	public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
+
+    private void UpdateResourcePrices() {
+
+    }
 
 	/// <summary>
 	/// Produces roboticons if enough resources are available.
