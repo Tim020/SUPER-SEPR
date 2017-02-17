@@ -4,11 +4,17 @@ using UnityEngine;
 
 public class ShowHideEventUI : MonoBehaviour {
 
+	/// <summary>
+	/// Starts the event.
+	/// </summary>
     public void StartEvent() {
         Invoke("HideSprite", 3f);
     }
-
-    private void HideSprite() {
+	
+	/// <summary>
+	/// Hides the sprite.
+	/// </summary>
+	private void HideSprite() {
         gameObject.SetActive(false);
     }
 }

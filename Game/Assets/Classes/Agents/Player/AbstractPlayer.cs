@@ -8,6 +8,10 @@ using System.Collections.Generic;
 /// </summary>
 public abstract class AbstractPlayer : Agent {
 
+	/// <summary>
+	/// Gets or sets the player ID.
+	/// </summary>
+	/// <value>The player ID.</value>
 	public int playerID { protected set; get; }
 
 	/// <summary>
@@ -120,7 +124,7 @@ public abstract class AbstractPlayer : Agent {
 	/// <exception cref="System.ArgumentException">When trying to upgrade a roboticon that is not owned</exception>
 	public void UpgradeRoboticon(Roboticon roboticon, ResourceGroup upgrade) {
 		if (ownedRoboticons.Contains(roboticon)) {
-			roboticon.Upgrade(upgrade);
+			roboticon.UpgradeProductionValues(upgrade);
 		} else {
 			throw new ArgumentException("Cannot upgrade a roboticon the player does not own.");
 		}
@@ -135,15 +139,6 @@ public abstract class AbstractPlayer : Agent {
 	public void InstallRoboticon(Roboticon roboticon, Tile tile) {
 		tile.InstallRoboticon(roboticon);
 		roboticon.InstallRoboticonToTile();
-	}
-
-	public void PutItemUpForAuction() {
-		//TODO - interface with auction. Not a priority.
-	}
-
-	public bool PlaceBidOnCurrentAuctionItem(int bidAmount) {
-		//TODO - interface with auction. Not a priority.
-		return true;
 	}
 
 	/// <summary>
@@ -162,6 +157,26 @@ public abstract class AbstractPlayer : Agent {
 		return name;
 	}
 
+	/// <summary>
+	/// Called on the first tick of each new phase.
+	/// </summary>
+	/// <param name="state">The current game state.</param>
 	public abstract void StartPhase(Data.GameState state);
+
+	/// <summary>
+	/// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="AbstractPlayer"/>.
+	/// </summary>
+	/// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="AbstractPlayer"/>.</param>
+	/// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current <see cref="AbstractPlayer"/>;
+	/// otherwise, <c>false</c>.</returns>
+	public override bool Equals(object obj) {
+		if (obj == null || GetType() != obj.GetType()) {
+			return false;
+		}
+
+		AbstractPlayer playerToCompare = (AbstractPlayer)obj;
+
+		return playerToCompare.playerID == playerID;
+	}
 
 }
