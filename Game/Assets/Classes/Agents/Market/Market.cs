@@ -246,10 +246,12 @@ public class Market : Agent {
 	}
 
 	/// <summary>
-	/// Produces the roboticon if enough resources are available.
+	/// Produces roboticons if enough resources are available.
+	/// Will use up to half of it's available ore to produce roboticons.
+	/// TODO: This will probably need fine tuning at some point.
 	/// </summary>
-	public void ProduceRoboticon() {
-		if (resources.ore >= ROBOTICON_PRODUCTION_COST) {
+	public void ProduceRoboticons() {
+		for (int i = 0; i < (resources.ore / 2) / ROBOTICON_PRODUCTION_COST; i++) {
 			resources.ore -= ROBOTICON_PRODUCTION_COST;
 			numRoboticonsForSale++;
 		}

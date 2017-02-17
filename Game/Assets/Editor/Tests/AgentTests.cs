@@ -266,6 +266,8 @@ public class AgentTests {
 		[TestFixture]
 		public class RoboticonProductionTests {
 
+			//TODO: Rewrite these tests to take into account the new method for producing roboticons.
+
 			/// <summary>
 			/// The dummy market.
 			/// </summary>
@@ -286,7 +288,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_NumRoboticons() {
-				testMarket.ProduceRoboticon();
+				testMarket.ProduceRoboticons();
 				Assert.AreEqual(13, testMarket.GetNumRoboticonsForSale());
 			}
 
@@ -295,7 +297,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_Resources() {
-				testMarket.ProduceRoboticon();
+				testMarket.ProduceRoboticons();
 				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
 				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
@@ -308,7 +310,7 @@ public class AgentTests {
 				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
 				//as production shouldn't occur at less than 12 market should not change
 				testMarket.SetResources(expectedMarketLevel);
-				testMarket.ProduceRoboticon();
+				testMarket.ProduceRoboticons();
 				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
 			}
 

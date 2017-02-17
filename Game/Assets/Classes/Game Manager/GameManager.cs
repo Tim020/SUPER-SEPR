@@ -63,11 +63,11 @@ public class GameManager : Object {
 	/// Whether this is the first tick of the game state.
 	/// </summary>
 	private bool FirstTick {
-		set{
+		set {
 			UnityEngine.Debug.Log("Changed to: " + value + " | " + state + " | " + currentPlayerTurn);
 			firstTick = value;
 		}
-		get{
+		get {
 			return firstTick;
 		}
 	}
@@ -178,6 +178,7 @@ public class GameManager : Object {
 					p.Produce();
 				}
 				market.UpdatePrices();
+				market.ProduceRoboticons();
 				playersCompletedPhase = 0;
 				state = Data.GameState.AUCTION;
 				FirstTick = true;
@@ -307,7 +308,7 @@ public class GameManager : Object {
 	public HumanPlayer GetHumanPlayer() {
 		return (HumanPlayer)players[0];
 	}
-	
+
 	/// <summary>
 	/// Gets the elapsed time of the timer in seconds.
 	/// </summary>
