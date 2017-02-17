@@ -172,7 +172,7 @@ public class GameManager : Object {
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
-				market.UpdatePrices(playersCompletedPhase);
+				market.UpdatePrices(completePhaseCycles);
 				market.ProduceRoboticons();
 				playersCompletedPhase = 0;
 				state = Data.GameState.AUCTION;

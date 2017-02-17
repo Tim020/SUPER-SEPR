@@ -17,6 +17,8 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
 
+	private bool firstPhase = true;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AIPlayer"/> class.
 	/// </summary>
@@ -41,7 +43,6 @@ public class AIPlayer : AbstractPlayer {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
 					money -= tileToAcquire.GetPrice();
-					Debug.Log(money);
 				} catch (NullReferenceException) {
 					//means the ai didn't have enough funds to acquire a tile
 				} catch (ArgumentException) {
@@ -77,10 +78,14 @@ public class AIPlayer : AbstractPlayer {
 				break;
 			case Data.GameState.AUCTION:
 				//TODO: Implement buying from market
-				UpdateSellingPrediction();
-				SellToMarket();
-				UpdatBuyingPrediction();
-				BuyFromMarket();
+				if (!firstPhase) {
+					UpdateSellingPrediction();
+					SellToMarket();
+					UpdatBuyingPrediction();
+					BuyFromMarket();
+				} else {
+					firstPhase = false;
+				}
 				break;
 		}
 
@@ -231,7 +236,9 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>The selling price history.</returns>
 	private ResourceGroup[] GetSellingPriceHistory() {
-		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
+		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count];
+		Debug.Log(GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count);
+		Debug.Log(GameHandler.GetGameManager().market.resourcePriceHistory[0].Tail.ToString());
 		for (int i = 0; i < sellingPirces.Length; i++) {
 			sellingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
 		}
