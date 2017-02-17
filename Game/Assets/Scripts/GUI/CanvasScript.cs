@@ -11,6 +11,8 @@ public class CanvasScript : MonoBehaviour {
 	/// </summary>
 	public HelpBoxScript helpBox;
 
+	public GameObject confirmationWindow;
+
 	/// <summary>
 	/// The phase timer popup.
 	/// </summary>
@@ -191,6 +193,20 @@ public class CanvasScript : MonoBehaviour {
 	public void HideOptionsMenu() {
 		optionsMenu.SetActive(false);
 	}
+
+	public void ShowConfirmationWindow() {
+		confirmationWindow.SetActive (true);
+	}
+
+	public void HideConfirmationWindow() {
+		confirmationWindow.SetActive (false);
+	}
+
+	public void QuitGame() {
+		Application.Quit();
+	}
+
+
 
 	/// <summary>
 	/// Shows the auction menu.
