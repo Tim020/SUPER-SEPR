@@ -89,4 +89,20 @@ public class Data {
 	public static string GetHelpBoxText(Data.GameState phase) {
 		return helpBoxText[(int)phase];
 	}
+
+	/// <summary>
+	/// A generic Tuple.
+	/// </summary>
+	public class Tuple<T1 , T2> {
+
+		public T1 Head { get; private set; }
+
+		public T2 Tail { get; private set; }
+
+		public Tuple(T1 head, T2 tail) {
+			Head = head;
+			Tail = tail;
+		}
+
+	}
 }

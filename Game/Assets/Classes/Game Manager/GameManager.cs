@@ -83,6 +83,11 @@ public class GameManager : Object {
 	private const int phaseTimeInSeconds = 60;
 
 	/// <summary>
+	/// The number of completed phase cycles.
+	/// </summary>
+	private int completePhaseCycles = 0;
+
+	/// <summary>
 	/// Creates a new instance of the GameManager
 	/// </summary>
 	/// <param name="gameName">Name of the game</param>
@@ -167,7 +172,7 @@ public class GameManager : Object {
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
-				market.UpdatePrices();
+				market.UpdatePrices(playersCompletedPhase);
 				market.ProduceRoboticons();
 				playersCompletedPhase = 0;
 				state = Data.GameState.AUCTION;
@@ -192,6 +197,7 @@ public class GameManager : Object {
 					p.StartPhase(state);
 				}
 				TryRandomEvent();
+				completePhaseCycles++;
 				playersCompletedPhase = 0;
 				state = Data.GameState.GAME_WAIT;
 				firstTick = true;
