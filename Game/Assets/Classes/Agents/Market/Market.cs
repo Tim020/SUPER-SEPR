@@ -100,6 +100,8 @@ public class Market : Agent {
 
     private ResourceGroup runningTotal = new ResourceGroup();
 
+	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
 	/// </summary>
@@ -110,6 +112,7 @@ public class Market : Agent {
 		numRoboticonsForSale = STARTING_ROBOTICON_AMOUNT;
 		money = STARTING_MONEY;
 		playerTrades = new List<P2PTrade>();
+		resourcePriceHistory = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
 	}
 
 	/// <summary>
@@ -262,8 +265,9 @@ public class Market : Agent {
 	/// Updates the prices for resources based on supply and demand economics.
 	/// TODO: Implement this
 	/// </summary>
-    public void UpdatePrices() {
+	public void UpdatePrices(int phaseID) {
 
+		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
 
 	/// <summary>

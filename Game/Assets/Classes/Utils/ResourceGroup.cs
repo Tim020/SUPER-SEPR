@@ -41,21 +41,21 @@ public class ResourceGroup {
 		return new ResourceGroup(r1.GetFood() * r2.GetFood(), r1.GetEnergy() * r2.GetEnergy(), r1.GetOre() * r2.GetOre());
 	}
 
-    public static ResourceGroup operator /(ResourceGroup r1, ResourceGroup r2) {
-        return new ResourceGroup(r1.GetFood() / r2.GetFood(), r1.GetEnergy() / r2.GetEnergy(), r1.GetOre() / r2.GetOre());
-    }
+	public static ResourceGroup operator /(ResourceGroup r1, ResourceGroup r2) {
+		return new ResourceGroup(r1.GetFood() / r2.GetFood(), r1.GetEnergy() / r2.GetEnergy(), r1.GetOre() / r2.GetOre());
+	}
 
-    public static ResourceGroup operator -(ResourceGroup r, int c) {
-        return new ResourceGroup(r.GetFood() - c, r.GetEnergy() - c, r.GetOre() - c);
-    }
+	public static ResourceGroup operator -(ResourceGroup r, int c) {
+		return new ResourceGroup(r.GetFood() - c, r.GetEnergy() - c, r.GetOre() - c);
+	}
 
 	public static ResourceGroup operator *(ResourceGroup r, int c) {
 		return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
 	}
 
-    public static ResourceGroup operator /(ResourceGroup r, int c) {
-        return new ResourceGroup(r.GetFood() / c, r.GetEnergy() / c, r.GetOre() / c);
-    }
+	public static ResourceGroup operator /(ResourceGroup r, int c) {
+		return new ResourceGroup(r.GetFood() / c, r.GetEnergy() / c, r.GetOre() / c);
+	}
 
 	/// <summary>
 	/// Returns a <see cref="System.String"/> that represents the current <see cref="ResourceGroup"/>.
@@ -76,7 +76,7 @@ public class ResourceGroup {
 			return false;
 		}
 
-		ResourceGroup resourcesToCompare = (ResourceGroup) obj;
+		ResourceGroup resourcesToCompare = (ResourceGroup)obj;
 
 		return food == resourcesToCompare.food &&
 		energy == resourcesToCompare.energy &&
@@ -122,4 +122,10 @@ public class ResourceGroup {
 		return ore;
 	}
 
+	/// <summary>
+	/// Clone this instance.
+	/// </summary>
+	public ResourceGroup Clone() {
+		return new ResourceGroup(this.food, this.energy, this.ore);
+	}
 }
