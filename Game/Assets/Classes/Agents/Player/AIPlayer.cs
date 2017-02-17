@@ -75,7 +75,7 @@ public class AIPlayer : AbstractPlayer {
 				try {
 					if (ShouldUpgrade()) {
 						Debug.Log("I'm going to upgrade a roboticon");
-						Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
+						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
 						//Debug.Log("I'm upgrading roboticon: " + upgrade.Head.GetName());
 						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
 						money -= Roboticon.UPGRADE_VALUE;
@@ -154,7 +154,7 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>The upgrade.</returns>
 	/// <exception cref="System.NullReferenceException">If there aren't any roboticons to upgrade.</exception>
-	private Tuple<Roboticon, ResourceGroup> ChooseUpgrade() {
+	private Data.Tuple<Roboticon, ResourceGroup> ChooseUpgrade() {
 		Tile[] mannedTiles = GetMannedTiles();
 		TileChoice best = new TileChoice();
 		TileChoice current;
@@ -180,7 +180,7 @@ public class AIPlayer : AbstractPlayer {
 			} else {
 				upgrade = new ResourceGroup(0, 0, 1);
 			}
-			return new Tuple<Roboticon, ResourceGroup>(best.tile.GetInstalledRoboticons()[0], upgrade);
+			return new Data.Tuple<Roboticon, ResourceGroup>(best.tile.GetInstalledRoboticons()[0], upgrade);
 		} else {
 			throw new NullReferenceException("No roboticon to upgrade.");
 		}
@@ -441,21 +441,5 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 
-	}
-
-	/// <summary>
-	/// A generic Tuple.
-	/// </summary>
-	class Tuple<T1 , T2> {
-
-		public T1 Head { get; private set; }
-
-		public T2 Tail { get; private set; }
-
-		internal Tuple(T1 head, T2 tail) {
-			Head = head;
-			Tail = tail;
-		}
-        
 	}
 }
