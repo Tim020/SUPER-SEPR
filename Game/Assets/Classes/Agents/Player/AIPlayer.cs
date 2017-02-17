@@ -39,7 +39,6 @@ public class AIPlayer : AbstractPlayer {
 		this.name = name;
 		this.money = money;
 	}
-
 	/// <summary>
 	/// Act based on the specified state.
 	/// </summary>
@@ -55,6 +54,9 @@ public class AIPlayer : AbstractPlayer {
 					Tile tileToAcquire = Array.Find(GetAvailableTiles(), t => t.GetPrice() < money - 15);
 					AcquireTile(tileToAcquire);
 					money -= tileToAcquire.GetPrice();
+					
+					
+					
 					//Debug.Log("I aquired tile:" + tileToAcquire.GetID());
 					//Debug.Log("Funds stand at " + money);
 					break;                   
@@ -62,6 +64,9 @@ public class AIPlayer : AbstractPlayer {
 				try {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
+			
+					
+
 					money -= tileToAcquire.GetPrice();
 					//Debug.Log("I aquired tile:" + tileToAcquire.GetID());
 					//Debug.Log("Funds stand at " + money);
