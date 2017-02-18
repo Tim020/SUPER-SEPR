@@ -299,6 +299,11 @@ public class Market : Agent {
 	/// </summary>
     private void UpdateResourcePrices() {
 
+		int upgradeTotalSum = upgradeTotal.Sum();
+		int foodTotal = upgradeTotal.GetFood();
+		int oreTotal = upgradeTotal.GetOre();
+		int energyTotal = upgradeTotal.GetEnergy();
+
     }
 
 	/// <summary>
@@ -316,7 +321,7 @@ public class Market : Agent {
 		}
 
 		foreach(Roboticon r in allRoboticons) {
-			upgradeTotal += r.GetProductionValues() - r.GetInitialProductionValues();
+			upgradeTotal += (r.GetProductionValues() - r.GetInitialProductionValues());
 		}
 	}
 
