@@ -18,14 +18,14 @@ public class AIPlayer : AbstractPlayer {
 	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
 
 	/// <summary>
-	/// The current change in resource values for both buying and selling.
-	/// </summary>
-	private Data.Tuple<ResourceGroup, ResourceGroup> currentChange = new Data.Tuple<ResourceGroup, ResourceGroup>(new ResourceGroup() , new ResourceGroup());
-
-	/// <summary>
 	/// The avgerage market buying price.
 	/// </summary>
 	private ResourceGroup avgMarketBuyingPrice;
+
+	/// <summary>
+	/// The avgerage market selling price.
+	/// </summary>
+	private ResourceGroup avgMarketSellingPrice;
 
 	/// <summary>
 	/// The first phase.
@@ -100,24 +100,24 @@ public class AIPlayer : AbstractPlayer {
 					SellToMarket();
 					UpdatBuyingPrediction();
 					BuyFromMarket();
-				    Trade();
+				    BuyTrade();
 					Gamble();
 				} else {
 					firstPhase = false;
 					avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+					avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 				}
 
 				break;
 		}
 		// This must be done to signify the end of the AI turn.
-		Debug.Log("AI calling finished for phase: " + state);
 		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
 	}
 
 	/// <summary>
 	/// If there's a optimal trade it purhcase resources.
 	/// </summary>
-	public void Trade() {
+	public void BuyTrade() {
 		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades();
 		Market.P2PTrade considering = null;
 
@@ -147,13 +147,19 @@ public class AIPlayer : AbstractPlayer {
 		}
 	}
 
+	private void MakeTrade() {
+		Market.P2PTrade trade = null;
+
+
+	}
+
 	/// <summary>
 	/// Updates the selling price prediction.
 	/// </summary>
 	private void UpdateSellingPrediction() {
 		ResourceGroup[] history = GetMarketBuyingPriceHistory();
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(history), currentPrediction.Tail);
-		currentChange = new Data.Tuple<ResourceGroup, ResourceGroup>(history[history.Length - 1], currentChange.Tail);
+		ResourceGroup currentChange = history[history.Length - 1];
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(history, currentChange), currentPrediction.Tail);
 	}
 
 	/// <summary>
@@ -161,22 +167,26 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	private void UpdatBuyingPrediction() {
 		ResourceGroup[] history = GetMarketSellingPriceHistory();
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(history));
-		currentChange = new Data.Tuple<ResourceGroup, ResourceGroup>(currentChange.Head, history[history.Length - 1]);
+		ResourceGroup currentChange = history[history.Length - 1];
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(history, currentChange));
 	}
 
 	/// <summary>
 	/// Predicts that a negative change will occur for all resources.
 	/// </summary>
 	/// <param name="priceHistory">The price history.</param>
-	private ResourcePrediction Prediction(ResourceGroup[] priceHistory) {
+	private ResourcePrediction Prediction(ResourceGroup[] priceHistory, ResourceGroup currentChange) {
 		ResourcePrediction p = new ResourcePrediction();
 		ResourceGroup[] change = GetPriceDifference(priceHistory);
 
 		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
 		foreach (Data.ResourceType t in types) {
-			//1 - ProbStreackEnd means we have the likelyhood of getting an increase
-			p.SetResource(t, 1 - ProbStreackEnd(CurrentStreak(t, change), t, change));
+			//1 - ProbStreackEnd means we have the likelyhood of getting an increas
+			if (currentChange.GetResource(t) >= 0) {
+				p.SetResource(t, 1 - ProbStreackEnd(CurrentStreak(t, change), t, change));
+			} else {
+				p.SetResource(t, -1);
+			}
 		}
 		return p;
 	}
@@ -195,14 +205,20 @@ public class AIPlayer : AbstractPlayer {
 
 		for (int i = 0; i < diff.Length - size; i++) {
 			Array.ConstrainedCopy(diff, i, current, 0, size);
-			if (Array.TrueForAll(current, r => r.GetResource(resource) > 0)) {
+			if (Array.TrueForAll(current, r => r.GetResource(resource) >= 0)) {
 				if (i + 1 < diff.Length && diff[i+1].GetResource(resource) < 0) {
 					count++;
 				}
 				total++;
 			}
 		}
-		return count / total;
+
+		//if we haven't seen a streak this long predict 50/50 chance of ending
+		if (count == 0f || total == 0f) {
+			return 0.5f;
+		} else {
+			return count / total;
+		}
 	}
 
 	/// <summary>
@@ -213,7 +229,7 @@ public class AIPlayer : AbstractPlayer {
 	/// <param name="diff">The changes in price.</param>
 	private int CurrentStreak(Data.ResourceType resource, ResourceGroup[] diff) {
 		for (int i = diff.Length - 1; i > 0; i--) {
-			if (diff[i].GetResource(resource) <= 0) {
+			if (diff[i].GetResource(resource) < 0) {
 				return diff.Length - (i + 1);
 			}
 		}
@@ -330,6 +346,7 @@ public class AIPlayer : AbstractPlayer {
 	/// <summary>
 	/// Sells to the market.
 	/// </summary>
+	//TODO: Add a check to whether price is within +/-5% average
 	private void SellToMarket() {
 		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		Market market = GameHandler.GetGameManager().market;
@@ -338,7 +355,7 @@ public class AIPlayer : AbstractPlayer {
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
 			//means we're at a low and shouldn't sell anything
-			if (currentChange.Head.GetResource(t) < 0) {
+			if (currentPrediction.Head.GetResource(t) < 0) {
 				sellingAmounts.SetResource(t, 0);
 			//if the price is almost certainly going to rise then the AI holds off 
 			} else if (currentPrediction.Head.GetResource(t) >= 0.75) {
@@ -378,7 +395,7 @@ public class AIPlayer : AbstractPlayer {
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
 			//means we're at a low or the prices aren't profitable so we buy nothing
-			if (currentChange.Tail.GetResource(t) < 0 || (avgMarketBuyingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
+			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketBuyingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
 				buyingAmounts.SetResource(t, 0);
 			//if it's almost certain the price is going to drop we don't buy
 			} else if (currentPrediction.Tail.GetResource(t) >= 0.75) {
