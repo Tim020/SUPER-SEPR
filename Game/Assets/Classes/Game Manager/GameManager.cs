@@ -300,7 +300,7 @@ public class GameManager : Object {
 	/// </summary>
 	/// <param name="player">The player who won.</param>
 	private void ShowWinner(AbstractPlayer player) {
-
+		GetHumanPlayer().GetHumanGui().GetCanvasScript().DisplayWinner(GetHumanPlayer(), player);
 	}
 
 	/// <summary>

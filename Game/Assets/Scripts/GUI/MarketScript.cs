@@ -184,7 +184,7 @@ public class MarketScript : MonoBehaviour {
 		int roboticonsToBuy = int.Parse(roboticonBuyAmount.text);
 		int buyPrice = int.Parse(totalBuyPrice.text.Substring(1));
 
-		ResetInputBoxes ();
+		ResetInputBoxes();
 
 		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice && market.GetNumRoboticonsForSale() >= roboticonsToBuy) {
 			try {
@@ -214,7 +214,7 @@ public class MarketScript : MonoBehaviour {
 		resourcesToSell.energy = int.Parse(energySellAmount.text);
 		resourcesToSell.ore = int.Parse(oreSellAmount.text);
 
-		ResetInputBoxes ();
+		ResetInputBoxes();
 
 		int sellPrice = int.Parse(totalSellPrice.text.Substring(1));
 
@@ -252,10 +252,12 @@ public class MarketScript : MonoBehaviour {
 	/// Sets the market resource values.
 	/// </summary>
 	public void SetMarketValues() {
-		UpdateShownMarketPrices();
-		UpdateTotalBuyPrice();
-		UpdateTotalSellPrice();
-		UpdateMarketResourceAmounts();
+		if (gameObject.activeInHierarchy) {
+			UpdateShownMarketPrices();
+			UpdateTotalBuyPrice();
+			UpdateTotalSellPrice();
+			UpdateMarketResourceAmounts();
+		}
 	}
 
 	/// <summary>

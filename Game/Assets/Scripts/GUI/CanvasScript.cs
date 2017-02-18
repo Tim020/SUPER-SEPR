@@ -11,6 +11,9 @@ public class CanvasScript : MonoBehaviour {
 	/// </summary>
 	public HelpBoxScript helpBox;
 
+	/// <summary>
+	/// The confirmation window.
+	/// </summary>
 	public GameObject confirmationWindow;
 
 	/// <summary>
@@ -119,6 +122,11 @@ public class CanvasScript : MonoBehaviour {
 	private bool tradeConfirm = true;
 
 	/// <summary>
+	/// The score board.
+	/// </summary>
+	public ScoreBoardScript scoreBoard;
+
+	/// <summary>
 	/// Gets a value indicating whether this <see cref="CanvasScript"/> should show the trade confirmation.
 	/// </summary>
 	/// <value><c>true</c> if we show the trade confirmation; otherwise, <c>false</c>.</value>
@@ -211,11 +219,16 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	public void ShowConfirmationWindow() {
-		confirmationWindow.SetActive (true);
+		confirmationWindow.SetActive(true);
 	}
 
 	public void HideConfirmationWindow() {
-		confirmationWindow.SetActive (false);
+		confirmationWindow.SetActive(false);
+	}
+
+	public void DisplayWinner(HumanPlayer player, AbstractPlayer winner) {
+		scoreBoard.SetWinnerText(player, winner);
+		scoreBoard.gameObject.SetActive(true);
 	}
 
 	public void QuitGame() {
