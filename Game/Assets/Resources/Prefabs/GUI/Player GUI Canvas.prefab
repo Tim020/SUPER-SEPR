@@ -8301,8 +8301,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 215695da4a51ee44495a4bf95a54a88e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  winnerText: {fileID: 0}
-  scoreText: {fileID: 0}
+  winnerText: {fileID: 114394485963633050}
+  scoreText: {fileID: 114841460132867656}
 --- !u!114 &114387038987782744
 MonoBehaviour:
   m_ObjectHideFlags: 1

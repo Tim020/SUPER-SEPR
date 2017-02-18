@@ -207,10 +207,11 @@ public class GameManager : Object {
 				if (CheckWinCondition()) {
 					state = Data.GameState.GAME_OVER;
 					firstTick = true;
+				} else {
+					playersCompletedPhase = 0;
+					state = Data.GameState.GAME_WAIT;
+					firstTick = true;
 				}
-				playersCompletedPhase = 0;
-				state = Data.GameState.GAME_WAIT;
-				firstTick = true;
 			}
 		} else if (state == Data.GameState.GAME_OVER) {
 			if (firstTick) {

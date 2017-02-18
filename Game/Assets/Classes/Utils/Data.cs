@@ -42,7 +42,7 @@ public class Data {
 	/// <summary>
 	/// The human readable names of all the different game states
 	/// </summary>
-	public static string[] stateNames = new string[9] {
+	public static string[] stateNames = new string[10] {
 		"College Selection",
 		"Game Wait",
 		"Acquisition",
@@ -51,7 +51,8 @@ public class Data {
 		"Player End",
 		"Production",
 		"Auction",
-		"Recycle"
+		"Recycle",
+		"Game Over"
 	};
 
 	/// <summary>
