@@ -222,8 +222,6 @@ public class CanvasScript : MonoBehaviour {
 		Application.Quit();
 	}
 
-
-
 	/// <summary>
 	/// Shows the auction menu.
 	/// </summary>
