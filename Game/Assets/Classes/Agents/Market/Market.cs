@@ -242,7 +242,7 @@ public class Market : Agent {
 	/// </summary>
 	public void UpdatePrices(int phaseID) {
 
-		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
+		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone() * -1));
 	}
 
 	/// <summary>
