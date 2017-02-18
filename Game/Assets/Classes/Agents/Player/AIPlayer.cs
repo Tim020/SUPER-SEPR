@@ -8,29 +8,30 @@ using Random = UnityEngine.Random;
 public class AIPlayer : AbstractPlayer {
 
 	/// <summary>
-	/// The current roboticon.
+	/// NEW: The current roboticon.
 	/// </summary>
 	private Roboticon currentRoboticon = null;
 
 	/// <summary>
-	/// Prediction that the buying price droping and the selling price rising
+	/// NEW: Prediction that the buying price droping and the selling price rising
 	/// </summary>
 	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
 
 	/// <summary>
-	/// The avgerage market buying price.
+	/// NEW: The avgerage market buying price.
 	/// </summary>
 	private ResourceGroup avgMarketBuyingProfit;
 
 	/// <summary>
-	/// The avgerage market selling price.
+	/// NEW: The avgerage market selling price.
 	/// </summary>
 	private ResourceGroup avgMarketSellingProfit;
 
 	/// <summary>
-	/// The first phase.
+	/// NEW: The first phase.
 	/// </summary>
 	private bool firstPhase = true;
+
 
 	/// <summary>
 	/// The sold to market.
@@ -49,9 +50,9 @@ public class AIPlayer : AbstractPlayer {
 		this.name = name;
 		this.money = money;
 	}
-
+		
 	/// <summary>
-	/// Act based on the specified state.
+	/// NEW: Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state) {
@@ -103,6 +104,7 @@ public class AIPlayer : AbstractPlayer {
 					BuyFromMarket();
 				    BuyTrade();
 					Gamble();
+					MakeTrade();
 				} else {
 					firstPhase = false;
 				avgMarketBuyingProfit = GameHandler.GetGameManager().market.GetResourceSellingPrices();
@@ -116,7 +118,333 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// If there's a optimal trade it purhcase resources.
+	/// NEW: Scores the fitness of a tile.
+	/// </summary>
+	/// <returns>The tile choice with the correct score</returns>
+	/// <param name="tile">The tile to score</param>
+	private TileChoice ScoreTile(Tile tile) {
+		TileChoice scoredTile;
+		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
+		tileScore -= tile.GetPrice();
+		scoredTile = new TileChoice(tile, tileScore);
+		return scoredTile;
+	}
+
+	/// <summary>
+	/// CHANGED: Gets the best tile for acquisition.
+	/// </summary>
+	/// <returns>The best possible tile for acquisition</returns>
+	/// <exception cref="System.NullReferenceException">If the AI doesn't have enough money.</exception>
+	/// <exception cref="System.ArgumentException">If there aren't any available tiles.</exception>
+	private Tile ChooseTileToAcquire() {
+		Tile[] availableTiles = GetAvailableTiles();
+		TileChoice best = new TileChoice();
+		TileChoice current;
+
+		if (availableTiles.Length == 0) {
+			throw new ArgumentException("No avaialbe tiles.");
+		}
+
+		foreach (Tile t in availableTiles) {
+			current = ScoreTile(t);
+			if (current > best && current.tile.GetPrice() <= money - 15) {
+				best = current;
+			}
+		}
+
+		if (best.tile == null) {
+			throw new NullReferenceException("Not enough funds");
+		} else {
+			return best.tile;
+		}
+	}
+
+	/// <summary>
+	/// CHANGED: Checks whether the AI should purchase a roboticon.
+	/// </summary>
+	/// <returns><c>true</c>, if the AI should purchase a roboticon <c>false</c> otherwise.</returns>
+	private bool ShouldPurchaseRoboticon() {
+		List<Tile> unmannedTiles = GetUnmannedTiles();
+
+		if (GameHandler.GetGameManager().market.GetNumRoboticonsForSale() == 0) {
+			return false;
+		} else if (unmannedTiles.Count > 0 && GameHandler.GetGameManager().market.GetRoboticonSellingPrice() < money) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// NEW: Gets the best tile fo roboticon installation.
+	/// </summary>
+	/// <returns>The tile.</returns>
+	/// <exception cref="System.ArgumentException">If all tiles owned tiles are occupied with a roboticon.</exception>
+	private Tile InstallationTile() {
+		List<Tile> unmannedTiles = GetUnmannedTiles();
+		if (unmannedTiles.Count > 0) {
+			TileChoice best = new TileChoice();
+			TileChoice current = new TileChoice();
+			foreach (Tile t in unmannedTiles) {
+				current = ScoreTile(t);
+				if (current > best) {
+					best = current;
+				}
+			}
+			return best.tile;
+		} else {
+			throw new ArgumentException("No tile needs more roboticons.");
+		}
+	}
+
+	/// <summary>
+	/// CHNAGED: Checks whether we should upgrade a roboticon. 
+	/// </summary>
+	/// <returns><c>true</c>, if an upgrade should happen, <c>false</c> otherwise.</returns>
+	private Boolean ShouldUpgrade() {
+		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADE_VALUE) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// NEW: Chooses the best upgrade and the best roboticon for it.
+	/// </summary>
+	/// <returns>The upgrade.</returns>
+	/// <exception cref="System.NullReferenceException">If there aren't any roboticons to upgrade.</exception>
+	private Data.Tuple<Roboticon, ResourceGroup> ChooseUpgrade() {
+		Tile[] mannedTiles = GetMannedTiles();
+		TileChoice best = new TileChoice();
+		TileChoice current;
+		Roboticon toUpgrade = null;
+
+		foreach (Tile t in mannedTiles) {
+			ResourceGroup tResources = t.GetTotalResourcesGenerated();
+			if (tResources.energy >= 20 || tResources.food >= 20 || tResources.ore >= 20) {
+				continue;
+			} else {
+				//this works as score is based on tile base resources, so most worthful tile/roboticon pair
+				//gets upgraded
+				current = ScoreTile(t);
+				if (current > best) {
+					best = current;
+				}
+			}
+		}
+
+		if (best != null) {
+
+			//chooses upgrade based on the best price at the moment
+			ResourceGroup upgrade = ChooseBestRoboticonUpgrade(best.tile);
+
+			//chooses the weakest/lowest worth roboticon
+			foreach (Roboticon r in best.tile.GetInstalledRoboticons()) {
+				if (toUpgrade == null) {
+					toUpgrade = r;
+				} else if (r.GetPrice() < r.GetPrice()) {
+					toUpgrade = r;
+				}
+			}
+			return new Data.Tuple<Roboticon, ResourceGroup>(toUpgrade, upgrade);
+		} else {
+			throw new NullReferenceException("No roboticon to upgrade.");
+		}
+	}
+
+	/// <summary>
+	/// CHANGED: Chooses the best roboticon upgrade.
+	/// </summary>
+	/// <returns>The best roboticon upgrade.</returns>
+	/// <param name="tile">The tile where the roboticon is located.</param>
+	private ResourceGroup ChooseBestRoboticonUpgrade(Tile tile) {
+		ResourceGroup prices = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+
+		if (prices.energy >= prices.food && prices.energy >= prices.ore) {
+			return new ResourceGroup(0, 1, 0);
+		} else if (prices.food >= prices.energy && prices.food >= prices.ore) {
+			return new ResourceGroup(1, 0, 0);
+		} else {
+			return new ResourceGroup(0, 0, 1);
+		}
+	}
+
+	/// <summary>
+	/// NEW: Manages the AIs current trades.
+	/// </summary>
+	private void ManageTrades() {
+		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host == this);
+		ResourceGroup currentBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		ResourceGroup currentSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+		Market m = GameHandler.GetGameManager().market;
+
+		foreach (Market.P2PTrade t in trades) {
+			//cancells if it can sell for more or if it thinks it unlikely that the player will buy it
+			if (currentBuyingPrice.GetResource(t.resource) >= t.unitPrice || currentSellingPrice.GetResource(t.resource) > t.unitPrice) {
+				m.CancelPlayerTrade(this, t);
+			}
+		}
+	}
+
+	/// <summary>
+	/// NEW: Calculates the curent streak of posative change in a specific resources.
+	/// </summary>
+	/// <returns>The number of consecutive  posative changes.</returns>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">The changes in price.</param>
+	private int CurrentStreak(Data.ResourceType resource, ResourceGroup[] diff) {
+		for (int i = diff.Length - 1; i > 0; i--) {
+			if (diff[i].GetResource(resource) < 0) {
+				return diff.Length - (i + 1);
+			}
+		}
+		return 0;
+	}
+
+	/// <summary>
+	/// NEW: Calculates the probability that the streack will end for the given resource.
+	/// </summary>
+	/// <returns>The streack end.</returns>
+	/// <param name="size">Size.</param>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">Diff.</param>
+	private float ProbStreackEnd(int size, Data.ResourceType resource, ResourceGroup[] diff) {
+		ResourceGroup[] current = new ResourceGroup[size];
+		float total = 0;
+		float count = 0;
+
+		for (int i = 0; i < diff.Length - size; i++) {
+			Array.ConstrainedCopy(diff, i, current, 0, size);
+			if (Array.TrueForAll(current, r => r.GetResource(resource) >= 0)) {
+				if (i + 1 < diff.Length && diff[i+1].GetResource(resource) < 0) {
+					count++;
+				}
+				total++;
+			}
+		}
+
+		//if we haven't seen a streak this long predict 50/50 chance of ending
+		if (count == 0f || total == 0f) {
+			return 0.5f;
+		} else {
+			return count / total;
+		}
+	}
+
+	/// <summary>
+	/// NEW: Predicts that a negative change will occur for all resources.
+	/// </summary>
+	/// <param name="priceHistory">The price history.</param>
+	private ResourcePrediction Prediction(ResourceGroup[] priceHistory, ResourceGroup currentChange) {
+		ResourcePrediction p = new ResourcePrediction();
+		ResourceGroup[] change = GetPriceDifference(priceHistory);
+
+		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
+		foreach (Data.ResourceType t in types) {
+			//1 - ProbStreackEnd means we have the likelyhood of getting an increas
+			if (currentChange.GetResource(t) >= 0) {
+				p.SetResource(t, 1 - ProbStreackEnd(CurrentStreak(t, change), t, change));
+			} else {
+				p.SetResource(t, -1);
+			}
+		}
+		return p;
+	}
+
+	/// <summary>
+	/// NEW: Updates the selling price prediction.
+	/// </summary>
+	private void UpdateSellingPrediction() {
+		ResourceGroup[] history = GetMarketBuyingPriceHistory();
+		ResourceGroup currentChange = history[history.Length - 1];
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(history, currentChange), currentPrediction.Tail);
+	}
+
+	/// <summary>
+	/// NEW: Sells to the market will sell up to resources / 3.
+	/// </summary>
+	//TODO: Add a check to whether price is within +/-5% average
+	private void SellToMarket() {
+		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+		Market market = GameHandler.GetGameManager().market;
+		ResourceGroup sellingAmounts = resources / 3;
+
+		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
+		foreach (Data.ResourceType t in types) {
+			//means we're at a low and shouldn't sell anything
+			if (currentPrediction.Head.GetResource(t) < 0) {
+				sellingAmounts.SetResource(t, 0);
+				//if the price is almost certainly going to rise then the AI holds off 
+			} else if (currentPrediction.Head.GetResource(t) >= 0.75) {
+				sellingAmounts.SetResource(t, 0);
+				//if the price falling is more likely than 3/4 then the AI sells while price is high
+			} else if (currentPrediction.Head.GetResource(t) <= 0.25 ){
+				continue;
+				//otherwise the AI gambles on whether to sell or not
+			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
+				sellingAmounts.SetResource(t, 0);
+			}
+		}
+
+		//makes sure the market still has enough money for human player
+		while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
+			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
+		}
+
+		market.SellTo(this, sellingAmounts);
+
+		if (sellingAmounts.Equals(new ResourceGroup(0, 0, 0))) {
+			soldToMarket = false;
+		} else {
+			soldToMarket = true;
+		}
+	}
+
+	/// <summary>
+	/// NEW: Updates the buying price prediction.
+	/// </summary>
+	private void UpdatBuyingPrediction() {
+		ResourceGroup[] history = GetMarketSellingPriceHistory();
+		ResourceGroup currentChange = history[history.Length - 1];
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(history, currentChange));
+	}
+
+	/// <summary>
+	/// NEW: Buy from market, will buy up to resources / 3.
+	/// </summary>
+	private void BuyFromMarket() {
+		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		Market market = GameHandler.GetGameManager().market;
+		ResourceGroup buyingAmounts = resources / 3;
+
+		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
+		foreach (Data.ResourceType t in types) {
+			//means we're at a low or the prices aren't profitable so we buy nothing
+			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketBuyingProfit * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
+				buyingAmounts.SetResource(t, 0);
+				//if it's almost certain the price is going to drop we don't buy
+			} else if (currentPrediction.Tail.GetResource(t) >= 0.75) {
+				buyingAmounts.SetResource(t, 0);
+				//if the price more likely than 3/4 to rise then the AI buys while price is low
+			} else if (currentPrediction.Tail.GetResource(t) <= 0.25 && Random.Range(0, 1) > currentPrediction.Tail.GetResource(t)) {
+				continue;
+				//otherwise the AI gambles on whether to buy or not
+			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
+				buyingAmounts.SetResource(t, 0);
+			}
+		}
+
+		while ((buyingAmounts * currentPrice).Sum() > money / 2) {
+			buyingAmounts = new ResourceGroup(Mathf.Max(buyingAmounts.food - 1, 0), Mathf.Max(buyingAmounts.energy - 1, 0), Mathf.Max(buyingAmounts.ore - 1, 0));
+		}
+
+		market.BuyFrom(this, buyingAmounts);
+	}
+
+	/// <summary>
+	/// NEW: If there's a optimal trade it purhcase resources.
 	/// </summary>
 	public void BuyTrade() {
 		//only considers buying a trade that isn't his own
@@ -150,7 +478,18 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Makes a trade if it's worthwile.
+	/// NEW: Gamble with the market. Will gamble with up to half its money (randomly).
+	/// </summary>
+	private void Gamble() {
+		if (!soldToMarket) {
+			if ((100 - GameManager.instance.casino.minRollNeeded) / GameManager.instance.casino.maxWinPercentage >= 0.5) {
+				GameManager.instance.casino.GambleMoney(this, Random.Range(0, GetMoney() / 2));
+			}
+		}
+	}
+
+	/// <summary>
+	/// NEW: Makes a trade if it's worthwile.
 	/// </summary>
 	private void MakeTrade() {
 		Market.P2PTrade trade = null;
@@ -181,107 +520,7 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Manages the AIs current trades.
-	/// </summary>
-	private void ManageTrades() {
-		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host == this);
-		ResourceGroup currentBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-		ResourceGroup currentSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
-		Market m = GameHandler.GetGameManager().market;
-
-		foreach (Market.P2PTrade t in trades) {
-			//cancells if it can sell for more or if it thinks it unlikely that the player will buy it
-			if (currentBuyingPrice.GetResource(t.resource) >= t.unitPrice || currentSellingPrice.GetResource(t.resource) > t.unitPrice) {
-				m.CancelPlayerTrade(this, t);
-			}
-		}
-	}
-
-	/// <summary>
-	/// Updates the selling price prediction.
-	/// </summary>
-	private void UpdateSellingPrediction() {
-		ResourceGroup[] history = GetMarketBuyingPriceHistory();
-		ResourceGroup currentChange = history[history.Length - 1];
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(history, currentChange), currentPrediction.Tail);
-	}
-
-	/// <summary>
-	/// Updates the buying price prediction.
-	/// </summary>
-	private void UpdatBuyingPrediction() {
-		ResourceGroup[] history = GetMarketSellingPriceHistory();
-		ResourceGroup currentChange = history[history.Length - 1];
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(history, currentChange));
-	}
-
-	/// <summary>
-	/// Predicts that a negative change will occur for all resources.
-	/// </summary>
-	/// <param name="priceHistory">The price history.</param>
-	private ResourcePrediction Prediction(ResourceGroup[] priceHistory, ResourceGroup currentChange) {
-		ResourcePrediction p = new ResourcePrediction();
-		ResourceGroup[] change = GetPriceDifference(priceHistory);
-
-		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
-		foreach (Data.ResourceType t in types) {
-			//1 - ProbStreackEnd means we have the likelyhood of getting an increas
-			if (currentChange.GetResource(t) >= 0) {
-				p.SetResource(t, 1 - ProbStreackEnd(CurrentStreak(t, change), t, change));
-			} else {
-				p.SetResource(t, -1);
-			}
-		}
-		return p;
-	}
-
-	/// <summary>
-	/// Calculates the probability that the streack will end for the given resource.
-	/// </summary>
-	/// <returns>The streack end.</returns>
-	/// <param name="size">Size.</param>
-	/// <param name="resource">Resource.</param>
-	/// <param name="diff">Diff.</param>
-	private float ProbStreackEnd(int size, Data.ResourceType resource, ResourceGroup[] diff) {
-		ResourceGroup[] current = new ResourceGroup[size];
-		float total = 0;
-		float count = 0;
-
-		for (int i = 0; i < diff.Length - size; i++) {
-			Array.ConstrainedCopy(diff, i, current, 0, size);
-			if (Array.TrueForAll(current, r => r.GetResource(resource) >= 0)) {
-				if (i + 1 < diff.Length && diff[i+1].GetResource(resource) < 0) {
-					count++;
-				}
-				total++;
-			}
-		}
-
-		//if we haven't seen a streak this long predict 50/50 chance of ending
-		if (count == 0f || total == 0f) {
-			return 0.5f;
-		} else {
-			return count / total;
-		}
-	}
-
-	/// <summary>
-	/// Calculates the curent streak of posative change in a specific resources.
-	/// </summary>
-	/// <returns>The number of consecutive  posative changes.</returns>
-	/// <param name="resource">Resource.</param>
-	/// <param name="diff">The changes in price.</param>
-	private int CurrentStreak(Data.ResourceType resource, ResourceGroup[] diff) {
-		for (int i = diff.Length - 1; i > 0; i--) {
-			if (diff[i].GetResource(resource) < 0) {
-				return diff.Length - (i + 1);
-			}
-		}
-		return 0;
-	}
-
-	/// <summary>
-	/// Gets the price difference.
+	/// NEW: Gets the price difference.
 	/// </summary>
 	/// <returns>The price difference.</returns>
 	/// <param name="prices">Prices.</param>
@@ -297,7 +536,7 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Gets the selling price history.
+	/// NEW: Gets the selling price history.
 	/// </summary>
 	/// <returns>The selling price history.</returns>
 	private ResourceGroup[] GetMarketSellingPriceHistory() {
@@ -309,7 +548,7 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Gets the buying price history.
+	/// NEW: Gets the buying price history.
 	/// </summary>
 	/// <returns>The buying price history.</returns>
 	private ResourceGroup[] GetMarketBuyingPriceHistory() {
@@ -321,7 +560,7 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Gets the available tiles from the map.
+	/// NEW: Gets the available tiles from the map.
 	/// </summary>
 	/// <returns>A list of the available tiles.</returns>
 	private Tile[] GetAvailableTiles() {
@@ -329,7 +568,7 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Gets the manned tiles.
+	/// NEW: Gets the manned tiles.
 	/// </summary>
 	/// <returns>The manned tiles.</returns>
 	private Tile[] GetMannedTiles() {
@@ -337,226 +576,7 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Checks whether we should upgrade a roboticon. 
-	/// </summary>
-	/// <returns><c>true</c>, if an upgrade should happen, <c>false</c> otherwise.</returns>
-	private Boolean ShouldUpgrade() {
-		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADE_VALUE) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/// <summary>
-	/// Chooses the best upgrade and the best roboticon for it.
-	/// </summary>
-	/// <returns>The upgrade.</returns>
-	/// <exception cref="System.NullReferenceException">If there aren't any roboticons to upgrade.</exception>
-	private Data.Tuple<Roboticon, ResourceGroup> ChooseUpgrade() {
-		Tile[] mannedTiles = GetMannedTiles();
-		TileChoice best = new TileChoice();
-		TileChoice current;
-
-		foreach (Tile t in mannedTiles) {
-			ResourceGroup tResources = t.GetTotalResourcesGenerated();
-			if (tResources.energy >= 20 || tResources.food >= 20 || tResources.ore >= 20) {
-				continue;
-			} else {
-				//this works as score is based on tile base resources, so most worthful tile/roboticon pair
-				//gets upgraded
-				current = ScoreTile(t);
-				if (current > best) {
-					best = current;
-				}
-			}
-		}
-
-		if (best != null) {
-			ResourceGroup upgrade = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
-			if (upgrade.energy >= upgrade.food && upgrade.energy >= upgrade.ore) {
-				upgrade = new ResourceGroup(0, 1, 0);
-			} else if (upgrade.food >= upgrade.energy && upgrade.food >= upgrade.ore) {
-				upgrade = new ResourceGroup(1, 0, 0);
-			} else {
-				upgrade = new ResourceGroup(0, 0, 1);
-			}
-			return new Data.Tuple<Roboticon, ResourceGroup>(best.tile.GetInstalledRoboticons()[0], upgrade);
-		} else {
-			throw new NullReferenceException("No roboticon to upgrade.");
-		}
-	}
-
-	/// <summary>
-	/// Sells to the market.
-	/// </summary>
-	//TODO: Add a check to whether price is within +/-5% average
-	private void SellToMarket() {
-		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
-		Market market = GameHandler.GetGameManager().market;
-		ResourceGroup sellingAmounts = resources / 3;
-
-		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
-		foreach (Data.ResourceType t in types) {
-			//means we're at a low and shouldn't sell anything
-			if (currentPrediction.Head.GetResource(t) < 0) {
-				sellingAmounts.SetResource(t, 0);
-			//if the price is almost certainly going to rise then the AI holds off 
-			} else if (currentPrediction.Head.GetResource(t) >= 0.75) {
-				sellingAmounts.SetResource(t, 0);
-			//if the price falling is more likely than 3/4 then the AI sells while price is high
-			} else if (currentPrediction.Head.GetResource(t) <= 0.25 ){
-				continue;
-			//otherwise the AI gambles on whether to sell or not
-			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
-				sellingAmounts.SetResource(t, 0);
-			}
-		}
-
-		//makes sure the market still has enough money for human player
-		while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
-			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
-		}
-			
-		market.SellTo(this, sellingAmounts);
-
-		if (sellingAmounts.Equals(new ResourceGroup(0, 0, 0))) {
-			soldToMarket = false;
-		} else {
-			soldToMarket = true;
-		}
-	}
-
-	/// <summary>
-	/// Buy from market.
-	/// </summary>
-	/// if min and the price is less than the buying max/average price then buy 
-	private void BuyFromMarket() {
-		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-		Market market = GameHandler.GetGameManager().market;
-		ResourceGroup buyingAmounts = resources / 3;
-
-		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
-		foreach (Data.ResourceType t in types) {
-			//means we're at a low or the prices aren't profitable so we buy nothing
-			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketBuyingProfit * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
-				buyingAmounts.SetResource(t, 0);
-			//if it's almost certain the price is going to drop we don't buy
-			} else if (currentPrediction.Tail.GetResource(t) >= 0.75) {
-				buyingAmounts.SetResource(t, 0);
-			//if the price more likely than 3/4 to rise then the AI buys while price is low
-			} else if (currentPrediction.Tail.GetResource(t) <= 0.25 && Random.Range(0, 1) > currentPrediction.Tail.GetResource(t)) {
-				continue;
-			//otherwise the AI gambles on whether to buy or not
-			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
-				buyingAmounts.SetResource(t, 0);
-			}
-		}
-
-		while ((buyingAmounts * currentPrice).Sum() > money / 2) {
-			buyingAmounts = new ResourceGroup(Mathf.Max(buyingAmounts.food - 1, 0), Mathf.Max(buyingAmounts.energy - 1, 0), Mathf.Max(buyingAmounts.ore - 1, 0));
-		}
-
-		market.BuyFrom(this, buyingAmounts);
-	}
-
-	/// <summary>
-	/// Gamble with the market. Will gamble with up to half its money (randomly).
-	/// </summary>
-	private void Gamble() {
-		if (!soldToMarket) {
-			if ((100 - GameManager.instance.casino.minRollNeeded) / GameManager.instance.casino.maxWinPercentage >= 0.5) {
-				GameManager.instance.casino.GambleMoney(this, Random.Range(0, GetMoney() / 2));
-			}
-		}
-	}
-
-	/// <summary>
-	/// Gets the best tile for acquisition.
-	/// </summary>
-	/// <returns>The best possible tile for acquisition</returns>
-	/// <exception cref="System.NullReferenceException">If the AI doesn't have enough money.</exception>
-	/// <exception cref="System.ArgumentException">If there aren't any available tiles.</exception>
-	private Tile ChooseTileToAcquire() {
-		Tile[] availableTiles = GetAvailableTiles();
-		TileChoice best = new TileChoice();
-		TileChoice current;
-
-		if (availableTiles.Length == 0) {
-			throw new ArgumentException("No avaialbe tiles.");
-		}
-             
-		foreach (Tile t in availableTiles) {
-			current = ScoreTile(t);
-			if (current > best && current.tile.GetPrice() <= money - 15) {
-				best = current;
-			}
-		}
-
-		if (best.tile == null) {
-			throw new NullReferenceException("Not enough funds");
-		} else {
-			return best.tile;
-		}
-	}
-
-
-	/// <summary>
-	/// Scores the fitness of a tile.
-	/// </summary>
-	/// <returns>The tile choice with the correct score</returns>
-	/// <param name="tile">The tile to score</param>
-	private TileChoice ScoreTile(Tile tile) {
-		TileChoice scoredTile;
-		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
-		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
-		tileScore -= tile.GetPrice();
-		scoredTile = new TileChoice(tile, tileScore);
-		return scoredTile;
-	}
-
-	/// <summary>
-	/// Gets the human player money.
-	/// </summary>
-	/// <returns>The human player money.</returns>
-	private int GetHumanPlayerMoney() {
-		return GameHandler.GetGameManager().GetHumanPlayer().GetMoney();
-	}
-
-	/// <summary>
-	/// Gets the human player resources.
-	/// </summary>
-	/// <returns>The human player resources.</returns>
-	private ResourceGroup GetHumanPlayerResources() {
-		return GameHandler.GetGameManager().GetHumanPlayer().GetResources();
-	}
-
-	/// <summary>
-	/// Gets the human player total resources.
-	/// </summary>
-	/// <returns>The human total resources.</returns>
-	private ResourceGroup GetHumanTotalResources() {
-		return GameHandler.GetGameManager().GetHumanPlayer().CalculateTotalResourcesGenerated();
-	}
-
-	/// <summary>
-	/// Chooses the best roboticon upgrade.
-	/// </summary>
-	/// <returns>The best roboticon upgrade.</returns>
-	/// <param name="tile">The tile where the roboticon is located.</param>
-	private ResourceGroup ChooseBestRoboticonUpgrade(Tile tile) {
-		ResourceGroup tileResources = tile.GetTotalResourcesGenerated();
-		if (tileResources.energy >= tileResources.food && tileResources.energy >= tileResources.ore) {
-			return new ResourceGroup(1, 0, 0);
-		} else if (tileResources.food >= tileResources.energy && tileResources.food >= tileResources.ore) {
-			return new ResourceGroup(0, 1, 0);
-		} else {
-			return new ResourceGroup(0, 0, 1);
-		}
-	}
-
-	/// <summary>
-	/// Gets the a list of tiles that have no installed roboticon.
+	/// NEW: Gets the a list of tiles that have no installed roboticon.
 	/// </summary>
 	/// <returns>The unmanned tiles.</returns>
 	private List<Tile> GetUnmannedTiles() {
@@ -571,69 +591,31 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Gets the best tile fo roboticon installation.
-	/// </summary>
-	/// <returns>The tile.</returns>
-	/// <exception cref="System.ArgumentException">If all tiles owned tiles are occupied with a roboticon.</exception>
-	private Tile InstallationTile() {
-		List<Tile> unmannedTiles = GetUnmannedTiles();
-		if (unmannedTiles.Count > 0) {
-			TileChoice best = new TileChoice();
-			TileChoice current = new TileChoice();
-			foreach (Tile t in unmannedTiles) {
-				current = ScoreTile(t);
-				if (current > best) {
-					best = current;
-				}
-			}
-			return best.tile;
-		} else {
-			throw new ArgumentException("No tile needs more roboticons.");
-		}
-	}
-
-	/// <summary>
-	/// Checks whether the AI should purchase a roboticon.
-	/// </summary>
-	/// <returns><c>true</c>, if the AI should purchase a roboticon <c>false</c> otherwise.</returns>
-	private bool ShouldPurchaseRoboticon() {
-		List<Tile> unmannedTiles = GetUnmannedTiles();
-
-		if (GameHandler.GetGameManager().market.GetNumRoboticonsForSale() == 0) {
-			return false;
-		} else if (unmannedTiles.Count > 0 && GameHandler.GetGameManager().market.GetRoboticonSellingPrice() < money) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/// <summary>
-	/// Class representing a ranked tile choice for best purchase options.
+	/// NEW: Class representing a ranked tile choice for best purchase options.
 	/// </summary>
 	private class TileChoice {
 
 		/// <summary>
-		/// Gets the tile.
+		/// NEW: Gets the tile.
 		/// </summary>
 		/// <value>The tile.</value>
 		public Tile tile { get; private set; }
 
 		/// <summary>
-		/// Gets the score.
+		/// NEW: Gets the score.
 		/// </summary>
 		/// <value>The score.</value>
 		public int score { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
+		/// NEW: Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
 		/// </summary>
 		public TileChoice() {
 			this.score = -1000;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
+		/// NEW: Initializes a new instance of the <see cref="AIPlayer+TileChoice"/> class.
 		/// </summary>
 		/// <param name="tile">The tile this represents.</param>
 		/// <param name="score">The score of the tile.</param>
@@ -642,6 +624,7 @@ public class AIPlayer : AbstractPlayer {
 			this.score = score;
 		}
 
+		//NEW
 		public static bool operator >(TileChoice tc1, TileChoice tc2) {
 			if (tc1.score > tc2.score) {
 				return true;
@@ -650,6 +633,7 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 
+		//NEW
 		public static bool operator <(TileChoice tc1, TileChoice tc2) {
 			if (tc1.score < tc2.score) {
 				return true;
@@ -658,6 +642,7 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 
+		//NEW
 		public static bool operator ==(TileChoice tc1, TileChoice tc2) {
 			if (tc1.score == tc2.score) {
 				return true;
@@ -666,6 +651,7 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 
+		//NEW
 		public static bool operator !=(TileChoice tc1, TileChoice tc2) {
 			if (tc1.score != tc2.score) {
 				return true;
@@ -677,30 +663,30 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// A triplet of predictions regarding the resources food, energy, ore.
+	/// NEW: A triplet of predictions regarding the resources food, energy, ore.
 	/// </summary>
 	private class ResourcePrediction {
 
 		/// <summary>
-		/// Gets the energy prediction.
+		/// NEW: Gets the energy prediction.
 		/// </summary>
 		/// <value>The energy prediciton. </value>
 		public float energy { get; private set; }
 
 		/// <summary>
-		/// Gets the food prediction.
+		/// NEW: Gets the food prediction.
 		/// </summary>
 		/// <value>The food prediciton. </value>
 		public float food { get; private set; }
 
 		/// <summary>
-		/// Gets the ore prediction.
+		/// NEW: Gets the ore prediction.
 		/// </summary>
 		/// <value>The ore prediciton. </value>
 		public float ore { get; private set; }
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AIPlayer+Prediction"/> class.
+		/// NEW: Initializes a new instance of the <see cref="AIPlayer+Prediction"/> class.
 		/// </summary>
 		public ResourcePrediction() {
 			this.food = 1;
@@ -709,7 +695,7 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AIPlayer+Prediction"/> class.
+		/// NEW: Initializes a new instance of the <see cref="AIPlayer+Prediction"/> class.
 		/// </summary>
 		/// <param name="food">Food.</param>
 		/// <param name="energy">Energy.</param>
@@ -721,7 +707,7 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		/// <summary>
-		/// Gets the specified resource.
+		/// NEW: Gets the specified resource.
 		/// </summary>
 		/// <returns>The resource.</returns>
 		/// <param name="resource">Resource type.</param>
@@ -739,7 +725,7 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		/// <summary>
-		/// Sets the specified resource value.
+		/// NEW: Sets the specified resource value.
 		/// </summary>
 		/// <returns>The resource.</returns>
 		/// <param name="resource">Resource type.</param>
