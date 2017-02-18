@@ -248,12 +248,10 @@ public class MarketScript : MonoBehaviour {
 	/// Sets the market resource values.
 	/// </summary>
 	public void SetMarketValues() {
-		if (gameObject.activeInHierarchy) {
-			UpdateShownMarketPrices();
-			UpdateTotalBuyPrice();
-			UpdateTotalSellPrice();
-			UpdateMarketResourceAmounts();
-		}
+		UpdateShownMarketPrices();
+		UpdateTotalBuyPrice();
+		UpdateTotalSellPrice();
+		UpdateMarketResourceAmounts();
 	}
 
 	/// <summary>

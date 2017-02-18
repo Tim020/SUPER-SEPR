@@ -63,6 +63,9 @@ public class HumanGui {
 		if (phase == Data.GameState.ROBOTICON_CUSTOMISATION || phase == Data.GameState.ROBOTICON_PLACEMENT) {
 			ShowPhaseTimerBox();
 		}
+		if (phase == Data.GameState.GAME_OVER) {
+			canvas.DisableMainGui();
+		}
 
 		UpdateResourceBar();
 		canvas.RefreshRoboticonList();

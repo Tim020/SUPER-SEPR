@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// Abstract player.
@@ -35,18 +36,29 @@ public abstract class AbstractPlayer : Agent {
 	protected List<Tile> ownedTiles = new List<Tile>();
 
 	/// <summary>
-	/// Calculates the score for the player.
+	/// The resources owned by this player.
 	/// </summary>
-	/// <returns>The player's score.</returns>
+	protected List<ResourceGroup> ownedResources = new List<ResourceGroup>();
+
+	/// <summary>
+	/// Calculates the score for the player by adding score from tile resources, roboticons, player resources and money.
+	/// This is in effect calculating the net worth of the player.
+	/// </summary>
+	/// <returns> The player's score </returns>
 	public int CalculateScore() {
-		int totalScore = 0;
+		int totalScore = money;
+
 		foreach (Tile tile in ownedTiles) {
 			ResourceGroup tileResources = tile.GetTotalResourcesGenerated();
-			totalScore += tileResources.energy + tileResources.food + tileResources.ore;
+			totalScore += (tileResources * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 		}
 			
 		foreach (Roboticon roboticon in ownedRoboticons) {
 			totalScore += roboticon.GetPrice();
+		}
+			
+		foreach (ResourceGroup resource in ownedResources) {
+			totalScore += (resource * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 		}
 
 		return totalScore;
@@ -56,7 +68,9 @@ public abstract class AbstractPlayer : Agent {
 	/// Adds the total resources for all tiles owned by the player to the player's resources.
 	/// </summary>
 	public void Produce() {
-		resources += CalculateTotalResourcesGenerated();
+		ResourceGroup r = CalculateTotalResourcesGenerated();
+		resources += r;
+		GameManager.instance.market.updateMarketSupply(r);
 	}
 
 	/// <summary>
@@ -69,6 +83,7 @@ public abstract class AbstractPlayer : Agent {
 		foreach (Tile tile in ownedTiles) {
 			totalResources += tile.GetTotalResourcesGenerated();
 		}
+		UnityEngine.Debug.Log("Player: " + playerID + " | " + totalResources);
 		return totalResources;
 	}
 

@@ -204,9 +204,20 @@ public class GameManager : Object {
 				}
 				TryRandomEvent();
 				completePhaseCycles++;
+				if (CheckWinCondition()) {
+					state = Data.GameState.GAME_OVER;
+					firstTick = true;
+				}
 				playersCompletedPhase = 0;
 				state = Data.GameState.GAME_WAIT;
 				firstTick = true;
+			}
+		} else if (state == Data.GameState.GAME_OVER) {
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.StartPhase(state);
+				}
+				CalculateAndDisplayWinner();
 			}
 		}
 	}
@@ -258,12 +269,38 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// TODO: FIX ME/Actually write this method someone please! :)
+	/// Checks the window condition.
+	/// </summary>
+	/// <returns><c>true</c>, if window condition is true, <c>false</c> otherwise.</returns>
+	public bool CheckWinCondition() {
+		return  map.GetNumUnownedTilesRemaining() == 0;
+	}
+
+	/// <summary>
 	/// Gets the winner when the game has ended.
 	/// </summary>
-	/// <returns>The winner if game has ended.</returns>
-	public AbstractPlayer GetWinnerIfGameHasEnded() {
-		return null;
+	/// <returns>The winner if game has ended. Ends Game.</returns>
+	public void CalculateAndDisplayWinner() {
+		int topScore = -1;
+		AbstractPlayer winner = null;
+		if (CheckWinCondition()) {
+			foreach (AbstractPlayer p in players.Values) {
+				if (p.CalculateScore() >= topScore) {
+					topScore = p.CalculateScore();
+					winner = p;
+				}
+			}
+			this.ShowWinner(winner);
+		}
+	}
+
+	/// <summary>
+	/// TODO: CREATE UI TO DISPLAY WINNER
+	/// Shows the winner.
+	/// </summary>
+	/// <param name="player">The player who won.</param>
+	private void ShowWinner(AbstractPlayer player) {
+
 	}
 
 	/// <summary>
@@ -282,14 +319,6 @@ public class GameManager : Object {
 	private void SetUpMap() {
 		map = new Map();
 		map.Instantiate();
-	}
-
-	/// <summary>
-	/// Shows the winner.
-	/// </summary>
-	/// <param name="player">The player who won.</param>
-	private void ShowWinner(AbstractPlayer player) {
-		
 	}
 
 	/// <summary>

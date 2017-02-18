@@ -155,7 +155,7 @@ public class Tile {
 			totalResources += roboticon.GetProductionValues() * ROBOTICON_UPGRADE_WEIGHT;
 		}
 
-		return totalResources;
+        return totalResources;
 	}
 
 	/// <summary>

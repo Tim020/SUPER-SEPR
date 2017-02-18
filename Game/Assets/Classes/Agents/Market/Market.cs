@@ -95,6 +95,8 @@ public class Market : Agent {
 
 	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
+	private ResourceGroup runningTotal = new ResourceGroup();
+
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
 	/// </summary>
@@ -241,8 +243,12 @@ public class Market : Agent {
 	/// TODO: Implement this
 	/// </summary>
 	public void UpdatePrices(int phaseID) {
-
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
+	}
+
+	public void updateMarketSupply(ResourceGroup r) {
+		runningTotal = runningTotal + r;
+		UnityEngine.Debug.Log("Market Total: " + runningTotal);
 	}
 
 	/// <summary>
@@ -267,6 +273,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Gets the resource buying prices.
+	/// Used when a player sells to the market.
 	/// </summary>
 	/// <returns>The resource buying prices.</returns>
 	public ResourceGroup GetResourceBuyingPrices() {
@@ -275,6 +282,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Gets the resource selling prices.
+	/// Used when a player buys from the market.
 	/// </summary>
 	/// <returns>The resource selling prices.</returns>
 	public ResourceGroup GetResourceSellingPrices() {
