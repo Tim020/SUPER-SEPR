@@ -8,11 +8,6 @@ using Random = UnityEngine.Random;
 public class AIPlayer : AbstractPlayer {
 
 	/// <summary>
-	/// First time through the acquisition phase
-	/// </summary>
-	private Boolean first = true;
-
-	/// <summary>
 	/// The current roboticon.
 	/// </summary>
 	private Roboticon currentRoboticon = null;
@@ -22,8 +17,24 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
 
+	/// <summary>
+	/// The current change in resource values for both buying and selling.
+	/// </summary>
+	private Data.Tuple<ResourceGroup, ResourceGroup> currentChange = new Data.Tuple<ResourceGroup, ResourceGroup>(new ResourceGroup() , new ResourceGroup());
+
+	/// <summary>
+	/// The avgerage market buying price.
+	/// </summary>
+	private ResourceGroup avgMarketBuyingPrice;
+
+	/// <summary>
+	/// The first phase.
+	/// </summary>
 	private bool firstPhase = true;
 
+	/// <summary>
+	/// The sold to market.
+	/// </summary>
 	private bool soldToMarket = false;
 
 	/// <summary>
@@ -47,199 +58,159 @@ public class AIPlayer : AbstractPlayer {
 		Debug.Log("AI: " + state);
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
-				//Debug.Log("I'm in tile purchase");
-				//Debug.Log("Funds stand at " + money);
-				if (first) {
-					first = false;
-					Tile tileToAcquire = Array.Find(GetAvailableTiles(), t => t.GetPrice() < money - 15);
-					AcquireTile(tileToAcquire);
-					money -= tileToAcquire.GetPrice();
-					//Debug.Log("I aquired tile:" + tileToAcquire.GetID());
-					//Debug.Log("Funds stand at " + money);
-					break;                   
-				}
 				try {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
 					money -= tileToAcquire.GetPrice();
 				} catch (NullReferenceException) {
-					//Debug.Log("I didn't acquire a tile as I only have this much money: " + money);
+					//Not enough money
 				} catch (ArgumentException) {
+					//No available tiles
 				}
 				break;
 			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				//Debug.Log("LOOK IM HERE: I'm in roboticon customisation");
-				try {
-					if (ShouldUpgrade()) {
-
-						Debug.Log("I'm going to upgrade a roboticon");
-						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
-						//Debug.Log("I'm upgrading roboticon: " + upgrade.Head.GetName());
-						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
-						money -= Roboticon.UPGRADE_VALUE;
-					}
-				} catch (NullReferenceException) {
-					//Debug.Log("I'm not upgrading anyting.");
-				}
-
 				if (ShouldPurchaseRoboticon()) {
 					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
-				} else {
-					//Debug.Log("I'm not buying a roboticon.");
 				}
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
-				//Debug.Log("Im in roboticon placement");
 				try {
 					if (currentRoboticon != null) {
 						Tile install = InstallationTile();
 						InstallRoboticon(currentRoboticon, install);
-						//Debug.Log("I've installed " + currentRoboticon.GetName() + " at tile " + install.GetID());
 						currentRoboticon = null;
 					}
 				} catch (ArgumentException) {
-					//Debug.Log("No where to install a roboticon.");
+					//No tile on which to install a roboticon
 				}
 				break;
 			case Data.GameState.AUCTION:
+				try {
+					if (ShouldUpgrade()) {
+						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
+						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
+						money -= Roboticon.UPGRADE_VALUE;
+					}
+				} catch (NullReferenceException) {
+					//Decided not to upgrade a roboticon
+				}
 				if (!firstPhase) {
+					avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
 					UpdateSellingPrediction();
 					SellToMarket();
 					UpdatBuyingPrediction();
 					BuyFromMarket();
+				    Trade();
 					Gamble();
 				} else {
 					firstPhase = false;
+					avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 				}
 
 				break;
 		}
 		// This must be done to signify the end of the AI turn.
-		//Debug.Log("Finished");
 		Debug.Log("AI calling finished for phase: " + state);
 		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
 	}
 
 	/// <summary>
-	/// Updates the selling prediction.
+	/// If there's a optimal trade it purhcase resources.
+	/// </summary>
+	public void Trade() {
+		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades();
+		Market.P2PTrade considering = null;
+
+		for (int i = 0; i < trades.Count; i++) {
+			if (trades[i].unitPrice < avgMarketBuyingPrice.GetResource(trades[i].resource)) {
+				if (considering != null) {
+					int currentProfit = ((trades[i].resourceAmount * avgMarketBuyingPrice.GetResource(trades[i].resource)) - 
+						(trades[i].resourceAmount * trades[i].unitPrice));
+					int consideringProfit = ((considering.resourceAmount * avgMarketBuyingPrice.GetResource(considering.resource)) - 
+						(considering.resourceAmount * considering.unitPrice));
+					if (currentProfit > consideringProfit) {
+						considering = trades[i];
+					}
+				} else {
+					considering = trades[i];
+				}
+			}
+		}
+
+		if (considering != null) {
+			GameHandler.GetGameManager().market.PurchasePlayerTrade(this, considering);
+		}
+	}
+
+	/// <summary>
+	/// Updates the selling price prediction.
 	/// </summary>
 	private void UpdateSellingPrediction() {
-		ResourceGroup[] prices = GetSellingPriceHistory();
-		ResourceGroup[] priceDiff = GetPriceDifference(prices);
-		ResourceGroup currentRun = new ResourceGroup(CurrentPositiveRun(Data.ResourceType.FOOD, priceDiff), CurrentPositiveRun(Data.ResourceType.ENERGY, priceDiff), CurrentPositiveRun(Data.ResourceType.ORE, priceDiff));
-		ResourceGroup avgRun = new ResourceGroup(AvgPosativeRun(Data.ResourceType.FOOD, priceDiff), AvgPosativeRun(Data.ResourceType.ENERGY, priceDiff), AvgPosativeRun(Data.ResourceType.ORE, priceDiff));
-		ResourcePrediction newPrediction;
-
-		float energyPrediction = 1 - ((Array.FindAll(priceDiff, r => r.energy > 0).Length - (float)currentRun.energy) / prices.Length);
-		float foodPrediction = 1 - ((Array.FindAll(priceDiff, r => r.food > 0).Length - (float)currentRun.food) / prices.Length);
-		float orePrediction = 1 - ((Array.FindAll(priceDiff, r => r.ore > 0).Length - (float)currentRun.ore) / prices.Length);
-
-		newPrediction = new ResourcePrediction(foodPrediction, energyPrediction, orePrediction);
-
-		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
-		foreach (Data.ResourceType t in types) {
-			if (currentRun.GetResource(t) > avgRun.GetResource(t)) {
-				float diff = currentRun.GetResource(t) - avgRun.GetResource(t) / currentRun.GetResource(t);
-				newPrediction.SetResource(t, currentPrediction.Tail.GetResource(t) - diff);
-			}
-		}
-
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, newPrediction);
+		ResourceGroup[] history = GetMarketBuyingPriceHistory();
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(history), currentPrediction.Tail);
+		currentChange = new Data.Tuple<ResourceGroup, ResourceGroup>(history[history.Length - 1], currentChange.Tail);
 	}
 
 	/// <summary>
-	/// Updates the buying prediction.
+	/// Updates the buying price prediction.
 	/// </summary>
 	private void UpdatBuyingPrediction() {
-		ResourceGroup[] prices = GetBuyingPriceHistory();
-		ResourceGroup[] priceDiff = GetPriceDifference(prices);
-		ResourceGroup currentRun = new ResourceGroup(CurrentNegativeRun(Data.ResourceType.FOOD, priceDiff), CurrentNegativeRun(Data.ResourceType.ENERGY, priceDiff), CurrentNegativeRun(Data.ResourceType.ORE, priceDiff));
-		ResourceGroup avgRun = new ResourceGroup(AvgNegativeRun(Data.ResourceType.FOOD, priceDiff), AvgNegativeRun(Data.ResourceType.ENERGY, priceDiff), AvgNegativeRun(Data.ResourceType.ORE, priceDiff));
-		ResourcePrediction newPrediction;
+		ResourceGroup[] history = GetMarketSellingPriceHistory();
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(history));
+		currentChange = new Data.Tuple<ResourceGroup, ResourceGroup>(currentChange.Head, history[history.Length - 1]);
+	}
 
-		float energyPrediction = 1 - ((Array.FindAll(priceDiff, r => r.energy < 0).Length - (float)currentRun.energy) / prices.Length);
-		float foodPrediction = 1 - ((Array.FindAll(priceDiff, r => r.food < 0).Length - (float)currentRun.food) / prices.Length);
-		float orePrediction = 1 - ((Array.FindAll(priceDiff, r => r.ore < 0).Length - (float)currentRun.ore) / prices.Length);
+	/// <summary>
+	/// Predicts that a negative change will occur for all resources.
+	/// </summary>
+	/// <param name="priceHistory">The price history.</param>
+	private ResourcePrediction Prediction(ResourceGroup[] priceHistory) {
+		ResourcePrediction p = new ResourcePrediction();
+		ResourceGroup[] change = GetPriceDifference(priceHistory);
 
-		newPrediction = new ResourcePrediction(foodPrediction, energyPrediction, orePrediction);
-
-		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
+		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
 		foreach (Data.ResourceType t in types) {
-			if (currentRun.GetResource(t) > avgRun.GetResource(t)) {
-				float diff = currentRun.GetResource(t) - avgRun.GetResource(t) / currentRun.GetResource(t);
-				newPrediction.SetResource(t, currentPrediction.Tail.GetResource(t) - diff);
-			}
+			p.SetResource(t, 1 - ProbStreackEnd(CurrentStreak(t, change), t, change));
 		}
-
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, newPrediction);
+		return p;
 	}
 
 	/// <summary>
-	/// Calculates the run of increasing resources.
+	/// Calculates the probability that the streack will end for the given resource.
 	/// </summary>
-	/// <returns>The run.</returns>
+	/// <returns>The streack end.</returns>
+	/// <param name="size">Size.</param>
+	/// <param name="resource">Resource.</param>
+	/// <param name="diff">Diff.</param>
+	private float ProbStreackEnd(int size, Data.ResourceType resource, ResourceGroup[] diff) {
+		ResourceGroup[] current = new ResourceGroup[size];
+		float total = 0;
+		float count = 0;
+		for (int i = 0; i < diff.Length - size; i++) {
+			Array.ConstrainedCopy(diff, i, current, 0, size);
+			if (Array.TrueForAll(current, r => r.GetResource(resource) > 0)) {
+				if (i + 1 < diff.Length && diff[i+1].GetResource(resource) < 0) {
+					count++;
+				}
+				total++;
+			}
+		}
+		return count / total;
+	}
+
+	/// <summary>
+	/// Calculates the curent streak of posative change in a specific resources.
+	/// </summary>
+	/// <returns>The number of consecutive  posative changes.</returns>
 	/// <param name="resource">Resource.</param>
 	/// <param name="diff">The changes in price.</param>
-	private int CurrentPositiveRun(Data.ResourceType resource, ResourceGroup[] diff) {
+	private int CurrentStreak(Data.ResourceType resource, ResourceGroup[] diff) {
 		for (int i = diff.Length - 1; i > 0; i--) {
 			if (diff[i].GetResource(resource) <= 0) {
 				return diff.Length - (i + 1);
 			}
 		}
 		return 0;
-	}
-
-	/// <summary>
-	/// Calculates the run of decreasing resources.
-	/// </summary>
-	/// <returns>The run.</returns>
-	/// <param name="resource">Resource.</param>
-	/// <param name="diff">The changes in price.</param>
-	private int CurrentNegativeRun(Data.ResourceType resource, ResourceGroup[] diff) {
-		for (int i = diff.Length - 1; i > 0; i--) {
-			if (diff[i].GetResource(resource) >= 0) {
-				return diff.Length - (i + 1);
-			}
-		}
-		return 0;
-	}
-
-	/// <summary>
-	/// Calculates the average of all posative resource runs.
-	/// </summary>
-	/// <returns>The average run length.</returns>
-	/// <param name="resource">Resource.</param>
-	/// <param name="diff">The changes in price.</param>
-	private int AvgPosativeRun(Data.ResourceType resource, ResourceGroup[] diff) {
-		int count = 0;
-		int totalRunLength = 0;
-		for (int i = diff.Length - 1; i > 0; i++) {
-			if (diff[i].GetResource(resource) >= 0) {
-				totalRunLength++;
-			} else if (i != 0 && diff[i - 1].GetResource(resource) > 0) {
-				count++;
-			}
-		}
-		return totalRunLength / count;
-	}
-
-	/// <summary>
-	/// Calculates the average of all negative resource runs.
-	/// </summary>
-	/// <returns>The average run length.</returns>
-	/// <param name="resource">Resource.</param>
-	/// <param name="diff">The changes in price.</param>
-	private int AvgNegativeRun(Data.ResourceType resource, ResourceGroup[] diff) {
-		int count = 0;
-		int totalRunLength = 0;
-		for (int i = diff.Length - 1; i > 0; i++) {
-			if (diff[i].GetResource(resource) <= 0) {
-				totalRunLength++;
-			} else if (i != 0 && diff[i - 1].GetResource(resource) > 0) {
-				count++;
-			}
-		}
-		return totalRunLength / count;
 	}
 
 	/// <summary>
@@ -262,10 +233,8 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the selling price history.
 	/// </summary>
 	/// <returns>The selling price history.</returns>
-	private ResourceGroup[] GetSellingPriceHistory() {
+	private ResourceGroup[] GetMarketSellingPriceHistory() {
 		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count];
-		Debug.Log(GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count);
-		Debug.Log(GameHandler.GetGameManager().market.resourcePriceHistory[0].Tail.ToString());
 		for (int i = 0; i < sellingPirces.Length; i++) {
 			sellingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
 		}
@@ -276,7 +245,7 @@ public class AIPlayer : AbstractPlayer {
 	/// Gets the buying price history.
 	/// </summary>
 	/// <returns>The buying price history.</returns>
-	private ResourceGroup[] GetBuyingPriceHistory() {
+	private ResourceGroup[] GetMarketBuyingPriceHistory() {
 		ResourceGroup[] buyingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
 		for (int i = 0; i < buyingPirces.Length; i++) {
 			buyingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
@@ -359,13 +328,19 @@ public class AIPlayer : AbstractPlayer {
 
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
-			if (currentPrediction.Tail.GetResource(t) >= 0.75) {
-				sellingAmounts.SetResource(t, 0);
-			} else if (currentPrediction.Tail.GetResource(t) > 0.5 && Random.Range(0, 1) > 0.5) {
+			//means we're at a low and shouldn't do anything
+			if (currentChange.Head.GetResource(t) < 0) {
+				continue;
+			//if the negative outcome is almost certain to happen then the AI doesn't risk it
+			} else if (currentPrediction.Head.GetResource(t) > 0.75) {
+				continue;
+			//if the negative outcome is more likely than 1/5 then the AI gambles on whether to hold off selling
+			} else if (currentPrediction.Head.GetResource(t) > 0.20 && Random.Range(0, 1) > currentPrediction.Head.GetResource(t)) {
 				sellingAmounts.SetResource(t, 0);
 			}
 		}
 
+		//makes sure the market still has enough money for human player
 		while ((sellingAmounts * currentPrice).Sum() > market.GetMoney() / 2) {
 			sellingAmounts = new ResourceGroup(Mathf.Max(sellingAmounts.food - 1, 0), Mathf.Max(sellingAmounts.energy - 1, 0), Mathf.Max(sellingAmounts.ore - 1, 0));
 		}
@@ -382,6 +357,7 @@ public class AIPlayer : AbstractPlayer {
 	/// <summary>
 	/// Buy from market.
 	/// </summary>
+	/// if min and the price is less than the buying max/average price then buy 
 	private void BuyFromMarket() {
 		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 		Market market = GameHandler.GetGameManager().market;
@@ -389,9 +365,11 @@ public class AIPlayer : AbstractPlayer {
 
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
-			if (currentPrediction.Tail.GetResource(t) >= 0.75) {
-				buyingAmounts.SetResource(t, 0);
-			} else if (currentPrediction.Tail.GetResource(t) > 0.3 && Random.Range(0, 1) > 0.3) {
+			if (currentChange.Tail.GetResource(t) < 0 || (avgMarketBuyingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
+				continue;
+			} else if (currentPrediction.Tail.GetResource(t) > 0.75) {
+				continue;
+			} else if (currentPrediction.Tail.GetResource(t) > 0.20 && Random.Range(0, 1) > currentPrediction.Tail.GetResource(t)){
 				buyingAmounts.SetResource(t, 0);
 			}
 		}
@@ -431,7 +409,7 @@ public class AIPlayer : AbstractPlayer {
              
 		foreach (Tile t in availableTiles) {
 			current = ScoreTile(t);
-			if (current > best && current.tile.GetPrice() <= money) {
+			if (current > best && current.tile.GetPrice() <= money - 15) {
 				best = current;
 			}
 		}
@@ -672,13 +650,10 @@ public class AIPlayer : AbstractPlayer {
 			switch (resource) {
 				case Data.ResourceType.ENERGY:
 					return energy;
-					break;
 				case Data.ResourceType.FOOD:
 					return food;
-					break;
 				case Data.ResourceType.ORE:
 					return ore;
-					break;
 				default:
 					throw new ArgumentException("Illeagal resource type");
 			}
