@@ -39,7 +39,7 @@ public class Roboticon {
 	public Roboticon() {
 		name = "RBN#" + (Random.Range(1000, 9999));
 		productionValues = new ResourceGroup(Random.Range(1, 4), Random.Range(1, 4), Random.Range(1, 4));
-		initialProductionValues = productionValues;
+		initialProductionValues = productionValues.Clone();
 	}
 
 	/// <summary>
