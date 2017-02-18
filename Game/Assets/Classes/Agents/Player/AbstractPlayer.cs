@@ -86,7 +86,7 @@ public abstract class AbstractPlayer : Agent {
 		UnityEngine.Debug.Log("Player: " + playerID + " | " + totalResources);
 		return totalResources;
 	}
-
+	private Market market;
 	/// <summary>
 	/// Acquires the given tile.
 	/// </summary>
@@ -96,6 +96,8 @@ public abstract class AbstractPlayer : Agent {
 		if (!ownedTiles.Contains(tile)) {
 			ownedTiles.Add(tile);
 			tile.SetOwner(this);
+			market = GameHandler.GetGameManager().market;
+			market.UpdateMarketMoney (tile.GetPrice());
 		} else {
 			throw new Exception("Tried to acquire a tile which is already owned by this player.");
 		}

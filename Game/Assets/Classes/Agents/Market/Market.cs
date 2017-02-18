@@ -305,6 +305,10 @@ public class Market : Agent {
 		return money;
 	}
 
+	public void UpdateMarketMoney(int amount){
+		money = money + amount;
+	}
+
 	/// <summary>
 	/// Gets the player trades.
 	/// </summary>

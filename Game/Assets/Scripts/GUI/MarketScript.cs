@@ -184,6 +184,8 @@ public class MarketScript : MonoBehaviour {
 		int roboticonsToBuy = int.Parse(roboticonBuyAmount.text);
 		int buyPrice = int.Parse(totalBuyPrice.text.Substring(1));
 
+		ResetInputBoxes ();
+
 		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice && market.GetNumRoboticonsForSale() >= roboticonsToBuy) {
 			try {
 				GameHandler.GetGameManager().market.BuyFrom(GameManager.instance.GetHumanPlayer(), resourcesToBuy);
@@ -211,6 +213,8 @@ public class MarketScript : MonoBehaviour {
 		resourcesToSell.food = int.Parse(foodSellAmount.text);
 		resourcesToSell.energy = int.Parse(energySellAmount.text);
 		resourcesToSell.ore = int.Parse(oreSellAmount.text);
+
+		ResetInputBoxes ();
 
 		int sellPrice = int.Parse(totalSellPrice.text.Substring(1));
 
@@ -313,4 +317,16 @@ public class MarketScript : MonoBehaviour {
 		marketRoboticonAmount.text = "/" + market.GetNumRoboticonsForSale();
 	}
 
+	private void ResetInputBoxes() {
+		foodSellAmount.text = "0";
+		foodBuyAmount.text = "0";
+
+		energySellAmount.text = "0";
+		energyBuyAmount.text = "0";
+
+		oreSellAmount.text = "0";
+		oreBuyAmount.text = "0";
+
+		roboticonBuyAmount.text = "0";
+	}
 }
