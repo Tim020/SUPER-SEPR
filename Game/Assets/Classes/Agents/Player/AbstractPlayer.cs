@@ -100,7 +100,7 @@ public abstract class AbstractPlayer : Agent {
 	/// <summary>
 	/// Gets the roboticons owned by the player.
 	/// </summary>
-	/// <returns>The owned roboticons.</returns>
+	/// <returns>The owned roboticons list.</returns>
 	public List<Roboticon> GetRoboticons() {
 		return ownedRoboticons;
 	}

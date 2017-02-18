@@ -93,6 +93,10 @@ public class Market : Agent {
 	/// </summary>
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
+	private ResourceGroup allRoboticons;
+
+	private ResourceGroup upgradeTotal; 
+
 	/// <summary>
 	/// A list of all current standing player trades
 	/// </summary>
@@ -289,10 +293,31 @@ public class Market : Agent {
 	public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
-
+	/// <summary>
+	/// Updates market resource prices
+	/// </summary>
     private void UpdateResourcePrices() {
 
     }
+
+	/// <summary>
+	/// Gets the upgrade values for each roboticon, storing them in 
+	/// </summary>
+	/// <returns>The roboticon upgrades.</returns>
+	private void GetRoboticonUpgrades() {
+
+		for (int i = 0; i < 2; i = i + 1) {
+
+			allRoboticons += GameManager.instance.players[i].GetRoboticons();
+		}
+
+		foreach(Roboticon r in allRoboticons) {
+
+			upgradeTotal += r.GetProductionValues() - r.GetInitialProductionValues();
+		}
+	}
+
+
 
 	/// <summary>
 	/// Produces roboticons if enough resources are available.
@@ -402,3 +427,4 @@ public class Market : Agent {
 		}
 	}
 }
+
