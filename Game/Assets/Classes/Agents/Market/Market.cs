@@ -93,7 +93,7 @@ public class Market : Agent {
 	/// </summary>
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
-	private ResourceGroup allRoboticons;
+	private List<Roboticon> allRoboticons;
 
 	private ResourceGroup upgradeTotal; 
 
@@ -104,7 +104,7 @@ public class Market : Agent {
 
     private ResourceGroup runningTotal = new ResourceGroup();
 
-	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
+    public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
     private Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistoryDetailed;
 
@@ -120,6 +120,7 @@ public class Market : Agent {
 		playerTrades = new List<P2PTrade>();
 		resourcePriceHistory = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
         resourcePriceHistoryDetailed = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
+		allRoboticons = new List<Roboticon>();
 	}
 
 	/// <summary>
@@ -305,14 +306,16 @@ public class Market : Agent {
 	/// </summary>
 	/// <returns>The roboticon upgrades.</returns>
 	private void GetRoboticonUpgrades() {
-
-		for (int i = 0; i < 2; i = i + 1) {
-
-			allRoboticons += GameManager.instance.players[i].GetRoboticons();
+		allRoboticons.Clear();
+		foreach(Object o in GameManager.instance.players.Values) {
+			//TODO: Do some kind of type checking to see if this is "legal"
+			AbstractPlayer p = (AbstractPlayer) o;
+			foreach(Roboticon r in p.GetRoboticons()) {
+				allRoboticons.Add(r);
+			}
 		}
 
 		foreach(Roboticon r in allRoboticons) {
-
 			upgradeTotal += r.GetProductionValues() - r.GetInitialProductionValues();
 		}
 	}
