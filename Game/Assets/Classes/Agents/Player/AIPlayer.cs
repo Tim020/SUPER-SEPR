@@ -122,12 +122,17 @@ public class AIPlayer : AbstractPlayer {
 		Market.P2PTrade considering = null;
 
 		for (int i = 0; i < trades.Count; i++) {
-			if (trades[i].unitPrice < avgMarketBuyingPrice.GetResource(trades[i].resource)) {
+			//checks if unit price is less than average market buying price and that we have enough money
+			if (trades[i].unitPrice < avgMarketBuyingPrice.GetResource(trades[i].resource) 
+				&& trades[i].unitPrice * trades[i].resourceAmount < money) {
 				if (considering != null) {
+					//estimated profit of the current trade i.e. trade[i] 
 					int currentProfit = ((trades[i].resourceAmount * avgMarketBuyingPrice.GetResource(trades[i].resource)) - 
 						(trades[i].resourceAmount * trades[i].unitPrice));
+					//estimated profit of our consideration
 					int consideringProfit = ((considering.resourceAmount * avgMarketBuyingPrice.GetResource(considering.resource)) - 
 						(considering.resourceAmount * considering.unitPrice));
+
 					if (currentProfit > consideringProfit) {
 						considering = trades[i];
 					}
@@ -170,6 +175,7 @@ public class AIPlayer : AbstractPlayer {
 
 		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
 		foreach (Data.ResourceType t in types) {
+			//1 - ProbStreackEnd means we have the likelyhood of getting an increase
 			p.SetResource(t, 1 - ProbStreackEnd(CurrentStreak(t, change), t, change));
 		}
 		return p;
@@ -186,6 +192,7 @@ public class AIPlayer : AbstractPlayer {
 		ResourceGroup[] current = new ResourceGroup[size];
 		float total = 0;
 		float count = 0;
+
 		for (int i = 0; i < diff.Length - size; i++) {
 			Array.ConstrainedCopy(diff, i, current, 0, size);
 			if (Array.TrueForAll(current, r => r.GetResource(resource) > 0)) {
@@ -293,9 +300,11 @@ public class AIPlayer : AbstractPlayer {
 
 		foreach (Tile t in mannedTiles) {
 			ResourceGroup tResources = t.GetTotalResourcesGenerated();
-			if (tResources.energy >= 10 || tResources.food >= 10 || tResources.ore >= 10) {
+			if (tResources.energy >= 20 || tResources.food >= 20 || tResources.ore >= 20) {
 				continue;
 			} else {
+				//this works as score is based on tile base resources, so most worthful tile/roboticon pair
+				//gets upgraded
 				current = ScoreTile(t);
 				if (current > best) {
 					best = current;
@@ -328,14 +337,17 @@ public class AIPlayer : AbstractPlayer {
 
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
-			//means we're at a low and shouldn't do anything
+			//means we're at a low and shouldn't sell anything
 			if (currentChange.Head.GetResource(t) < 0) {
+				sellingAmounts.SetResource(t, 0);
+			//if the price is almost certainly going to rise then the AI holds off 
+			} else if (currentPrediction.Head.GetResource(t) >= 0.75) {
+				sellingAmounts.SetResource(t, 0);
+			//if the price falling is more likely than 3/4 then the AI sells while price is high
+			} else if (currentPrediction.Head.GetResource(t) <= 0.25 ){
 				continue;
-			//if the negative outcome is almost certain to happen then the AI doesn't risk it
-			} else if (currentPrediction.Head.GetResource(t) > 0.75) {
-				continue;
-			//if the negative outcome is more likely than 1/5 then the AI gambles on whether to hold off selling
-			} else if (currentPrediction.Head.GetResource(t) > 0.20 && Random.Range(0, 1) > currentPrediction.Head.GetResource(t)) {
+			//otherwise the AI gambles on whether to sell or not
+			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
 				sellingAmounts.SetResource(t, 0);
 			}
 		}
@@ -365,11 +377,17 @@ public class AIPlayer : AbstractPlayer {
 
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
+			//means we're at a low or the prices aren't profitable so we buy nothing
 			if (currentChange.Tail.GetResource(t) < 0 || (avgMarketBuyingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
+				buyingAmounts.SetResource(t, 0);
+			//if it's almost certain the price is going to drop we don't buy
+			} else if (currentPrediction.Tail.GetResource(t) >= 0.75) {
+				buyingAmounts.SetResource(t, 0);
+			//if the price more likely than 3/4 to rise then the AI buys while price is low
+			} else if (currentPrediction.Tail.GetResource(t) <= 0.25 && Random.Range(0, 1) > currentPrediction.Tail.GetResource(t)) {
 				continue;
-			} else if (currentPrediction.Tail.GetResource(t) > 0.75) {
-				continue;
-			} else if (currentPrediction.Tail.GetResource(t) > 0.20 && Random.Range(0, 1) > currentPrediction.Tail.GetResource(t)){
+			//otherwise the AI gambles on whether to buy or not
+			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
 				buyingAmounts.SetResource(t, 0);
 			}
 		}
