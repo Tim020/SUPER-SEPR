@@ -18,7 +18,7 @@ public class HalfPlayerResource : RandomEvent {
         Transform events = GameObject.FindGameObjectWithTag("events").transform;
         GameObject thisEvent = events.Find("HalfPlayerResources").gameObject;
         thisEvent.SetActive(true);
-        thisEvent.GetComponent<Text>().text = player.GetName() + "'s resources have just halfed!";
+		thisEvent.GetComponentInChildren<Text>().text = player.GetName() + "'s resources have just halfed!";
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
     }
 }

@@ -22,7 +22,7 @@ public class QuarterPlayerResource : RandomEvent {
         Transform events = GameObject.FindGameObjectWithTag("events").transform;
         GameObject thisEvent = events.Find("QuarterPlayerResources").gameObject;
         thisEvent.SetActive(true);
-        thisEvent.GetComponent<Text>().text = player.GetName() + "'s resources have just decreased by a quarter!";
+		thisEvent.GetComponentInChildren<Text>().text = player.GetName() + "'s resources have just decreased by a quarter!";
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
     }
 }

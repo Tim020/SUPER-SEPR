@@ -30,7 +30,7 @@ public class RoboticonRandomTreasure : RandomEvent {
         Transform events = GameObject.FindGameObjectWithTag("events").transform;
         GameObject thisEvent = events.Find("RoboticonRandomTreasure").gameObject;
         thisEvent.SetActive(true);
-        thisEvent.GetComponent<Text>().text = "One of "+ player.GetName() + "'s roboticons have stumbled acorss a hidden treasure, " + message;
+        thisEvent.GetComponentInChildren<Text>().text = "One of "+ player.GetName() + "'s roboticons have stumbled acorss a hidden treasure, " + message;
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
     }
 }
