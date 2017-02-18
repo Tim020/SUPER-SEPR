@@ -389,4 +389,18 @@ public class CanvasScript : MonoBehaviour {
 		ShowTradeConfirmation = !tradeConfirmationShow.isOn;
 	}
 
+	/// <summary>
+	/// Disables the main GUI elements.
+	/// </summary>
+	public void DisableMainGui() {
+		helpBox.gameObject.SetActive(false);
+		phaseTimer.gameObject.SetActive(false);
+		marketScript.gameObject.SetActive(false);
+		auctionScript.gameObject.SetActive(false);
+		optionsMenu.gameObject.SetActive(false);
+		roboticonList.gameObject.SetActive(false);
+		roboticonUpgradesWindow.gameObject.SetActive(false);
+		endPhaseButton.SetActive(false);
+		tileWindow.gameObject.SetActive(false);
+	}
 }

@@ -40,29 +40,25 @@ public abstract class AbstractPlayer : Agent {
 	/// </summary>
 	protected List<ResourceGroup> ownedResources = new List<ResourceGroup>();
 
-	protected List<Market> sellingPrices = new List<Market>();
-
 	/// <summary>
-	/// Calculates the score for the player by adding score from tiles, roboticons, resources and money.
+	/// Calculates the score for the player by adding score from tile resources, roboticons, player resources and money.
+	/// This is in effect calculating the net worth of the player.
 	/// </summary>
 	/// <returns> The player's score </returns>
 	public int CalculateScore() {
 		int totalScore = money;
+
 		foreach (Tile tile in ownedTiles) {
 			ResourceGroup tileResources = tile.GetTotalResourcesGenerated();
-			totalScore += tileResources.energy + tileResources.food + tileResources.ore;
+			totalScore += (tileResources * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 		}
 			
 		foreach (Roboticon roboticon in ownedRoboticons) {
 			totalScore += roboticon.GetPrice();
 		}
-
-		/// <summary>
-		/// Calculates the score from resources by multiplying the player's remaining resources with the selling price.
-		/// </summary>
+			
 		foreach (ResourceGroup resource in ownedResources) {
-			totalScore += resources.food + resources.energy + resources.ore;
-	
+			totalScore += (resource * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 		}
 
 		return totalScore;
@@ -72,10 +68,10 @@ public abstract class AbstractPlayer : Agent {
 	/// Adds the total resources for all tiles owned by the player to the player's resources.
 	/// </summary>
 	public void Produce() {
-        ResourceGroup r = CalculateTotalResourcesGenerated();
-        resources += r;
-        GameManager.instance.market.updateMarketSupply(r);
-    }
+		ResourceGroup r = CalculateTotalResourcesGenerated();
+		resources += r;
+		GameManager.instance.market.updateMarketSupply(r);
+	}
 
 	/// <summary>
 	/// Returns the sum of all tile-generated resources.
@@ -87,8 +83,8 @@ public abstract class AbstractPlayer : Agent {
 		foreach (Tile tile in ownedTiles) {
 			totalResources += tile.GetTotalResourcesGenerated();
 		}
-        UnityEngine.Debug.Log("Player: " + playerID + " | " + totalResources);
-        return totalResources;
+		UnityEngine.Debug.Log("Player: " + playerID + " | " + totalResources);
+		return totalResources;
 	}
 
 	/// <summary>

@@ -192,9 +192,20 @@ public class GameManager : Object {
 					p.StartPhase(state);
 				}
 				TryRandomEvent();
+				if (CheckWinCondition()) {
+					state = Data.GameState.GAME_OVER;
+					firstTick = true;
+				}
 				playersCompletedPhase = 0;
 				state = Data.GameState.GAME_WAIT;
 				firstTick = true;
+			}
+		} else if (state == Data.GameState.GAME_OVER) {
+			if (firstTick) {
+				foreach (AbstractPlayer p in players.Values) {
+					p.StartPhase(state);
+				}
+				CalculateAndDisplayWinner();
 			}
 		}
 	}
@@ -246,26 +257,39 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// TODO: FIX ME
+	/// Checks the window condition.
+	/// </summary>
+	/// <returns><c>true</c>, if window condition is true, <c>false</c> otherwise.</returns>
+	public bool CheckWinCondition() {
+		return  map.GetNumUnownedTilesRemaining() == 0;
+	}
+
+	/// <summary>
 	/// Gets the winner when the game has ended.
 	/// </summary>
 	/// <returns>The winner if game has ended. Ends Game.</returns>
-	public AbstractPlayer GetWinnerIfGameHasEnded() {
-		var RemainingTiles = Map.GetNumUnownedTilesRemaining();
-		var topScore = -1;
-		string winner;
-		if (RemainingTiles <= 0) {
+	public void CalculateAndDisplayWinner() {
+		int topScore = -1;
+		AbstractPlayer winner = null;
+		if (CheckWinCondition()) {
 			foreach (AbstractPlayer p in players.Values) {
-				if(p.CalculateScore >= topScore) {
+				if (p.CalculateScore() >= topScore) {
 					topScore = p.CalculateScore();
-					winner = p.ToString();
-					Console.WriteLine(winner); 
+					winner = p;
 				}
-			GameManager.ShowWinner();
-			Application.Quit();
-}
-}
-}
+			}
+			this.ShowWinner(winner);
+		}
+	}
+
+	/// <summary>
+	/// TODO: CREATE UI TO DISPLAY WINNER
+	/// Shows the winner.
+	/// </summary>
+	/// <param name="player">The player who won.</param>
+	private void ShowWinner(AbstractPlayer player) {
+
+	}
 
 	/// <summary>
 	/// Sets up GUI gameObject.
@@ -285,16 +309,6 @@ public class GameManager : Object {
 		map.Instantiate();
 	}
 
-	/// <summary>
-	/// TODO: CREATE UI TO DISPLAY WINNER
-	/// Shows the winner.
-	/// </summary>
-	/// <param name="player">The player who won.</param>
-	private void ShowWinner(AbstractPlayer player) {
-
-	}
-
-	
 	/// <summary>
 	/// Use the event factory instance to try and make a random event occur. There is a chance an event will not occur.
 	/// </summary>

@@ -17,9 +17,6 @@ public class Data {
 	/// <summary>
 	/// The different states possible in the game
 	/// </summary>
-	/// <summary>
-	/// Game state.
-	/// </summary>
 	public enum GameState {
 		COLLEGE_SELECTION,
 		GAME_WAIT,
@@ -29,7 +26,8 @@ public class Data {
 		PLAYER_FINISH,
 		PRODUCTION,
 		AUCTION,
-		RECYCLE
+		RECYCLE,
+		GAME_OVER
 	}
 
 	/// <summary>
