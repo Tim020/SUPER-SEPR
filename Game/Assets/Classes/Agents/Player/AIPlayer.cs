@@ -159,15 +159,15 @@ public class AIPlayer : AbstractPlayer {
 
 		Data.ResourceType[] types = {Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE};
 		foreach (Data.ResourceType t in types) {
-			if (GetResources().GetResource(t) / 3) { continue; }
+			if (GetResources().GetResource(t) / 3 > 0) { continue; }
 
 			if (buyingPrie.GetResource(t) > avgMarketSellingProfit.GetResource(t)) {
-				float discount = 0.76;
+				float discount = 0.76f;
 
 				//tries to give the best discount on the basis its more likely to play
 				while ((int) buyingPrie.GetResource(t) * discount < avgMarketSellingProfit.GetResource(t) && discount < 1) {
 					if ((int) buyingPrie.GetResource(t) * discount > avgMarketSellingProfit.GetResource(t)) {
-						trade = new Market.P2PTrade(this, t, GetResources().GetResource(t) / 3, (int) buyingPrie.GetResource(t) * discount);
+						trade = new Market.P2PTrade(this, t, GetResources().GetResource(t) / 3, (int) (buyingPrie.GetResource(t) * discount));
 					}
 					discount += 0.02f;
 				}
@@ -184,7 +184,7 @@ public class AIPlayer : AbstractPlayer {
 	/// Manages the AIs current trades.
 	/// </summary>
 	private void ManageTrades() {
-		Market.P2PTrade trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host == this);
+		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host == this);
 		ResourceGroup currentBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 		ResourceGroup currentSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		Market m = GameHandler.GetGameManager().market;
