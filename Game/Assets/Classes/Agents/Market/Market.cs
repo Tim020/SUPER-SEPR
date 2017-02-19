@@ -94,9 +94,9 @@ public class Market : Agent {
 	/// </summary>
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
-	private List<Roboticon> allRoboticons;
+	public List<Roboticon> allRoboticons;
 
-	private ResourceGroup upgradeTotal; 
+	public ResourceGroup upgradeTotal; 
 
 	/// <summary>
 	/// A list of all current standing player trades
@@ -143,7 +143,6 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() + resourcesToBuy);
 			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
-            UpdateResourceBuyPrices();
         } else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
@@ -171,7 +170,6 @@ public class Market : Agent {
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
             UpdateMarketSupplyOnSell(resourcesToSell);
-			UpdateResourceSellPrices();
             resources += resourcesToSell;
 			money = money - price;
 			player.SetResources(player.GetResources() - resourcesToSell);
@@ -298,7 +296,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Updates market resource prices
 	/// </summary>
-    private void UpdateResourceBuyPrices() {
+	public void UpdateResourceBuyPrices() {
 		float elasticity = 0.7f;
 		int upgradeTotalSum = upgradeTotal.Sum();
 		int foodTotal = upgradeTotal.GetFood();
@@ -315,16 +313,16 @@ public class Market : Agent {
 
     }
 
-	private void UpdateResourceSellPrices() {
+	public void UpdateResourceSellPrices() {
 		/// I'm not too sure if i need to clone this first? I'm gonna do it anyway.
 		resourceBuyingPrices = (resourceSellingPrices.Clone() - (1 / Random.Range(2,6)));
 	}
 
 	/// <summary>
-	/// Gets the upgrade values for each roboticon, storing them in 
+	/// Gets the upgrade values for each roboticon
 	/// </summary>
 	/// <returns>The roboticon upgrades.</returns>
-	private void GetRoboticonUpgrades() {
+	public void GetRoboticonUpgrades() {
 		allRoboticons.Clear();
 		foreach(Object o in GameManager.instance.players.Values) {
 			//TODO: Do some kind of type checking to see if this is "legal"
