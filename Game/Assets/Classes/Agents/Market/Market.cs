@@ -142,7 +142,7 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() + resourcesToBuy);
 			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
-            UpdateResourcePrices();
+            UpdateResourcBuyPrices();
         } else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
@@ -175,7 +175,6 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() - resourcesToSell);
 			player.GiveMoney(price);
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
-            UpdateResourcePrices();
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
@@ -297,17 +296,17 @@ public class Market : Agent {
 	/// <summary>
 	/// Updates market resource prices
 	/// </summary>
-    private void UpdateResourcePrices() {
+    private void UpdateResourcBuyPrices() {
 
-		float elasticity = 0.7;
+		float elasticity = 0.7f;
 		int upgradeTotalSum = upgradeTotal.Sum();
 		int foodTotal = upgradeTotal.GetFood();
 		int oreTotal = upgradeTotal.GetOre();
 		int energyTotal = upgradeTotal.GetEnergy();
 
-		float newFood = ((1.0-(foodTotal / upgradeTotalSum) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
-		float newOre = ((1.0-(oreTotal / upgradeTotalSum) / elasticity) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
-		float newEnergy = ((1.0-(EnergyTotal / upgradeTotalSum) / elasticity) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+		float newFood = ((1-(foodTotal / upgradeTotalSum) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
+		float newOre = ((1-(oreTotal / upgradeTotalSum) / elasticity) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
+		float newEnergy = ((1-(energyTotal / upgradeTotalSum) / elasticity) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
 	
 		ResourceGroup newPrices = ResourceGroup((int)newFood,(int)newEnergy,(int)newOre);
 
