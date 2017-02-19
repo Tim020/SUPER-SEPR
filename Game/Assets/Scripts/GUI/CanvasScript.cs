@@ -32,6 +32,11 @@ public class CanvasScript : MonoBehaviour {
 	public MarketScript marketScript;
 
 	/// <summary>
+	/// The casino script.
+	/// </summary>
+	public CasinoScript casinoScript;
+
+	/// <summary>
 	/// The end phase button.
 	/// </summary>
 	public GameObject endPhaseButton;
@@ -178,6 +183,17 @@ public class CanvasScript : MonoBehaviour {
 		marketScript.gameObject.SetActive(false);
 	}
 
+	public void ShowCasino() {
+		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION) {
+			auctionScript.gameObject.SetActive(false);
+			casinoScript.gameObject.SetActive(true);
+		}
+	}
+
+	public void HideCasino() {
+		casinoScript.gameObject.SetActive(false);
+	}
+
 	/// <summary>
 	/// Shows the options menu.
 	/// </summary>
@@ -197,6 +213,7 @@ public class CanvasScript : MonoBehaviour {
 	/// </summary>
 	public void ShowAuctionMenu() {
 		auctionScript.gameObject.SetActive(true);
+		casinoScript.gameObject.SetActive(false);
 	}
 
 	/// <summary>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DonaldTrumpScript : MonoBehaviour {
+public class ShowHideEventUI : MonoBehaviour {
 
 	/// <summary>
 	/// Starts the event.
@@ -10,7 +10,7 @@ public class DonaldTrumpScript : MonoBehaviour {
     public void StartEvent() {
         Invoke("HideSprite", 3f);
     }
-
+	
 	/// <summary>
 	/// Hides the sprite.
 	/// </summary>

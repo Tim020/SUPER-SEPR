@@ -14,11 +14,10 @@ public class DonaldTrump : RandomEvent {
             }
             p.GetRoboticons().Clear();
         }
-        Transform events = GameObject.FindGameObjectWithTag("events").transform;
-        GameObject trump = events.GetChild(0).gameObject;
-        trump.SetActive(true);
-        trump.GetComponent<DonaldTrumpScript>().StartEvent();
 
-        Debug.Log("RANDOM EVENT: Donald Trump joined the game... And immediately deports all Roboticons");
+        Transform events = GameObject.FindGameObjectWithTag("events").transform;
+        GameObject thisEvent = events.Find("DonaldTrump").gameObject;
+        thisEvent.SetActive(true);
+        thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
     }
 }

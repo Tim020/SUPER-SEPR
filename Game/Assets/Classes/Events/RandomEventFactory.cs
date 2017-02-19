@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class RandomEventFactory {
-    
-	/// <summary>
-	/// The list of regular events that can occur in the game.
-	/// </summary>
-	private List<RandomEvent> regularEvents = new List<RandomEvent>();
+
+    /// <summary>
+    /// The list of regular events that can occur in the game.
+    /// </summary>
+    public List<RandomEvent> regularEvents = new List<RandomEvent>();
 
 	/// <summary>
 	/// The list of crazy events that can occur in the game.
@@ -33,12 +33,14 @@ public class RandomEventFactory {
 		crazyEventsLength = crazyEvents.Count;
 	}
 
-	/// <summary>
-	/// Initialises the list of events.
-	/// </summary>
-	private void PopulateEventLists() {
-		regularEvents.Add(new HalfPlayerResource());
-
+    /// <summary>
+    /// Initialises the list of events.
+    /// </summary>
+    private void PopulateEventLists() {
+        regularEvents.Add(new HalfPlayerResource());
+        regularEvents.Add(new QuarterPlayerResource());
+        regularEvents.Add(new RoboticonRandomTreasure());
+		
 		crazyEvents.Add(new DonaldTrump());
 	}
 

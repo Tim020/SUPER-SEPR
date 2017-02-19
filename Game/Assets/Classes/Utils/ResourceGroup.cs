@@ -1,4 +1,5 @@
 ﻿// Game Executable hosted at: http://www-users.york.ac.uk/~jwa509/alpha01BugFree.exe
+using System;
 
 public class ResourceGroup {
 
@@ -89,6 +90,50 @@ public class ResourceGroup {
 	/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
 	public override int GetHashCode() {
 		return food.GetHashCode() ^ energy.GetHashCode() << 2 ^ ore.GetHashCode() >> 2;
+	}
+
+	/// <summary>
+	/// Gets the specified resource.
+	/// </summary>
+	/// <returns>The resource.</returns>
+	/// <param name="resource">Resource.</param>
+	public int GetResource(Data.ResourceType resource) {
+		switch (resource) {
+			case Data.ResourceType.ENERGY:
+				return energy;
+				break;
+			case Data.ResourceType.FOOD:
+				return food;
+				break;
+			case Data.ResourceType.ORE:
+				return ore;
+				break;
+			default:
+				throw new ArgumentException("Illeagal resource type");
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Sets the specified resource.
+	/// </summary>
+	/// <param name="resource">The resource.</param>
+	/// <param name="value">The new value.</param>
+	public void SetResource(Data.ResourceType resource, int value) {
+		switch (resource) {
+		case Data.ResourceType.ENERGY:
+			energy = value;
+			break;
+		case Data.ResourceType.FOOD:
+			food = value;
+			break;
+		case Data.ResourceType.ORE:
+			ore = value;
+			break;
+		default:
+			throw new ArgumentException("Illeagal resource type");
+			break;
+		}
 	}
 
 	/// <summary>

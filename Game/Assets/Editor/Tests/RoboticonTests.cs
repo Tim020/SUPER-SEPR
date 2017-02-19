@@ -55,9 +55,9 @@ public class RoboticonTests {
 			ResourceGroup upgrade = new ResourceGroup(-1, -1, -1);
 			testRoboticon.UpgradeProductionValues(upgrade);
 			Assert.Fail();
-		} catch (ArgumentException e) {
+		} catch (ArgumentException) {
 			Assert.Pass();
-		} catch (Exception e) {
+		} catch (Exception) {
 			Assert.Fail();
 		}
 	}
@@ -82,9 +82,9 @@ public class RoboticonTests {
 			ResourceGroup downgrade = new ResourceGroup(-1, -1, -1);
 			testRoboticon.Downgrade(downgrade);
 			Assert.Fail();
-		} catch (ArgumentException e) {
+		} catch (ArgumentException) {
 			Assert.Pass();
-		} catch (Exception e) {
+		} catch (Exception) {
 			Assert.Fail();
 		}
 	}
