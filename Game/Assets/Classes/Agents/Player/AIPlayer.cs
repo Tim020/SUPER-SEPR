@@ -408,7 +408,11 @@ public class AIPlayer : AbstractPlayer {
 		ResourceGroup[] history = GetMarketSellingPriceHistory();
 		ResourceGroup currentChange = history[history.Length - 1];
 		//-1 as a better change in price is considered to be a drop (i.e. cheaper price)
-		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(GetPriceDifference(history) * -1, currentChange));
+		ResourceGroup[] priceMutate = GetPriceDifference(history);
+		for (int i = 0; i < priceMutate.Length; i++) {
+			priceMutate[i] = priceMutate[i] * -1;
+		}
+		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(currentPrediction.Head, Prediction(priceMutate, currentChange));
 	}
 
 	/// <summary>
