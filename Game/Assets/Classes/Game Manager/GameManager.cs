@@ -197,7 +197,7 @@ public class GameManager : Object {
 					p.StartPhase(state);
 				}
 				TryRandomEvent();
-				GameManager.instance.market.GetRoboticonUpgrades();
+				GameManager.instance.market.CalculatePlayerResourceUpgrades();
 				GameManager.instance.market.UpdateResourceBuyPrices();
 				GameManager.instance.market.UpdateResourceSellPrices();
 				completePhaseCycles++;

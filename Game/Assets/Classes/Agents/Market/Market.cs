@@ -94,20 +94,21 @@ public class Market : Agent {
 	/// </summary>
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
-	public List<Roboticon> allRoboticons;
-
-	public ResourceGroup upgradeTotal; 
+	/// <summary>
+	/// The total production values across all players, taking into account tiles and roboticons.
+	/// </summary>
+	public ResourceGroup playersResourceProductionTotals;
 
 	/// <summary>
 	/// A list of all current standing player trades
 	/// </summary>
 	private List<P2PTrade> playerTrades;
 
-    private ResourceGroup runningTotal = new ResourceGroup();
+	private ResourceGroup runningTotal = new ResourceGroup();
 
-    public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
+	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
-    private Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistoryDetailed;
+	private Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistoryDetailed;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
@@ -120,8 +121,8 @@ public class Market : Agent {
 		money = STARTING_MONEY;
 		playerTrades = new List<P2PTrade>();
 		resourcePriceHistory = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
-        resourcePriceHistoryDetailed = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
-		allRoboticons = new List<Roboticon>();
+		resourcePriceHistoryDetailed = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
+		playersResourceProductionTotals = new ResourceGroup();
 	}
 
 	/// <summary>
@@ -143,19 +144,19 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() + resourcesToBuy);
 			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
-        } else {
+		} else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
 	}
-	
+
 	/// <summary>
 	/// Updates global market supply when the user buys from the market
 	/// </summary>
 	/// <param name="resourcesToBuy"></param>
-    public void UpdateMarketSupplyOnBuy (ResourceGroup resourcesToBuy) {
-        runningTotal -= resourcesToBuy;
-    }
-  
+	public void UpdateMarketSupplyOnBuy(ResourceGroup resourcesToBuy) {
+		runningTotal -= resourcesToBuy;
+	}
+
 	/// <summary>
 	/// Sell resources to the market.
 	/// </summary>
@@ -169,8 +170,8 @@ public class Market : Agent {
 
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
-            UpdateMarketSupplyOnSell(resourcesToSell);
-            resources += resourcesToSell;
+			UpdateMarketSupplyOnSell(resourcesToSell);
+			resources += resourcesToSell;
 			money = money - price;
 			player.SetResources(player.GetResources() - resourcesToSell);
 			player.GiveMoney(price);
@@ -179,22 +180,21 @@ public class Market : Agent {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
 	}
-    
-    ///<summary>
-    ///Updates global market supply when use sells to the market
-    /// </summary>
+
+	///<summary>
+	///Updates global market supply when use sells to the market
+	/// </summary>
 	///<param name="resourcesToSell"></param>
-    public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell)
-    {
-        runningTotal += resourcesToSell;
-    }
-    
-    /// <summary>
-    /// Buy a Roboticon from the market if there are any.
-    /// </summary>
-    /// <returns>The roboticon bought by the player.</returns>
-    /// <param name="player">The player buying the roboticon.</param>
-    public Roboticon BuyRoboticon(AbstractPlayer player) {
+	public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell) {
+		runningTotal += resourcesToSell;
+	}
+
+	/// <summary>
+	/// Buy a Roboticon from the market if there are any.
+	/// </summary>
+	/// <returns>The roboticon bought by the player.</returns>
+	/// <param name="player">The player buying the roboticon.</param>
+	public Roboticon BuyRoboticon(AbstractPlayer player) {
 		if (numRoboticonsForSale > 0) {
 			if (player.GetMoney() >= roboticonBuyingPrice) {
 				Roboticon r = new Roboticon();
@@ -267,24 +267,23 @@ public class Market : Agent {
 			player.GiveResouce(trade.resource, trade.resourceAmount);
 			player.DeductMoney(trade.GetTotalCost());
 			trade.host.GiveMoney(trade.GetTotalCost());
-            switch (trade.resource)
-            {
-                case Data.ResourceType.FOOD:
-                    ResourceGroup price = new ResourceGroup(trade.unitPrice, 0, 0);
-                    break;
-            }
+			switch (trade.resource) {
+				case Data.ResourceType.FOOD:
+					ResourceGroup price = new ResourceGroup(trade.unitPrice, 0, 0);
+					break;
+			}
 			playerTrades.Remove(trade);
 		}
 	}
 
-    /// <summary>
-    /// Keeps a running total of all the resources that have been mined so far
-    /// <param name="r">Player supply total</param>
-    /// </summary>
-    public void updateMarketSupply(ResourceGroup r) {
-        runningTotal = runningTotal + r;
-        UnityEngine.Debug.Log("Market Total: " + runningTotal);
-    }
+	/// <summary>
+	/// Keeps a running total of all the resources that have been mined so far
+	/// <param name="r">Player supply total</param>
+	/// </summary>
+	public void updateMarketSupply(ResourceGroup r) {
+		runningTotal = runningTotal + r;
+		UnityEngine.Debug.Log("Market Total: " + runningTotal);
+	}
 
 	/// <summary>
 	/// Updates the prices for resources based on supply and demand economics.
@@ -293,51 +292,53 @@ public class Market : Agent {
 	public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
+
 	/// <summary>
 	/// Updates market resource prices
 	/// </summary>
 	public void UpdateResourceBuyPrices() {
 		float elasticity = 0.7f;
-		int upgradeTotalSum = upgradeTotal.Sum();
-		int foodTotal = upgradeTotal.GetFood();
-		int oreTotal = upgradeTotal.GetOre();
-		int energyTotal = upgradeTotal.GetEnergy();
+		int upgradeTotalSum = playersResourceProductionTotals.Sum();
+		int foodTotal = playersResourceProductionTotals.GetFood();
+		int oreTotal = playersResourceProductionTotals.GetOre();
+		int energyTotal = playersResourceProductionTotals.GetEnergy();
 
-		float newFood = ((1-(foodTotal / upgradeTotalSum) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
-		float newOre = ((1-(oreTotal / upgradeTotalSum) / elasticity) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
-		float newEnergy = ((1-(energyTotal / upgradeTotalSum) / elasticity) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
-	
-		ResourceGroup newPrices = new ResourceGroup((int)newFood,(int)newEnergy,(int)newOre);
+		UnityEngine.Debug.Log(playersResourceProductionTotals);
+		UnityEngine.Debug.Log("Totals: " + foodTotal + ", " + oreTotal + ", " + energyTotal);
 
-		resourceSellingPrices = newPrices;
+		if (upgradeTotalSum > 0) {
+			float newFood = (((1 - (foodTotal / upgradeTotalSum)) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
+			float newOre = (((1 - (oreTotal / upgradeTotalSum) / elasticity)) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
+			float newEnergy = (((1 - (energyTotal / upgradeTotalSum) / elasticity)) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+			ResourceGroup newPrices = new ResourceGroup((int)newFood, (int)newEnergy, (int)newOre);
+			resourceSellingPrices = newPrices;
+		}
+		UnityEngine.Debug.Log("New resource buy prices: " + resourceSellingPrices);
+	}
 
-    }
-
+	/// <summary>
+	/// Updates the resource sell prices.
+	/// </summary>
 	public void UpdateResourceSellPrices() {
-		/// I'm not too sure if i need to clone this first? I'm gonna do it anyway.
-		resourceBuyingPrices = (resourceSellingPrices.Clone() - (1 / Random.Range(2,6)));
+		resourceBuyingPrices = (resourceSellingPrices.Clone() - (1 / Random.Range(2, 6)));
 	}
 
 	/// <summary>
 	/// Gets the upgrade values for each roboticon
 	/// </summary>
 	/// <returns>The roboticon upgrades.</returns>
-	public void GetRoboticonUpgrades() {
-		allRoboticons.Clear();
-		foreach(Object o in GameManager.instance.players.Values) {
-			//TODO: Do some kind of type checking to see if this is "legal"
-			AbstractPlayer p = (AbstractPlayer) o;
-			foreach(Roboticon r in p.GetRoboticons()) {
-				allRoboticons.Add(r);
+	public void CalculatePlayerResourceUpgrades() {
+		playersResourceProductionTotals = new ResourceGroup();
+		foreach (Object o in GameManager.instance.players.Values) {
+			AbstractPlayer p = (AbstractPlayer)o;
+			foreach (Roboticon r in p.GetRoboticons()) {
+				playersResourceProductionTotals += r.GetProductionValues();
+			}
+			foreach (Tile t in p.GetOwnedTiles()) {
+				playersResourceProductionTotals += t.GetBaseResourcesGenerated();
 			}
 		}
-
-		foreach(Roboticon r in allRoboticons) {
-			upgradeTotal += (r.GetProductionValues() - r.GetInitialProductionValues());
-		}
 	}
-
-
 
 	/// <summary>
 	/// Produces roboticons if enough resources are available.
