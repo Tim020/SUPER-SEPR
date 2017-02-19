@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// The market class.
@@ -142,7 +143,7 @@ public class Market : Agent {
 			player.SetResources(player.GetResources() + resourcesToBuy);
 			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
 			GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
-            UpdateResourcBuyPrices();
+            UpdateResourceBuyPrices();
         } else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
@@ -170,6 +171,7 @@ public class Market : Agent {
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
             UpdateMarketSupplyOnSell(resourcesToSell);
+			UpdateResourceSellPrices();
             resources += resourcesToSell;
 			money = money - price;
 			player.SetResources(player.GetResources() - resourcesToSell);
@@ -296,7 +298,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Updates market resource prices
 	/// </summary>
-    private void UpdateResourcBuyPrices() {
+    private void UpdateResourceBuyPrices() {
 		float elasticity = 0.7f;
 		int upgradeTotalSum = upgradeTotal.Sum();
 		int foodTotal = upgradeTotal.GetFood();
@@ -312,6 +314,11 @@ public class Market : Agent {
 		resourceSellingPrices = newPrices;
 
     }
+
+	private void UpdateResourceSellPrices() {
+		/// I'm not too sure if i need to clone this first? I'm gonna do it anyway.
+		resourceBuyingPrices = (resourceSellingPrices.Clone() - (1 / Random.Range(2,6)));
+	}
 
 	/// <summary>
 	/// Gets the upgrade values for each roboticon, storing them in 
