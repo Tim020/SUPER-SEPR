@@ -299,10 +299,19 @@ public class Market : Agent {
 	/// </summary>
     private void UpdateResourcePrices() {
 
+		float elasticity = 0.7;
 		int upgradeTotalSum = upgradeTotal.Sum();
 		int foodTotal = upgradeTotal.GetFood();
 		int oreTotal = upgradeTotal.GetOre();
 		int energyTotal = upgradeTotal.GetEnergy();
+
+		float newFood = ((1.0-(foodTotal / upgradeTotalSum) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
+		float newOre = ((1.0-(oreTotal / upgradeTotalSum) / elasticity) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
+		float newEnergy = ((1.0-(EnergyTotal / upgradeTotalSum) / elasticity) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+	
+		ResourceGroup newPrices = ResourceGroup((int)newFood,(int)newEnergy,(int)newOre);
+
+		resourceSellingPrices = newPrices;
 
     }
 
