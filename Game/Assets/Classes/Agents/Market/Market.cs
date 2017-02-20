@@ -282,6 +282,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Keeps a running total of all the resources that have been mined so far.
+    /// NEW
 	/// </summary>
 	/// <param name="r">Player supply total</param>
 	public void updateMarketSupply(ResourceGroup r) {
@@ -290,7 +291,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates the prices for resources based on supply and demand economics.
-	/// TODO: Implement this
+	/// NEW
 	/// </summary>
 	public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
@@ -298,6 +299,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates market resource prices
+    ///NEW
 	/// </summary>
 	public void UpdateResourceSellPrices() {
 		float elasticity = 0.7f;
@@ -317,6 +319,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates the resource sell prices.
+    /// NEW
 	/// </summary>
 	public void UpdateResourceBuyPrices() {
 		resourceBuyingPrices = resourceSellingPrices.Clone() - ((((float)1 / Random.Range(2, 6)) * resourceSellingPrices));
@@ -325,6 +328,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Called when the market enters the recycle phase.
 	/// Used to update all resource prices.
+    /// NEW
 	/// </summary>
 	/// <param name="cycleNumber">The numebr of game cycles completed.</param>
 	public void RecyclePhase(int cycleNumber) {
@@ -336,6 +340,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Gets the upgrade values for each roboticon
+    /// NEW
 	/// </summary>
 	/// <returns>The roboticon upgrades.</returns>
 	public void CalculatePlayerResourceUpgrades() {
