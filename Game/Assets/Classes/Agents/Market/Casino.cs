@@ -5,7 +5,7 @@ using System;
 /// <summary>
 /// The casino used to gamble with
 /// </summary>
-public class Casino : MonoBehaviour {
+public class Casino {
 
 	/// <summary>
 	/// The max win percentage.
