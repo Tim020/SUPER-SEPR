@@ -120,6 +120,7 @@ public class Market : Agent {
 		money = STARTING_MONEY;
 		playerTrades = new List<P2PTrade>();
 		resourcePriceHistory = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
+		CachePrices(-1);
 		playersResourceProductionTotals = new ResourceGroup();
 	}
 
