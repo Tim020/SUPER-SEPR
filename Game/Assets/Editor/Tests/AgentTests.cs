@@ -783,17 +783,12 @@ public class AgentTests {
 			public void TileAcquisition_NotEnoughMoney() {
 				dummyAI.SetMoney(0);
 				try {
-<<<<<<< HEAD
-					dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
-=======
 					dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
->>>>>>> 34414aec598b717985f3d0fe08e495aa4c2a025c
 				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
 				}
-<<<<<<< HEAD
 			}
 
 			/// <summary>
@@ -801,7 +796,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void TileAcquisition_OptimalTile() {
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 				List<DummyTile> tiles = dummyMap.GetTiles();
 				DummyTile expected = null;
 
@@ -823,7 +818,7 @@ public class AgentTests {
 			[Test]
 			public void TileAcquisition_BuyThresholdTile() {
 				dummyAI.SetMoney(threshold);
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 				List<DummyTile> tiles = dummyMap.GetTiles().FindAll(t => t.GetPrice() == threshold);
 				DummyTile expected = null;
 			
@@ -883,7 +878,7 @@ public class AgentTests {
 					}
 				}
 
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 			}
 
 			/// <summary>
@@ -891,7 +886,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void Roboticon_Aqcuistion() {
-				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 				Assert.AreEqual(1, dummyAI.GetRoboticons().Count);
 			}
 
@@ -911,14 +906,14 @@ public class AgentTests {
 			public void Roboticon_AqcuisitionThreshold() {
 				List<DummyTile> tiles = dummyMap.GetTiles();
 				dummyAI.SetMoney(threshold);
-				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 				Assert.AreEqual(0, dummyAI.GetRoboticons().Count);
 			}
 
 		}
 
 		[TestFixture]
-		public class RoboticonUpgradeTests {
+		public class RoboticonPlacementTests {
 
 			/// <summary>
 			/// The dummy market.
@@ -959,14 +954,21 @@ public class AgentTests {
 					}
 				}
 
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+			}
+
+			/// <summary>
+			/// Checks that the AI places the roboticon on an unmanned tile.
+			/// </summary>
+			[Test]
+			public void RoboticonPlacement_SingleChoice() {
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				Assert.AreEqual(1, dummyAI.GetOwnedTiles()[0].GetInstalledRoboticons().Count);
 			}
 
 			[Test]
-			public void RoboticonUpgrade_ApplicationSingleTile() {
-
-=======
->>>>>>> 34414aec598b717985f3d0fe08e495aa4c2a025c
+			public void RoboticonPlacement_MultipleChoice() {
 			}
 
 		}

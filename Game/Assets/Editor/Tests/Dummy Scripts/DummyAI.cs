@@ -42,7 +42,6 @@ public class DummyAI : AIPlayer {
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state, int turnCount) {
-		Debug.Log("IMMMA BEEING CALLED");
 		if (firstPhase) {
 			UpdateMoneyThreshold();
 		}
@@ -235,7 +234,7 @@ public class DummyAI : AIPlayer {
 			}
 		}
 
-		while ((buyingAmounts * currentPrice).Sum() > money / 2) {
+		while ((buyingAmounts * currentPrice).Sum() > Mathf.Max(0, (money - moneyThreshold)) / 2) {
 			buyingAmounts = new ResourceGroup(Mathf.Max(buyingAmounts.food - 1, 0), Mathf.Max(buyingAmounts.energy - 1, 0), Mathf.Max(buyingAmounts.ore - 1, 0));
 		}
 
