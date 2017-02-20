@@ -91,7 +91,7 @@ public abstract class AbstractPlayer : Agent {
 				ownedTiles.Add(tile);
 				tile.SetOwner(this);
 				this.DeductMoney(tile.GetPrice());
-				GameManager.instance.market.UpdateMarketMoney(tile.GetPrice());
+				GameManager.instance.market.IncreaseMarketMoney(tile.GetPrice());
 			} else {
 				throw new Exception("Tried to acquire a tile which is already owned by this player.");
 			}
