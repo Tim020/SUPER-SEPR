@@ -261,7 +261,7 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Gets the winner when the game has ended.
+	/// NEW: Gets the winner when the game has ended.
 	/// </summary>
 	/// <returns>The winner if game has ended. Ends Game.</returns>
 	public void CalculateAndDisplayWinner() {
