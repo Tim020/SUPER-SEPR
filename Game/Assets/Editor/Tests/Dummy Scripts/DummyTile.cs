@@ -23,7 +23,25 @@ public class DummyTile : Tile {
 	/// </summary>
 	/// <param name="player">Player.</param>
 	public override void SetOwner(AbstractPlayer player) {
-		Debug.Log("Called on dummy tile");
 		this.owner = player;
+	}
+
+	/// <summary>
+	/// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="DummyTile"/>.
+	/// </summary>
+	/// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="DummyTile"/>.</param>
+	/// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current <see cref="DummyTile"/>;
+	/// otherwise, <c>false</c>.</returns>
+	public override bool Equals(object obj) {
+		if (obj.GetType() != this.GetType()) {
+			return false;
+		} else {
+			DummyTile t = (DummyTile) obj;
+			if (t.GetID() == this.GetID()) {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
 }
