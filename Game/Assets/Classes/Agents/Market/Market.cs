@@ -272,12 +272,11 @@ public class Market : Agent {
 	}
 
 	/// <summary>
-	/// Keeps a running total of all the resources that have been mined so far
-	/// <param name="r">Player supply total</param>
+	/// Keeps a running total of all the resources that have been mined so far.
 	/// </summary>
+	/// <param name="r">Player supply total</param>
 	public void updateMarketSupply(ResourceGroup r) {
 		runningTotal = runningTotal + r;
-		UnityEngine.Debug.Log("Market Total: " + runningTotal);
 	}
 
 	/// <summary>
@@ -293,18 +292,19 @@ public class Market : Agent {
 	/// </summary>
 	public void UpdateResourceBuyPrices() {
 		float elasticity = 0.7f;
-		int upgradeTotalSum = playersResourceProductionTotals.Sum();
-		int foodTotal = playersResourceProductionTotals.GetFood();
-		int oreTotal = playersResourceProductionTotals.GetOre();
-		int energyTotal = playersResourceProductionTotals.GetEnergy();
+		float upgradeTotalSum = (float)playersResourceProductionTotals.Sum();
+		float foodTotal = (float)playersResourceProductionTotals.GetFood();
+		float energyTotal = (float)playersResourceProductionTotals.GetEnergy();
+		float oreTotal = (float)playersResourceProductionTotals.GetOre();
 
 		UnityEngine.Debug.Log(playersResourceProductionTotals);
-		UnityEngine.Debug.Log("Totals: " + foodTotal + ", " + oreTotal + ", " + energyTotal);
+		UnityEngine.Debug.Log("Totals: " + foodTotal + ", " + energyTotal + ", " + oreTotal);
 
 		if (upgradeTotalSum > 0) {
-			float newFood = (((1 - (foodTotal / upgradeTotalSum)) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
-			float newOre = (((1 - (oreTotal / upgradeTotalSum) / elasticity)) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
-			float newEnergy = (((1 - (energyTotal / upgradeTotalSum) / elasticity)) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+			float newFood = (float)(((1 - (foodTotal / upgradeTotalSum)) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
+			float newEnergy = (float)(((1 - (energyTotal / upgradeTotalSum) / elasticity)) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+			float newOre = (float)(((1 - (oreTotal / upgradeTotalSum) / elasticity)) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
+			UnityEngine.Debug.Log(newFood + ", " + newEnergy + ", " + newOre);
 			ResourceGroup newPrices = new ResourceGroup((int)newFood, (int)newEnergy, (int)newOre);
 			resourceSellingPrices = newPrices;
 		}

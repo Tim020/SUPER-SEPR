@@ -110,7 +110,6 @@ public class AIPlayer : AbstractPlayer {
 					avgMarketBuyingProfit = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 					avgMarketSellingProfit = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 				}
-
 				break;
 		}
 		// This must be done to signify the end of the AI turn.
