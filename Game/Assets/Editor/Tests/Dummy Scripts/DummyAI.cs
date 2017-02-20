@@ -51,15 +51,11 @@ public class DummyAI : AIPlayer {
 			try {
 				Tile tileToAcquire = ChooseTileToAcquire();
 				AcquireTile(tileToAcquire);
-				Debug.Log("IMMMA BUYING A TILE");
-				/*} catch (NullReferenceException e) {
-				//Not enough money
-				//Debug.Log("IMMA NULL REFERENCE EXCEPTION " + e.Message);*/
+			} catch (NullReferenceException e) {
+				//not enough money
 			} catch (ArgumentException e) {
 				//No available tiles
-				Debug.Log("IMMMA ARGUMENT EXCEPTION " + e.Message);
 			}
-			Debug.Log("IMMMA 'BOUT TO END");
 			break;
 		case Data.GameState.ROBOTICON_CUSTOMISATION:
 			if (ShouldPurchaseRoboticon()) {

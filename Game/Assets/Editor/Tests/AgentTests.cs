@@ -768,8 +768,11 @@ public class AgentTests {
 			[Test]
 			public void TileAcquisition_NotEnoughMoney() {
 				dummyAI.SetMoney(0);
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
-				Assert.AreEqual(0, dummyAI.GetOwnedTiles().Count);
+				try {
+					dummyAI.StartPhase(Data.GameState.TILE_PURCHASE,0);
+				} catch (){
+					Assert.AreEqual(0, dummyAI.GetOwnedTiles().Count);
+				}
 			}
 
 		}
