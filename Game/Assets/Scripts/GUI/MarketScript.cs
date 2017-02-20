@@ -116,11 +116,6 @@ public class MarketScript : MonoBehaviour {
 	/// </summary>
 	public Text marketMoney;
 
-	/// <summary>
-	/// The market.
-	/// </summary>
-	private Market market;
-
 	public char ValidatePositiveInput(string text, int charIndex, char addedChar) {
 		int tryParseResult;
 
@@ -135,7 +130,6 @@ public class MarketScript : MonoBehaviour {
 	/// Start this instance.
 	/// </summary>
 	void Start() {
-		market = GameHandler.GetGameManager().market;
 		SetMarketValues();
 
 		foodBuyAmount.onValidateInput += ValidatePositiveInput; //Add the ValidatePositiveInput function to
@@ -175,7 +169,7 @@ public class MarketScript : MonoBehaviour {
 	/// Raises the buy button press event.
 	/// </summary>
 	public void OnBuyButtonPress() {
-		marketMoney.text = "£" + market.GetMarketMoney().ToString();
+		marketMoney.text = "£" + GameManager.instance.market.GetMarketMoney().ToString();
 
 		ResourceGroup resourcesToBuy = new ResourceGroup();
 		resourcesToBuy.food = int.Parse(foodBuyAmount.text);
@@ -186,15 +180,15 @@ public class MarketScript : MonoBehaviour {
 
 		ResetInputBoxes();
 
-		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice && market.GetNumRoboticonsForSale() >= roboticonsToBuy) {
+		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice && GameManager.instance.market.GetNumRoboticonsForSale() >= roboticonsToBuy) {
 			try {
-				GameHandler.GetGameManager().market.BuyFrom(GameManager.instance.GetHumanPlayer(), resourcesToBuy);
+				GameManager.instance.market.BuyFrom(GameManager.instance.GetHumanPlayer(), resourcesToBuy);
 			} catch (ArgumentException) {
 				canvas.marketScript.PlayPurchaseDeclinedAnimation();
 				return;
 			}
 			for (int i = 0; i < roboticonsToBuy; i++) {
-				Roboticon newRoboticon = market.BuyRoboticon(GameManager.instance.GetHumanPlayer());
+				Roboticon newRoboticon = GameManager.instance.market.BuyRoboticon(GameManager.instance.GetHumanPlayer());
 				canvas.AddRoboticonToList(newRoboticon);
 			}
 			canvas.GetHumanGui().UpdateResourceBar();
@@ -207,7 +201,7 @@ public class MarketScript : MonoBehaviour {
 	/// Raises the sell button press event.
 	/// </summary>
 	public void OnSellButtonPress() {
-		marketMoney.text = "£" + market.GetMarketMoney().ToString();
+		marketMoney.text = "£" + GameManager.instance.market.GetMarketMoney().ToString();
 
 		ResourceGroup resourcesToSell = new ResourceGroup();
 		resourcesToSell.food = int.Parse(foodSellAmount.text);
@@ -222,7 +216,7 @@ public class MarketScript : MonoBehaviour {
 		bool hasEnoughResources = humanResources.food >= resourcesToSell.food && humanResources.energy >= resourcesToSell.energy && humanResources.ore >= resourcesToSell.ore;
 		if (hasEnoughResources) {
 			try {
-				GameHandler.GetGameManager().market.SellTo(GameManager.instance.GetHumanPlayer(), resourcesToSell);
+				GameManager.instance.market.SellTo(GameManager.instance.GetHumanPlayer(), resourcesToSell);
 			} catch (ArgumentException e) {
 				//TODO - Implement separate animation for when the market does not have enough resources
 				canvas.marketScript.PlaySaleDeclinedAnimation();
@@ -264,12 +258,12 @@ public class MarketScript : MonoBehaviour {
 	/// Updates the total buy price.
 	/// </summary>
 	public void UpdateTotalBuyPrice() {
-		ResourceGroup buyingPrices = market.GetResourceBuyingPrices();
+		ResourceGroup buyingPrices = GameManager.instance.market.GetResourceSellingPrices();
 
 		int foodPrice = int.Parse(foodBuyAmount.text) * buyingPrices.food;
 		int energyPrice = int.Parse(energyBuyAmount.text) * buyingPrices.energy;
 		int orePrice = int.Parse(oreBuyAmount.text) * buyingPrices.ore;
-		int roboticonPrice = int.Parse(roboticonBuyAmount.text) * market.GetRoboticonSellingPrice();
+		int roboticonPrice = int.Parse(roboticonBuyAmount.text) * GameManager.instance.market.GetRoboticonSellingPrice();
 
 		totalBuyPrice.text = "£" + (foodPrice + energyPrice + orePrice + roboticonPrice).ToString();
 
@@ -279,7 +273,7 @@ public class MarketScript : MonoBehaviour {
 	/// Updates the total sell price.
 	/// </summary>
 	public void UpdateTotalSellPrice() {
-		ResourceGroup sellingPrices = market.GetResourceSellingPrices();
+		ResourceGroup sellingPrices = GameManager.instance.market.GetResourceBuyingPrices();
 
 		int foodPrice = int.Parse(foodSellAmount.text) * sellingPrices.food;
 		int energyPrice = int.Parse(energySellAmount.text) * sellingPrices.energy;
@@ -293,30 +287,31 @@ public class MarketScript : MonoBehaviour {
 	/// Updates the market resource prices.
 	/// </summary>
 	private void UpdateShownMarketPrices() {
-		ResourceGroup sellingPrices = market.GetResourceSellingPrices();
-		ResourceGroup buyingPrices = market.GetResourceBuyingPrices();
+		//Yes, these are backwards. Yes, this is correct (viewing perspective is different on player and market).
+		ResourceGroup sellingPrices = GameManager.instance.market.GetResourceBuyingPrices();
+		ResourceGroup buyingPrices = GameManager.instance.market.GetResourceSellingPrices();
 
 		foodBuyPrice.text = "£" + buyingPrices.food.ToString();
 		energyBuyPrice.text = "£" + buyingPrices.energy.ToString();
 		oreBuyPrice.text = "£" + buyingPrices.ore.ToString();
-		roboticonBuyPrice.text = "£" + market.GetRoboticonSellingPrice().ToString();
+		roboticonBuyPrice.text = "£" + GameManager.instance.market.GetRoboticonSellingPrice().ToString();
 
 		foodSellPrice.text = "£" + sellingPrices.food.ToString();
 		energySellPrice.text = "£" + sellingPrices.energy.ToString();
 		oreSellPrice.text = "£" + sellingPrices.ore.ToString();
 
-		marketMoney.text = "£" + market.GetMarketMoney().ToString();
+		marketMoney.text = "£" + GameManager.instance.market.GetMarketMoney().ToString();
 	}
 
 	/// <summary>
 	/// Updates the market resource amounts.
 	/// </summary>
 	private void UpdateMarketResourceAmounts() {
-		ResourceGroup marketResources = market.GetResources();
+		ResourceGroup marketResources = GameManager.instance.market.GetResources();
 		marketFoodAmount.text = "/" + marketResources.food.ToString();
 		marketEnergyAmount.text = "/" + marketResources.energy.ToString();
 		marketOreAmount.text = "/" + marketResources.ore.ToString();
-		marketRoboticonAmount.text = "/" + market.GetNumRoboticonsForSale();
+		marketRoboticonAmount.text = "/" + GameManager.instance.market.GetNumRoboticonsForSale();
 	}
 
 	private void ResetInputBoxes() {

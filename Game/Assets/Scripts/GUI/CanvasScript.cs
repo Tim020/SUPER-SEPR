@@ -175,6 +175,7 @@ public class CanvasScript : MonoBehaviour {
 	public void ShowMarketWindow() {
 		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION || GameManager.instance.GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			marketScript.gameObject.SetActive(true);
+			marketScript.SetMarketValues();
 		} else {
 			//TODO - Error message "Market cannot be accessed in this phase."
 		}

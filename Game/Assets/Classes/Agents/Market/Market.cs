@@ -290,7 +290,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Updates market resource prices
 	/// </summary>
-	public void UpdateResourceBuyPrices() {
+	public void UpdateResourceSellPrices() {
 		float elasticity = 0.7f;
 		float upgradeTotalSum = (float)playersResourceProductionTotals.Sum();
 		float foodTotal = (float)playersResourceProductionTotals.GetFood();
@@ -314,8 +314,8 @@ public class Market : Agent {
 	/// <summary>
 	/// Updates the resource sell prices.
 	/// </summary>
-	public void UpdateResourceSellPrices() {
-		resourceBuyingPrices = (resourceSellingPrices.Clone() - (1 / Random.Range(2, 6)));
+	public void UpdateResourceBuyPrices() {
+		resourceBuyingPrices = resourceSellingPrices.Clone() - ((((float)1 / Random.Range(2, 6)) * resourceSellingPrices));
 	}
 
 	/// <summary>

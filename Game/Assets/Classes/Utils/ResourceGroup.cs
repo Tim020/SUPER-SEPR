@@ -1,5 +1,6 @@
 ﻿// Game Executable hosted at: http://www-users.york.ac.uk/~jwa509/alpha01BugFree.exe
 using System;
+using UnityEngine;
 
 public class ResourceGroup {
 
@@ -52,6 +53,18 @@ public class ResourceGroup {
 
 	public static ResourceGroup operator *(ResourceGroup r, int c) {
 		return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
+	}
+
+	public static ResourceGroup operator *(int c, ResourceGroup r) {
+		return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
+	}
+
+	public static ResourceGroup operator *(ResourceGroup r, float c) {
+		return new ResourceGroup(Mathf.RoundToInt(r.GetFood() * c), Mathf.RoundToInt(r.GetEnergy() * c), Mathf.RoundToInt(r.GetOre() * c));
+	}
+
+	public static ResourceGroup operator *(float c, ResourceGroup r) {
+		return new ResourceGroup(Mathf.RoundToInt(r.GetFood() * c), Mathf.RoundToInt(r.GetEnergy() * c), Mathf.RoundToInt(r.GetOre() * c));
 	}
 
 	public static ResourceGroup operator /(ResourceGroup r, int c) {
@@ -121,18 +134,18 @@ public class ResourceGroup {
 	/// <param name="value">The new value.</param>
 	public void SetResource(Data.ResourceType resource, int value) {
 		switch (resource) {
-		case Data.ResourceType.ENERGY:
-			energy = value;
-			break;
-		case Data.ResourceType.FOOD:
-			food = value;
-			break;
-		case Data.ResourceType.ORE:
-			ore = value;
-			break;
-		default:
-			throw new ArgumentException("Illeagal resource type");
-			break;
+			case Data.ResourceType.ENERGY:
+				energy = value;
+				break;
+			case Data.ResourceType.FOOD:
+				food = value;
+				break;
+			case Data.ResourceType.ORE:
+				ore = value;
+				break;
+			default:
+				throw new ArgumentException("Illeagal resource type");
+				break;
 		}
 	}
 

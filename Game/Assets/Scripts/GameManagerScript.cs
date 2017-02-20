@@ -28,7 +28,7 @@ public class GameManagerScript : MonoBehaviour {
 	void Start() {
 		DontDestroyOnLoad(this);
 
-		GameHandler.CreateNew(gameName, new HumanPlayer(new ResourceGroup(50, 50, 50), 0, "Player", 500), new AIPlayer(new ResourceGroup(50, 50, 50), 1, "AI", 100));
+		GameHandler.CreateNew(gameName, new HumanPlayer(new ResourceGroup(50, 50, 50), 0, "Player", 200), new AIPlayer(new ResourceGroup(50, 50, 50), 1, "AI", 200));
 		GameHandler.GetGameManager().StartGame();
 
 		SceneManager.LoadScene(GAME_SCENE_INDEX);

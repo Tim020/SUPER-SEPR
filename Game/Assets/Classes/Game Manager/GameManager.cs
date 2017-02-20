@@ -105,6 +105,7 @@ public class GameManager : Object {
 		this.gameName = gameName;
 		players.Add(0, human);
 		players.Add(1, ai);
+		players.Add(2, new AIPlayer(new ResourceGroup(50, 50, 50), 2, "AI2", 200));
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
@@ -204,8 +205,8 @@ public class GameManager : Object {
 				}
 				TryRandomEvent();
 				GameManager.instance.market.CalculatePlayerResourceUpgrades();
-				GameManager.instance.market.UpdateResourceBuyPrices();
 				GameManager.instance.market.UpdateResourceSellPrices();
+				GameManager.instance.market.UpdateResourceBuyPrices();
 				completePhaseCycles++;
 				if (CheckWinCondition()) {
 					state = Data.GameState.GAME_OVER;
