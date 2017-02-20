@@ -20,8 +20,8 @@ public class Casino {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Casino"/> class.
 	/// </summary>
-	/// <param name="minWinRoll">The maximum value for the minimum roll needed to win that can be generated.</param>
-	/// <example>Setting the parameter to 35 will randomly generate the number needed to win up to that. In effect the maximum chance you have to win is 35</example>
+	/// <param name="maxWinPercentage">The maximum percentage chance the player has to win.</param>
+	/// <example>Setting the parameter to 35 will randomly generate the number needed to win up to that. In effect the maximum chance you have to win is 35.</example>
 	public Casino(int maxWinPercentage) {
 		this.maxWinPercentage = maxWinPercentage;
 		this.minRollNeeded = 100 - UnityEngine.Random.Range(5, this.maxWinPercentage + 1);
