@@ -290,11 +290,6 @@ public class Market : Agent {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
 
-	public void updateMarketSupply(ResourceGroup r) {
-		runningTotal = runningTotal + r;
-		UnityEngine.Debug.Log("Market Total: " + runningTotal);
-	}	
-
 	/// <summary>
 	/// Updates market resource prices
 	/// </summary>
