@@ -179,7 +179,6 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Selects food as the trade resource.
 	/// </summary>
 	public void SelectFood() {
-		Debug.Log("Press food");
 		selectedResource = Data.ResourceType.FOOD;
 		resourceMax = GameManager.instance.GetHumanPlayer().GetResourceAmount(Data.ResourceType.FOOD);
 		tradeQuantity = 0;
@@ -200,7 +199,6 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Selects energy as the trade resource.
 	/// </summary>
 	public void SelectEnergy() {
-		Debug.Log("Press energy");
 		selectedResource = Data.ResourceType.ENERGY;
 		resourceMax = GameManager.instance.GetHumanPlayer().GetResourceAmount(Data.ResourceType.ENERGY);
 		tradeQuantity = 0;
@@ -221,7 +219,6 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Selects ore as the trade resource.
 	/// </summary>
 	public void SelectOre() {
-		Debug.Log("Press ore");
 		selectedResource = Data.ResourceType.ORE;
 		resourceMax = GameManager.instance.GetHumanPlayer().GetResourceAmount(Data.ResourceType.ORE);
 		tradeQuantity = 0;
@@ -409,7 +406,6 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Clears the trades list. 
 	/// </summary>
 	private void ClearTradesList() {
-//		Debug.Log(currentDisplayedTrades.Count);
 		if (currentDisplayedTrades.Count > 0) {
 			for (int i = 0; i < currentDisplayedTrades.Count; i++) {
 				Destroy(currentDisplayedTrades[i]);

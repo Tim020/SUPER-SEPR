@@ -36,7 +36,6 @@ public class HumanPlayer : AbstractPlayer {
 	public override void StartPhase(Data.GameState state) {
 		humanGui.DisableGui();
 		humanGui.SetCurrentPlayerName(this.name);
-		//TODO: Something?
 		humanGui.DisplayGui(state);
 	}
 

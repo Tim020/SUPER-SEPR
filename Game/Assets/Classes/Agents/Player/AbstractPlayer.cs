@@ -44,7 +44,6 @@ public abstract class AbstractPlayer : Agent {
 	public virtual int CalculateScore() {
 		int totalScore = money;
 
-		UnityEngine.Debug.Log(GameManager.instance.market.GetResourceBuyingPrices());
 		foreach (Tile tile in ownedTiles) {
 			totalScore += (tile.GetTotalResourcesGenerated() * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 		}
@@ -52,10 +51,8 @@ public abstract class AbstractPlayer : Agent {
 		foreach (Roboticon roboticon in ownedRoboticons) {
 			totalScore += roboticon.GetPrice();
 		}
-
-		UnityEngine.Debug.Log(GameManager.instance.market.GetResourceBuyingPrices());	
+			
 		totalScore += (GetResources() * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
-		UnityEngine.Debug.Log(GameManager.instance.market.GetResourceBuyingPrices());
 
 		return totalScore;
 	}

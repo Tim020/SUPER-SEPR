@@ -101,6 +101,8 @@ public class Market : Agent {
 
 	/// <summary>
 	/// The resource price history.
+	/// Head: Market buying prices.
+	/// Tail: Market selling prices.
 	/// </summary>
 	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 

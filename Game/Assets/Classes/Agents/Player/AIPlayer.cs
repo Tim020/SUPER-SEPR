@@ -18,20 +18,24 @@ public class AIPlayer : AbstractPlayer {
 	private Data.Tuple<ResourcePrediction, ResourcePrediction> currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(new ResourcePrediction(), new ResourcePrediction());
 
 	/// <summary>
-	/// NEW: The avgerage market buying price.
-	/// </summary>
-	private ResourceGroup avgMarketBuyingPrice;
-
-	/// <summary>
 	/// NEW: The avgerage market selling price.
 	/// </summary>
 	private ResourceGroup avgMarketSellingPrice;
 
 	/// <summary>
+	/// NEW: The avgerage market buying price.
+	/// </summary>
+	private ResourceGroup avgMarketBuyingPrice;
+
+	/// <summary>
+	/// The money threshold.
+	/// </summary>
+	private int moneyThreshold = 999;
+
+	/// <summary>
 	/// NEW: The first phase.
 	/// </summary>
 	private bool firstPhase = true;
-
 
 	/// <summary>
 	/// The sold to market.
@@ -56,61 +60,65 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state) {
+		if (firstPhase) {
+			UpdateMoneyThreshold();
+		}
 		switch (state) {
-			case Data.GameState.TILE_PURCHASE:
-				try {
-					Tile tileToAcquire = ChooseTileToAcquire();
-					AcquireTile(tileToAcquire);
-				} catch (NullReferenceException) {
-					//Not enough money
-				} catch (ArgumentException) {
-					//No available tiles
+		case Data.GameState.TILE_PURCHASE:
+			try {
+				Tile tileToAcquire = ChooseTileToAcquire();
+				AcquireTile(tileToAcquire);
+			} catch (NullReferenceException) {
+				//Not enough money
+			} catch (ArgumentException) {
+				//No available tiles
+			}
+			break;
+		case Data.GameState.ROBOTICON_CUSTOMISATION:
+			if (ShouldPurchaseRoboticon()) {
+				currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
+			}
+			break;
+		case Data.GameState.ROBOTICON_PLACEMENT:
+			try {
+				if (currentRoboticon != null) {
+					Tile install = InstallationTile();
+					InstallRoboticon(currentRoboticon, install);
+					currentRoboticon = null;
 				}
-				break;
-			case Data.GameState.ROBOTICON_CUSTOMISATION:
-				if (ShouldPurchaseRoboticon()) {
-					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
-				}
-				break;
-			case Data.GameState.ROBOTICON_PLACEMENT:
-				try {
-					if (currentRoboticon != null) {
-						Tile install = InstallationTile();
-						InstallRoboticon(currentRoboticon, install);
-						currentRoboticon = null;
-					}
-				} catch (ArgumentException) {
-					//No tile on which to install a roboticon
-				}
-				break;
-			case Data.GameState.AUCTION:
+			} catch (ArgumentException) {
+				//No tile on which to install a roboticon
+			}
+			break;
+		case Data.GameState.AUCTION:
 				//this may be an issue you done gooffed
-				try {
-					if (ShouldUpgrade()) {
-						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
-						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
-						money -= Roboticon.UPGRADE_VALUE;
-					}
-				} catch (NullReferenceException) {
-					//Decided not to upgrade a roboticon
+			UpdateMoneyThreshold();
+			try {
+				if (ShouldUpgrade()) {
+					Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
+					UpgradeRoboticon(upgrade.Head, upgrade.Tail);
+					money -= Roboticon.UPGRADE_VALUE;
 				}
-				if (!firstPhase) {
-					avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
-					ManageTrades();
-					UpdateSellingPrediction();
-					SellToMarket();
-					UpdatBuyingPrediction();
-					BuyFromMarket();
-					BuyTrade();
-					Gamble();
-					MakeTrade();
-				} else {
-					firstPhase = false;
-					avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-					avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
-				}
-				Debug.Log(name + " | money : " + money.ToString() + " post :" + state.ToString());
-				break;
+			} catch (NullReferenceException) {
+				//Decided not to upgrade a roboticon
+			}
+			if (!firstPhase) {
+				avgMarketSellingPrice = (avgMarketSellingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
+				avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceBuyingPrices()) / 2;
+				ManageTrades();
+				UpdateSellingPrediction();
+				SellToMarket();
+				UpdateBuyingPrediction();
+				BuyFromMarket();
+				BuyTrade();
+				Gamble();
+				MakeTrade();
+			} else {
+				firstPhase = false;
+				avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+				avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+			}
+			break;
 		}
 		// This must be done to signify the end of the AI turn.
 		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
@@ -126,6 +134,9 @@ public class AIPlayer : AbstractPlayer {
 		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
 		tileScore -= tile.GetPrice();
+		if (money - tile.GetPrice() < moneyThreshold) {
+			tileScore = -999;
+		}
 		scoredTile = new TileChoice(tile, tileScore);
 		return scoredTile;
 	}
@@ -168,7 +179,7 @@ public class AIPlayer : AbstractPlayer {
 
 		if (GameHandler.GetGameManager().market.GetNumRoboticonsForSale() == 0) {
 			return false;
-		} else if (unmannedTiles.Count > 0 && GameHandler.GetGameManager().market.GetRoboticonSellingPrice() < money) {
+		} else if (unmannedTiles.Count > 0 && money - GameHandler.GetGameManager().market.GetRoboticonSellingPrice() >= moneyThreshold) {
 			return true;
 		} else {
 			return false;
@@ -234,6 +245,10 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 
+		if (money - Roboticon.UPGRADE_VALUE < moneyThreshold) {
+			best = null;
+		}
+
 		if (best != null) {
 
 			//chooses upgrade based on the best price at the moment
@@ -275,13 +290,13 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	private void ManageTrades() {
 		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host == this);
-		ResourceGroup currentBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-		ResourceGroup currentSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+		ResourceGroup currentBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+		ResourceGroup currentSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 		Market m = GameHandler.GetGameManager().market;
 
 		foreach (Market.P2PTrade t in trades) {
 			//cancells if it can sell for more or if it thinks it unlikely that the player will buy it
-			if (currentBuyingPrice.GetResource(t.resource) >= t.unitPrice || currentSellingPrice.GetResource(t.resource) > t.unitPrice) {
+			if (currentSellingPrice.GetResource(t.resource) <= t.unitPrice) {
 				m.CancelPlayerTrade(this, t);
 			}
 		}
@@ -352,19 +367,17 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// NEW: Updates the selling price prediction.
+	/// NEW: Updates the selling price (to the market) prediction.
 	/// </summary>
 	private void UpdateSellingPrediction() {
 		ResourceGroup[] history = GetMarketBuyingPriceHistory();
 		ResourceGroup currentChange = history[history.Length - 1];
 		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(GetPriceDifference(history), currentChange), currentPrediction.Tail);
-		Debug.Log("Selling prediction " + name + " : " + currentPrediction.Head.food + ", " + currentPrediction.Head.energy + ", " + currentPrediction.Head.ore);
 	}
 
 	/// <summary>
 	/// NEW: Sells to the market will sell up to resources / 3.
 	/// </summary>
-	//TODO: Add a check to whether price is within +/-5% average
 	private void SellToMarket() {
 		ResourceGroup currentPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		Market market = GameHandler.GetGameManager().market;
@@ -402,9 +415,9 @@ public class AIPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// NEW: Updates the buying price prediction.
+	/// NEW: Updates the buying price (from the market) prediction.
 	/// </summary>
-	private void UpdatBuyingPrediction() {
+	private void UpdateBuyingPrediction() {
 		ResourceGroup[] history = GetMarketSellingPriceHistory();
 		ResourceGroup currentChange = history[history.Length - 1];
 		//-1 as a better change in price is considered to be a drop (i.e. cheaper price)
@@ -426,7 +439,7 @@ public class AIPlayer : AbstractPlayer {
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
 			//means we're at a low or the prices aren't profitable so we buy nothing
-			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketBuyingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
+			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketSellingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
 				buyingAmounts.SetResource(t, 0);
 				//if it's almost certain the price is going to drop we don't buy
 			} else if (currentPrediction.Tail.GetResource(t) >= 0.75) {
@@ -458,21 +471,23 @@ public class AIPlayer : AbstractPlayer {
 	public void BuyTrade() {
 		//only considers buying a trade that isn't his own
 		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host != this);
+		ResourceGroup currentMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		ResourceGroup currentMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		Market.P2PTrade considering = null;
 
 		for (int i = 0; i < trades.Count; i++) {
 			//checks if unit price is less than average market buying price and that we have enough money
-			if (trades[i].unitPrice < avgMarketSellingPrice.GetResource(trades[i].resource) && trades[i].unitPrice * trades[i].resourceAmount < money) {
+			if (trades[i].unitPrice < currentMarketSellingPrice.GetResource(trades[i].resource) && trades[i].unitPrice * trades[i].resourceAmount < money) {
 				if (considering != null) {
 					//estimated profit of the current trade i.e. trade[i] 
-					int currentProfit = ((trades[i].resourceAmount * avgMarketSellingPrice.GetResource(trades[i].resource)) - (trades[i].resourceAmount * trades[i].unitPrice));
+					int currentProfit = ((trades[i].resourceAmount * avgMarketBuyingPrice.GetResource(trades[i].resource)) - (trades[i].resourceAmount * trades[i].unitPrice));
 					//estimated profit of our consideration
-					int consideringProfit = ((considering.resourceAmount * avgMarketSellingPrice.GetResource(considering.resource)) - (considering.resourceAmount * considering.unitPrice));
+					int consideringProfit = ((considering.resourceAmount * avgMarketBuyingPrice.GetResource(considering.resource)) - (considering.resourceAmount * considering.unitPrice));
 
-					if (currentProfit > consideringProfit) {
+					if (currentProfit > consideringProfit && money - (trades[i].unitPrice * trades[i].resourceAmount) >= moneyThreshold) {
 						considering = trades[i];
 					}
-				} else {
+				} else if (money - (trades[i].unitPrice * trades[i].resourceAmount) >= moneyThreshold) {
 					considering = trades[i];
 				}
 			}
@@ -487,9 +502,9 @@ public class AIPlayer : AbstractPlayer {
 	/// NEW: Gamble with the market. Will gamble with up to half its money (randomly).
 	/// </summary>
 	private void Gamble() {
-		if (!soldToMarket) {
-			if ((100 - GameManager.instance.casino.minRollNeeded) / GameManager.instance.casino.maxWinPercentage >= 0.5) {
-				GameManager.instance.casino.GambleMoney(this, Random.Range(0, GetMoney() / 2));
+		if ((!soldToMarket || Random.Range(0.0f, 1.0f) < 0.35f) && GetMoney() > moneyThreshold) {
+			if ((100f - GameManager.instance.casino.minRollNeeded) / GameManager.instance.casino.maxWinPercentage >= 0.5 || Random.Range(0.0f, 1.0f) < 0.25f) {
+				GameManager.instance.casino.GambleMoney(this, Random.Range(0, Mathf.Max((GetMoney() - moneyThreshold) / 2, 0)));
 			}
 		}
 	}
@@ -499,29 +514,20 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	private void MakeTrade() {
 		Market.P2PTrade trade = null;
-		ResourceGroup buyingPrie = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		ResourceGroup currentMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+		ResourceGroup currentMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		Market m = GameHandler.GetGameManager().market;
 
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
-			if (GetResources().GetResource(t) / 3 > 0) {
-				continue;
-			}
-
-			if (buyingPrie.GetResource(t) > avgMarketBuyingPrice.GetResource(t)) {
-				float discount = 0.76f;
-
-				//tries to give the best discount on the basis its more likely to play
-				while ((int)buyingPrie.GetResource(t) * discount < avgMarketBuyingPrice.GetResource(t) && discount < 1) {
-					if ((int)buyingPrie.GetResource(t) * discount > avgMarketBuyingPrice.GetResource(t)) {
-						trade = new Market.P2PTrade(this, t, GetResources().GetResource(t) / 3, (int)(buyingPrie.GetResource(t) * discount));
+			if (GetResources().GetResource(t) / 3 >= 1) {
+				if (currentMarketSellingPrice.GetResource(t) > avgMarketSellingPrice.GetResource(t)) {
+					int tradeSellPrice = Mathf.RoundToInt(avgMarketSellingPrice.GetResource(t) + (((float)currentMarketSellingPrice.GetResource(t) - avgMarketSellingPrice.GetResource(t)) / 2));
+					trade = new Market.P2PTrade(this, t, GetResourceAmount(t) / 3, tradeSellPrice);
+					if (trade != null) {
+						m.CreatePlayerTrade(trade.host, trade.resource, trade.resourceAmount, trade.unitPrice);
+						trade = null;
 					}
-					discount += 0.02f;
-				}
-
-				if (trade != null) {
-					m.CreatePlayerTrade(trade.host, trade.resource, trade.resourceAmount, trade.unitPrice);
-					trade = null;
 				}
 			}
 		}
@@ -550,7 +556,7 @@ public class AIPlayer : AbstractPlayer {
 	private ResourceGroup[] GetMarketSellingPriceHistory() {
 		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count];
 		for (int i = -1; i < sellingPirces.Length - 1; i++) {
-			sellingPirces[i+1] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
+			sellingPirces[i + 1] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
 		}
 		return sellingPirces;
 	}
@@ -562,7 +568,7 @@ public class AIPlayer : AbstractPlayer {
 	private ResourceGroup[] GetMarketBuyingPriceHistory() {
 		ResourceGroup[] buyingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
 		for (int i = -1; i < buyingPirces.Length - 1; i++) {
-			buyingPirces[i+1] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
+			buyingPirces[i + 1] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
 		}
 		return buyingPirces;
 	}
@@ -596,6 +602,17 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 		return unmannedTiles;
+	}
+
+	/// <summary>
+	/// Updates the money threshold.
+	/// </summary>
+	private void UpdateMoneyThreshold() {
+		foreach (Tile t in GetAvailableTiles()) {
+			if (t.GetPrice() < moneyThreshold) {
+				moneyThreshold = t.GetPrice();
+			}
+		}
 	}
 
 	/// <summary>
@@ -667,7 +684,7 @@ public class AIPlayer : AbstractPlayer {
 				return false;
 			}
 		}
-			
+
 		/// <summary>
 		/// NEW: Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="AIPlayer+TileChoice"/>.
 		/// </summary>
@@ -690,7 +707,7 @@ public class AIPlayer : AbstractPlayer {
 		/// NEW: Serves as a hash function for a particular type.
 		/// </summary>
 		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
-		public override int GetHashCode () {
+		public override int GetHashCode() {
 			return tile.GetHashCode() + score.GetHashCode();
 		}
 
@@ -747,14 +764,14 @@ public class AIPlayer : AbstractPlayer {
 		/// <param name="resource">Resource type.</param>
 		public float GetResource(Data.ResourceType resource) {
 			switch (resource) {
-				case Data.ResourceType.ENERGY:
-					return energy;
-				case Data.ResourceType.FOOD:
-					return food;
-				case Data.ResourceType.ORE:
-					return ore;
-				default:
-					throw new ArgumentException("Illeagal resource type");
+			case Data.ResourceType.ENERGY:
+				return energy;
+			case Data.ResourceType.FOOD:
+				return food;
+			case Data.ResourceType.ORE:
+				return ore;
+			default:
+				throw new ArgumentException("Illeagal resource type");
 			}
 		}
 
@@ -766,17 +783,17 @@ public class AIPlayer : AbstractPlayer {
 		/// <param name="value">The value of the resource.</param> 
 		public void SetResource(Data.ResourceType resource, float value) {
 			switch (resource) {
-				case Data.ResourceType.ENERGY:
-					energy = value;
-					break;
-				case Data.ResourceType.FOOD:
-					food = value;
-					break;
-				case Data.ResourceType.ORE:
-					ore = value;
-					break;
-				default:
-					throw new ArgumentException("Illeagal resource type");
+			case Data.ResourceType.ENERGY:
+				energy = value;
+				break;
+			case Data.ResourceType.FOOD:
+				food = value;
+				break;
+			case Data.ResourceType.ORE:
+				ore = value;
+				break;
+			default:
+				throw new ArgumentException("Illeagal resource type");
 			}
 		}
 	}
