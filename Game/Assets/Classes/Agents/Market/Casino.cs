@@ -28,6 +28,7 @@ public class Casino {
 	}
 
 	/// <summary>
+	/// NEW: This is a new section of code that deals with gambling.
 	/// Gambles the money.
 	/// Generates a random win amount each time also, up to the max value set.
 	/// </summary>

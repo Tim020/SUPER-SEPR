@@ -396,8 +396,14 @@ public class Market : Agent {
 		return money;
 	}
 
-	public void UpdateMarketMoney(int amount) {
-		money = money + amount;
+	/// <summary>
+	/// NEW: Increases the market money.
+	/// </summary>
+	/// <param name="amount">Amount.</param>
+	public void IncreaseMarketMoney(int amount) {
+		if (amount > 0) {
+			money = money + amount;
+		}
 	}
 
 	/// <summary>
@@ -409,6 +415,8 @@ public class Market : Agent {
 	}
 
 	/// <summary>
+	/// NEW: A representation of a player trade. Switched to using this as there was no UI implemented for this yet, so we went with our orignial design and this data class
+	/// best fits with that design.
 	/// Class to represent an offer being made by a player, contains information about the offer such as resource type, amount and unit price
 	/// </summary>
 	public class P2PTrade {

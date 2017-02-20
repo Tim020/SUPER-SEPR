@@ -21,7 +21,7 @@ public class DummyPlayer : AbstractPlayer {
 			tile.SetOwner(this);
 			this.DeductMoney(tile.GetPrice());
 			if (market != null) {
-				market.UpdateMarketMoney(tile.GetPrice());
+				market.IncreaseMarketMoney(tile.GetPrice());
 			}
 		} else {
 			throw new Exception("Tried to acquire a tile which is already owned by this player.");
