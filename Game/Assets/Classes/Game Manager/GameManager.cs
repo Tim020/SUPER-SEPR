@@ -251,14 +251,6 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Gets the current player.
-	/// </summary>
-	/// <returns>The current player.</returns>
-	public AbstractPlayer GetCurrentPlayer() {
-		return currentPlayer;
-	}
-
-	/// <summary>
 	/// Checks the window condition.
 	/// </summary>
 	/// <returns><c>true</c>, if window condition is true, <c>false</c> otherwise.</returns>
@@ -282,16 +274,8 @@ public class GameManager : Object {
 					winner = p;
 				}
 			}
-			this.ShowWinner(winner);
+			GetHumanPlayer().GetHumanGui().GetCanvasScript().DisplayWinner(GetHumanPlayer(), winner);
 		}
-	}
-
-	/// <summary>
-	/// Shows the winner.
-	/// </summary>
-	/// <param name="player">The player who won.</param>
-	private void ShowWinner(AbstractPlayer player) {
-		GetHumanPlayer().GetHumanGui().GetCanvasScript().DisplayWinner(GetHumanPlayer(), player);
 	}
 
 	/// <summary>
@@ -350,5 +334,4 @@ public class GameManager : Object {
 	public int GetPhaseTimeRemaining() {
 		return phaseTimeInSeconds - GetTimerInSeconds();
 	}
-
 }
