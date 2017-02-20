@@ -772,7 +772,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void TileAcquisition_EnoughMoney() {
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 				Assert.AreEqual(1, dummyAI.GetOwnedTiles().Count);
 			}
 
@@ -783,12 +783,17 @@ public class AgentTests {
 			public void TileAcquisition_NotEnoughMoney() {
 				dummyAI.SetMoney(0);
 				try {
+<<<<<<< HEAD
 					dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+=======
+					dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+>>>>>>> 34414aec598b717985f3d0fe08e495aa4c2a025c
 				} catch (ArgumentException) {
 					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
 				}
+<<<<<<< HEAD
 			}
 
 			/// <summary>
@@ -960,6 +965,8 @@ public class AgentTests {
 			[Test]
 			public void RoboticonUpgrade_ApplicationSingleTile() {
 
+=======
+>>>>>>> 34414aec598b717985f3d0fe08e495aa4c2a025c
 			}
 
 		}

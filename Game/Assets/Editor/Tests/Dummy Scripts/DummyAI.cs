@@ -41,7 +41,8 @@ public class DummyAI : AIPlayer {
 	/// NEW: Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void StartPhase(Data.GameState state) {
+	public override void StartPhase(Data.GameState state, int turnCount) {
+		Debug.Log("IMMMA BEEING CALLED");
 		if (firstPhase) {
 			UpdateMoneyThreshold();
 		}

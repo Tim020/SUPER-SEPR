@@ -26,17 +26,18 @@ public class HumanPlayer : AbstractPlayer {
 		this.humanGui = gui;
 		humanGui.SetCanvasScript(canvas);
 		canvas.SetHumanGui(humanGui);
-		humanGui.DisplayGui(Data.GameState.TILE_PURCHASE);
+		humanGui.DisplayGui(Data.GameState.TILE_PURCHASE, 0);
 	}
 
 	/// <summary>
 	/// NEW: Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void StartPhase(Data.GameState state) {
+	public override void StartPhase(Data.GameState state, int turnCount) {
 		humanGui.DisableGui();
 		humanGui.SetCurrentPlayerName(this.name);
-		humanGui.DisplayGui(state);
+		humanGui.DisplayGui(state, turnCount);
+		GameManager.instance.OnPlayerCompletedPhase(state);
 	}
 
 	/// <summary>

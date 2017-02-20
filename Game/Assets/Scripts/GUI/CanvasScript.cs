@@ -127,6 +127,11 @@ public class CanvasScript : MonoBehaviour {
 	public ScoreBoardScript scoreBoard;
 
 	/// <summary>
+	/// The turn count text.
+	/// </summary>
+	public Text turnCount;
+
+	/// <summary>
 	/// Gets a value indicating whether this <see cref="CanvasScript"/> should show the trade confirmation.
 	/// </summary>
 	/// <value><c>true</c> if we show the trade confirmation; otherwise, <c>false</c>.</value>
@@ -165,8 +170,10 @@ public class CanvasScript : MonoBehaviour {
 	/// Sets the current phase text.
 	/// </summary>
 	/// <param name="text">Phase text.</param>
-	public void SetCurrentPhaseText(string text) {
+	/// <param name="turnCount">The current turn count.</param> 
+	public void SetCurrentPhaseText(string text, int turnCount) {
 		currentPhaseText.text = text;
+		this.turnCount.text = "Turn: " + turnCount.ToString();
 	}
 
 	/// <summary>

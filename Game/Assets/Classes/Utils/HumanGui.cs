@@ -57,7 +57,8 @@ public class HumanGui {
 	/// NEW: Disables the main UI when the game is over.
 	/// </summary>
 	/// <param name="phase">The current phase of the game.</param>
-	public void DisplayGui(Data.GameState phase) {
+	/// <param name="turnCount">The current turn count.</param>
+	public void DisplayGui(Data.GameState phase, int turnCount) {
 		currentPhase = phase;
 
 		ShowHelpBox();
@@ -77,7 +78,7 @@ public class HumanGui {
 		canvas.HideMarketWindow();
 		canvas.HideAuctionMenu();
 
-		canvas.SetCurrentPhaseText(Data.StateToPhaseName(phase) + " Phase");
+		canvas.SetCurrentPhaseText(Data.StateToPhaseName(phase) + " Phase", turnCount);
 	}
 
 	/// <summary>

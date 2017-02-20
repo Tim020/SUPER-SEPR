@@ -59,66 +59,66 @@ public class AIPlayer : AbstractPlayer {
 	/// NEW: Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void StartPhase(Data.GameState state) {
+	public override void StartPhase(Data.GameState state, int turnCount) {
 		if (firstPhase) {
 			UpdateMoneyThreshold();
 		}
 		switch (state) {
-		case Data.GameState.TILE_PURCHASE:
-			try {
-				Tile tileToAcquire = ChooseTileToAcquire();
-				AcquireTile(tileToAcquire);
-			} catch (NullReferenceException) {
-				//Not enough money
-			} catch (ArgumentException) {
-				//No available tiles
-			}
-			break;
-		case Data.GameState.ROBOTICON_CUSTOMISATION:
-			if (ShouldPurchaseRoboticon()) {
-				currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
-			}
-			break;
-		case Data.GameState.ROBOTICON_PLACEMENT:
-			try {
-				if (currentRoboticon != null) {
-					Tile install = InstallationTile();
-					InstallRoboticon(currentRoboticon, install);
-					currentRoboticon = null;
+			case Data.GameState.TILE_PURCHASE:
+				try {
+					Tile tileToAcquire = ChooseTileToAcquire();
+					AcquireTile(tileToAcquire);
+				} catch (NullReferenceException) {
+					//Not enough money
+				} catch (ArgumentException) {
+					//No available tiles
 				}
-			} catch (ArgumentException) {
-				//No tile on which to install a roboticon
-			}
-			break;
-		case Data.GameState.AUCTION:
+				break;
+			case Data.GameState.ROBOTICON_CUSTOMISATION:
+				if (ShouldPurchaseRoboticon()) {
+					currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
+				}
+				break;
+			case Data.GameState.ROBOTICON_PLACEMENT:
+				try {
+					if (currentRoboticon != null) {
+						Tile install = InstallationTile();
+						InstallRoboticon(currentRoboticon, install);
+						currentRoboticon = null;
+					}
+				} catch (ArgumentException) {
+					//No tile on which to install a roboticon
+				}
+				break;
+			case Data.GameState.AUCTION:
 				//this may be an issue you done gooffed
-			UpdateMoneyThreshold();
-			try {
-				if (ShouldUpgrade()) {
-					Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
-					UpgradeRoboticon(upgrade.Head, upgrade.Tail);
-					money -= Roboticon.UPGRADE_VALUE;
+				UpdateMoneyThreshold();
+				try {
+					if (ShouldUpgrade()) {
+						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
+						UpgradeRoboticon(upgrade.Head, upgrade.Tail);
+						money -= Roboticon.UPGRADE_VALUE;
+					}
+				} catch (NullReferenceException) {
+					//Decided not to upgrade a roboticon
 				}
-			} catch (NullReferenceException) {
-				//Decided not to upgrade a roboticon
-			}
-			if (!firstPhase) {
-				avgMarketSellingPrice = (avgMarketSellingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
-				avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceBuyingPrices()) / 2;
-				ManageTrades();
-				UpdateSellingPrediction();
-				SellToMarket();
-				UpdateBuyingPrediction();
-				BuyFromMarket();
-				BuyTrade();
-				Gamble();
-				MakeTrade();
-			} else {
-				firstPhase = false;
-				avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-				avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
-			}
-			break;
+				if (!firstPhase) {
+					avgMarketSellingPrice = (avgMarketSellingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
+					avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceBuyingPrices()) / 2;
+					ManageTrades();
+					UpdateSellingPrediction();
+					SellToMarket();
+					UpdateBuyingPrediction();
+					BuyFromMarket();
+					BuyTrade();
+					Gamble();
+					MakeTrade();
+				} else {
+					firstPhase = false;
+					avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+					avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+				}
+				break;
 		}
 		// This must be done to signify the end of the AI turn.
 		GameHandler.GetGameManager().OnPlayerCompletedPhase(state);
@@ -134,7 +134,7 @@ public class AIPlayer : AbstractPlayer {
 		ResourceGroup weighting = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
 		tileScore -= tile.GetPrice();
-		if (money - tile.GetPrice() < moneyThreshold) {
+		if (money - tile.GetPrice() < moneyThreshold && tile.GetPrice() != moneyThreshold) {
 			tileScore = -999;
 		}
 		scoredTile = new TileChoice(tile, tileScore);
@@ -453,7 +453,7 @@ public class AIPlayer : AbstractPlayer {
 			}
 		}
 
-		while ((buyingAmounts * currentPrice).Sum() > money / 2) {
+		while ((buyingAmounts * currentPrice).Sum() > Mathf.Max(0, (money - moneyThreshold)) / 2) {
 			buyingAmounts = new ResourceGroup(Mathf.Max(buyingAmounts.food - 1, 0), Mathf.Max(buyingAmounts.energy - 1, 0), Mathf.Max(buyingAmounts.ore - 1, 0));
 		}
 
@@ -487,7 +487,7 @@ public class AIPlayer : AbstractPlayer {
 					if (currentProfit > consideringProfit && money - (trades[i].unitPrice * trades[i].resourceAmount) >= moneyThreshold) {
 						considering = trades[i];
 					}
-				} else if (money - (trades[i].unitPrice * trades[i].resourceAmount) >= moneyThreshold) {
+				} else if (money - (trades[i].unitPrice * trades[i].resourceAmount) > moneyThreshold) {
 					considering = trades[i];
 				}
 			}
@@ -764,14 +764,14 @@ public class AIPlayer : AbstractPlayer {
 		/// <param name="resource">Resource type.</param>
 		public float GetResource(Data.ResourceType resource) {
 			switch (resource) {
-			case Data.ResourceType.ENERGY:
-				return energy;
-			case Data.ResourceType.FOOD:
-				return food;
-			case Data.ResourceType.ORE:
-				return ore;
-			default:
-				throw new ArgumentException("Illeagal resource type");
+				case Data.ResourceType.ENERGY:
+					return energy;
+				case Data.ResourceType.FOOD:
+					return food;
+				case Data.ResourceType.ORE:
+					return ore;
+				default:
+					throw new ArgumentException("Illeagal resource type");
 			}
 		}
 
@@ -783,17 +783,17 @@ public class AIPlayer : AbstractPlayer {
 		/// <param name="value">The value of the resource.</param> 
 		public void SetResource(Data.ResourceType resource, float value) {
 			switch (resource) {
-			case Data.ResourceType.ENERGY:
-				energy = value;
-				break;
-			case Data.ResourceType.FOOD:
-				food = value;
-				break;
-			case Data.ResourceType.ORE:
-				ore = value;
-				break;
-			default:
-				throw new ArgumentException("Illeagal resource type");
+				case Data.ResourceType.ENERGY:
+					energy = value;
+					break;
+				case Data.ResourceType.FOOD:
+					food = value;
+					break;
+				case Data.ResourceType.ORE:
+					ore = value;
+					break;
+				default:
+					throw new ArgumentException("Illeagal resource type");
 			}
 		}
 	}
