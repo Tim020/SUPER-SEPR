@@ -99,11 +99,15 @@ public class Market : Agent {
 	/// </summary>
 	private List<P2PTrade> playerTrades;
 
+	/// <summary>
+	/// The resource price history.
+	/// </summary>
 	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
+	/// <summary>
+	/// The running total of resources bought/sold.
+	/// </summary>
 	private ResourceGroup runningTotal = new ResourceGroup();
-
-	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
