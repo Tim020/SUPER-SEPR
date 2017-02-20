@@ -178,7 +178,7 @@ public class GameManager : Object {
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
-				market.UpdatePrices(completePhaseCycles);
+				market.CachePrices(completePhaseCycles);
 				market.ProduceRoboticons();
 				playersCompletedPhase = 0;
 				state = Data.GameState.AUCTION;
@@ -203,6 +203,9 @@ public class GameManager : Object {
 					p.StartPhase(state);
 				}
 				TryRandomEvent();
+				GameManager.instance.market.CalculatePlayerResourceUpgrades();
+				GameManager.instance.market.UpdateResourceBuyPrices();
+				GameManager.instance.market.UpdateResourceSellPrices();
 				completePhaseCycles++;
 				if (CheckWinCondition()) {
 					state = Data.GameState.GAME_OVER;

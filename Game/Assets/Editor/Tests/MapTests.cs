@@ -43,7 +43,7 @@ public class MapTests {
 		try {
 			testMap.GetTile(101);
 			Assert.Fail();
-		} catch (IndexOutOfRangeException e) {
+		} catch (IndexOutOfRangeException) {
 			Assert.Pass();
 		} catch (Exception) {
 			Assert.Fail();

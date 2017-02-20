@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// The market class.
@@ -89,6 +90,11 @@ public class Market : Agent {
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
 	/// <summary>
+	/// The total production values across all players, taking into account tiles and roboticons.
+	/// </summary>
+	public ResourceGroup playersResourceProductionTotals;
+
+	/// <summary>
 	/// A list of all current standing player trades
 	/// </summary>
 	private List<P2PTrade> playerTrades;
@@ -96,6 +102,8 @@ public class Market : Agent {
 	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
 	private ResourceGroup runningTotal = new ResourceGroup();
+
+	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Market"/> class.
@@ -108,6 +116,7 @@ public class Market : Agent {
 		money = STARTING_MONEY;
 		playerTrades = new List<P2PTrade>();
 		resourcePriceHistory = new Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>>();
+		playersResourceProductionTotals = new ResourceGroup();
 	}
 
 	/// <summary>
@@ -123,6 +132,7 @@ public class Market : Agent {
 
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food || resourcesToBuy.energy > resources.energy || resourcesToBuy.ore > resources.ore);
 		if (hasEnoughResources) {
+			UpdateMarketSupplyOnBuy(resourcesToBuy);
 			resources -= resourcesToBuy;
 			money = money + (resourcesToBuy * resourceSellingPrices).Sum();
 			player.SetResources(player.GetResources() + resourcesToBuy);
@@ -131,6 +141,14 @@ public class Market : Agent {
 		} else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
+	}
+
+	/// <summary>
+	/// Updates global market supply when the user buys from the market
+	/// </summary>
+	/// <param name="resourcesToBuy"></param>
+	public void UpdateMarketSupplyOnBuy(ResourceGroup resourcesToBuy) {
+		runningTotal -= resourcesToBuy;
 	}
 
 	/// <summary>
@@ -146,6 +164,7 @@ public class Market : Agent {
 
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
+			UpdateMarketSupplyOnSell(resourcesToSell);
 			resources += resourcesToSell;
 			money = money - price;
 			player.SetResources(player.GetResources() - resourcesToSell);
@@ -154,6 +173,14 @@ public class Market : Agent {
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
+	}
+
+	///<summary>
+	///Updates global market supply when use sells to the market
+	/// </summary>
+	///<param name="resourcesToSell"></param>
+	public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell) {
+		runningTotal += resourcesToSell;
 	}
 
 	/// <summary>
@@ -234,21 +261,82 @@ public class Market : Agent {
 			player.GiveResouce(trade.resource, trade.resourceAmount);
 			player.DeductMoney(trade.GetTotalCost());
 			trade.host.GiveMoney(trade.GetTotalCost());
+			switch (trade.resource) {
+				case Data.ResourceType.FOOD:
+					ResourceGroup price = new ResourceGroup(trade.unitPrice, 0, 0);
+					break;
+			}
 			playerTrades.Remove(trade);
 		}
+	}
+
+	/// <summary>
+	/// Keeps a running total of all the resources that have been mined so far.
+	/// </summary>
+	/// <param name="r">Player supply total</param>
+	public void updateMarketSupply(ResourceGroup r) {
+		runningTotal = runningTotal + r;
 	}
 
 	/// <summary>
 	/// Updates the prices for resources based on supply and demand economics.
 	/// TODO: Implement this
 	/// </summary>
-	public void UpdatePrices(int phaseID) {
+	public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
 
 	public void updateMarketSupply(ResourceGroup r) {
 		runningTotal = runningTotal + r;
 		UnityEngine.Debug.Log("Market Total: " + runningTotal);
+	}	
+
+	/// <summary>
+	/// Updates market resource prices
+	/// </summary>
+	public void UpdateResourceBuyPrices() {
+		float elasticity = 0.7f;
+		float upgradeTotalSum = (float)playersResourceProductionTotals.Sum();
+		float foodTotal = (float)playersResourceProductionTotals.GetFood();
+		float energyTotal = (float)playersResourceProductionTotals.GetEnergy();
+		float oreTotal = (float)playersResourceProductionTotals.GetOre();
+
+		UnityEngine.Debug.Log(playersResourceProductionTotals);
+		UnityEngine.Debug.Log("Totals: " + foodTotal + ", " + energyTotal + ", " + oreTotal);
+
+		if (upgradeTotalSum > 0) {
+			float newFood = (float)(((1 - (foodTotal / upgradeTotalSum)) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
+			float newEnergy = (float)(((1 - (energyTotal / upgradeTotalSum) / elasticity)) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
+			float newOre = (float)(((1 - (oreTotal / upgradeTotalSum) / elasticity)) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
+			UnityEngine.Debug.Log(newFood + ", " + newEnergy + ", " + newOre);
+			ResourceGroup newPrices = new ResourceGroup((int)newFood, (int)newEnergy, (int)newOre);
+			resourceSellingPrices = newPrices;
+		}
+		UnityEngine.Debug.Log("New resource buy prices: " + resourceSellingPrices);
+	}
+
+	/// <summary>
+	/// Updates the resource sell prices.
+	/// </summary>
+	public void UpdateResourceSellPrices() {
+		resourceBuyingPrices = (resourceSellingPrices.Clone() - (1 / Random.Range(2, 6)));
+	}
+
+	/// <summary>
+	/// Gets the upgrade values for each roboticon
+	/// </summary>
+	/// <returns>The roboticon upgrades.</returns>
+	public void CalculatePlayerResourceUpgrades() {
+		playersResourceProductionTotals = new ResourceGroup();
+		foreach (Object o in GameManager.instance.players.Values) {
+			AbstractPlayer p = (AbstractPlayer)o;
+			foreach (Roboticon r in p.GetRoboticons()) {
+				playersResourceProductionTotals += r.GetProductionValues();
+			}
+			foreach (Tile t in p.GetOwnedTiles()) {
+				playersResourceProductionTotals += t.GetBaseResourcesGenerated();
+			}
+		}
 	}
 
 	/// <summary>
@@ -365,3 +453,4 @@ public class Market : Agent {
 		}
 	}
 }
+

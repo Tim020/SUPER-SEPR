@@ -27,11 +27,19 @@ public class Roboticon {
 	private bool isInstalledToTile;
 
 	/// <summary>
+	/// Resourcegroup to store the initial production values of a robiticon to work out upgrades from
+	/// ToDO : Should this be private? @tim?
+	/// </summary>
+
+	private ResourceGroup initialProductionValues;
+
+	/// <summary>
 	/// Initializes a new instance of the <see cref="Roboticon"/> class.
 	/// </summary>
 	public Roboticon() {
 		name = "RBN#" + (Random.Range(1000, 9999));
 		productionValues = new ResourceGroup(Random.Range(1, 4), Random.Range(1, 4), Random.Range(1, 4));
+		initialProductionValues = productionValues.Clone();
 	}
 
 	/// <summary>
@@ -94,6 +102,10 @@ public class Roboticon {
 	/// <returns>The upgrade pattern.</returns>
 	public ResourceGroup GetProductionValues() {
 		return productionValues;
+	}
+
+	public ResourceGroup GetInitialProductionValues() {
+		return initialProductionValues;
 	}
 
 	/// <summary>

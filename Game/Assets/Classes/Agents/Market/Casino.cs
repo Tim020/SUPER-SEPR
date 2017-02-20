@@ -10,7 +10,7 @@ public class Casino : MonoBehaviour {
 	/// <summary>
 	/// The max win percentage.
 	/// </summary>
-	private int maxWinPercentage;
+	public int maxWinPercentage{ private set; get; }
 
 	/// <summary>
 	/// Percentage of the time you win the gamble.

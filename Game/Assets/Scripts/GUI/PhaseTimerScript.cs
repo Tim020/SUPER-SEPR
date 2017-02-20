@@ -30,12 +30,12 @@ public class PhaseTimerScript : MonoBehaviour {
 		Debug.Log("Hide");
 		timerBoxAnimator.SetBool("timerBoxVisible", false);
 	}
-	
+
 	/// <summary>
 	/// Update this instance.
 	/// </summary>
 	void Update() {
-		if (GameHandler.GetGameManager().GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION || GameHandler.GetGameManager().GetCurrentState() == Data.GameState.ROBOTICON_PLACEMENT) {
+		if (GameManager.instance.GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION || GameManager.instance.GetCurrentState() == Data.GameState.ROBOTICON_PLACEMENT) {
 			timerBoxText.text = "Time Remaining: " + GameHandler.GetGameManager().GetPhaseTimeRemaining().ToString() + "s";
 		}
 	}
