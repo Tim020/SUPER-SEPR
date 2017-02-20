@@ -4,6 +4,7 @@
 using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 /// <summary>
 /// Unit tests for the agent hierarchy .
@@ -720,7 +721,6 @@ public class AgentTests {
 	/// </summary>
 	[TestFixture]
 	public class AITests {
-		//TODO: Write some AI tests.
 
 		/// <summary>
 		/// Tile acquisition tests.
@@ -744,6 +744,11 @@ public class AgentTests {
 			AbstractPlayer dummyAI;
 
 			/// <summary>
+			/// The threshold.
+			/// </summary>
+			int threshold = -1;
+
+			/// <summary>
 			/// Setup this instance.
 			/// </summary>
 			[SetUp]
@@ -751,6 +756,15 @@ public class AgentTests {
 				dummyMarket = new DummyMarket();
 				dummyMap = new DummyMap();
 				dummyAI = new DummyAI(new ResourceGroup(50, 50, 50), 0, "Dummy AI", 500, dummyMap, dummyMarket);
+
+				foreach (DummyTile t in dummyMap.GetTiles()) {
+					if (threshold == -1) {
+						threshold = t.GetPrice();
+					} else if (t.GetPrice() < threshold) {
+						threshold = t.GetPrice();
+					}
+				}
+
 			}
 
 			/// <summary>
@@ -770,8 +784,182 @@ public class AgentTests {
 				dummyAI.SetMoney(0);
 				try {
 					dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
-				} catch ()
-					Assert.AreEqual(0, dummyAI.GetOwnedTiles().Count);
+				} catch (ArgumentException) {
+					Assert.Pass();
+				} catch (Exception) {
+					Assert.Fail();
+				}
+			}
+
+			/// <summary>
+			/// Checks that the AI acquires the optimal tile.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_OptimalTile() {
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				List<DummyTile> tiles = dummyMap.GetTiles();
+				DummyTile expected = null;
+
+				foreach (DummyTile t in tiles) {
+					if (expected == null) {
+						expected = t;
+					} else if ((expected.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - expected.GetPrice() < 
+						(t.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - t.GetPrice()) {
+						expected = t;
+					}
+				}
+					
+				Assert.AreEqual(expected.GetID(), dummyAI.GetOwnedTiles()[0].GetID());
+			}
+
+			/// <summary>
+			/// Checks that the AI acquires the optimal tile with money constraints.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_BuyThresholdTile() {
+				dummyAI.SetMoney(threshold);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				List<DummyTile> tiles = dummyMap.GetTiles().FindAll(t => t.GetPrice() == threshold);
+				DummyTile expected = null;
+			
+				foreach (DummyTile t in tiles) {
+					if (expected == null) {
+						expected = t;
+					} else if ((expected.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - expected.GetPrice() < 
+						(t.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - t.GetPrice()) {
+						expected = t;
+					}
+				}
+					
+				Assert.AreEqual(expected.GetID(), dummyAI.GetOwnedTiles()[0].GetID());
+			}
+
+		}
+
+		[TestFixture]
+		public class RoboticonPurchaseTests {
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market dummyMarket;
+
+			/// <summary>
+			/// The dummy map.
+			/// </summary>
+			DummyMap dummyMap;
+
+			/// <summary>
+			/// The dummy AI.
+			/// </summary>
+			AbstractPlayer dummyAI;
+
+			/// <summary>
+			/// The dummy roboticon.
+			/// </summary>
+			Roboticon dummyRoboticon;
+
+			/// <summary>
+			/// The threshold.
+			/// </summary>
+			int threshold;
+
+			[SetUp]
+			public void Setup() {
+				dummyMarket = new DummyMarket();
+				dummyMap = new DummyMap();
+				dummyAI = new DummyAI(new ResourceGroup(50, 50, 50), 0, "Dummy AI", 500, dummyMap, dummyMarket);
+
+				foreach (DummyTile t in dummyMap.GetTiles()) {
+					if (threshold == -1) {
+						threshold = t.GetPrice();
+					} else if (t.GetPrice() < threshold) {
+						threshold = t.GetPrice();
+					}
+				}
+
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+			}
+
+			/// <summary>
+			/// Checks that the roboticon can purchase a roboticon
+			/// </summary>
+			[Test]
+			public void Roboticon_Aqcuistion() {
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION);
+				Assert.AreEqual(1, dummyAI.GetRoboticons().Count);
+			}
+
+			/// <summary>
+			/// Checks that the AI doesn't purchase a tile when it doesn't have enough money.
+			/// </summary>
+			[Test]
+			public void Roboticon_AqcuistionNotEnoughMoney() {
+				dummyAI.SetMoney(14);
+				Assert.AreEqual(0, dummyAI.GetRoboticons().Count);
+			}
+
+			/// <summary>
+			/// Checks that the AI won't buy a roboticon if it would mean breakign the threshold (min amount of funds).
+			/// </summary>
+			[Test]
+			public void Roboticon_AqcuisitionThreshold() {
+				List<DummyTile> tiles = dummyMap.GetTiles();
+				dummyAI.SetMoney(threshold);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION);
+				Assert.AreEqual(0, dummyAI.GetRoboticons().Count);
+			}
+
+		}
+
+		[TestFixture]
+		public class RoboticonUpgradeTests {
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market dummyMarket;
+
+			/// <summary>
+			/// The dummy map.
+			/// </summary>
+			DummyMap dummyMap;
+
+			/// <summary>
+			/// The dummy AI.
+			/// </summary>
+			AbstractPlayer dummyAI;
+
+			/// <summary>
+			/// The dummy roboticon.
+			/// </summary>
+			Roboticon dummyRoboticon;
+
+			/// <summary>
+			/// The threshold.
+			/// </summary>
+			int threshold;
+
+			[SetUp]
+			public void Setup() {
+				dummyMarket = new DummyMarket();
+				dummyMap = new DummyMap();
+				dummyAI = new DummyAI(new ResourceGroup(50, 50, 50), 0, "Dummy AI", 500, dummyMap, dummyMarket);
+
+				foreach (DummyTile t in dummyMap.GetTiles()) {
+					if (threshold == -1) {
+						threshold = t.GetPrice();
+					} else if (t.GetPrice() < threshold) {
+						threshold = t.GetPrice();
+					}
+				}
+
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+			}
+
+			[Test]
+			public void RoboticonUpgrade_ApplicationSingleTile() {
+
 			}
 
 		}

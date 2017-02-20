@@ -158,7 +158,7 @@ public class AIPlayer : AbstractPlayer {
 
 		foreach (Tile t in availableTiles) {
 			current = ScoreTile(t);
-			if (current > best && current.tile.GetPrice() <= money - 15) {
+			if (current > best) {
 				best = current;
 			}
 		}

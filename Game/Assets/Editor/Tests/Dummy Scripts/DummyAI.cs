@@ -58,7 +58,7 @@ public class DummyAI : AIPlayer {
 			break;
 		case Data.GameState.ROBOTICON_CUSTOMISATION:
 			if (ShouldPurchaseRoboticon()) {
-				currentRoboticon = GameHandler.GetGameManager().market.BuyRoboticon(this);
+				currentRoboticon = market.BuyRoboticon(this);
 			}
 			break;
 		case Data.GameState.ROBOTICON_PLACEMENT:
@@ -85,8 +85,8 @@ public class DummyAI : AIPlayer {
 				//Decided not to upgrade a roboticon
 			}
 			if (!firstPhase) {
-				avgMarketSellingPrice = (avgMarketSellingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
-				avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceBuyingPrices()) / 2;
+				avgMarketSellingPrice = (avgMarketSellingPrice + market.GetResourceSellingPrices()) / 2;
+				avgMarketBuyingPrice = (avgMarketBuyingPrice + market.GetResourceBuyingPrices()) / 2;
 				ManageTrades();
 				UpdateSellingPrediction();
 				SellToMarket();
@@ -97,8 +97,8 @@ public class DummyAI : AIPlayer {
 				MakeTrade();
 			} else {
 				firstPhase = false;
-				avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-				avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+				avgMarketSellingPrice = market.GetResourceSellingPrices();
+				avgMarketBuyingPrice = market.GetResourceBuyingPrices();
 			}
 			break;
 		}
@@ -115,7 +115,7 @@ public class DummyAI : AIPlayer {
 		ResourceGroup weighting = market.GetResourceBuyingPrices();
 		int tileScore = (tile.GetBaseResourcesGenerated() * weighting).Sum();
 		tileScore -= tile.GetPrice();
-		if (money - tile.GetPrice() < moneyThreshold) {
+		if (money - tile.GetPrice() < moneyThreshold && tile.GetPrice() != moneyThreshold) {
 			tileScore = -999;
 		}
 		scoredTile = new TileChoice(tile, tileScore);
@@ -128,10 +128,9 @@ public class DummyAI : AIPlayer {
 	/// <returns><c>true</c>, if the AI should purchase a roboticon <c>false</c> otherwise.</returns>
 	protected override bool ShouldPurchaseRoboticon() {
 		List<Tile> unmannedTiles = GetUnmannedTiles();
-
-		if (GameHandler.GetGameManager().market.GetNumRoboticonsForSale() == 0) {
+		if (market.GetNumRoboticonsForSale() == 0) {
 			return false;
-		} else if (unmannedTiles.Count > 0 && money - GameHandler.GetGameManager().market.GetRoboticonSellingPrice() >= moneyThreshold) {
+		} else if (unmannedTiles.Count > 0 && money - market.GetRoboticonSellingPrice() > moneyThreshold) {
 			return true;
 		} else {
 			return false;
@@ -354,7 +353,6 @@ public class DummyAI : AIPlayer {
 	/// <exception cref="System.Exception">Thrown when the tile is already owned by another player.</exception>
 	/// <exception cref="System.Exception">Thrown when the player does not have enough money to purchase the tile.</exception>
 	public override void AcquireTile(Tile tile) {
-		Debug.Log("called acquire");
 		if (!ownedTiles.Contains(tile)) {
 			ownedTiles.Add(tile);
 			tile.SetOwner(this);
