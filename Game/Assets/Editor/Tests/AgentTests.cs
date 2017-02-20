@@ -776,11 +776,6 @@ public class AgentTests {
 	}
 
 	[TestFixture]
-	public class CasinoTests {
-
-	}
-
-	[TestFixture]
 	public class GameManager {
 
 	}
