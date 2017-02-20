@@ -10,6 +10,9 @@ public class RoboticonRandomTreasure : RandomEvent {
     /// </summary>
     public override void InvokeEvent() {
         AbstractPlayer player = (AbstractPlayer)GameManager.instance.players[UnityEngine.Random.Range(0, GameManager.instance.players.Count)];
+		if(player.GetRoboticons().Count == 0){
+			return;
+		}
         ResourceGroup resources = player.GetResources();
         int resourceType = Random.Range(0, 3);
         string message = "+";
@@ -32,5 +35,6 @@ public class RoboticonRandomTreasure : RandomEvent {
         thisEvent.SetActive(true);
         thisEvent.GetComponentInChildren<Text>().text = "One of "+ player.GetName() + "'s roboticons have stumbled acorss a hidden treasure, " + message;
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
+		GameManager.instance.GetHumanPlayer().GetHumanGui().UpdateResourceBar();
     }
 }

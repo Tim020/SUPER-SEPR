@@ -84,6 +84,7 @@ public class AIPlayer : AbstractPlayer {
 				}
 				break;
 			case Data.GameState.AUCTION:
+				//this may be an issue you done gooffed
 				try {
 					if (ShouldUpgrade()) {
 						Data.Tuple<Roboticon, ResourceGroup> upgrade = ChooseUpgrade();
@@ -108,6 +109,7 @@ public class AIPlayer : AbstractPlayer {
 					avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
 					avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 				}
+				Debug.Log(name + " | money : " + money.ToString() + " post :" + state.ToString());
 				break;
 		}
 		// This must be done to signify the end of the AI turn.
@@ -356,6 +358,7 @@ public class AIPlayer : AbstractPlayer {
 		ResourceGroup[] history = GetMarketBuyingPriceHistory();
 		ResourceGroup currentChange = history[history.Length - 1];
 		currentPrediction = new Data.Tuple<ResourcePrediction, ResourcePrediction>(Prediction(GetPriceDifference(history), currentChange), currentPrediction.Tail);
+		Debug.Log("Selling prediction " + name + " : " + currentPrediction.Head.food + ", " + currentPrediction.Head.energy + ", " + currentPrediction.Head.ore);
 	}
 
 	/// <summary>
@@ -379,7 +382,7 @@ public class AIPlayer : AbstractPlayer {
 			} else if (currentPrediction.Head.GetResource(t) <= 0.25) {
 				continue;
 				//otherwise the AI gambles on whether to sell or not
-			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
+			} else if (Random.Range(0f, 1f) < currentPrediction.Head.GetResource(t)) {
 				sellingAmounts.SetResource(t, 0);
 			}
 		}
@@ -432,7 +435,7 @@ public class AIPlayer : AbstractPlayer {
 			} else if (currentPrediction.Tail.GetResource(t) <= 0.25 && Random.Range(0, 1) > currentPrediction.Tail.GetResource(t)) {
 				continue;
 				//otherwise the AI gambles on whether to buy or not
-			} else if (Random.Range(0, 1) < currentPrediction.Head.GetResource(t)) {
+			} else if (Random.Range(0f, 1f) < currentPrediction.Head.GetResource(t)) {
 				buyingAmounts.SetResource(t, 0);
 			}
 		}
@@ -441,6 +444,11 @@ public class AIPlayer : AbstractPlayer {
 			buyingAmounts = new ResourceGroup(Mathf.Max(buyingAmounts.food - 1, 0), Mathf.Max(buyingAmounts.energy - 1, 0), Mathf.Max(buyingAmounts.ore - 1, 0));
 		}
 
+		//ensures the ai doesn't try to buy more resources than there are
+		foreach (Data.ResourceType t in types) {
+			buyingAmounts.SetResource(t, Math.Min(market.GetResourceAmount(t), buyingAmounts.GetResource(t)));
+		}
+			
 		market.BuyFrom(this, buyingAmounts);
 	}
 

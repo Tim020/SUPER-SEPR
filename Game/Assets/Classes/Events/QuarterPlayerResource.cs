@@ -24,5 +24,6 @@ public class QuarterPlayerResource : RandomEvent {
         thisEvent.SetActive(true);
 		thisEvent.GetComponentInChildren<Text>().text = player.GetName() + "'s resources have just decreased by a quarter!";
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
+		GameManager.instance.GetHumanPlayer().GetHumanGui().UpdateResourceBar();
     }
 }

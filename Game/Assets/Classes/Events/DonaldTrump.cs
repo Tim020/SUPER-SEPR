@@ -19,5 +19,6 @@ public class DonaldTrump : RandomEvent {
         GameObject thisEvent = events.Find("DonaldTrump").gameObject;
         thisEvent.SetActive(true);
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
+		GameManager.instance.GetHumanPlayer().GetHumanGui().UpdateResourceBar();
     }
 }

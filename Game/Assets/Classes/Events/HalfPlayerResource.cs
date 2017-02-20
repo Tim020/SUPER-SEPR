@@ -20,5 +20,6 @@ public class HalfPlayerResource : RandomEvent {
         thisEvent.SetActive(true);
 		thisEvent.GetComponentInChildren<Text>().text = player.GetName() + "'s resources have just halfed!";
         thisEvent.GetComponent<ShowHideEventUI>().StartEvent();
+		GameManager.instance.GetHumanPlayer().GetHumanGui().UpdateResourceBar();
     }
 }

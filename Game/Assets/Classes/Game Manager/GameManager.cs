@@ -208,6 +208,8 @@ public class GameManager : Object {
 					p.StartPhase(state);
 				}
 				CalculateAndDisplayWinner();
+				UnityEngine.Debug.Log("Final market info: \n\tSelling Prices: " + market.GetResourceSellingPrices() + "\n\tBuying Prices: " + market.GetResourceBuyingPrices() + "\n\tMoney: " + market.GetMoney());
+				firstTick = false;
 			}
 		}
 	}
@@ -273,8 +275,10 @@ public class GameManager : Object {
 		AbstractPlayer winner = null;
 		if (CheckWinCondition()) {
 			foreach (AbstractPlayer p in players.Values) {
-				if (p.CalculateScore() >= topScore) {
-					topScore = p.CalculateScore();
+				int score = p.CalculateScore();
+				UnityEngine.Debug.Log(p.GetName() + ": " + score);
+				if (score >= topScore) {
+					topScore = score;
 					winner = p;
 				}
 			}
