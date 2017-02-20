@@ -578,7 +578,7 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>A list of the available tiles.</returns>
 	protected virtual Tile[] GetAvailableTiles() {
-		return GameHandler.GetGameManager().GetMap().GetTiles().FindAll(t => t.GetOwner() == null).ToArray();
+		return GameHandler.GetGameManager().GetMap().GetTiles().FindAll(t => t.GetOwner() == null && t.GetPrice() < Mathf.Max(money - moneyThreshold, moneyThreshold)).ToArray();
 	}
 
 	/// <summary>
