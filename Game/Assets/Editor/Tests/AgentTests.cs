@@ -111,7 +111,7 @@ public class AgentTests {
 				testMarket = new DummyMarket();
 				//set resources to make testing simpler
 				testMarket.SetResources(new ResourceGroup(16, 16, 16));
-				player = new HumanPlayer(null, 0, "TestPlayer", 0);
+				player = new DummyPlayer(null, 0, "TestPlayer", 0);
 				player.SetMoney(9999);
 				player.SetResources(new ResourceGroup(9999, 9999, 9999));
 			}
@@ -214,7 +214,7 @@ public class AgentTests {
 				testMarket = new DummyMarket();
 				//set resources to make testing simpler
 				testMarket.SetResources(new ResourceGroup(16, 16, 16));
-				player = new HumanPlayer(null, 0, "TestPlayer", 0);
+				player = new DummyPlayer(null, 0, "TestPlayer", 0);
 				player.SetMoney(9999);
 				player.SetResources(new ResourceGroup(9999, 9999, 9999));
 			}
@@ -356,7 +356,7 @@ public class AgentTests {
 			/// <summary>
 			/// The test human.
 			/// </summary>
-			HumanPlayer testHuman;
+			DummyPlayer testHuman;
 
 			/// <summary>
 			/// The test tile.
@@ -369,7 +369,7 @@ public class AgentTests {
 			[SetUp]
 			public void Setup() {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				testHuman = new HumanPlayer(testResources, 0, "Test", 500);
+				testHuman = new DummyPlayer(testResources, 0, "Test", 500);
 				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 			}
 
@@ -408,7 +408,7 @@ public class AgentTests {
 			/// <summary>
 			/// The test human.
 			/// </summary>
-			HumanPlayer testHuman;
+			DummyPlayer testHuman;
 
 
 			/// <summary>
@@ -423,7 +423,7 @@ public class AgentTests {
 			[SetUp]
 			public void Setup() {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				testHuman = new HumanPlayer(testResources, 0, "Test", 500);
+				testHuman = new DummyPlayer(testResources, 0, "Test", 500);
 				testRoboticon = new Roboticon();
 			}
 
@@ -463,7 +463,7 @@ public class AgentTests {
 			/// <summary>
 			/// The test human.
 			/// </summary>
-			HumanPlayer testHuman;
+			DummyPlayer testHuman;
 
 			/// <summary>
 			/// The test roboticon.
@@ -481,7 +481,7 @@ public class AgentTests {
 			[SetUp]
 			public void Setup() {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				testHuman = new HumanPlayer(testResources, 0, "Test", 500);
+				testHuman = new DummyPlayer(testResources, 0, "Test", 500);
 				testRoboticon = new Roboticon();
 				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 				testHuman.AcquireRoboticon(testRoboticon);
@@ -531,7 +531,7 @@ public class AgentTests {
 			/// <summary>
 			/// The test human.
 			/// </summary>
-			HumanPlayer testHuman;
+			DummyPlayer testHuman;
 
 			/// <summary>
 			/// The test roboticon.
@@ -549,7 +549,7 @@ public class AgentTests {
 			[SetUp]
 			public void Setup() {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				testHuman = new HumanPlayer(testResources, 0, "Test", 500);
+				testHuman = new DummyPlayer(testResources, 0, "Test", 500);
 				testRoboticon = new Roboticon();
 				testHuman.AcquireRoboticon(testRoboticon);
 			}

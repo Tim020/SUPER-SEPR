@@ -92,7 +92,7 @@ public abstract class AbstractPlayer : Agent {
 	/// </summary>
 	/// <param name="tile">The tile the player wishes to acquire.</param>
 	/// <exception cref="System.Exception">Thrown when the tile is already owned by another player.</exception>
-	public void AcquireTile(Tile tile) {
+	public virtual void AcquireTile(Tile tile) {
 		if (!ownedTiles.Contains(tile)) {
 			ownedTiles.Add(tile);
 			tile.SetOwner(this);
