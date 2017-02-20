@@ -150,14 +150,6 @@ public class Market : Agent {
 	}
 
 	/// <summary>
-	/// Updates global market supply when the user buys from the market
-	/// </summary>
-	/// <param name="resourcesToBuy"></param>
-	public void UpdateMarketSupplyOnBuy(ResourceGroup resourcesToBuy) {
-		runningTotal -= resourcesToBuy;
-	}
-
-	/// <summary>
 	/// Sell resources to the market.
 	/// </summary>
 	/// <param name="player">The player selling to the market.</param>
@@ -178,6 +170,14 @@ public class Market : Agent {
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
+	}
+
+	/// <summary>
+	/// Updates global market supply when the user buys from the market
+	/// </summary>
+	/// <param name="resourcesToBuy"></param>
+	public void UpdateMarketSupplyOnBuy(ResourceGroup resourcesToBuy) {
+		runningTotal -= resourcesToBuy;
 	}
 
 	///<summary>

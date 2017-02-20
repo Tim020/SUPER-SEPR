@@ -37,7 +37,7 @@ public abstract class AbstractPlayer : Agent {
 	protected List<Tile> ownedTiles = new List<Tile>();
 
 	/// <summary>
-	/// Calculates the score for the player by adding score from tile resources, roboticons, player resources and money.
+	/// NEW: Calculates the score for the player by adding score from tile resources, roboticons, player resources and money.
 	/// This is in effect calculating the net worth of the player.
 	/// </summary>
 	/// <returns> The player's score </returns>
@@ -59,6 +59,7 @@ public abstract class AbstractPlayer : Agent {
 
 	/// <summary>
 	/// Adds the total resources for all tiles owned by the player to the player's resources.
+	/// New: Change market supply
 	/// </summary>
 	public void Produce() {
 		ResourceGroup r = CalculateTotalResourcesGenerated();
@@ -81,6 +82,7 @@ public abstract class AbstractPlayer : Agent {
 
 	/// <summary>
 	/// Acquires the given tile.
+	/// NEW: Checks for funds, deducts funds from the player and gives money to the market.
 	/// </summary>
 	/// <param name="tile">The tile the player wishes to acquire.</param>
 	/// <exception cref="System.Exception">Thrown when the tile is already owned by another player.</exception>
@@ -118,6 +120,7 @@ public abstract class AbstractPlayer : Agent {
 
 	/// <summary>
 	/// Adds the roboticon to the list of ones owned by the player.
+	/// NEW: Check to make sure you can't acquire the same roboticon more than once.
 	/// </summary>
 	/// <param name="roboticon">The Roboticon being purchased.</param>
 	/// <exception cref="System.ArgumentException">When trying to acquire an owned roboticon</exception>
@@ -131,7 +134,7 @@ public abstract class AbstractPlayer : Agent {
 
 	/// <summary>
 	/// Upgrades the given roboticon.
-	/// TODO: This probably shouldn't be here
+	/// NEW: Checks the roboticon is owned by this player and not someone else's
 	/// </summary>
 	/// <param name="roboticon">The Roboticon.</param>
 	/// <param name="upgrade">The ResourceGroup indicating upgrade values.</param>
@@ -172,7 +175,7 @@ public abstract class AbstractPlayer : Agent {
 	}
 
 	/// <summary>
-	/// Called on the first tick of each new phase.
+	/// NEW: Called on the first tick of each new phase.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public abstract void StartPhase(Data.GameState state);
@@ -197,8 +200,8 @@ public abstract class AbstractPlayer : Agent {
 	/// Serves as a hash function for a particular type.
 	/// </summary>
 	/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
-	public override int GetHashCode () {
-		return playerID.GetHashCode ();
+	public override int GetHashCode() {
+		return playerID.GetHashCode();
 	}
 
 }

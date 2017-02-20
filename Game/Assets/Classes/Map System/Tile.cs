@@ -50,7 +50,6 @@ public class Tile {
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Tile"/> class.
-	/// TODO: Probably doesn't need to be passed the mapDimensions, instead consider a static reference to somewhere in the map class.
 	/// </summary>
 	/// <param name="resources">The resources to produce.</param>
 	/// <param name="mapDimensions">The map dimensions.</param>
@@ -139,7 +138,6 @@ public class Tile {
 	/// </summary>
 	/// <returns>The price of the tile.</returns>
 	public int GetPrice() {
-		//TODO: What is this??
 		return (resourcesGenerated * new ResourceGroup(10, 10, 10)).Sum();
 	}
 
@@ -199,6 +197,7 @@ public class Tile {
 	}
 
 	/// <summary>
+	/// NEW: Moved the original TileGraphic class to be an inner class of Tile.
 	/// Class representing the graphical overlay of a tile.
 	/// </summary>
 	public class TileGraphic {

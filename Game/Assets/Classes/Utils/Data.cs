@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//NEW: Entirely new class, most of data from GameManager moved into here.
 public class Data {
 
 	/// <summary>
-	/// Types of resources available in the game
+	/// NEW: Types of resources available in the game
 	/// </summary>
 	public enum ResourceType {
 		ORE,
@@ -87,7 +88,7 @@ public class Data {
 	}
 
 	/// <summary>
-	/// A generic Tuple.
+	/// NEW: A generic Tuple.
 	/// </summary>
 	public class Tuple<T1 , T2> {
 

@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: This probably needs a meaningful name and a new folder location
-//TODO: Needs a rewrite based on the new requirement for only having one player
+//NEW: Moved this class into a different location.
+//NEW: Moved all market logic out of here.
 public class HumanGui {
 
 	/// <summary>
@@ -53,6 +53,8 @@ public class HumanGui {
 
 	/// <summary>
 	/// Displays the correct GUI configuration for the given game state.
+	/// NEW: Shows the phase timer dropdown box if in the customisation or installation phase.
+	/// NEW: Disables the main UI when the game is over.
 	/// </summary>
 	/// <param name="phase">The current phase of the game.</param>
 	public void DisplayGui(Data.GameState phase) {
@@ -63,6 +65,7 @@ public class HumanGui {
 		if (phase == Data.GameState.ROBOTICON_CUSTOMISATION || phase == Data.GameState.ROBOTICON_PLACEMENT) {
 			ShowPhaseTimerBox();
 		}
+
 		if (phase == Data.GameState.GAME_OVER) {
 			canvas.DisableMainGui();
 		}
@@ -94,6 +97,7 @@ public class HumanGui {
 
 	/// <summary>
 	/// Disables the GUI.
+	/// NEW: Hides all UI elements.
 	/// </summary>
 	public void DisableGui() {
 		UpdateResourceBar();
@@ -105,10 +109,10 @@ public class HumanGui {
 		canvas.HideMarketWindow();
 		canvas.HideTileInfoWindow();
 	}
-	//private Market market;
 
 	/// <summary>
 	/// Purchases a given tile.
+	/// NEW: Don't handle purchase logic here anymore.
 	/// </summary>
 	/// <param name="tile">The tile to purchase.</param>
 	public void PurchaseTile(Tile tile) {
@@ -147,7 +151,7 @@ public class HumanGui {
 
 	/// <summary>
 	/// Installs the roboticon.
-	/// TODO: This probably shouldn't be here as it is not tied to the UI.
+	/// NEW: Moved all puchase logic out of here and into market.
 	/// </summary>
 	/// <returns><c>true</c>, if roboticon was installed, <c>false</c> otherwise.</returns>
 	/// <param name="roboticon">Roboticon.</param>

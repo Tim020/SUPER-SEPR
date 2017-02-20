@@ -18,7 +18,7 @@ public class HumanPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Sets up the GUI elements
+	/// NEW: Sets up the GUI elements
 	/// </summary>
 	/// <param name="gui">The HumanGui interface class.</param>
 	/// <param name="canvas">The actual UI script.</param>
@@ -30,7 +30,7 @@ public class HumanPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Act based on the specified state.
+	/// NEW: Act based on the specified state.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state) {
@@ -40,7 +40,7 @@ public class HumanPlayer : AbstractPlayer {
 	}
 
 	/// <summary>
-	/// Gets the GUI element for this player.
+	/// NEW: Gets the GUI element for this player.
 	/// </summary>
 	/// <returns>The main GUI overlay.</returns>
 	public HumanGui GetHumanGui() {

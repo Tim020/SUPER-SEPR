@@ -7,6 +7,7 @@ using UnityEngine;
 
 /// <summary>
 /// Pure data class to handle things to do with the game - the GameManager instance and saving and loading
+/// CHANGED: Removed saving and loading as a change to the requiements.
 /// </summary>
 public static class GameHandler {
 

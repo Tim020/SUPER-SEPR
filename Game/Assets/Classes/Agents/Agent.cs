@@ -30,7 +30,7 @@ public abstract class Agent {
 	}
 
 	/// <summary>
-	/// Gets the amount of a specific resource.
+	/// NEW: Gets the amount of a specific resource.
 	/// </summary>
 	/// <param name="type">The resource type.</param>
 	/// <exception cref="System.ArgumentException">If the specified type is <c>Data.ResourceType.NONE</c></exception>
@@ -52,7 +52,7 @@ public abstract class Agent {
 	}
 
 	/// <summary>
-	/// Deducts an amount of the specified resouce from the player
+	/// NEW: Deducts an amount of the specified resouce from the player
 	/// If the amount specified is greater than the player has then it will remove all the possible resources from the player - TODO: This may not be desired
 	/// </summary>
 	/// <param name="type">Type of resource</param>
@@ -79,7 +79,7 @@ public abstract class Agent {
 	}
 
 	/// <summary>
-	/// Gives the player an amount of this resouce.
+	/// NEW: Gives the player an amount of this resouce.
 	/// </summary>
 	/// <param name="type">Type of resource to give the player</param>
 	/// <param name="amount">Amount of resource to give</param>
@@ -121,7 +121,7 @@ public abstract class Agent {
 	}
 
 	/// <summary>
-	/// Deducts a specified amount of money
+	/// NEW: Deducts a specified amount of money
 	/// </summary>
 	/// <param name="moneyToDeduct">Money to deduct.</param>
 	public void DeductMoney(int moneyToDeduct) {
@@ -131,7 +131,7 @@ public abstract class Agent {
 	}
 
 	/// <summary>
-	/// Gives a specified amount of money.
+	/// NEW: Gives a specified amount of money.
 	/// </summary>
 	/// <param name="moneyToGive">Money to give.</param>
 	public void GiveMoney(int moneyToGive) {

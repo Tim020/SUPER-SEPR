@@ -121,7 +121,7 @@ public class GameManager : Object {
 
 	/// <summary>
 	/// Update this instance.
-	/// State machine to handle the transition between game phases.
+	/// NEW: State machine to handle the transition between game phases.
 	/// </summary>
 	public void Update() {
 		if (state == Data.GameState.GAME_WAIT) {
@@ -216,7 +216,7 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Called when the player has finished their turn for a particular phase.
+	/// NEW: Called when the player has finished their turn for a particular phase.
 	/// </summary>
 	/// <param name="state">The state that was completed.</param>
 	/// <param name="args">Optional arguments.</param>
@@ -298,7 +298,8 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Use the event factory instance to try and make a random event occur. There is a chance an event will not occur.
+	/// NEW: Use the event factory instance to try and make a random event occur.
+	/// There is a chance an event will not occur.
 	/// </summary>
 	private void TryRandomEvent() {
 		randomEventFactory.StartEvent();
@@ -313,7 +314,7 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Gets the human player in this game.
+	/// NEW: Gets the human player in this game.
 	/// </summary>
 	/// <returns>The human player.</returns>
 	public HumanPlayer GetHumanPlayer() {
@@ -321,7 +322,7 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Gets the elapsed time of the timer in seconds.
+	/// NEW: Gets the elapsed time of the timer in seconds.
 	/// </summary>
 	/// <returns>Elapsed time in seconds.</returns>
 	public int GetTimerInSeconds() {
@@ -329,7 +330,7 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// Gets the remaining time for the current phase.
+	/// NEW: Gets the remaining time for the current phase.
 	/// </summary>
 	/// <returns>Remaining time in seconds.</returns>
 	public int GetPhaseTimeRemaining() {

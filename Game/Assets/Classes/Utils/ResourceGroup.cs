@@ -43,30 +43,36 @@ public class ResourceGroup {
 		return new ResourceGroup(r1.GetFood() * r2.GetFood(), r1.GetEnergy() * r2.GetEnergy(), r1.GetOre() * r2.GetOre());
 	}
 
+	// NEW
 	public static ResourceGroup operator /(ResourceGroup r1, ResourceGroup r2) {
 		return new ResourceGroup(r1.GetFood() / r2.GetFood(), r1.GetEnergy() / r2.GetEnergy(), r1.GetOre() / r2.GetOre());
 	}
 
+	// NEW
 	public static ResourceGroup operator -(ResourceGroup r, int c) {
 		return new ResourceGroup(r.GetFood() - c, r.GetEnergy() - c, r.GetOre() - c);
 	}
-
+		
 	public static ResourceGroup operator *(ResourceGroup r, int c) {
 		return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
 	}
 
+	// NEW
 	public static ResourceGroup operator *(int c, ResourceGroup r) {
 		return new ResourceGroup(r.GetFood() * c, r.GetEnergy() * c, r.GetOre() * c);
 	}
 
+	// NEW
 	public static ResourceGroup operator *(ResourceGroup r, float c) {
 		return new ResourceGroup(Mathf.RoundToInt(r.GetFood() * c), Mathf.RoundToInt(r.GetEnergy() * c), Mathf.RoundToInt(r.GetOre() * c));
 	}
 
+	// NEW
 	public static ResourceGroup operator *(float c, ResourceGroup r) {
 		return new ResourceGroup(Mathf.RoundToInt(r.GetFood() * c), Mathf.RoundToInt(r.GetEnergy() * c), Mathf.RoundToInt(r.GetOre() * c));
 	}
 
+	// NEW
 	public static ResourceGroup operator /(ResourceGroup r, int c) {
 		return new ResourceGroup(r.GetFood() / c, r.GetEnergy() / c, r.GetOre() / c);
 	}
@@ -106,7 +112,7 @@ public class ResourceGroup {
 	}
 
 	/// <summary>
-	/// Gets the specified resource.
+	/// NEW: Gets the specified resource.
 	/// </summary>
 	/// <returns>The resource.</returns>
 	/// <param name="resource">Resource.</param>
@@ -128,7 +134,7 @@ public class ResourceGroup {
 	}
 
 	/// <summary>
-	/// Sets the specified resource.
+	/// NEW: Sets the specified resource.
 	/// </summary>
 	/// <param name="resource">The resource.</param>
 	/// <param name="value">The new value.</param>
@@ -181,7 +187,7 @@ public class ResourceGroup {
 	}
 
 	/// <summary>
-	/// Clone this instance.
+	/// NEW: Clone this instance.
 	/// </summary>
 	public ResourceGroup Clone() {
 		return new ResourceGroup(this.food, this.energy, this.ore);

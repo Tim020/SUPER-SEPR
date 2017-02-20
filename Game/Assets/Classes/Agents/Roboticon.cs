@@ -5,14 +5,13 @@ using Random = UnityEngine.Random;
 
 public class Roboticon {
 
-	//TODO - Get correct valuation of an upgrade - Placeholder 50 per upgrade
 	/// <summary>
 	/// The amount of money needed to upgrade once.
 	/// </summary>
 	public const int UPGRADE_VALUE = 50;
 
 	/// <summary>
-	/// The production values of the Roboticon.
+	/// NEW: The production values of the Roboticon.
 	/// </summary>
 	private ResourceGroup productionValues;
 
@@ -27,10 +26,8 @@ public class Roboticon {
 	private bool isInstalledToTile;
 
 	/// <summary>
-	/// Resourcegroup to store the initial production values of a robiticon to work out upgrades from
-	/// ToDO : Should this be private? @tim?
+	/// NEW: Resourcegroup to store the initial production values of a robiticon to work out upgrades from
 	/// </summary>
-
 	private ResourceGroup initialProductionValues;
 
 	/// <summary>
@@ -65,7 +62,7 @@ public class Roboticon {
 	}
 
 	/// <summary>
-	/// Upgrade the roboticon wit the specified upgrades.
+	/// NEW: Upgrade the roboticon wit the specified upgrades.
 	/// </summary>
 	/// <param name="upgrades">The upgrades to apply.</param>
 	/// <exception cref="System.ArgumentException">When an upgrade contains a negative value</exception>
@@ -78,6 +75,7 @@ public class Roboticon {
 
 	/// <summary>
 	/// Downgrade the specified roboticon with the specified resource amounts.
+	/// NEW: Added checks to make sure you can't downgrade by a negative amount.
 	/// </summary>
 	/// <param name="downgrades">Downgrades.</param>
 	/// /// <exception cref="System.ArgumentException">When a downgrade contains a negative value</exception>
@@ -97,13 +95,17 @@ public class Roboticon {
 	}
 
 	/// <summary>
-	/// Get the upgrade pattern on this roboticon.
+	/// NEW: Get the upgrades on this roboticon.
 	/// </summary>
-	/// <returns>The upgrade pattern.</returns>
+	/// <returns>The upgraded production values.</returns>
 	public ResourceGroup GetProductionValues() {
 		return productionValues;
 	}
 
+	/// <summary>
+	/// NEW: Gets the initial production values.
+	/// </summary>
+	/// <returns>The initial production values.</returns>
 	public ResourceGroup GetInitialProductionValues() {
 		return initialProductionValues;
 	}
