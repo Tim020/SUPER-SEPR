@@ -106,7 +106,7 @@ public class GameManager : Object {
 		players.Add(0, human);
 		players.Add(1, ai);
 		//this was used for testing purposes
-		//players.Add(2, new AIPlayer(new ResourceGroup(50, 50, 50), 2, "AI2", 200));
+		players.Add(2, new AIPlayer(new ResourceGroup(50, 50, 50), 2, "AI2", 200));
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
@@ -133,7 +133,7 @@ public class GameManager : Object {
 		} else if (state == Data.GameState.TILE_PURCHASE) {
 			if (firstTick) {
 				firstTick = false;
-				currentPlayer.StartPhase(state);
+				currentPlayer.StartPhase(state, completePhaseCycles);
 			}
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
 			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
@@ -141,7 +141,7 @@ public class GameManager : Object {
 			} else {
 				if (firstTick) {
 					firstTick = false;
-					currentPlayer.StartPhase(state);
+					currentPlayer.StartPhase(state, completePhaseCycles);
 				}
 			}
 		} else if (state == Data.GameState.ROBOTICON_PLACEMENT) {
@@ -150,13 +150,13 @@ public class GameManager : Object {
 			} else {
 				if (firstTick) {
 					firstTick = false;	
-					currentPlayer.StartPhase(state);
+					currentPlayer.StartPhase(state, completePhaseCycles);
 				}
 			}
 		} else if (state == Data.GameState.PLAYER_FINISH) {
 			if (firstTick) {
 				firstTick = false;
-				currentPlayer.StartPhase(state);
+				currentPlayer.StartPhase(state, completePhaseCycles);
 				playersCompletedPhase++;
 				if (playersCompletedPhase == players.Count) {
 					state = Data.GameState.PRODUCTION;
@@ -180,7 +180,7 @@ public class GameManager : Object {
 			if (firstTick) {
 				firstTick = false;
 				foreach (AbstractPlayer p in players.Values) {
-					p.StartPhase(state);
+					p.StartPhase(state, completePhaseCycles);
 				}
 			}
 			if (playersCompletedPhase == players.Count) {
@@ -190,7 +190,7 @@ public class GameManager : Object {
 		} else if (state == Data.GameState.RECYCLE) {
 			if (firstTick) {
 				foreach (AbstractPlayer p in players.Values) {
-					p.StartPhase(state);
+					p.StartPhase(state, completePhaseCycles);
 				}
 				TryRandomEvent();
 				market.RecyclePhase(completePhaseCycles);
@@ -207,7 +207,7 @@ public class GameManager : Object {
 		} else if (state == Data.GameState.GAME_OVER) {
 			if (firstTick) {
 				foreach (AbstractPlayer p in players.Values) {
-					p.StartPhase(state);
+					p.StartPhase(state, completePhaseCycles);
 				}
 				CalculateAndDisplayWinner();
 				UnityEngine.Debug.Log("Final market info: \n\tSelling Prices: " + market.GetResourceSellingPrices() + "\n\tBuying Prices: " + market.GetResourceBuyingPrices() + "\n\tMoney: " + market.GetMoney());

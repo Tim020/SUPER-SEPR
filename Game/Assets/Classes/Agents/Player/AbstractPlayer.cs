@@ -178,7 +178,7 @@ public abstract class AbstractPlayer : Agent {
 	/// NEW: Called on the first tick of each new phase.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public abstract void StartPhase(Data.GameState state);
+	public abstract void StartPhase(Data.GameState state, int turnCount);
 
 	/// <summary>
 	/// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="AbstractPlayer"/>.

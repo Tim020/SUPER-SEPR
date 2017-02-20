@@ -73,7 +73,7 @@ public class DummyPlayer : AbstractPlayer {
 	/// NEW: Called on the first tick of each new phase.
 	/// </summary>
 	/// <param name="state">The current game state.</param>
-	public override void StartPhase(Data.GameState state) {
+	public override void StartPhase(Data.GameState state, int turnCount) {
 		return;
 	}
 
