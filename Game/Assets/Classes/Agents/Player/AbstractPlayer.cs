@@ -75,7 +75,6 @@ public abstract class AbstractPlayer : Agent {
 		foreach (Tile tile in ownedTiles) {
 			totalResources += tile.GetTotalResourcesGenerated();
 		}
-		UnityEngine.Debug.Log("Player: " + playerID + " | " + totalResources);
 		return totalResources;
 	}
 

@@ -52,8 +52,6 @@ public class RandomEventFactory {
 		if (Random.Range(0, 10) > 6) {
 			RandomEvent e = ChooseEvent(PickEventCategory());
 			e.InvokeEvent();
-		} else {
-			Debug.Log("By chance an event will not be occuring");
 		}
 	}
 
@@ -75,13 +73,10 @@ public class RandomEventFactory {
 	/// <returns>The event object</returns>
 	private RandomEvent ChooseEvent(int category) {
 		if (category == 0 && regEventsLength > 0) {
-			Debug.Log("Regular Event Selected");
 			return regularEvents[Random.Range(0, regEventsLength)];
 		} else if (category == 1 && crazyEventsLength > 0) {
-			Debug.Log("Crazy Event Selected");
 			return crazyEvents[Random.Range(0, crazyEventsLength)];
 		}
-		Debug.LogWarning("No event selected");
 		return null;
 	}
 }

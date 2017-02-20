@@ -56,7 +56,6 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <param name="state">The current game state.</param>
 	public override void StartPhase(Data.GameState state) {
-		Debug.Log("AI: " + state);
 		switch (state) {
 			case Data.GameState.TILE_PURCHASE:
 				try {
@@ -453,8 +452,6 @@ public class AIPlayer : AbstractPlayer {
 		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host != this);
 		Market.P2PTrade considering = null;
 
-		Debug.Log("Money at P2P: " + money.ToString());
-
 		for (int i = 0; i < trades.Count; i++) {
 			//checks if unit price is less than average market buying price and that we have enough money
 			if (trades[i].unitPrice < avgMarketSellingPrice.GetResource(trades[i].resource) && trades[i].unitPrice * trades[i].resourceAmount < money) {
@@ -474,7 +471,6 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		if (considering != null) {
-			Debug.Log("Buying trade");
 			GameHandler.GetGameManager().market.PurchasePlayerTrade(this, considering);
 		}
 	}
@@ -545,8 +541,8 @@ public class AIPlayer : AbstractPlayer {
 	/// <returns>The selling price history.</returns>
 	private ResourceGroup[] GetMarketSellingPriceHistory() {
 		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count];
-		for (int i = -1; i < sellingPirces.Length; i++) {
-			sellingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
+		for (int i = -1; i < sellingPirces.Length - 1; i++) {
+			sellingPirces[i+1] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
 		}
 		return sellingPirces;
 	}
@@ -557,8 +553,8 @@ public class AIPlayer : AbstractPlayer {
 	/// <returns>The buying price history.</returns>
 	private ResourceGroup[] GetMarketBuyingPriceHistory() {
 		ResourceGroup[] buyingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
-		for (int i = -1; i < buyingPirces.Length; i++) {
-			buyingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
+		for (int i = -1; i < buyingPirces.Length - 1; i++) {
+			buyingPirces[i+1] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
 		}
 		return buyingPirces;
 	}

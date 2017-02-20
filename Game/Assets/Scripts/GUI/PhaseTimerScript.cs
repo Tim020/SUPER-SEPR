@@ -19,7 +19,6 @@ public class PhaseTimerScript : MonoBehaviour {
 	/// Shows the timer box.
 	/// </summary>
 	public void ShowTimerBox() {
-		Debug.Log("Show");
 		timerBoxAnimator.SetBool("timerBoxVisible", true);
 	}
 
@@ -27,7 +26,6 @@ public class PhaseTimerScript : MonoBehaviour {
 	/// Hides the timer box.
 	/// </summary>
 	public void HideTimerBox() {
-		Debug.Log("Hide");
 		timerBoxAnimator.SetBool("timerBoxVisible", false);
 	}
 

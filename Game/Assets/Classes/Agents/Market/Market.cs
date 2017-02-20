@@ -261,7 +261,6 @@ public class Market : Agent {
 	/// <param name="trade">The trade the player wishes to purchase.</param>
 	public void PurchasePlayerTrade(AbstractPlayer player, P2PTrade trade) {
 		if (IsPlayerTradeValid(player, trade)) {
-			UnityEngine.Debug.Log(trade);
 			player.GiveResouce(trade.resource, trade.resourceAmount);
 			player.DeductMoney(trade.GetTotalCost());
 			trade.host.GiveMoney(trade.GetTotalCost());
@@ -296,18 +295,13 @@ public class Market : Agent {
 		float energyTotal = (float)playersResourceProductionTotals.GetEnergy();
 		float oreTotal = (float)playersResourceProductionTotals.GetOre();
 
-		UnityEngine.Debug.Log(playersResourceProductionTotals);
-		UnityEngine.Debug.Log("Totals: " + foodTotal + ", " + energyTotal + ", " + oreTotal);
-
 		if (upgradeTotalSum > 0) {
 			float newFood = (float)(((1 - (foodTotal / upgradeTotalSum)) / elasticity) * STARTING_FOOD_SELL_PRICE) + STARTING_FOOD_SELL_PRICE;
 			float newEnergy = (float)(((1 - (energyTotal / upgradeTotalSum) / elasticity)) * STARTING_ENERGY_SELL_PRICE) + STARTING_ENERGY_SELL_PRICE;
 			float newOre = (float)(((1 - (oreTotal / upgradeTotalSum) / elasticity)) * STARTING_ORE_SELL_PRICE) + STARTING_ORE_SELL_PRICE;
-			UnityEngine.Debug.Log(newFood + ", " + newEnergy + ", " + newOre);
 			ResourceGroup newPrices = new ResourceGroup((int)newFood, (int)newEnergy, (int)newOre);
 			resourceSellingPrices = newPrices;
 		}
-		UnityEngine.Debug.Log("New resource buy prices: " + resourceSellingPrices);
 	}
 
 	/// <summary>
