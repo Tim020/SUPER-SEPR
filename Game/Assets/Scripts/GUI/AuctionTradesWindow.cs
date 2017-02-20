@@ -409,7 +409,7 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Clears the trades list. 
 	/// </summary>
 	private void ClearTradesList() {
-		Debug.Log(currentDisplayedTrades.Count);
+//		Debug.Log(currentDisplayedTrades.Count);
 		if (currentDisplayedTrades.Count > 0) {
 			for (int i = 0; i < currentDisplayedTrades.Count; i++) {
 				Destroy(currentDisplayedTrades[i]);

@@ -100,6 +100,10 @@ public class HumanGui {
 		HidePhaseTimerBox();
 		canvas.HideRoboticonUpgradesWindow();
 		canvas.DisableEndPhaseButton();
+		canvas.HideCasino();
+		canvas.HideAuctionMenu();
+		canvas.HideMarketWindow();
+		canvas.HideTileInfoWindow();
 	}
 	//private Market market;
 
