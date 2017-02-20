@@ -59,7 +59,7 @@ public abstract class AbstractPlayer : Agent {
 
 	/// <summary>
 	/// Adds the total resources for all tiles owned by the player to the player's resources.
-	/// New: Change market supply
+	/// New: update market supply
 	/// </summary>
 	public void Produce() {
 		ResourceGroup r = CalculateTotalResourcesGenerated();
