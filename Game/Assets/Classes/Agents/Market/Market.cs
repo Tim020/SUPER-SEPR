@@ -91,6 +91,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// The total production values across all players, taking into account tiles and roboticons.
+    /// New: Resource Group
 	/// </summary>
 	public ResourceGroup playersResourceProductionTotals;
 
@@ -103,18 +104,21 @@ public class Market : Agent {
 	/// The resource price history.
 	/// Head: Market buying prices.
 	/// Tail: Market selling prices.
+    /// New: Dictionary
 	/// </summary>
 	public Dictionary<int, Data.Tuple<ResourceGroup, ResourceGroup>> resourcePriceHistory;
 
 	/// <summary>
 	/// The running total of resources bought/sold.
+    /// New : ResourceGroup
 	/// </summary>
 	private ResourceGroup runningTotal = new ResourceGroup();
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="Market"/> class.
-	/// </summary>
-	public Market() {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Market"/> class.
+    /// New : resourcePriceHistory
+    /// </summary>
+    public Market() {
 		resourceSellingPrices = new ResourceGroup(STARTING_FOOD_BUY_PRICE, STARTING_ENERGY_BUY_PRICE, STARTING_ORE_BUY_PRICE);
 		resourceBuyingPrices = new ResourceGroup(STARTING_FOOD_SELL_PRICE, STARTING_ENERGY_SELL_PRICE, STARTING_ORE_SELL_PRICE);
 		resources = new ResourceGroup(STARTING_FOOD_AMOUNT, STARTING_ENERGY_AMOUNT, STARTING_ORE_AMOUNT);
@@ -126,13 +130,14 @@ public class Market : Agent {
 		playersResourceProductionTotals = new ResourceGroup();
 	}
 
-	/// <summary>
-	/// Buy resources from the market.
-	/// </summary>
-	/// <param name="player">The player buying from the market.</param>
-	/// <param name="resourcesToBuy">The resources the player is wishing to buy</param>
-	/// <exception cref="System.ArgumentException">When the market does not have enough resources to complete the transaction</exception>
-	public virtual void BuyFrom(AbstractPlayer player, ResourceGroup resourcesToBuy) {
+    /// <summary>
+    /// Buy resources from the market.
+    /// </summary>
+    /// NEW: UpdateMarketSupplyOnBuy, 
+    /// <param name="player">The player buying from the market.</param>
+    /// <param name="resourcesToBuy">The resources the player is wishing to buy</param>
+    /// <exception cref="System.ArgumentException">When the market does not have enough resources to complete the transaction</exception>
+    public virtual void BuyFrom(AbstractPlayer player, ResourceGroup resourcesToBuy) {
 		if (resourcesToBuy.GetFood() < 0 || resourcesToBuy.GetEnergy() < 0 || resourcesToBuy.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
@@ -149,13 +154,14 @@ public class Market : Agent {
 		}
 	}
 
-	/// <summary>
-	/// Sell resources to the market.
-	/// </summary>
-	/// <param name="player">The player selling to the market.</param>
-	/// <param name="resourcesToSell">The resources the player wishes to sell to the market</param>
-	/// <exception cref="System.ArgumentException">When the market does not have enough money to complete the transaction.</exception>
-	public virtual void SellTo(AbstractPlayer player, ResourceGroup resourcesToSell) {
+    /// <summary>
+    /// Sell resources to the market..
+    /// NEW: UpdateMarketSupplyOnSell
+    /// </summary>
+    /// <param name="player">The player selling to the market.</param>
+    /// <param name="resourcesToSell">The resources the player wishes to sell to the market</param>
+    /// <exception cref="System.ArgumentException">When the market does not have enough money to complete the transaction.</exception>
+    public virtual void SellTo(AbstractPlayer player, ResourceGroup resourcesToSell) {
 		if (resourcesToSell.GetFood() < 0 || resourcesToSell.GetEnergy() < 0 || resourcesToSell.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
@@ -174,6 +180,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates global market supply when the user buys from the market
+    /// NEW
 	/// </summary>
 	/// <param name="resourcesToBuy"></param>
 	public void UpdateMarketSupplyOnBuy(ResourceGroup resourcesToBuy) {
@@ -182,6 +189,7 @@ public class Market : Agent {
 
 	///<summary>
 	///Updates global market supply when use sells to the market
+    ///NEW
 	/// </summary>
 	///<param name="resourcesToSell"></param>
 	public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell) {
@@ -191,6 +199,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Buy a Roboticon from the market if there are any.
 	/// </summary>
+    /// NEW: (tim)
 	/// <returns>The roboticon bought by the player.</returns>
 	/// <param name="player">The player buying the roboticon.</param>
 	public virtual Roboticon BuyRoboticon(AbstractPlayer player) {
@@ -273,6 +282,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Keeps a running total of all the resources that have been mined so far.
+    /// NEW
 	/// </summary>
 	/// <param name="r">Player supply total</param>
 	public void updateMarketSupply(ResourceGroup r) {
@@ -281,7 +291,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates the prices for resources based on supply and demand economics.
-	/// TODO: Implement this
+	/// NEW
 	/// </summary>
 	public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
@@ -289,6 +299,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates market resource prices
+    ///NEW
 	/// </summary>
 	public void UpdateResourceSellPrices() {
 		float elasticity = 0.7f;
@@ -308,6 +319,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates the resource sell prices.
+    /// NEW
 	/// </summary>
 	public void UpdateResourceBuyPrices() {
 		resourceBuyingPrices = resourceSellingPrices.Clone() - ((((float)1 / Random.Range(2, 6)) * resourceSellingPrices));
@@ -316,6 +328,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Called when the market enters the recycle phase.
 	/// Used to update all resource prices.
+    /// NEW
 	/// </summary>
 	/// <param name="cycleNumber">The numebr of game cycles completed.</param>
 	public void RecyclePhase(int cycleNumber) {
@@ -327,6 +340,7 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Gets the upgrade values for each roboticon
+    /// NEW
 	/// </summary>
 	/// <returns>The roboticon upgrades.</returns>
 	public void CalculatePlayerResourceUpgrades() {

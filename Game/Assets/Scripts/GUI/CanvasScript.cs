@@ -171,6 +171,7 @@ public class CanvasScript : MonoBehaviour {
 
 	/// <summary>
 	/// Shows the market window.
+	/// NEW: Looks at the different states and enables/disables other UI such as auction.
 	/// </summary>
 	public void ShowMarketWindow() {
 		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION || GameManager.instance.GetCurrentState() == Data.GameState.ROBOTICON_CUSTOMISATION) {
@@ -194,6 +195,9 @@ public class CanvasScript : MonoBehaviour {
 		marketScript.gameObject.SetActive(false);
 	}
 
+	/// <summary>
+	/// NEW: Shows the casino.
+	/// </summary>
 	public void ShowCasino() {
 		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION) {
 			auctionScript.gameObject.SetActive(false);
@@ -201,6 +205,9 @@ public class CanvasScript : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// NEW: Hides the casino.
+	/// </summary>
 	public void HideCasino() {
 		casinoScript.gameObject.SetActive(false);
 	}
@@ -220,33 +227,38 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Shows confirmation window.
+	/// NEW: Shows confirmation window.
 	/// </summary>
 	public void ShowConfirmationWindow() {
 		confirmationWindow.SetActive(true);
 	}
 
 	/// <summary>
-	/// Hides cofirmation window.
+	/// NEW: Hides cofirmation window.
 	/// </summary>
 	public void HideConfirmationWindow() {
 		confirmationWindow.SetActive(false);
 	}
 
+	/// <summary>
+	/// NEW: Displays the end screen UI.
+	/// </summary>
+	/// <param name="player">The human player.</param>
+	/// <param name="winner">The winning player.</param>
 	public void DisplayWinner(HumanPlayer player, AbstractPlayer winner) {
 		scoreBoard.SetWinnerText(player, winner);
 		scoreBoard.gameObject.SetActive(true);
 	}
 
 	/// <summary>
-	/// Quits the game.
+	/// NEW: Quits the game.
 	/// </summary>
 	public void QuitGame() {
 		Application.Quit();
 	}
 
 	/// <summary>
-	/// Shows the auction menu.
+	/// NEW: Shows the auction menu.
 	/// </summary>
 	public void ShowAuctionMenu() {
 		auctionScript.gameObject.SetActive(true);
@@ -255,7 +267,7 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Hides the auction menu.
+	/// NEW: Hides the auction menu.
 	/// </summary>
 	public void HideAuctionMenu() {
 		auctionScript.gameObject.SetActive(false);
@@ -376,14 +388,14 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Shows the phase timer box.
+	/// NEW: Shows the phase timer box.
 	/// </summary>
 	public void ShowPhaseTimerBox() {
 		phaseTimer.ShowTimerBox();
 	}
 
 	/// <summary>
-	/// Hides the phase timer box.
+	/// NEW: Hides the phase timer box.
 	/// </summary>
 	public void HidePhaseTimerBox() {
 		phaseTimer.HideTimerBox();
@@ -438,14 +450,14 @@ public class CanvasScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Called when the toggle on the trade confirmation is pressed.
+	/// NEW: Called when the toggle on the trade confirmation is pressed.
 	/// </summary>
 	public void TradeTogglePressed() {
 		ShowTradeConfirmation = !tradeConfirmationShow.isOn;
 	}
 
 	/// <summary>
-	/// Disables the main GUI elements.
+	/// NEW: Disables the main GUI elements.
 	/// </summary>
 	public void DisableMainGui() {
 		helpBox.gameObject.SetActive(false);

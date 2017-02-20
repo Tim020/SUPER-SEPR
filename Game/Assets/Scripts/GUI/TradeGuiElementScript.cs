@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//NEW class that represents an individual trade in the list of player trades.
 public class TradeGuiElementScript : MonoBehaviour {
 
 	/// <summary>

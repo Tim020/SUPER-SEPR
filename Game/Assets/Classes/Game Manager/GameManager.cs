@@ -93,6 +93,7 @@ public class GameManager : Object {
 
 	/// <summary>
 	/// Creates a new instance of the GameManager
+	/// CHANGED: Takes two player parameters rather than a list of players.
 	/// </summary>
 	/// <param name="gameName">Name of the game</param>
 	/// <param name="human">The HumanPlayer</param>

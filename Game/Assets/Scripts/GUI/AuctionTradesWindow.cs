@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+//NEW: Class that is part of the auction UI.
 public class AuctionTradesWindow : MonoBehaviour {
 
 	/// <summary>
@@ -320,6 +321,9 @@ public class AuctionTradesWindow : MonoBehaviour {
 		ResetUI();
 	}
 
+	/// <summary>
+	/// Called first time this is shown.
+	/// </summary>
 	public void FirstShow() {
 		selectedResource = Data.ResourceType.NONE;
 		ResetUI();

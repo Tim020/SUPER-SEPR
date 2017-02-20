@@ -784,4 +784,40 @@ public class AgentTests {
 	public class GameManager {
 
 	}
+
+	[TestFixture]
+	public class CasinoTests {
+
+		/// <summary>
+		/// The casino.
+		/// </summary>
+		private Casino casino;
+
+		/// <summary>
+		/// The player.
+		/// </summary>
+		private AbstractPlayer player;
+
+		/// <summary>
+		/// Setup this instance.
+		/// </summary>
+		[SetUp]
+		public void Setup() {
+			casino = new Casino(35);
+			player = new DummyPlayer(new ResourceGroup(), 0, "Dummy Player", 0);
+		}
+
+		/// <summary>
+		/// Gambles with no money.
+		/// </summary>
+		[Test]
+		public void Gamble_NoMoney() {
+			try {
+				casino.GambleMoney(player, 50);
+				Assert.Fail();
+			} catch (ArgumentException e) {
+				Assert.Pass();
+			}
+		}
+	}
 }

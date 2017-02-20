@@ -19,11 +19,10 @@ public class GameManagerScript : MonoBehaviour {
 	/// </summary>
 	public string gameName = "game";
 
-	// Use this for initialization
-	//TODO - Implement main menu and loading/saving.
 	/// <summary>
 	/// Start this instance.
 	/// Creates a new instance of the GameManager and starts said instance.
+	/// CHANGED: different way of calling CreateNew on GameManager to reflect the changes made to that class.
 	/// </summary>
 	void Start() {
 		DontDestroyOnLoad(this);
