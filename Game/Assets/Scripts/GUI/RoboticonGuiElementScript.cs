@@ -51,6 +51,7 @@ public class RoboticonGuiElementScript : MonoBehaviour {
 
 	/// <summary>
 	/// Shows the install button.
+	/// NEW: Doesn't show if the roboticon is already installed on a tile.
 	/// </summary>
 	public void ShowInstallButton() {
 		if (!roboticon.IsInstalledToTile()) {
@@ -77,10 +78,11 @@ public class RoboticonGuiElementScript : MonoBehaviour {
 
 	/// <summary>
 	/// Called when the install button is clicked.
+	/// NEW: Hides the install button if the roboticon was installed.
 	/// </summary>
 	public void OnInstallClick() {
 		if (roboticonWindow.InstallRoboticon(roboticon)) {
-			upgradeButton.SetActive(false);
+			installButton.SetActive(false);
 		}
 	}
 

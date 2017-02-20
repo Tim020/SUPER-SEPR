@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//NEW class attached to the timer drop down box.
 public class PhaseTimerScript : MonoBehaviour {
 
 	/// <summary>

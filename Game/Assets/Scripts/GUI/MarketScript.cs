@@ -142,7 +142,7 @@ public class MarketScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Enables the interactions with the input boxes for resource amounts.
+	/// NEW: Enables the interactions with the input boxes for resource amounts.
 	/// </summary>
 	public void EnableResourceInteractions() {
 		foodBuyAmount.interactable = true;
@@ -154,7 +154,7 @@ public class MarketScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Disables the interactions with the input boxes for resource amounts.
+	/// NEW: Disables the interactions with the input boxes for resource amounts.
 	/// </summary>
 	public void DisableResourceInteractions() {
 		foodBuyAmount.interactable = false;
@@ -167,6 +167,7 @@ public class MarketScript : MonoBehaviour {
 
 	/// <summary>
 	/// Raises the buy button press event.
+	/// NEW: Moved some logic into here from the canvas script.
 	/// </summary>
 	public void OnBuyButtonPress() {
 		marketMoney.text = "£" + GameManager.instance.market.GetMarketMoney().ToString();
@@ -178,6 +179,7 @@ public class MarketScript : MonoBehaviour {
 		int roboticonsToBuy = int.Parse(roboticonBuyAmount.text);
 		int buyPrice = int.Parse(totalBuyPrice.text.Substring(1));
 
+		//New code after this point
 		ResetInputBoxes();
 
 		if (GameHandler.GetGameManager().GetHumanPlayer().GetMoney() >= buyPrice && GameManager.instance.market.GetNumRoboticonsForSale() >= roboticonsToBuy) {
@@ -199,6 +201,7 @@ public class MarketScript : MonoBehaviour {
 
 	/// <summary>
 	/// Raises the sell button press event.
+	/// NEW: Moved some logic into here from the canvas script.
 	/// </summary>
 	public void OnSellButtonPress() {
 		marketMoney.text = "£" + GameManager.instance.market.GetMarketMoney().ToString();
@@ -208,6 +211,7 @@ public class MarketScript : MonoBehaviour {
 		resourcesToSell.energy = int.Parse(energySellAmount.text);
 		resourcesToSell.ore = int.Parse(oreSellAmount.text);
 
+		//New code after this point
 		ResetInputBoxes();
 
 		int sellPrice = int.Parse(totalSellPrice.text.Substring(1));
@@ -244,6 +248,7 @@ public class MarketScript : MonoBehaviour {
 
 	/// <summary>
 	/// Sets the market resource values.
+	/// NEW: Updates to show the amount of resources in the market.
 	/// </summary>
 	public void SetMarketValues() {
 		if (gameObject.activeInHierarchy) {
@@ -285,6 +290,7 @@ public class MarketScript : MonoBehaviour {
 
 	/// <summary>
 	/// Updates the market resource prices.
+	/// NEW: Displays the amount of money the market has.
 	/// </summary>
 	private void UpdateShownMarketPrices() {
 		//Yes, these are backwards. Yes, this is correct (viewing perspective is different on player and market).
@@ -304,7 +310,7 @@ public class MarketScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Updates the market resource amounts.
+	/// NEW: Updates the market resource amounts.
 	/// </summary>
 	private void UpdateMarketResourceAmounts() {
 		ResourceGroup marketResources = GameManager.instance.market.GetResources();
@@ -315,7 +321,7 @@ public class MarketScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Resets all input boxes to 0.
+	/// NEW: Resets all input boxes to 0.
 	/// </summary>
 	private void ResetInputBoxes() {
 		foodSellAmount.text = "0";

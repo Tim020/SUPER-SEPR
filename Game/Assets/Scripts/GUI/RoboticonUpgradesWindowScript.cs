@@ -26,22 +26,22 @@ public class RoboticonUpgradesWindowScript : MonoBehaviour {
 	public Text oreUpgradesAmount;
 
 	/// <summary>
-	/// The text element represting whether this roboticon has been installed on a tile.
+	/// NEW: The text element represting whether this roboticon has been installed on a tile.
 	/// </summary>
 	public Text installed;
 
 	/// <summary>
-	/// The food upgrade cost text.
+	/// NEW: The food upgrade cost text.
 	/// </summary>
 	public Text foodCost;
 
 	/// <summary>
-	/// The energy upgrade cost text.
+	/// NEW: The energy upgrade cost text.
 	/// </summary>
 	public Text energyCost;
 
 	/// <summary>
-	/// The ore upgrade cost text.
+	/// NEW: The ore upgrade cost text.
 	/// </summary>
 	public Text oreCost;
 
@@ -52,6 +52,7 @@ public class RoboticonUpgradesWindowScript : MonoBehaviour {
 
 	/// <summary>
 	/// Show the upgrade window for the specified Roboticon.
+	/// NEW: Updates the text showing the upgrade prices.
 	/// </summary>
 	/// <param name="roboticon">Roboticon.</param>
 	public void Show(Roboticon roboticon) {
@@ -96,7 +97,7 @@ public class RoboticonUpgradesWindowScript : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Called to upgrade the Roboticon.
+	/// NEW: Called to upgrade the Roboticon.
 	/// </summary>
 	/// <param name="upgrade">Upgrade.</param>
 	private void DoUpgrade(ResourceGroup upgrade) {
