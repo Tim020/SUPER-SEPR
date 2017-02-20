@@ -194,14 +194,23 @@ public class CanvasScript : MonoBehaviour {
 		optionsMenu.SetActive(false);
 	}
 
+	/// <summary>
+	/// Shows confirmation window.
+	/// </summary>
 	public void ShowConfirmationWindow() {
 		confirmationWindow.SetActive (true);
 	}
 
+	/// <summary>
+	/// Hides cofirmation window.
+	/// </summary>
 	public void HideConfirmationWindow() {
 		confirmationWindow.SetActive (false);
 	}
 
+	/// <summary>
+	/// Quits the game.
+	/// </summary>
 	public void QuitGame() {
 		Application.Quit();
 	}
