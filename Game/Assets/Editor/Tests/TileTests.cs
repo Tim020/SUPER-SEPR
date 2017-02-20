@@ -14,7 +14,7 @@ public class TileTests {
 	/// <summary>
 	/// The test tile.
 	/// </summary>
-	TestTile testTile;
+	DummyTile testTile;
 
 	/// <summary>
 	/// Setup this instance.
@@ -23,7 +23,7 @@ public class TileTests {
 	public void Setup() {
 		ResourceGroup testResources = new ResourceGroup(10, 10, 10);
 		Vector2 pos = new Vector2(3, 3);
-		testTile = new TestTile(testResources, pos, 5);
+		testTile = new DummyTile(testResources, pos, 5);
 	}
 
 	/// <summary>
@@ -77,7 +77,7 @@ public class TileTests {
 		/// <summary>
 		/// The test tile.
 		/// </summary>
-		TestTile testTile;
+		DummyTile testTile;
 
 		/// <summary>
 		/// Setup this instance.
@@ -86,7 +86,7 @@ public class TileTests {
 		public void Setup() {
 			ResourceGroup testResources = new ResourceGroup(10, 10, 10);
 			Vector2 pos = new Vector2(3, 3);
-			testTile = new TestTile(testResources, pos, 5);
+			testTile = new DummyTile(testResources, pos, 5);
 			testRoboticon = new Roboticon();
 		}
 

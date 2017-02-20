@@ -1,12 +1,11 @@
-﻿// Game Executable hosted at: http://www-users.york.ac.uk/~jwa509/alpha01BugFree.exe
-
-using System;
+﻿using UnityEngine;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-using Random = UnityEngine.Random;
+using System;
 
-public class Map {
+/// <summary>
+/// NEW: Dummy map for testing.
+/// </summary>
+public class DummyMap {
 
 	/// <summary>
 	/// The size of the map in number of tiles.
@@ -21,7 +20,7 @@ public class Map {
 	/// <summary>
 	/// The tiles in the map.
 	/// </summary>
-	protected List<Tile> tiles = new List<Tile>();
+	protected List<DummyTile> tiles = new List<DummyTile>();
 
 	/// <summary>
 	/// The maximum production amount of a tile.
@@ -31,11 +30,11 @@ public class Map {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Map"/> class.
 	/// </summary>
-	public Map() {
-		int numTiles = (int) (MAP_DIMENSIONS.x * MAP_DIMENSIONS.y);
+	public DummyMap() {
+		int numTiles = (int)(MAP_DIMENSIONS.x * MAP_DIMENSIONS.y);
 
 		for (int i = 0; i < numTiles; i++) {
-			Tile tile = new Tile(GetRandomTileResources(), MAP_DIMENSIONS, i);
+			DummyTile tile = new DummyTile(GetRandomTileResources(), MAP_DIMENSIONS, i);
 			tiles.Add(tile);
 		}
 	}
@@ -72,19 +71,6 @@ public class Map {
 	}
 
 	/// <summary>
-	/// Instantiate the map into the current scene.
-	/// </summary>
-	public void Instantiate() {
-		foreach (Tile tile in tiles) {
-			tile.Instantiate(MAP_POSITION);
-		}
-
-		MapManagerScript mapManager = new GameObject("Map Manager").AddComponent<MapManagerScript>();
-		MonoBehaviour.DontDestroyOnLoad(mapManager);
-		mapManager.SetMap(this);
-	}
-
-	/// <summary>
 	/// Refreshes all tiles in the map.
 	/// </summary>
 	public void UpdateMap() {
@@ -97,7 +83,7 @@ public class Map {
 	/// Gets the list of tiles.
 	/// </summary>
 	/// <returns>The tiles.</returns>
-	public List<Tile> GetTiles() {
+	public List<DummyTile> GetTiles() {
 		return tiles;
 	}
 
@@ -115,7 +101,8 @@ public class Map {
 	/// </summary>
 	/// <returns>The random resource amount.</returns>
 	protected int GetRandomResourceAmount() {
-		return Random.Range(0, MAX_TILE_RESOURCE_PRODUCTION + 1);
+		return UnityEngine.Random.Range(0, MAX_TILE_RESOURCE_PRODUCTION + 1);
 	}
 
 }
+

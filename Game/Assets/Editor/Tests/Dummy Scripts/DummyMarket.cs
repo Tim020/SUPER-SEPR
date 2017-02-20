@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// NEW: Dummy market for testing.
+/// </summary>
 public class DummyMarket : Market {
 
 	/// <summary>
-	/// Buy resources from the market.
+	/// NEW: Buy resources from the market.
 	/// </summary>
 	/// <param name="player">The player buying from the market.</param>
 	/// <param name="resourcesToBuy">The resources the player is wishing to buy</param>
@@ -27,7 +30,7 @@ public class DummyMarket : Market {
 	}
 
 	/// <summary>
-	/// Sell resources to the market.
+	/// NEW: Sell resources to the market.
 	/// </summary>
 	/// <param name="player">The player selling to the market.</param>
 	/// <param name="resourcesToSell">The resources the player wishes to sell to the market</param>
@@ -49,7 +52,7 @@ public class DummyMarket : Market {
 	}
 
 	/// <summary>
-	/// Buy a Roboticon from the market if there are any.
+	/// NEW: Buy a Roboticon from the market if there are any.
 	/// </summary>
 	/// <returns>The roboticon bought by the player.</returns>
 	/// <param name="player">The player buying the roboticon.</param>

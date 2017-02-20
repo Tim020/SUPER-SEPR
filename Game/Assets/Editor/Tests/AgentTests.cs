@@ -13,27 +13,27 @@ using NUnit.Framework;
 public class AgentTests {
 
 	/// <summary>
-	/// Tests for the market.
+	/// Tests for the dummyMarket.
 	/// </summary>
 	[TestFixture]
 	public class MarketTests {
 
 		/// <summary>
-		/// Testing the markets starting condtions.
+		/// Testing the dummyMarkets starting condtions.
 		/// </summary>
 		public class StartingCondtionsTests {
 
 			/// <summary>
 			/// The dummy market.
 			/// </summary>
-			Market testMarket;
+			DummyMarket dummyMarket;
 
 			/// <summary>
 			/// Setup this instance.
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new DummyMarket();
+				dummyMarket = new DummyMarket();
 			}
 
 
@@ -43,7 +43,7 @@ public class AgentTests {
 			[Test]
 			public void StartingCondtions_Amount() {
 				ResourceGroup amount = new ResourceGroup(16, 16, 0);
-				Assert.AreEqual(amount, testMarket.GetResources());
+				Assert.AreEqual(amount, dummyMarket.GetResources());
 			}
 
 			/// <summary>
@@ -52,7 +52,7 @@ public class AgentTests {
 			[Test]
 			public void StartingCondtions_SellPrice() {
 				ResourceGroup startingSellPrice = new ResourceGroup(10, 10, 10);
-				Assert.AreEqual(startingSellPrice, testMarket.GetResourceSellingPrices());
+				Assert.AreEqual(startingSellPrice, dummyMarket.GetResourceSellingPrices());
 			}
 
 			/// <summary>
@@ -61,7 +61,7 @@ public class AgentTests {
 			[Test]
 			public void StartingCondtions_BuyPrice() {
 				ResourceGroup startingBuyingPrices = new ResourceGroup(10, 10, 10);
-				Assert.AreEqual(startingBuyingPrices, testMarket.GetResourceBuyingPrices());
+				Assert.AreEqual(startingBuyingPrices, dummyMarket.GetResourceBuyingPrices());
 			}
 
 			/// <summary>
@@ -69,21 +69,21 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void StartingCondtions_RoboticonAmount() {
-				Assert.AreEqual(12, testMarket.GetNumRoboticonsForSale());
+				Assert.AreEqual(12, dummyMarket.GetNumRoboticonsForSale());
 			}
 
 			/// <summary>
 			/// Checks that the market funds are initialized to the correct value.
 			/// </summary>
 			[Test]
-			public void StartingCondtions_MarketFunds() {
-				Assert.AreEqual(100, testMarket.GetMoney());
+			public void StartingCondtions_DummyMarketFunds() {
+				Assert.AreEqual(100, dummyMarket.GetMoney());
 			}
 		}
 
 
 		/// <summary>
-		/// Testing the buy functionality of the market.
+		/// Testing the buy functionality of the dummyMarket.
 		/// </summary>
 		[TestFixture]
 		public class BuyFromTests {
@@ -96,7 +96,7 @@ public class AgentTests {
 			/// <summary>
 			/// The dummy market.
 			/// </summary>
-			Market testMarket;
+			DummyMarket dummyMarket;
 
 			/// <summary>
 			/// The dummy buy order.
@@ -108,9 +108,9 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new DummyMarket();
+				dummyMarket = new DummyMarket();
 				//set resources to make testing simpler
-				testMarket.SetResources(new ResourceGroup(16, 16, 16));
+				dummyMarket.SetResources(new ResourceGroup(16, 16, 16));
 				player = new DummyPlayer(null, 0, "TestPlayer", 0);
 				player.SetMoney(9999);
 				player.SetResources(new ResourceGroup(9999, 9999, 9999));
@@ -122,9 +122,9 @@ public class AgentTests {
 			[Test]
 			public void BuyFrom_Resources() {
 				order = new ResourceGroup(1, 1, 1);
-				ResourceGroup expectedMarketLevels = new ResourceGroup(15, 15, 15);
-				testMarket.BuyFrom(player, order);
-				Assert.AreEqual(expectedMarketLevels, testMarket.GetResources());
+				ResourceGroup expectedDummyMarketLevels = new ResourceGroup(15, 15, 15);
+				dummyMarket.BuyFrom(player, order);
+				Assert.AreEqual(expectedDummyMarketLevels, dummyMarket.GetResources());
 			}
 
 			/// <summary>
@@ -132,10 +132,10 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void BuyFrom_Money() {
-				int money = testMarket.GetMoney();
+				int money = dummyMarket.GetMoney();
 				order = new ResourceGroup(1, 1, 1);
-				testMarket.BuyFrom(player, order);
-				Assert.AreEqual(money + (order * testMarket.GetResourceSellingPrices()).Sum(), testMarket.GetMoney());
+				dummyMarket.BuyFrom(player, order);
+				Assert.AreEqual(money + (order * dummyMarket.GetResourceSellingPrices()).Sum(), dummyMarket.GetMoney());
 			}
 
 			/// <summary>
@@ -145,9 +145,9 @@ public class AgentTests {
 			public void BuyFrom_NotEnoughResources() {
 				order = new ResourceGroup(1, 1, 1);
 				//setting resources for ease
-				testMarket.SetResources(new ResourceGroup(0, 0, 0));	
+				dummyMarket.SetResources(new ResourceGroup(0, 0, 0));	
 				try {
-					testMarket.BuyFrom(player, order);
+					dummyMarket.BuyFrom(player, order);
 					Assert.Fail();
 				} catch (ArgumentException) {
 					Assert.Pass();
@@ -163,7 +163,7 @@ public class AgentTests {
 			public void BuyFrom_NegativeResources() {
 				order = new ResourceGroup(-1, -1, -1);
 				try {
-					testMarket.BuyFrom(player, order);
+					dummyMarket.BuyFrom(player, order);
 					Assert.Fail();
 				} catch (ArgumentException) {
 					Assert.Pass();
@@ -178,15 +178,15 @@ public class AgentTests {
 			[Test]
 			public void BuyFrom_FundDecreasePlayer() {
 				order = new ResourceGroup(1, 1, 1);
-				int expectedFunds = player.GetMoney() - (order * testMarket.GetResourceBuyingPrices()).Sum();
-				testMarket.BuyFrom(player, order);
+				int expectedFunds = player.GetMoney() - (order * dummyMarket.GetResourceBuyingPrices()).Sum();
+				dummyMarket.BuyFrom(player, order);
 				Assert.AreEqual(expectedFunds, player.GetMoney());
 			}
 		}
 
 
 		/// <summary>
-		/// Testing the functionality of selling to the market.
+		/// Testing the functionality of selling to the dummyMarket.
 		/// </summary>
 		[TestFixture]
 		public class SellToTests {
@@ -197,9 +197,9 @@ public class AgentTests {
 			AbstractPlayer player;
 
 			/// <summary>
-			/// The dummy market.
+			/// The dummy dummyMarket.
 			/// </summary>
-			Market testMarket;
+			DummyMarket dummyMarket;
 
 			/// <summary>
 			/// The dummy sell order.
@@ -211,23 +211,23 @@ public class AgentTests {
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new DummyMarket();
+				dummyMarket = new DummyMarket();
 				//set resources to make testing simpler
-				testMarket.SetResources(new ResourceGroup(16, 16, 16));
+				dummyMarket.SetResources(new ResourceGroup(16, 16, 16));
 				player = new DummyPlayer(null, 0, "TestPlayer", 0);
 				player.SetMoney(9999);
 				player.SetResources(new ResourceGroup(9999, 9999, 9999));
 			}
 
 			/// <summary>
-			/// Checks that the market gains resources when being sold to.
+			/// Checks that the dummyMarket gains resources when being sold to.
 			/// </summary>
 			[Test]
 			public void SellTo_Resources() {
 				order = new ResourceGroup(1, 1, 1);
-				ResourceGroup expectedMarketLevels = new ResourceGroup(17, 17, 17);
-				testMarket.SellTo(player, order);
-				Assert.IsTrue(expectedMarketLevels.Equals(testMarket.GetResources()));
+				ResourceGroup expectedDummyMarketLevels = new ResourceGroup(17, 17, 17);
+				dummyMarket.SellTo(player, order);
+				Assert.IsTrue(expectedDummyMarketLevels.Equals(dummyMarket.GetResources()));
 			}
 
 			/// <summary>
@@ -236,8 +236,8 @@ public class AgentTests {
 			[Test]
 			public void SellTo_Money() {
 				order = new ResourceGroup(1, 1, 1);
-				testMarket.SellTo(player, order);
-				Assert.AreEqual(70, testMarket.GetMoney());
+				dummyMarket.SellTo(player, order);
+				Assert.AreEqual(70, dummyMarket.GetMoney());
 			}
 
 			/// <summary>
@@ -246,12 +246,12 @@ public class AgentTests {
 			[Test]
 			public void SellTo_NotEnoughMoney() {
 				order = new ResourceGroup(1, 1, 1);
-				testMarket.SetMoney(0);
+				dummyMarket.SetMoney(0);
 				try {
-					testMarket.SellTo(player, order);
+					dummyMarket.SellTo(player, order);
 					Assert.Fail();
-				} catch (ArgumentException e) {
-					Assert.AreSame("Market does not have enough money to perform this transaction.", e.Message);
+				} catch (ArgumentException) {
+					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
 				}
@@ -264,10 +264,10 @@ public class AgentTests {
 			public void SellTo_NegativeResources() {
 				order = new ResourceGroup(-1, -1, -1);
 				try {
-					testMarket.SellTo(player, order);
+					dummyMarket.SellTo(player, order);
 					Assert.Fail();
-				} catch (ArgumentException e) {
-					Assert.AreSame("Market cannot complete a transaction for negative resources.", e.Message);
+				} catch (ArgumentException) {
+					Assert.Pass();
 				} catch (Exception) {
 					Assert.Fail();
 				}
@@ -279,8 +279,8 @@ public class AgentTests {
 			[Test]
 			public void SellTo_FundIncreasePlayer() {
 				order = new ResourceGroup(1, 1, 1);
-				int expectedFunds = player.GetMoney() + (order * testMarket.GetResourceBuyingPrices()).Sum();
-				testMarket.SellTo(player, order);
+				int expectedFunds = player.GetMoney() + (order * dummyMarket.GetResourceBuyingPrices()).Sum();
+				dummyMarket.SellTo(player, order);
 				Assert.AreEqual(expectedFunds, player.GetMoney());
 			}
 
@@ -294,16 +294,16 @@ public class AgentTests {
 			/// <summary>
 			/// The dummy market.
 			/// </summary>
-			Market testMarket;
+			DummyMarket dummyMarket;
 
 			/// <summary>
 			/// Setup this instance.
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				testMarket = new DummyMarket();
+				dummyMarket = new DummyMarket();
 				//set resources to make testing simpler
-				testMarket.SetResources(new ResourceGroup(50, 50, 50));
+				dummyMarket.SetResources(new ResourceGroup(50, 50, 50));
 			}
 
 			/// <summary>
@@ -311,8 +311,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_NumRoboticons() {
-				testMarket.ProduceRoboticons();
-				Assert.AreEqual(13, testMarket.GetNumRoboticonsForSale());
+				dummyMarket.ProduceRoboticons();
+				Assert.AreEqual(13, dummyMarket.GetNumRoboticonsForSale());
 			}
 
 			/// <summary>
@@ -320,9 +320,9 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_Resources() {
-				testMarket.ProduceRoboticons();
-				ResourceGroup expectedMarketLevel = new ResourceGroup(50, 50, 38);
-				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
+				dummyMarket.ProduceRoboticons();
+				ResourceGroup expectedDummyMarketLevel = new ResourceGroup(50, 50, 38);
+				Assert.AreEqual(expectedDummyMarketLevel, dummyMarket.GetResources());
 			}
 
 			/// <summary>
@@ -330,11 +330,11 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RobProduction_NotEnoughResources() {
-				ResourceGroup expectedMarketLevel = new ResourceGroup(16, 16, 4);
-				//as production shouldn't occur at less than 12 market should not change
-				testMarket.SetResources(expectedMarketLevel);
-				testMarket.ProduceRoboticons();
-				Assert.AreEqual(expectedMarketLevel, testMarket.GetResources());
+				ResourceGroup expectedDummyMarketLevel = new ResourceGroup(16, 16, 4);
+				//as production shouldn't occur at less than 12 dummyMarket should not change
+				dummyMarket.SetResources(expectedDummyMarketLevel);
+				dummyMarket.ProduceRoboticons();
+				Assert.AreEqual(expectedDummyMarketLevel, dummyMarket.GetResources());
 			}
 
 		}
@@ -356,17 +356,17 @@ public class AgentTests {
 			/// <summary>
 			/// The test human.
 			/// </summary>
-			DummyPlayer testHuman;
+			DummyPlayer dummyPlayer;
 
 			/// <summary>
 			/// The test tile.
 			/// </summary>
-			TestTile testTile;
+			DummyTile dummyTile;
 
 			/// <summary>
-			/// The market.
+			/// The dummy market.
 			/// </summary>
-			Market market;
+			DummyMarket dummyMarket;
 
 			/// <summary>
 			/// Setup this instance.
@@ -374,9 +374,9 @@ public class AgentTests {
 			[SetUp]
 			public void Setup() {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				market = new Market();
-				testHuman = new DummyPlayer(testResources, 0, "Test", 500, market);
-				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				dummyMarket = new DummyMarket();
+				dummyPlayer = new DummyPlayer(testResources, 0, "Test", 500, dummyMarket);
+				dummyTile = new DummyTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 			}
 
 			/// <summary>
@@ -384,8 +384,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void TileAcquisition_TileNotOwned() {
-				testHuman.AcquireTile(testTile);
-				Assert.AreEqual(testTile, testHuman.GetOwnedTiles()[0]); 
+				dummyPlayer.AcquireTile(dummyTile);
+				Assert.AreEqual(dummyTile, dummyPlayer.GetOwnedTiles()[0]); 
 			}
 
 			/// <summary>
@@ -394,9 +394,9 @@ public class AgentTests {
 			[Test]
 			public void TileAcquisition_TileOwned() {
 				//giving the tile an owner
-				testHuman.AcquireTile(testTile);
+				dummyPlayer.AcquireTile(dummyTile);
 				try {
-					testHuman.AcquireTile(testTile);
+					dummyPlayer.AcquireTile(dummyTile);
 					Assert.Fail();
 				} catch (Exception e) {
 					Assert.Pass();
@@ -408,21 +408,21 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void TileAcquisition_PlayerFundsDecrease() {
-				TestTile test = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
-				int initialFunds = testHuman.GetMoney();
-				testHuman.AcquireTile(test);
-				Assert.AreEqual(testHuman.GetMoney(), initialFunds - test.GetPrice());
+				DummyTile test = new DummyTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				int initialFunds = dummyPlayer.GetMoney();
+				dummyPlayer.AcquireTile(test);
+				Assert.AreEqual(dummyPlayer.GetMoney(), initialFunds - test.GetPrice());
 			}
 
 			/// <summary>
-			/// Check the market funds increase by the right amount whwn a tile is purchased.
+			/// Check the dummyMarket funds increase by the right amount whwn a tile is purchased.
 			/// </summary>
 			[Test]
-			public void TileAcquisition_MarketFundsIncrease() {
-				TestTile test = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
-				int initialFunds = market.GetMoney();
-				testHuman.AcquireTile(test);
-				Assert.AreEqual(market.GetMoney(), initialFunds + test.GetPrice());
+			public void TileAcquisition_DummyMarketFundsIncrease() {
+				DummyTile test = new DummyTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				int initialFunds = dummyMarket.GetMoney();
+				dummyPlayer.AcquireTile(test);
+				Assert.AreEqual(dummyMarket.GetMoney(), initialFunds + test.GetPrice());
 			}
 
 			/// <summary>
@@ -430,8 +430,8 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void TileAcquisition_PlayerFundsInsufficent() {
-				TestTile test = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
-				DummyPlayer testPlayer = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Test", 0, market);
+				DummyTile test = new DummyTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				DummyPlayer testPlayer = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Test", 0, dummyMarket);
 				try {
 					testPlayer.AcquireTile(test);
 					Assert.Fail();
@@ -516,7 +516,7 @@ public class AgentTests {
 			/// <summary>
 			/// The test tile.
 			/// </summary>
-			TestTile testTile;
+			DummyTile testTile;
 
 			/// <summary>
 			/// Setup this instance.
@@ -526,7 +526,7 @@ public class AgentTests {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
 				testHuman = new DummyPlayer(testResources, 0, "Test", 500);
 				testRoboticon = new Roboticon();
-				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				testTile = new DummyTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 				testHuman.AcquireRoboticon(testRoboticon);
 			}
 
@@ -653,23 +653,23 @@ public class AgentTests {
 			DummyPlayer player;
 
 			/// <summary>
-			/// The dummy market.
+			/// The dummy dummyMarket.
 			/// </summary>
-			Market market;
+			DummyMarket dummyMarket;
 
 			/// <summary>
 			/// The test tile.
 			/// </summary>
-			TestTile testTile;
+			DummyTile testTile;
 
 			/// <summary>
 			/// Setup this instance.
 			/// </summary>
 			[SetUp]
 			public void Setup() {
-				market = new DummyMarket();
-				player = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Test Player", 500, market);
-				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				dummyMarket = new DummyMarket();
+				player = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Test Player", 500, dummyMarket);
+				testTile = new DummyTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 			}
 
 			/// <summary>
@@ -687,7 +687,7 @@ public class AgentTests {
 			[Test]
 			public void PlayerScoreCalculated_Resource() {
 				player.SetMoney(0);
-				Assert.AreEqual(player.CalculateScore(), (player.GetResources() * market.GetResourceBuyingPrices()).Sum());
+				Assert.AreEqual(player.CalculateScore(), (player.GetResources() * dummyMarket.GetResourceBuyingPrices()).Sum());
 			}
 
 			/// <summary>
@@ -698,7 +698,7 @@ public class AgentTests {
 				player.SetMoney(testTile.GetPrice());
 				player.SetResources(new ResourceGroup());
 				player.AcquireTile(testTile);
-				Assert.AreEqual(player.CalculateScore(), (testTile.GetTotalResourcesGenerated() * market.GetResourceBuyingPrices()).Sum());
+				Assert.AreEqual(player.CalculateScore(), (testTile.GetTotalResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum());
 			}
 
 			/// <summary>
@@ -706,9 +706,9 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void PlayerScoreCalculated_Roboticon() {
-				player.SetMoney(market.GetRoboticonSellingPrice());
+				player.SetMoney(dummyMarket.GetRoboticonSellingPrice());
 				player.SetResources(new ResourceGroup());
-				Roboticon r = market.BuyRoboticon(player);
+				Roboticon r = dummyMarket.BuyRoboticon(player);
 				Assert.AreEqual(player.CalculateScore(), r.GetPrice());
 			}
 		}
@@ -721,5 +721,67 @@ public class AgentTests {
 	[TestFixture]
 	public class AITests {
 		//TODO: Write some AI tests.
+
+		/// <summary>
+		/// Tile acquisition tests.
+		/// </summary>
+		[TestFixture]
+		public class TileAcquisitionTests {
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market dummyMarket;
+
+			/// <summary>
+			/// The dummy map.
+			/// </summary>
+			DummyMap dummyMap;
+
+			/// <summary>
+			/// The dummy AI.
+			/// </summary>
+			AbstractPlayer dummyAI;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				dummyMarket = new DummyMarket();
+				dummyMap = new DummyMap();
+				dummyAI = new DummyAI(new ResourceGroup(50, 50, 50), 0, "Dummy AI", 500, dummyMap, dummyMarket);
+			}
+
+			/// <summary>
+			/// Checks that the AI will aqcuire a tile if it has enough funds.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_EnoughMoney() {
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				Assert.AreEqual(1, dummyAI.GetOwnedTiles().Count);
+			}
+
+			/// <summary>
+			/// Checks that the AI doesn't acquire a tile if it has insufficient funds.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_NotEnoughMoney() {
+				dummyAI.SetMoney(0);
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE);
+				Assert.AreEqual(0, dummyAI.GetOwnedTiles().Count);
+			}
+
+		}
+	}
+
+	[TestFixture]
+	public class CasinoTests {
+
+	}
+
+	[TestFixture]
+	public class GameManager {
+
 	}
 }

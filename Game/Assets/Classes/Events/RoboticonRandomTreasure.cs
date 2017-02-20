@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class RoboticonRandomTreasure : RandomEvent {
 
     /// <summary>
+	/// NEW: This is a new section of code that deals with starting the event.
     /// The implementation of the method that is called when the event starts.
     /// </summary>
     public override void InvokeEvent() {

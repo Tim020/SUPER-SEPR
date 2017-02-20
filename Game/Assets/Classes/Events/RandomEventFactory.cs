@@ -25,6 +25,7 @@ public class RandomEventFactory {
 	private int crazyEventsLength;
 
 	/// <summary>
+	/// NEW: This is a new section of code that deals with initialising the evnts system.
 	/// The constructor for the event factory, which initialises the list of events.
 	/// </summary>
 	public RandomEventFactory() {
@@ -34,6 +35,7 @@ public class RandomEventFactory {
 	}
 
     /// <summary>
+	/// NEW: This is a new section of code that deals with adding event instances to the event system.
     /// Initialises the list of events.
     /// </summary>
     private void PopulateEventLists() {
@@ -45,6 +47,7 @@ public class RandomEventFactory {
 	}
 
 	/// <summary>
+	/// NEW: This is a new section of code that deals with starting an event.
 	/// Picks an event at random to invoke. There is a chance no event will occur.
 	/// </summary>
 	/// <returns>The event that occured (null if no event occured)</returns>
@@ -56,6 +59,7 @@ public class RandomEventFactory {
 	}
 
 	/// <summary>
+	/// NEW: This is a new section of code that deals with randomly selecting an event type.
 	/// Randomly picks an event category, with a weighting towards regular events.
 	/// </summary>
 	/// <returns>0 for regular event. 1 for crazy event.</returns>
@@ -67,6 +71,7 @@ public class RandomEventFactory {
 	}
 
 	/// <summary>
+	/// NEW: This is a new section of code that deals with selecting an event of a certain type at random.
 	/// Randomly selectes an event from the specified category.
 	/// </summary>
 	/// <param name="category">The category of the event</param>
