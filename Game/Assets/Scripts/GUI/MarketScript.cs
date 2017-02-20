@@ -314,6 +314,9 @@ public class MarketScript : MonoBehaviour {
 		marketRoboticonAmount.text = "/" + GameManager.instance.market.GetNumRoboticonsForSale();
 	}
 
+	/// <summary>
+	/// Resets all input boxes to 0.
+	/// </summary>
 	private void ResetInputBoxes() {
 		foodSellAmount.text = "0";
 		foodBuyAmount.text = "0";

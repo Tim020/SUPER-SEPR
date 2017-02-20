@@ -219,10 +219,16 @@ public class CanvasScript : MonoBehaviour {
 		optionsMenu.SetActive(false);
 	}
 
+	/// <summary>
+	/// Shows confirmation window.
+	/// </summary>
 	public void ShowConfirmationWindow() {
 		confirmationWindow.SetActive(true);
 	}
 
+	/// <summary>
+	/// Hides cofirmation window.
+	/// </summary>
 	public void HideConfirmationWindow() {
 		confirmationWindow.SetActive(false);
 	}
@@ -232,6 +238,9 @@ public class CanvasScript : MonoBehaviour {
 		scoreBoard.gameObject.SetActive(true);
 	}
 
+	/// <summary>
+	/// Quits the game.
+	/// </summary>
 	public void QuitGame() {
 		Application.Quit();
 	}
