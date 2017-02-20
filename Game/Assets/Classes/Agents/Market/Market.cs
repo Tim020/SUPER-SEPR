@@ -262,15 +262,12 @@ public class Market : Agent {
 	/// <param name="trade">The trade the player wishes to purchase.</param>
 	public void PurchasePlayerTrade(AbstractPlayer player, P2PTrade trade) {
 		if (IsPlayerTradeValid(player, trade)) {
+			UnityEngine.Debug.Log(trade);
 			player.GiveResouce(trade.resource, trade.resourceAmount);
 			player.DeductMoney(trade.GetTotalCost());
 			trade.host.GiveMoney(trade.GetTotalCost());
-			switch (trade.resource) {
-				case Data.ResourceType.FOOD:
-					ResourceGroup price = new ResourceGroup(trade.unitPrice, 0, 0);
-					break;
-			}
 			playerTrades.Remove(trade);
+			GameManager.instance.GetHumanPlayer().GetHumanGui().UpdateResourceBar();
 		}
 	}
 
@@ -392,7 +389,7 @@ public class Market : Agent {
 		return money;
 	}
 
-	public void UpdateMarketMoney(int amount){
+	public void UpdateMarketMoney(int amount) {
 		money = money + amount;
 	}
 
@@ -449,6 +446,15 @@ public class Market : Agent {
 		/// <returns>The total cost of the deal</returns>
 		public int GetTotalCost() {
 			return resourceAmount * unitPrice;
+		}
+
+		/// <summary>
+		/// Returns a string that represents the current object.
+		/// </summary>
+		/// <returns>A string that represents the current object.</returns>
+		/// <filterpriority>2</filterpriority>
+		public override string ToString() {
+			return "[Player Trade] : " + host.GetName() + " | " + resource + " | " + resourceAmount.ToString() + " | " + unitPrice.ToString() + " | " + GetTotalCost().ToString();
 		}
 	}
 }

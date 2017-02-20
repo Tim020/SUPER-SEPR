@@ -141,9 +141,6 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// <param name="tradesToDisplay">Trades to display.</param>
 	public void DisplayCurrentTrades(List<Market.P2PTrade> tradesToDisplay) {
 		ClearTradesList();
-
-		gameObject.SetActive(true);
-
 		foreach (Market.P2PTrade trade in tradesToDisplay) {
 			AddTrade(trade);
 		}
@@ -155,7 +152,6 @@ public class AuctionTradesWindow : MonoBehaviour {
 	public void HideTradesList() {
 		ClearTradesList();
 		currentDisplayedTrades = new List<GameObject>();
-		gameObject.SetActive(false);
 	}
 
 	/// <summary>
@@ -306,14 +302,16 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Submits the current trade.
 	/// </summary>
 	public void SubmitTrade() {
-		if (canvas.ShowTradeConfirmation) {
-			resourceTypeConfirmation.text = "Resource Type: " + selectedResource;
-			resourceAmountConfirmation.text = "Quantity: " + tradeQuantity.ToString();
-			unitPriceConfirmation.text = "Unit Price: £" + unitPrice.ToString();
-			totalPriceConfirmation.text = "Total Price: £" + (tradeQuantity * unitPrice).ToString();
-			tradeConfirmation.SetActive(true);
-		} else {
-			CreateAndSubmitTrade();
+		if (selectedResource != null && tradeQuantity > 0 && unitPrice > 0) {
+			if (canvas.ShowTradeConfirmation) {
+				resourceTypeConfirmation.text = "Resource Type: " + selectedResource;
+				resourceAmountConfirmation.text = "Quantity: " + tradeQuantity.ToString();
+				unitPriceConfirmation.text = "Unit Price: £" + unitPrice.ToString();
+				totalPriceConfirmation.text = "Total Price: £" + (tradeQuantity * unitPrice).ToString();
+				tradeConfirmation.SetActive(true);
+			} else {
+				CreateAndSubmitTrade();
+			}
 		}
 	}
 
@@ -325,26 +323,36 @@ public class AuctionTradesWindow : MonoBehaviour {
 		ResetUI();
 	}
 
+	public void FirstShow() {
+		selectedResource = Data.ResourceType.NONE;
+		ResetUI();
+	}
+
 	/// <summary>
 	/// Resets the auction UI.
 	/// </summary>
 	public void ResetUI() {
-		canvas.GetHumanGui().UpdateResourceBar();
-		tradeConfirmation.SetActive(false);
-		purchaseRemoveConfirmation.SetActive(false);
-		confirmTrade.SetActive(false);
-		cancelTrade.SetActive(false);
-		selectedTrade = null;
-		switch (selectedResource) {
-			case Data.ResourceType.FOOD:
-				SelectFood();
-				break;
-			case Data.ResourceType.ENERGY:
-				SelectEnergy();
-				break;
-			case Data.ResourceType.ORE:
-				SelectOre();
-				break;
+		if (gameObject.activeInHierarchy) {
+			ClearTradesList();
+			canvas.GetHumanGui().UpdateResourceBar();
+			tradeConfirmation.SetActive(false);
+			purchaseRemoveConfirmation.SetActive(false);
+			confirmTrade.SetActive(false);
+			cancelTrade.SetActive(false);
+			selectedTrade = null;
+			switch (selectedResource) {
+				case Data.ResourceType.FOOD:
+					SelectFood();
+					break;
+				case Data.ResourceType.ENERGY:
+					SelectEnergy();
+					break;
+				case Data.ResourceType.ORE:
+					SelectOre();
+					break;
+				case Data.ResourceType.NONE:
+					break;
+			}
 		}
 	}
 
@@ -401,12 +409,13 @@ public class AuctionTradesWindow : MonoBehaviour {
 	/// Clears the trades list. 
 	/// </summary>
 	private void ClearTradesList() {
+		Debug.Log(currentDisplayedTrades.Count);
 		if (currentDisplayedTrades.Count > 0) {
-			for (int i = currentDisplayedTrades.Count - 1; i >= 0; i--) {
+			for (int i = 0; i < currentDisplayedTrades.Count; i++) {
 				Destroy(currentDisplayedTrades[i]);
 			}
-			currentDisplayedTrades = new List<GameObject>();
 		}
+		currentDisplayedTrades = new List<GameObject>();
 	}
 
 	/// <summary>

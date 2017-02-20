@@ -179,7 +179,7 @@ public class CanvasScript : MonoBehaviour {
 			//TODO - Error message "Market cannot be accessed in this phase."
 		}
 		if (GameManager.instance.GetCurrentState() == Data.GameState.AUCTION) {
-			auctionScript.gameObject.SetActive(true);
+			ShowAuctionMenu();
 			marketScript.EnableResourceInteractions();
 		} else {
 			marketScript.DisableResourceInteractions();
@@ -240,6 +240,7 @@ public class CanvasScript : MonoBehaviour {
 	/// </summary>
 	public void ShowAuctionMenu() {
 		auctionScript.gameObject.SetActive(true);
+		auctionScript.FirstShow();
 		casinoScript.gameObject.SetActive(false);
 	}
 

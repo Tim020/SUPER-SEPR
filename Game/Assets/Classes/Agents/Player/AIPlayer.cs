@@ -20,12 +20,12 @@ public class AIPlayer : AbstractPlayer {
 	/// <summary>
 	/// NEW: The avgerage market buying price.
 	/// </summary>
-	private ResourceGroup avgMarketBuyingProfit;
+	private ResourceGroup avgMarketBuyingPrice;
 
 	/// <summary>
 	/// NEW: The avgerage market selling price.
 	/// </summary>
-	private ResourceGroup avgMarketSellingProfit;
+	private ResourceGroup avgMarketSellingPrice;
 
 	/// <summary>
 	/// NEW: The first phase.
@@ -50,6 +50,7 @@ public class AIPlayer : AbstractPlayer {
 		this.name = name;
 		this.money = money;
 	}
+
 	/// <summary>
 	/// NEW: Act based on the specified state.
 	/// </summary>
@@ -95,7 +96,7 @@ public class AIPlayer : AbstractPlayer {
 					//Decided not to upgrade a roboticon
 				}
 				if (!firstPhase) {
-					avgMarketBuyingProfit = (avgMarketBuyingProfit + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
+					avgMarketBuyingPrice = (avgMarketBuyingPrice + GameHandler.GetGameManager().market.GetResourceSellingPrices()) / 2;
 					ManageTrades();
 					UpdateSellingPrediction();
 					SellToMarket();
@@ -106,8 +107,8 @@ public class AIPlayer : AbstractPlayer {
 					MakeTrade();
 				} else {
 					firstPhase = false;
-					avgMarketBuyingProfit = GameHandler.GetGameManager().market.GetResourceSellingPrices();
-					avgMarketSellingProfit = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
+					avgMarketBuyingPrice = GameHandler.GetGameManager().market.GetResourceSellingPrices();
+					avgMarketSellingPrice = GameHandler.GetGameManager().market.GetResourceBuyingPrices();
 				}
 				break;
 		}
@@ -424,7 +425,7 @@ public class AIPlayer : AbstractPlayer {
 		Data.ResourceType[] types = { Data.ResourceType.ENERGY, Data.ResourceType.FOOD, Data.ResourceType.ORE };
 		foreach (Data.ResourceType t in types) {
 			//means we're at a low or the prices aren't profitable so we buy nothing
-			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketBuyingProfit * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
+			if (currentPrediction.Tail.GetResource(t) < 0 || (avgMarketBuyingPrice * buyingAmounts).Sum() < (buyingAmounts * currentPrice).Sum()) {
 				buyingAmounts.SetResource(t, 0);
 				//if it's almost certain the price is going to drop we don't buy
 			} else if (currentPrediction.Tail.GetResource(t) >= 0.75) {
@@ -453,17 +454,16 @@ public class AIPlayer : AbstractPlayer {
 		List<Market.P2PTrade> trades = GameHandler.GetGameManager().market.GetPlayerTrades().FindAll(t => t.host != this);
 		Market.P2PTrade considering = null;
 
+		Debug.Log("Money at P2P: " + money.ToString());
+
 		for (int i = 0; i < trades.Count; i++) {
 			//checks if unit price is less than average market buying price and that we have enough money
-			if (trades[i].unitPrice < avgMarketBuyingProfit.GetResource(trades[i].resource)
-			    && trades[i].unitPrice * trades[i].resourceAmount < money) {
+			if (trades[i].unitPrice < avgMarketSellingPrice.GetResource(trades[i].resource) && trades[i].unitPrice * trades[i].resourceAmount < money) {
 				if (considering != null) {
 					//estimated profit of the current trade i.e. trade[i] 
-					int currentProfit = ((trades[i].resourceAmount * avgMarketBuyingProfit.GetResource(trades[i].resource)) -
-					                    (trades[i].resourceAmount * trades[i].unitPrice));
+					int currentProfit = ((trades[i].resourceAmount * avgMarketSellingPrice.GetResource(trades[i].resource)) - (trades[i].resourceAmount * trades[i].unitPrice));
 					//estimated profit of our consideration
-					int consideringProfit = ((considering.resourceAmount * avgMarketBuyingProfit.GetResource(considering.resource)) -
-					                        (considering.resourceAmount * considering.unitPrice));
+					int consideringProfit = ((considering.resourceAmount * avgMarketSellingPrice.GetResource(considering.resource)) - (considering.resourceAmount * considering.unitPrice));
 
 					if (currentProfit > consideringProfit) {
 						considering = trades[i];
@@ -475,6 +475,7 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		if (considering != null) {
+			Debug.Log("Buying trade");
 			GameHandler.GetGameManager().market.PurchasePlayerTrade(this, considering);
 		}
 	}
@@ -504,12 +505,12 @@ public class AIPlayer : AbstractPlayer {
 				continue;
 			}
 
-			if (buyingPrie.GetResource(t) > avgMarketSellingProfit.GetResource(t)) {
+			if (buyingPrie.GetResource(t) > avgMarketBuyingPrice.GetResource(t)) {
 				float discount = 0.76f;
 
 				//tries to give the best discount on the basis its more likely to play
-				while ((int)buyingPrie.GetResource(t) * discount < avgMarketSellingProfit.GetResource(t) && discount < 1) {
-					if ((int)buyingPrie.GetResource(t) * discount > avgMarketSellingProfit.GetResource(t)) {
+				while ((int)buyingPrie.GetResource(t) * discount < avgMarketBuyingPrice.GetResource(t) && discount < 1) {
+					if ((int)buyingPrie.GetResource(t) * discount > avgMarketBuyingPrice.GetResource(t)) {
 						trade = new Market.P2PTrade(this, t, GetResources().GetResource(t) / 3, (int)(buyingPrie.GetResource(t) * discount));
 					}
 					discount += 0.02f;
@@ -532,8 +533,8 @@ public class AIPlayer : AbstractPlayer {
 		if (prices.Length <= 1) {
 			throw new ArgumentException();
 		} 
-		ResourceGroup[] diff = new ResourceGroup[prices.Length - 2];
-		for (int i = 0; i < prices.Length; i++) {
+		ResourceGroup[] diff = new ResourceGroup[prices.Length - 1];
+		for (int i = 0; i < prices.Length - 1; i++) {
 			diff[i] = prices[i + 1] - prices[i];
 		}
 		return diff;
