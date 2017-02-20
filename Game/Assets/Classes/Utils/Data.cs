@@ -18,7 +18,6 @@ public class Data {
 	/// The different states possible in the game
 	/// </summary>
 	public enum GameState {
-		COLLEGE_SELECTION,
 		GAME_WAIT,
 		TILE_PURCHASE,
 		ROBOTICON_CUSTOMISATION,
@@ -42,8 +41,7 @@ public class Data {
 	/// <summary>
 	/// The human readable names of all the different game states
 	/// </summary>
-	public static string[] stateNames = new string[10] {
-		"College Selection",
+	public static string[] stateNames = new string[9] {
 		"Game Wait",
 		"Acquisition",
 		"Purchase",
@@ -69,15 +67,14 @@ public class Data {
 	/// </summary>
 	private static string[] helpBoxText = {
 		"",
-		"",
 		"This is the Acquisition Phase. Click on an unowned (white) tile, then click Acquire to purchase it.",
 		"This is the Purchase and Customisation Phase. Click on the 'market' button in the top right to open the market. Click 'roboticons' to upgrade your robiticons.",
 		"This is the Installation Phase. In the roboticons window, click 'Install' to install the roboticon to the currently selected tile.",
-		"",
+		"End of your turn.",
 		"This is the Production Phase. Your resources are being produced.",
-		"This is the Auction Phase.",
+		"This is the Auction Phase. Click on the market button to access the market and player trades. Click on the gamble button to access the Casino!",
 		"",
-		""
+		"The game has ended!"
 	};
 
 	/// <summary>

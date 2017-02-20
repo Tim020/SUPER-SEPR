@@ -317,6 +317,18 @@ public class Market : Agent {
 	}
 
 	/// <summary>
+	/// Called when the market enters the recycle phase.
+	/// Used to update all resource prices.
+	/// </summary>
+	/// <param name="cycleNumber">The numebr of game cycles completed.</param>
+	public void RecyclePhase(int cycleNumber) {
+		CalculatePlayerResourceUpgrades();
+		UpdateResourceSellPrices();
+		UpdateResourceBuyPrices();
+		CachePrices(cycleNumber);
+	}
+
+	/// <summary>
 	/// Gets the upgrade values for each roboticon
 	/// </summary>
 	/// <returns>The roboticon upgrades.</returns>

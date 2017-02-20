@@ -10,7 +10,6 @@ using System.Collections;
 using System.Diagnostics;
 using System.Collections.Specialized;
 
-[Serializable]
 /// <summary>
 /// The GameManager - represents the current instance of the game being played.
 /// </summary>
@@ -44,7 +43,7 @@ public class GameManager : Object {
 	/// <summary>
 	/// The current state of the game.
 	/// </summary>
-	private Data.GameState state = Data.GameState.COLLEGE_SELECTION;
+	private Data.GameState state = Data.GameState.GAME_WAIT;
 
 	/// <summary>
 	/// The current player.
@@ -124,27 +123,21 @@ public class GameManager : Object {
 	/// State machine to handle the transition between game phases.
 	/// </summary>
 	public void Update() {
-		if (state == Data.GameState.COLLEGE_SELECTION) {
-			//TODO: do we want to add college's back from our requirements?
-			state = Data.GameState.GAME_WAIT;
-		} else if (state == Data.GameState.GAME_WAIT) {
+		if (state == Data.GameState.GAME_WAIT) {
 			currentPlayer = (AbstractPlayer)players.Cast<DictionaryEntry>().ElementAt(playersCompletedPhase).Value;
 			currentPlayerTurn = currentPlayer.playerID;
 			state = Data.GameState.TILE_PURCHASE;
 			firstTick = true;
 		} else if (state == Data.GameState.TILE_PURCHASE) {
 			if (firstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				firstTick = false;
 				currentPlayer.StartPhase(state);
 			}
 		} else if (state == Data.GameState.ROBOTICON_CUSTOMISATION) {
-			//UnityEngine.Debug.Log(FirstTick);
 			if (timer.Elapsed.TotalSeconds > 60 && !firstTick) {
 				OnPlayerCompletedPhase(state);
 			} else {
 				if (firstTick) {
-					UnityEngine.Debug.Log("First tick: " + state);
 					firstTick = false;
 					currentPlayer.StartPhase(state);
 				}
@@ -154,14 +147,12 @@ public class GameManager : Object {
 				OnPlayerCompletedPhase(state);
 			} else {
 				if (firstTick) {
-					UnityEngine.Debug.Log("First tick: " + state);
 					firstTick = false;	
 					currentPlayer.StartPhase(state);
 				}
 			}
 		} else if (state == Data.GameState.PLAYER_FINISH) {
 			if (firstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				firstTick = false;
 				currentPlayer.StartPhase(state);
 				playersCompletedPhase++;
@@ -175,11 +166,9 @@ public class GameManager : Object {
 			}
 		} else if (state == Data.GameState.PRODUCTION) {
 			if (firstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.Produce();
 				}
-				market.CachePrices(completePhaseCycles);
 				market.ProduceRoboticons();
 				playersCompletedPhase = 0;
 				state = Data.GameState.AUCTION;
@@ -187,7 +176,6 @@ public class GameManager : Object {
 			}
 		} else if (state == Data.GameState.AUCTION) {
 			if (firstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				firstTick = false;
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
@@ -199,14 +187,11 @@ public class GameManager : Object {
 			}
 		} else if (state == Data.GameState.RECYCLE) {
 			if (firstTick) {
-				UnityEngine.Debug.Log("First tick: " + state);
 				foreach (AbstractPlayer p in players.Values) {
 					p.StartPhase(state);
 				}
 				TryRandomEvent();
-				GameManager.instance.market.CalculatePlayerResourceUpgrades();
-				GameManager.instance.market.UpdateResourceSellPrices();
-				GameManager.instance.market.UpdateResourceBuyPrices();
+				market.RecyclePhase(completePhaseCycles);
 				completePhaseCycles++;
 				if (CheckWinCondition()) {
 					state = Data.GameState.GAME_OVER;
@@ -244,14 +229,12 @@ public class GameManager : Object {
 				timer = System.Diagnostics.Stopwatch.StartNew();
 				this.state = Data.GameState.ROBOTICON_PLACEMENT;
 				firstTick = true;
-				//UnityEngine.Debug.Log(firstTick);
 				break;
 			case Data.GameState.ROBOTICON_PLACEMENT:
 				this.state = Data.GameState.PLAYER_FINISH;
 				firstTick = true;
 				break;
 			case Data.GameState.AUCTION:
-				//FIXME: This *probably* won't work.
 				playersCompletedPhase++;
 				break;
 		}
@@ -300,7 +283,6 @@ public class GameManager : Object {
 	}
 
 	/// <summary>
-	/// TODO: CREATE UI TO DISPLAY WINNER
 	/// Shows the winner.
 	/// </summary>
 	/// <param name="player">The player who won.</param>
