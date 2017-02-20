@@ -545,7 +545,7 @@ public class AIPlayer : AbstractPlayer {
 	/// <returns>The selling price history.</returns>
 	private ResourceGroup[] GetMarketSellingPriceHistory() {
 		ResourceGroup[] sellingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Keys.Count];
-		for (int i = 0; i < sellingPirces.Length; i++) {
+		for (int i = -1; i < sellingPirces.Length; i++) {
 			sellingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Tail;
 		}
 		return sellingPirces;
@@ -557,7 +557,7 @@ public class AIPlayer : AbstractPlayer {
 	/// <returns>The buying price history.</returns>
 	private ResourceGroup[] GetMarketBuyingPriceHistory() {
 		ResourceGroup[] buyingPirces = new ResourceGroup[GameHandler.GetGameManager().market.resourcePriceHistory.Count];
-		for (int i = 0; i < buyingPirces.Length; i++) {
+		for (int i = -1; i < buyingPirces.Length; i++) {
 			buyingPirces[i] = GameHandler.GetGameManager().market.resourcePriceHistory[i].Head;
 		}
 		return buyingPirces;
@@ -662,6 +662,32 @@ public class AIPlayer : AbstractPlayer {
 			} else {
 				return false;
 			}
+		}
+			
+		/// <summary>
+		/// NEW: Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="AIPlayer+TileChoice"/>.
+		/// </summary>
+		/// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="AIPlayer+TileChoice"/>.</param>
+		/// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+		/// <see cref="AIPlayer+TileChoice"/>; otherwise, <c>false</c>.</returns>
+		public override bool Equals(object obj) {
+			if (obj == null || GetType() != obj.GetType()) {
+				return false;
+			} 
+			TileChoice castType = (TileChoice)obj;
+			if (castType.score == score && castType.tile == tile) {
+				return true;
+			}
+			return false;
+		}
+
+		//NEW
+		/// <summary>
+		/// NEW: Serves as a hash function for a particular type.
+		/// </summary>
+		/// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a hash table.</returns>
+		public override int GetHashCode () {
+			return tile.GetHashCode() + score.GetHashCode();
 		}
 
 	}
