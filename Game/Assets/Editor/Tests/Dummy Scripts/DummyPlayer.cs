@@ -19,12 +19,29 @@ public class DummyPlayer : AbstractPlayer {
 		if (!ownedTiles.Contains(tile)) {
 			ownedTiles.Add(tile);
 			tile.SetOwner(this);
+			this.DeductMoney(tile.GetPrice());
 			if (market != null) {
 				market.UpdateMarketMoney(tile.GetPrice());
 			}
 		} else {
 			throw new Exception("Tried to acquire a tile which is already owned by this player.");
 		}
+	}
+
+	public override int CalculateScore() {
+		int totalScore = money;
+
+		foreach (Tile tile in ownedTiles) {
+			totalScore += (tile.GetTotalResourcesGenerated() * market.GetResourceBuyingPrices()).Sum();
+		}
+
+		foreach (Roboticon roboticon in ownedRoboticons) {
+			totalScore += roboticon.GetPrice();
+		}
+
+		totalScore += (GetResources() * market.GetResourceBuyingPrices()).Sum();
+
+		return totalScore;
 	}
 
 	public override void StartPhase(Data.GameState state) {

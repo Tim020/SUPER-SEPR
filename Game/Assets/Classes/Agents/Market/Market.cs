@@ -12,22 +12,22 @@ public class Market : Agent {
 	/// <summary>
 	/// The price the market is selling resources at - used when a player buys from the market.
 	/// </summary>
-	private ResourceGroup resourceSellingPrices;
+	protected ResourceGroup resourceSellingPrices;
 
 	/// <summary>
 	/// The price the market is buying resources at - used when a player sells to the market.
 	/// </summary>
-	private ResourceGroup resourceBuyingPrices;
+	protected ResourceGroup resourceBuyingPrices;
 
 	/// <summary>
 	/// The number roboticons the market has available for sale.
 	/// </summary>
-	private int numRoboticonsForSale = 15;
+	protected int numRoboticonsForSale = 15;
 
 	/// <summary>
 	/// The price the market is selling roboticons for - used when a player buys a roboticon.
 	/// </summary>
-	private int roboticonBuyingPrice = 15;
+	protected int roboticonSellPrice = 15;
 
 	/// <summary>
 	/// The amount of food the market starts with.
@@ -133,7 +133,6 @@ public class Market : Agent {
 		if (resourcesToBuy.GetFood() < 0 || resourcesToBuy.GetEnergy() < 0 || resourcesToBuy.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food || resourcesToBuy.energy > resources.energy || resourcesToBuy.ore > resources.ore);
 		if (hasEnoughResources) {
 			UpdateMarketSupplyOnBuy(resourcesToBuy);
@@ -165,7 +164,6 @@ public class Market : Agent {
 		if (resourcesToSell.GetFood() < 0 || resourcesToSell.GetEnergy() < 0 || resourcesToSell.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-
 		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
 			UpdateMarketSupplyOnSell(resourcesToSell);
@@ -192,13 +190,13 @@ public class Market : Agent {
 	/// </summary>
 	/// <returns>The roboticon bought by the player.</returns>
 	/// <param name="player">The player buying the roboticon.</param>
-	public Roboticon BuyRoboticon(AbstractPlayer player) {
+	public virtual Roboticon BuyRoboticon(AbstractPlayer player) {
 		if (numRoboticonsForSale > 0) {
-			if (player.GetMoney() >= roboticonBuyingPrice) {
+			if (player.GetMoney() >= roboticonSellPrice) {
 				Roboticon r = new Roboticon();
 				player.AcquireRoboticon(r);
-				player.DeductMoney(roboticonBuyingPrice);
-				money += roboticonBuyingPrice;
+				player.DeductMoney(roboticonSellPrice);
+				money += roboticonSellPrice;
 				numRoboticonsForSale--;
 				GameManager.instance.GetHumanPlayer().GetHumanGui().GetCanvasScript().marketScript.SetMarketValues();
 				return r;
@@ -378,7 +376,7 @@ public class Market : Agent {
 	/// </summary>
 	/// <returns>The roboticon selling price.</returns>
 	public int GetRoboticonSellingPrice() {
-		return roboticonBuyingPrice;
+		return roboticonSellPrice;
 	}
 
 	/// <summary>

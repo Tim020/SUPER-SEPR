@@ -62,7 +62,6 @@ public class AIPlayer : AbstractPlayer {
 				try {
 					Tile tileToAcquire = ChooseTileToAcquire();
 					AcquireTile(tileToAcquire);
-					money -= tileToAcquire.GetPrice();
 				} catch (NullReferenceException) {
 					//Not enough money
 				} catch (ArgumentException) {

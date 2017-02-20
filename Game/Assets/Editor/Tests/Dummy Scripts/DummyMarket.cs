@@ -14,13 +14,13 @@ public class DummyMarket : Market {
 		if (resourcesToBuy.GetFood() < 0 || resourcesToBuy.GetEnergy() < 0 || resourcesToBuy.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-
 		bool hasEnoughResources = !(resourcesToBuy.food > resources.food || resourcesToBuy.energy > resources.energy || resourcesToBuy.ore > resources.ore);
 		if (hasEnoughResources) {
+			UpdateMarketSupplyOnBuy(resourcesToBuy);
 			resources -= resourcesToBuy;
-			money = money + (resourcesToBuy * GetResourceSellingPrices()).Sum();
+			money = money + (resourcesToBuy * resourceSellingPrices).Sum();
 			player.SetResources(player.GetResources() + resourcesToBuy);
-			player.DeductMoney((resourcesToBuy * GetResourceSellingPrices()).Sum());
+			player.DeductMoney((resourcesToBuy * resourceSellingPrices).Sum());
 		} else {
 			throw new ArgumentException("Market does not have enough resources to perform this transaction.");
 		}
@@ -36,9 +36,9 @@ public class DummyMarket : Market {
 		if (resourcesToSell.GetFood() < 0 || resourcesToSell.GetEnergy() < 0 || resourcesToSell.GetOre() < 0) {
 			throw new ArgumentException("Market cannot complete a transaction for negative resources.");
 		}
-
-		int price = (resourcesToSell * GetResourceBuyingPrices()).Sum();
+		int price = (resourcesToSell * resourceBuyingPrices).Sum();
 		if (money >= price) {
+			UpdateMarketSupplyOnSell(resourcesToSell);
 			resources += resourcesToSell;
 			money = money - price;
 			player.SetResources(player.GetResources() - resourcesToSell);
@@ -46,6 +46,25 @@ public class DummyMarket : Market {
 		} else {
 			throw new ArgumentException("Market does not have enough money to perform this transaction.");
 		}
+	}
+
+	/// <summary>
+	/// Buy a Roboticon from the market if there are any.
+	/// </summary>
+	/// <returns>The roboticon bought by the player.</returns>
+	/// <param name="player">The player buying the roboticon.</param>
+	public override Roboticon BuyRoboticon(AbstractPlayer player) {
+		if (GetNumRoboticonsForSale() > 0) {
+			if (player.GetMoney() >= roboticonSellPrice) {
+				Roboticon r = new Roboticon();
+				player.AcquireRoboticon(r);
+				player.DeductMoney(roboticonSellPrice);
+				money += roboticonSellPrice;
+				numRoboticonsForSale--;
+				return r;
+			}
+		} 
+		return null;
 	}
 
 }

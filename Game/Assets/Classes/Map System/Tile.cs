@@ -101,7 +101,7 @@ public class Tile {
 	/// <param name="roboticon"></param>
 	public void InstallRoboticon(Roboticon roboticon) {
 		if (installedRoboticons.Contains(roboticon)) {
-			throw new Exception("Roboticon already exists on this tile\n");
+			throw new Exception("Roboticon already exists on this tile");
 		}
 		installedRoboticons.Add(roboticon);
 	}

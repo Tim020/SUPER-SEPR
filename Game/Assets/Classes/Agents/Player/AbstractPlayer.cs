@@ -36,30 +36,22 @@ public abstract class AbstractPlayer : Agent {
 	protected List<Tile> ownedTiles = new List<Tile>();
 
 	/// <summary>
-	/// The resources owned by this player.
-	/// </summary>
-	protected List<ResourceGroup> ownedResources = new List<ResourceGroup>();
-
-	/// <summary>
 	/// Calculates the score for the player by adding score from tile resources, roboticons, player resources and money.
 	/// This is in effect calculating the net worth of the player.
 	/// </summary>
 	/// <returns> The player's score </returns>
-	public int CalculateScore() {
+	public virtual int CalculateScore() {
 		int totalScore = money;
 
 		foreach (Tile tile in ownedTiles) {
-			ResourceGroup tileResources = tile.GetTotalResourcesGenerated();
-			totalScore += (tileResources * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
+			totalScore += (tile.GetTotalResourcesGenerated() * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 		}
 			
 		foreach (Roboticon roboticon in ownedRoboticons) {
 			totalScore += roboticon.GetPrice();
 		}
 			
-		foreach (ResourceGroup resource in ownedResources) {
-			totalScore += (resource * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
-		}
+		totalScore += (GetResources() * GameManager.instance.market.GetResourceBuyingPrices()).Sum();
 
 		return totalScore;
 	}
@@ -92,13 +84,19 @@ public abstract class AbstractPlayer : Agent {
 	/// </summary>
 	/// <param name="tile">The tile the player wishes to acquire.</param>
 	/// <exception cref="System.Exception">Thrown when the tile is already owned by another player.</exception>
+	/// <exception cref="System.Exception">Thrown when the player does not have enough money to purchase the tile.</exception>
 	public virtual void AcquireTile(Tile tile) {
-		if (!ownedTiles.Contains(tile)) {
-			ownedTiles.Add(tile);
-			tile.SetOwner(this);
-			GameManager.instance.market.UpdateMarketMoney(tile.GetPrice());
+		if (this.GetMoney() >= tile.GetPrice()) {
+			if (!ownedTiles.Contains(tile)) {
+				ownedTiles.Add(tile);
+				tile.SetOwner(this);
+				this.DeductMoney(tile.GetPrice());
+				GameManager.instance.market.UpdateMarketMoney(tile.GetPrice());
+			} else {
+				throw new Exception("Tried to acquire a tile which is already owned by this player.");
+			}
 		} else {
-			throw new Exception("Tried to acquire a tile which is already owned by this player.");
+			throw new Exception("Tried to acquire a tile, but the player does not have enough money to do this!");
 		}
 	}
 

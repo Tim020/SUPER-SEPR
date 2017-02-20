@@ -279,7 +279,7 @@ public class AgentTests {
 			[Test]
 			public void SellTo_FundIncreasePlayer() {
 				order = new ResourceGroup(1, 1, 1);
-				int expectedFunds = player.GetMoney() + (order * testMarket.GetResourceSellingPrices()).Sum();
+				int expectedFunds = player.GetMoney() + (order * testMarket.GetResourceBuyingPrices()).Sum();
 				testMarket.SellTo(player, order);
 				Assert.AreEqual(expectedFunds, player.GetMoney());
 			}
@@ -364,12 +364,18 @@ public class AgentTests {
 			TestTile testTile;
 
 			/// <summary>
+			/// The market.
+			/// </summary>
+			Market market;
+
+			/// <summary>
 			/// Setup this instance.
 			/// </summary>
 			[SetUp]
 			public void Setup() {
 				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				testHuman = new DummyPlayer(testResources, 0, "Test", 500);
+				market = new Market();
+				testHuman = new DummyPlayer(testResources, 0, "Test", 500, market);
 				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 			}
 
@@ -377,7 +383,7 @@ public class AgentTests {
 			/// Checks that tile acquisition is performed when a tile is not owned.
 			/// </summary>
 			[Test]
-			public void TileAcquisition_NotOwned() {
+			public void TileAcquisition_TileNotOwned() {
 				testHuman.AcquireTile(testTile);
 				Assert.AreEqual(testTile, testHuman.GetOwnedTiles()[0]); 
 			}
@@ -386,14 +392,51 @@ public class AgentTests {
 			/// Checks that tile acquisition fails if a tile is owned.
 			/// </summary>
 			[Test]
-			public void TileAcquisition_Owned() {
+			public void TileAcquisition_TileOwned() {
 				//giving the tile an owner
 				testHuman.AcquireTile(testTile);
 				try {
 					testHuman.AcquireTile(testTile);
 					Assert.Fail();
 				} catch (Exception e) {
-					Assert.AreSame("Tried to acquire a tile which is already owned by this player.", e.Message);
+					Assert.Pass();
+				}
+			}
+
+			/// <summary>
+			/// Check the player funds decrease by the right amount when they purchase a tile.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_PlayerFundsDecrease() {
+				TestTile test = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				int initialFunds = testHuman.GetMoney();
+				testHuman.AcquireTile(test);
+				Assert.AreEqual(testHuman.GetMoney(), initialFunds - test.GetPrice());
+			}
+
+			/// <summary>
+			/// Check the market funds increase by the right amount whwn a tile is purchased.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_MarketFundsIncrease() {
+				TestTile test = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				int initialFunds = market.GetMoney();
+				testHuman.AcquireTile(test);
+				Assert.AreEqual(market.GetMoney(), initialFunds + test.GetPrice());
+			}
+
+			/// <summary>
+			/// Checks the player cannot purchase a tile they do not have the funds for.
+			/// </summary>
+			[Test]
+			public void TileAcquisition_PlayerFundsInsufficent() {
+				TestTile test = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
+				DummyPlayer testPlayer = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Test", 0, market);
+				try {
+					testPlayer.AcquireTile(test);
+					Assert.Fail();
+				} catch (Exception e) {
+					Assert.Pass();
 				}
 			}
 
@@ -508,7 +551,7 @@ public class AgentTests {
 					testHuman.InstallRoboticon(testRoboticon, testTile);
 					Assert.Fail();
 				} catch (Exception e) {
-					Assert.AreSame("Roboticon already exists on this tile\n", e.Message);
+					Assert.Pass();
 				}
 			}
 
@@ -591,7 +634,6 @@ public class AgentTests {
 				testUpgrade = new ResourceGroup(1, 1, 1);
 				try {
 					testHuman.UpgradeRoboticon(robot, testUpgrade);
-					Debug.Log("get here");
 					Assert.Fail();
 				} catch (ArgumentException) {
 					Assert.Pass();
@@ -602,63 +644,18 @@ public class AgentTests {
 
 		}
 
-		/// <summary>
-		/// AI tests.
-		/// </summary>
 		[TestFixture]
-		public class AITests {
+		public class ScoreTests {
 
 			/// <summary>
-			/// Tile purchase tests.
+			/// The first test player.
 			/// </summary>
-			[TestFixture]
-			public class TilePurchaseTests {
-
-				/// <summary>
-				/// The test ai.
-				/// </summary>
-				private AIPlayer testAi;
-
-				/// <summary>
-				/// The test game.
-				/// </summary>
-				private GameManager testGame;
-
-				/// <summary>
-				/// Setup this instance.
-				/// </summary>
-				[SetUp]
-				public void Setup() {
-					testAi = new AIPlayer(new ResourceGroup(50, 50, 50), 0, "Jarvis", 0);
-					testGame = new GameManager("Test", new HumanPlayer(new ResourceGroup(0, 0, 0), 1, "Tony", 0), testAi);
-					testGame.Update();
-				}
-
-			}
-
+			DummyPlayer player;
 
 			/// <summary>
-			/// The test Ai.
+			/// The dummy market.
 			/// </summary>
-			private AIPlayer testAi;
-
-			/// <summary>
-			/// The test game.
-			/// </summary>
-			private GameManager testGame;
-
-
-
-
-		}
-
-		/*[TestFixture]
-		class ScoreTests {
-
-			/// <summary>
-			/// The test human.
-			/// </summary>
-			Human testHuman;
+			Market market;
 
 			/// <summary>
 			/// The test tile.
@@ -666,37 +663,63 @@ public class AgentTests {
 			TestTile testTile;
 
 			/// <summary>
-			/// The test roboticon.
+			/// Setup this instance.
 			/// </summary>
-			Roboticon testRoboticon;
-
 			[SetUp]
 			public void Setup() {
-				ResourceGroup testResources = new ResourceGroup(50, 50, 50);
-				Human testHuman = new Human(testResources, "Test", 500);
-				TestTile testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
-				Roboticon testRoboticon = new Roboticon();
-				testHuman.AcquireRoboticon(testRoboticon);
-				testHuman.AcquireTile(testTile);
+				market = new DummyMarket();
+				player = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Test Player", 500, market);
+				testTile = new TestTile(new ResourceGroup(2, 2, 2), new Vector2(0, 0), 1, null);
 			}
 
+			/// <summary>
+			/// Calculates the score based on the player's money only.
+			/// </summary>
 			[Test]
-			public void Score_NoInstalledRoboticons() {
-				Assert.AreEqual(0, testHuman.CalculateScore());
+			public void PlayerScoreCalculated_Money() {
+				player.SetResources(new ResourceGroup());
+				Assert.AreEqual(player.CalculateScore(), player.GetMoney());
 			}
 
+			/// <summary>
+			/// Calculates the score based on the player's remaining resources.
+			/// </summary>
 			[Test]
-			public void Score_InstalledNormalRoboticon() {
-				testHuman.InstallRoboticon(testRoboticon, testTile);
-				Assert.AreEqual(6, testHuman.CalculateScore());
+			public void PlayerScoreCalculated_Resource() {
+				player.SetMoney(0);
+				Assert.AreEqual(player.CalculateScore(), (player.GetResources() * market.GetResourceBuyingPrices()).Sum());
 			}
 
-			public void Score_InstalledUpgradedRoboticon() {
-
+			/// <summary>
+			/// Calculates the score of the player based on owning a tile.
+			/// </summary>
+			[Test]
+			public void PlayerScoreCalculated_Tile() {
+				player.SetMoney(testTile.GetPrice());
+				player.SetResources(new ResourceGroup());
+				player.AcquireTile(testTile);
+				Assert.AreEqual(player.CalculateScore(), (testTile.GetTotalResourcesGenerated() * market.GetResourceBuyingPrices()).Sum());
 			}
 
-		}*/
+			/// <summary>
+			/// Calculates the score of the player based on owning a roboticon.
+			/// </summary>
+			[Test]
+			public void PlayerScoreCalculated_Roboticon() {
+				player.SetMoney(market.GetRoboticonSellingPrice());
+				player.SetResources(new ResourceGroup());
+				Roboticon r = market.BuyRoboticon(player);
+				Assert.AreEqual(player.CalculateScore(), r.GetPrice());
+			}
+		}
 
 	}
 
+	/// <summary>
+	/// AI tests.
+	/// </summary>
+	[TestFixture]
+	public class AITests {
+		//TODO: Write some AI tests.
+	}
 }
