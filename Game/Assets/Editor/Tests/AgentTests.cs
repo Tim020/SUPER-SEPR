@@ -716,8 +716,126 @@ public class AgentTests {
 			}
 		}
 
+		/// <summary>
+		/// P2P tests.
+		/// </summary>
 		[TestFixture]
 		public class P2PTests {
+
+			//making, buying, cant not theirs,
+			//making enough/not enougg
+				//resources go into hold
+			//buygin enough/not enogh
+				//increase res decrease mon
+			//other gives money
+			//cancell their own
+
+			/// <summary>
+			/// The dummy player.
+			/// </summary>
+			DummyPlayer dummyPlayer;
+
+			/// <summary>
+			/// The dummy player 2.
+			/// </summary>
+			DummyPlayer dummyPlayer2;
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			DummyMarket dummyMarket;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				dummyMarket = new DummyMarket();
+				dummyPlayer = new DummyPlayer(new ResourceGroup(50, 50, 50), 0, "Dummy Player", 100, dummyMarket);
+				dummyPlayer2 = new DummyPlayer(new ResourceGroup(50, 50, 50), 1, "Dummyer Player", 100, dummyMarket);
+			}
+
+			/// <summary>
+			/// Checks that a valid trade can be generated.
+			/// </summary>
+			[Test]
+			public void P2PMaking_ValidTrade() {
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				Assert.AreEqual(1, dummyMarket.GetPlayerTrades().Count);
+			}
+
+			/// <summary>
+			/// Checks that a trade is invalid if the host attempts to trade for more than they own.
+			/// </summary>
+			[Test]
+			public void P2PMaking_NotEnoughResources() {
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 1000, 1000);
+				Assert.AreEqual(0, dummyMarket.GetPlayerTrades().Count);
+			}
+
+			/// <summary>
+			/// Checks that the player making the trade looses the amount of resources put forward for that trade.
+			/// </summary>
+			[Test]
+			public void P2PMaking_DecreaseResources() {
+				int expected = dummyPlayer.GetResourceAmount(Data.ResourceType.ENERGY) - 20;
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				Assert.AreEqual(expected, dummyPlayer.GetResourceAmount(Data.ResourceType.ENERGY));
+			}
+
+			/// <summary>
+			/// Checks that the player trade list is updated once a trade has been completed.
+			/// </summary>
+			[Test]
+			public void P2PBuying_TradeRemovedFromList() {
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				dummyMarket.PurchasePlayerTrade(dummyPlayer2, dummyMarket.GetPlayerTrades()[0]);
+				Assert.AreEqual(0, dummyMarket.GetPlayerTrades().Count);
+			}
+
+			/// <summary>
+			/// Checks that the trade is invalid if the buyer hasn't got enough money.
+			/// </summary>
+			[Test]
+			public void P2PBuying_NotEnoughMoney() {
+				dummyPlayer2.SetMoney(0);
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				dummyMarket.PurchasePlayerTrade(dummyPlayer2, dummyMarket.GetPlayerTrades()[0]);
+				Assert.AreEqual(1, dummyMarket.GetPlayerTrades().Count);
+			}
+
+			/// <summary>
+			/// Checks that the player purchasing the trade gains money form that trade.
+			/// </summary>
+			[Test]
+			public void P2PBuying_IncreaseFunds() {
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				int expected = dummyPlayer.GetMoney() + 20;
+				dummyMarket.PurchasePlayerTrade(dummyPlayer2, dummyMarket.GetPlayerTrades()[0]);
+				Assert.AreEqual(expected, dummyPlayer.GetMoney());
+			}
+
+			/// <summary>
+			/// Checks that the player purchasing the trade looses the money for that trade.
+			/// </summary>
+			[Test]
+			public void P2PBuying_DecreaseFunds() {
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				int expected = dummyPlayer2.GetMoney() - 20;
+				dummyMarket.PurchasePlayerTrade(dummyPlayer2, dummyMarket.GetPlayerTrades()[0]);
+				Assert.AreEqual(expected, dummyPlayer2.GetMoney());
+			}
+
+			/// <summary>
+			/// Checks that the player purchasing the trade recieves the resources for that trade.
+			/// </summary>
+			[Test]
+			public void P2PBuying_IncreaseResources() {
+				dummyMarket.CreatePlayerTrade(dummyPlayer, Data.ResourceType.ENERGY, 20, 1);
+				int expected = dummyPlayer2.GetResourceAmount(Data.ResourceType.ENERGY) + 20;
+				dummyMarket.PurchasePlayerTrade(dummyPlayer2, dummyMarket.GetPlayerTrades()[0]);
+				Assert.AreEqual(expected, dummyPlayer2.GetResourceAmount(Data.ResourceType.ENERGY));
+			}
 
 		}
 

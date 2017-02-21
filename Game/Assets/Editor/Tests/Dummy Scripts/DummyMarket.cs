@@ -70,4 +70,18 @@ public class DummyMarket : Market {
 		return null;
 	}
 
+	/// <summary>
+	/// NEW: Purchases the player trade for the given player and trade.
+	/// </summary>
+	/// <param name="player">The player wishing to purchase the trade.</param>
+	/// <param name="trade">The trade the player wishes to purchase.</param>
+	public override void PurchasePlayerTrade(AbstractPlayer player, P2PTrade trade) {
+		if (IsPlayerTradeValid(player, trade)) {
+			player.GiveResouce(trade.resource, trade.resourceAmount);
+			player.DeductMoney(trade.GetTotalCost());
+			trade.host.GiveMoney(trade.GetTotalCost());
+			playerTrades.Remove(trade);
+		}
+	}
+
 }

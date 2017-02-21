@@ -98,7 +98,7 @@ public class Market : Agent {
 	/// <summary>
 	/// A list of all current standing player trades
 	/// </summary>
-	private List<P2PTrade> playerTrades;
+	protected List<P2PTrade> playerTrades;
 
 	/// <summary>
 	/// The resource price history.
@@ -269,7 +269,7 @@ public class Market : Agent {
 	/// </summary>
 	/// <param name="player">The player wishing to purchase the trade.</param>
 	/// <param name="trade">The trade the player wishes to purchase.</param>
-	public void PurchasePlayerTrade(AbstractPlayer player, P2PTrade trade) {
+	public virtual void PurchasePlayerTrade(AbstractPlayer player, P2PTrade trade) {
 		if (IsPlayerTradeValid(player, trade)) {
 			player.GiveResouce(trade.resource, trade.resourceAmount);
 			player.DeductMoney(trade.GetTotalCost());

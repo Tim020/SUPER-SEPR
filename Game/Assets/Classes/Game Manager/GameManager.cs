@@ -106,7 +106,7 @@ public class GameManager : Object {
 		players.Add(0, human);
 		players.Add(1, ai);
 		//this was used for testing purposes
-		players.Add(2, new AIPlayer(new ResourceGroup(50, 50, 50), 2, "AI2", 200));
+		//players.Add(2, new AIPlayer(new ResourceGroup(50, 50, 50), 2, "AI2", 200));
 		randomEventFactory = new RandomEventFactory();
 		map = new Map();
 	}
