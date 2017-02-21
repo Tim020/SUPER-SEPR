@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEditor;
 using NUnit.Framework;
 
+//ALL CODE IN THIS FILE IS NEW
+
 /// <summary>
 /// Roboticon tests.
 /// </summary>

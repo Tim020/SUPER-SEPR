@@ -212,7 +212,7 @@ public class AIPlayer : AbstractPlayer {
 	/// CHNAGED: Checks whether we should upgrade a roboticon. 
 	/// </summary>
 	/// <returns><c>true</c>, if an upgrade should happen, <c>false</c> otherwise.</returns>
-	protected virtual Boolean ShouldUpgrade() {
+	protected virtual bool ShouldUpgrade() {
 		if (GetMannedTiles().Length > 0 && money / 4 > Roboticon.UPGRADE_VALUE) {
 			return true;
 		} else {
@@ -246,10 +246,10 @@ public class AIPlayer : AbstractPlayer {
 		}
 
 		if (money - Roboticon.UPGRADE_VALUE < moneyThreshold) {
-			best = null;
+			best = new TileChoice();
 		}
-
-		if (best != null) {
+			
+		if (best.tile != null) {
 
 			//chooses upgrade based on the best price at the moment
 			ResourceGroup upgrade = ChooseBestRoboticonUpgrade(best.tile);
@@ -578,7 +578,7 @@ public class AIPlayer : AbstractPlayer {
 	/// </summary>
 	/// <returns>A list of the available tiles.</returns>
 	protected virtual Tile[] GetAvailableTiles() {
-		return GameHandler.GetGameManager().GetMap().GetTiles().FindAll(t => t.GetOwner() == null && t.GetPrice() < Mathf.Max(money - moneyThreshold, moneyThreshold)).ToArray();
+		return GameHandler.GetGameManager().GetMap().GetTiles().FindAll(t => t.GetOwner() == null && t.GetPrice() <= Mathf.Max(money - moneyThreshold, moneyThreshold)).ToArray();
 	}
 
 	/// <summary>
@@ -637,6 +637,7 @@ public class AIPlayer : AbstractPlayer {
 		/// </summary>
 		public TileChoice() {
 			this.score = -1000;
+			this.tile = null;
 		}
 
 		/// <summary>

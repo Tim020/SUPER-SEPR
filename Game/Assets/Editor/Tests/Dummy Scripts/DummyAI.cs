@@ -35,6 +35,7 @@ public class DummyAI : AIPlayer {
 	public DummyAI(ResourceGroup resources, int ID, string name, int money, DummyMap map, Market market) : base(resources, ID, name, money) {
 		this.map = map;
 		this.market = market;
+		UpdateMoneyThreshold();
 	}
 
 	/// <summary>
@@ -68,7 +69,7 @@ public class DummyAI : AIPlayer {
 					InstallRoboticon(currentRoboticon, install);
 					currentRoboticon = null;
 				}
-			} catch (ArgumentException) {
+			} catch (ArgumentException e) {
 				//No tile on which to install a roboticon
 			}
 			break;
@@ -342,8 +343,7 @@ public class DummyAI : AIPlayer {
 	/// </summary>
 	/// <returns>A list of the available tiles.</returns>
 	protected override Tile[] GetAvailableTiles() {
-		Tile[] t1 = map.GetTiles().FindAll(t => t.GetOwner() == null).ToArray();
-		return t1;
+		return map.GetTiles().FindAll(t => t.GetOwner() == null  && t.GetPrice() <= Mathf.Max(money - moneyThreshold, moneyThreshold)).ToArray();
 	}
 
 	/// <summary>

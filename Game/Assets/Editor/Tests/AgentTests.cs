@@ -6,6 +6,8 @@ using UnityEditor;
 using NUnit.Framework;
 using System.Collections.Generic;
 
+//ALL CODE IN THIS FILE IS NEW
+
 /// <summary>
 /// Unit tests for the agent hierarchy .
 /// </summary>
@@ -714,6 +716,11 @@ public class AgentTests {
 			}
 		}
 
+		[TestFixture]
+		public class P2PTests {
+
+		}
+
 	}
 
 	/// <summary>
@@ -803,8 +810,8 @@ public class AgentTests {
 				foreach (DummyTile t in tiles) {
 					if (expected == null) {
 						expected = t;
-					} else if ((expected.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - expected.GetPrice() < 
-						(t.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - t.GetPrice()) {
+					} else if ((expected.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - expected.GetPrice() <
+					           (t.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - t.GetPrice()) {
 						expected = t;
 					}
 				}
@@ -825,8 +832,8 @@ public class AgentTests {
 				foreach (DummyTile t in tiles) {
 					if (expected == null) {
 						expected = t;
-					} else if ((expected.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - expected.GetPrice() < 
-						(t.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - t.GetPrice()) {
+					} else if ((expected.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - expected.GetPrice() <
+					           (t.GetBaseResourcesGenerated() * dummyMarket.GetResourceBuyingPrices()).Sum() - t.GetPrice()) {
 						expected = t;
 					}
 				}
@@ -864,6 +871,9 @@ public class AgentTests {
 			/// </summary>
 			int threshold;
 
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
 			[SetUp]
 			public void Setup() {
 				dummyMarket = new DummyMarket();
@@ -886,7 +896,7 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void Roboticon_Aqcuistion() {
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION, 0);
 				Assert.AreEqual(1, dummyAI.GetRoboticons().Count);
 			}
 
@@ -912,6 +922,9 @@ public class AgentTests {
 
 		}
 
+		/// <summary>
+		/// Roboticon placement tests.
+		/// </summary>
 		[TestFixture]
 		public class RoboticonPlacementTests {
 
@@ -940,6 +953,9 @@ public class AgentTests {
 			/// </summary>
 			int threshold;
 
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
 			[SetUp]
 			public void Setup() {
 				dummyMarket = new DummyMarket();
@@ -955,7 +971,6 @@ public class AgentTests {
 				}
 
 				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
 			}
 
 			/// <summary>
@@ -963,19 +978,152 @@ public class AgentTests {
 			/// </summary>
 			[Test]
 			public void RoboticonPlacement_SingleChoice() {
-				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_PLACEMENT, 0);
 				Assert.AreEqual(1, dummyAI.GetOwnedTiles()[0].GetInstalledRoboticons().Count);
 			}
 
+			/// <summary>
+			/// Checks that the AI places the roboticon on the best tile.
+			/// </summary>
 			[Test]
 			public void RoboticonPlacement_MultipleChoice() {
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION, 0);
+				dummyAI.SetMoney(500);
+				//best tile chosen first as there are currently static prices
+				Tile expected = dummyAI.GetOwnedTiles()[0];
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_PLACEMENT, 0);
+				Assert.AreEqual(expected.GetID(), dummyAI.GetOwnedTiles().Find(t => t.GetInstalledRoboticons().Count > 0).GetID());
+			}
+
+			/// <summary>
+			/// Checks that the AI doesn't place a roboticon if it hasn't got any.
+			/// </summary>
+			[Test]
+			public void RoboticonPlacement_NoRoboticons() {
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_PLACEMENT, 0);
+				Assert.AreEqual(0, dummyAI.GetOwnedTiles()[0].GetInstalledRoboticons().Count);
 			}
 
 		}
-	}
 
-	[TestFixture]
-	public class GameManager {
+
+		/// <summary>
+		/// Roboticon upgrade tests.
+		/// </summary>
+		[TestFixture]
+		public class RoboticonUpgradeTests {
+
+			/// <summary>
+			/// The dummy market.
+			/// </summary>
+			Market dummyMarket;
+
+			/// <summary>
+			/// The dummy map.
+			/// </summary>
+			DummyMap dummyMap;
+
+			/// <summary>
+			/// The dummy AI.
+			/// </summary>
+			AbstractPlayer dummyAI;
+
+			/// <summary>
+			/// The dummy roboticon.
+			/// </summary>
+			Roboticon dummyRoboticon;
+
+			/// <summary>
+			/// The threshold.
+			/// </summary>
+			int threshold;
+
+			/// <summary>
+			/// Setup this instance.
+			/// </summary>
+			[SetUp]
+			public void Setup() {
+				dummyMarket = new DummyMarket();
+				dummyMap = new DummyMap();
+				dummyAI = new DummyAI(new ResourceGroup(50, 50, 50), 0, "Dummy AI", 500, dummyMap, dummyMarket);
+
+				foreach (DummyTile t in dummyMap.GetTiles()) {
+					if (threshold == -1) {
+						threshold = t.GetPrice();
+					} else if (t.GetPrice() < threshold) {
+						threshold = t.GetPrice();
+					}
+				}
+
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_PLACEMENT, 0);
+				dummyAI.SetMoney(500);
+			}
+
+			/// <summary>
+			/// Checks that the AI upgrades it's roboticon when there' only one choice.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_SingleChoice() {
+				dummyAI.StartPhase(Data.GameState.AUCTION, 0);
+				Assert.AreNotEqual(dummyAI.GetRoboticons()[0].GetInitialProductionValues(), dummyAI.GetRoboticons()[0].GetProductionValues());
+			}
+
+			/// <summary>
+			/// Checks that the AI chooses the correct specification for the tile.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_CorrectSpecification() {
+				dummyAI.StartPhase(Data.GameState.AUCTION, 0);
+				ResourceGroup expected = dummyMarket.GetResourceBuyingPrices();
+
+				if (expected.energy >= expected.food && expected.energy >= expected.ore) {
+					expected = new ResourceGroup(0, 1, 0);
+				} else if (expected.food >= expected.energy && expected.food >= expected.ore) {
+					expected = new ResourceGroup(1, 0, 0);
+				} else {
+					expected = new ResourceGroup(0, 0, 1);
+				}
+					
+				Assert.AreEqual(expected, dummyAI.GetRoboticons()[0].GetProductionValues() - dummyAI.GetRoboticons()[0].GetInitialProductionValues());
+			}
+
+			/// <summary>
+			/// Checks that the AI chooses the optimal roboticon for upgrade when presented with multiple choice.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_MultipleChoice() {
+				dummyAI.StartPhase(Data.GameState.TILE_PURCHASE, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_CUSTOMISATION, 0);
+				dummyAI.StartPhase(Data.GameState.ROBOTICON_PLACEMENT, 0);
+				dummyAI.StartPhase(Data.GameState.AUCTION, 0);
+				Tile expected = dummyAI.GetOwnedTiles()[0];
+				Assert.AreNotEqual(expected.GetInstalledRoboticons()[0].GetInitialProductionValues(), expected.GetInstalledRoboticons()[0].GetProductionValues());
+			}
+
+			/// <summary>
+			/// Checks that the AI cannot upgrade a roboticon whithout sufficient funds.
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_NotEnoughMoney() {
+				dummyAI.SetMoney(0);
+				dummyAI.StartPhase(Data.GameState.AUCTION, 0);
+				Assert.AreEqual(dummyAI.GetRoboticons()[0].GetInitialProductionValues(), dummyAI.GetRoboticons()[0].GetProductionValues());
+			}
+
+			/// <summary>
+			/// Checks that a roboticon is not upgraded if this would compromise the threshold
+			/// </summary>
+			[Test]
+			public void RoboticonUpgrade_Threshold() {
+				dummyAI.SetMoney(threshold);
+				dummyAI.StartPhase(Data.GameState.AUCTION, 0);
+				Assert.AreEqual(dummyAI.GetRoboticons()[0].GetInitialProductionValues(), dummyAI.GetRoboticons()[0].GetProductionValues());
+			}
+		}
 
 	}
 
