@@ -89,11 +89,11 @@ public class Market : Agent {
 	/// </summary>
 	private const int ROBOTICON_PRODUCTION_COST = 12;
 
-	/// <summary>
-	/// The total production values across all players, taking into account tiles and roboticons.
-    /// New: Resource Group
-	/// </summary>
-	public ResourceGroup playersResourceProductionTotals;
+    /// <summary>
+    /// The total production values across all players, taking into account tiles and roboticons.
+    /// NEW: Resource Group playersResourceProductionTotals
+    /// </summary>
+    public ResourceGroup playersResourceProductionTotals;
 
 	/// <summary>
 	/// A list of all current standing player trades
@@ -110,13 +110,13 @@ public class Market : Agent {
 
 	/// <summary>
 	/// The running total of resources bought/sold.
-    /// New : ResourceGroup
+    /// NEW
 	/// </summary>
 	private ResourceGroup runningTotal = new ResourceGroup();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Market"/> class.
-    /// New : resourcePriceHistory
+    /// New : resourcePriceHistory; a dictionary to track the resource price history
     /// </summary>
     public Market() {
 		resourceSellingPrices = new ResourceGroup(STARTING_FOOD_BUY_PRICE, STARTING_ENERGY_BUY_PRICE, STARTING_ORE_BUY_PRICE);
@@ -133,7 +133,7 @@ public class Market : Agent {
     /// <summary>
     /// Buy resources from the market.
     /// </summary>
-    /// NEW: UpdateMarketSupplyOnBuy, 
+    /// NEW: UpdateMarketSupplyOnBuy updates the supply when resources are bought 
     /// <param name="player">The player buying from the market.</param>
     /// <param name="resourcesToBuy">The resources the player is wishing to buy</param>
     /// <exception cref="System.ArgumentException">When the market does not have enough resources to complete the transaction</exception>
@@ -156,7 +156,7 @@ public class Market : Agent {
 
     /// <summary>
     /// Sell resources to the market..
-    /// NEW: UpdateMarketSupplyOnSell
+    /// NEW: UpdateMarketSupplyOnSell updates market supply when resources are sold
     /// </summary>
     /// <param name="player">The player selling to the market.</param>
     /// <param name="resourcesToSell">The resources the player wishes to sell to the market</param>
@@ -180,26 +180,25 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Updates global market supply when the user buys from the market
-    /// NEW
+    /// NEW : Method to update market supply
 	/// </summary>
 	/// <param name="resourcesToBuy"></param>
 	public void UpdateMarketSupplyOnBuy(ResourceGroup resourcesToBuy) {
 		runningTotal -= resourcesToBuy;
 	}
 
-	///<summary>
-	///Updates global market supply when use sells to the market
-    ///NEW
-	/// </summary>
-	///<param name="resourcesToSell"></param>
-	public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell) {
+    ///<summary>
+    ///Updates global market supply when use sells to the market
+    ///NEW : Method to update market supply
+    /// </summary>
+    ///<param name="resourcesToSell"></param>
+    public void UpdateMarketSupplyOnSell(ResourceGroup resourcesToSell) {
 		runningTotal += resourcesToSell;
 	}
 
 	/// <summary>
 	/// Buy a Roboticon from the market if there are any.
 	/// </summary>
-    /// NEW: (tim)
 	/// <returns>The roboticon bought by the player.</returns>
 	/// <param name="player">The player buying the roboticon.</param>
 	public virtual Roboticon BuyRoboticon(AbstractPlayer player) {
@@ -282,24 +281,24 @@ public class Market : Agent {
 
 	/// <summary>
 	/// Keeps a running total of all the resources that have been mined so far.
-    /// NEW
+    /// NEW : Allows mined resources by roboticons to be counted in supply figures
 	/// </summary>
 	/// <param name="r">Player supply total</param>
 	public void updateMarketSupply(ResourceGroup r) {
 		runningTotal = runningTotal + r;
 	}
 
-	/// <summary>
-	/// Updates the prices for resources based on supply and demand economics.
-	/// NEW
-	/// </summary>
-	public void CachePrices(int phaseID) {
+    /// <summary>
+    /// Updates the prices for resources based on supply and demand economics.
+    /// NEW :  Updates the prices for resources based on supply and demand economics.
+    /// </summary>
+    public void CachePrices(int phaseID) {
 		resourcePriceHistory.Add(phaseID, new Data.Tuple<ResourceGroup, ResourceGroup>(resourceBuyingPrices.Clone(), resourceSellingPrices.Clone()));
 	}
 
 	/// <summary>
 	/// Updates market resource prices
-    ///NEW
+    ///NEW : Updates the resource prices at which the market sells : Does this using the calculated supply and upgrade totals.
 	/// </summary>
 	public void UpdateResourceSellPrices() {
 		float elasticity = 0.7f;
@@ -318,8 +317,8 @@ public class Market : Agent {
 	}
 
 	/// <summary>
-	/// Updates the resource sell prices.
-    /// NEW
+	/// Updates the resource buy prices.
+    /// NEW : Calculoates the resource buy prices as a fraction of the sell prices
 	/// </summary>
 	public void UpdateResourceBuyPrices() {
 		resourceBuyingPrices = resourceSellingPrices.Clone() - ((((float)1 / Random.Range(2, 6)) * resourceSellingPrices));
@@ -328,7 +327,7 @@ public class Market : Agent {
 	/// <summary>
 	/// Called when the market enters the recycle phase.
 	/// Used to update all resource prices.
-    /// NEW
+    /// NEW : Method to group methods so the recycle phase does not get messy. Is called at the recycle phase to update market values
 	/// </summary>
 	/// <param name="cycleNumber">The numebr of game cycles completed.</param>
 	public void RecyclePhase(int cycleNumber) {
@@ -338,12 +337,12 @@ public class Market : Agent {
 		CachePrices(cycleNumber);
 	}
 
-	/// <summary>
-	/// Gets the upgrade values for each roboticon
-    /// NEW
-	/// </summary>
-	/// <returns>The roboticon upgrades.</returns>
-	public void CalculatePlayerResourceUpgrades() {
+    /// <summary>
+    /// Gets the upgrade values for each roboticon
+    /// NEW : Gets the upgrade values for each roboticon
+    /// </summary>
+    /// <returns>The roboticon upgrades.</returns>
+    public void CalculatePlayerResourceUpgrades() {
 		playersResourceProductionTotals = new ResourceGroup();
 		foreach (Object o in GameManager.instance.players.Values) {
 			AbstractPlayer p = (AbstractPlayer)o;

@@ -37,7 +37,6 @@ public class HumanPlayer : AbstractPlayer {
 		humanGui.DisableGui();
 		humanGui.SetCurrentPlayerName(this.name);
 		humanGui.DisplayGui(state, turnCount);
-		GameManager.instance.OnPlayerCompletedPhase(state);
 	}
 
 	/// <summary>

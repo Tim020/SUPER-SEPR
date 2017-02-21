@@ -123,6 +123,7 @@ public class GameManager : Object {
 	/// <summary>
 	/// Update this instance.
 	/// NEW: State machine to handle the transition between game phases.
+    /// New: Code to call market methods to update prices in recycle
 	/// </summary>
 	public void Update() {
 		if (state == Data.GameState.GAME_WAIT) {
