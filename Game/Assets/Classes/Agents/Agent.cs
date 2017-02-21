@@ -1,6 +1,5 @@
-﻿// Game Executable hosted at: http://www-users.york.ac.uk/~jwa509/alpha01BugFree.exe
+﻿// Game Executable hosted at: https://seprated.github.io/Assessment3/Executables.zipusing
 using System;
-
 public abstract class Agent {
 
 	/// <summary>
