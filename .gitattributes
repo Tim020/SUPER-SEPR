@@ -12,3 +12,9 @@
 *.md text
 *.ver text
 *.mp3 filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+Game/Assets/Resources/Models/** filter=lfs diff=lfs merge=lfs -text
+Game/Assets/Resources/VFX/** filter=lfs diff=lfs merge=lfs -text
+Game/Assets/Resources/MapSurroundingTerrain.asset filter=lfs diff=lfs merge=lfs -text
+*.bmp filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text

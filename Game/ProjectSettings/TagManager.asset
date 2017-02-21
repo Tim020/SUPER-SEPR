@@ -4,12 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MapController
-  - MapOverlay
-  - CollegeSelection
-  - UserInterface
-  - TileInfoOverlay
-  - UIMarket
+  - uiCanvas
+  - gameManager
+  - mapTile
+  - events
   layers:
   - Default
   - TransparentFX
